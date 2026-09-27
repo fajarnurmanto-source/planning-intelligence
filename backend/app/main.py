@@ -2,7 +2,7 @@ import hashlib
 import os
 import re
 import shutil
-from datetime import date
+from datetime import date, datetime, timezone
 from pathlib import Path
 from uuid import UUID
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form
@@ -14,6 +14,8 @@ from .models import (
     PlanningPeriod,
     Document,
     DocumentVersion,
+    ParsingRun,
+    SourceUnit,
     Regulation,
     Audit,
     AuditEvent,
@@ -21,6 +23,14 @@ from .models import (
 )
 from .schemas import ProjectCreate, AuditCreate, SettingUpdate
 from .audit import record_event
+from .parser import (
+    DEFAULT_CONFIG,
+    PARSER_NAME,
+    PARSER_VERSION,
+    build_run_fingerprint,
+    config_sha256,
+    parse_document,
+)
 
 app = FastAPI(title="Planning & Decision Intelligence V0.1A", version="0.1.0-alpha.2")
 DATA_DIR = Path(os.getenv("APP_DATA_DIR", "/data"))
@@ -58,7 +68,7 @@ def health():
         "status": "ok",
         "version": "0.1.0-alpha.2",
         "ai_provider": os.getenv("AI_PROVIDER", "NO_AI"),
-        "capability": "PROVENANCE_INGESTION_FOUNDATION",
+        "capability": "DETERMINISTIC_DOCUMENT_PARSING",
     }
 
 @app.get("/api/projects")
@@ -312,6 +322,242 @@ def upload_document_version(
         "sha256": digest,
         "created": True,
     }
+
+
+
+def _version_extension(v: DocumentVersion) -> str | None:
+    if v.file_extension:
+        return v.file_extension.lower().lstrip(".")
+    suffix = Path(v.original_name or v.relative_path or "").suffix.lower().lstrip(".")
+    return suffix or None
+
+
+def _parsing_run_payload(run: ParsingRun, reused: bool = False):
+    return {
+        "id": str(run.id),
+        "document_version_id": str(run.document_version_id),
+        "parser_name": run.parser_name,
+        "parser_version": run.parser_version,
+        "parser_config_sha256": run.parser_config_sha256,
+        "input_sha256": run.input_sha256,
+        "run_fingerprint": run.run_fingerprint,
+        "status": run.status,
+        "page_count": run.page_count,
+        "source_unit_count": run.source_unit_count,
+        "result_sha256": run.result_sha256,
+        "error_message": run.error_message,
+        "started_at": run.started_at.isoformat() if run.started_at else None,
+        "completed_at": run.completed_at.isoformat() if run.completed_at else None,
+        "created_at": run.created_at.isoformat(),
+        "reused": reused,
+    }
+
+
+@app.post("/api/document-versions/{document_version_id}/parse")
+def parse_document_version(
+    document_version_id: UUID,
+    force: bool = False,
+    db: Session = Depends(get_db),
+):
+    v = db.get(DocumentVersion, document_version_id)
+    if not v:
+        raise HTTPException(404, "Document version not found")
+
+    path = DATA_DIR / v.relative_path
+    if not path.exists() or not path.is_file():
+        raise HTTPException(409, "Document-version file is missing from local storage")
+
+    actual_sha = sha256_file(path)
+    if actual_sha.lower() != v.sha256.lower():
+        raise HTTPException(
+            409,
+            "Document-version checksum mismatch. Parsing refused to protect provenance integrity.",
+        )
+
+    config = dict(DEFAULT_CONFIG)
+    cfg_sha = config_sha256(config)
+    fingerprint = build_run_fingerprint(v.sha256, config)
+
+    if not force:
+        existing = db.execute(
+            select(ParsingRun)
+            .where(
+                ParsingRun.document_version_id == v.id,
+                ParsingRun.run_fingerprint == fingerprint,
+                ParsingRun.status == "SUCCEEDED",
+            )
+            .order_by(ParsingRun.completed_at.desc())
+            .limit(1)
+        ).scalar_one_or_none()
+        if existing:
+            return _parsing_run_payload(existing, reused=True)
+
+    run = ParsingRun(
+        document_version_id=v.id,
+        parser_name=PARSER_NAME,
+        parser_version=PARSER_VERSION,
+        parser_config=config,
+        parser_config_sha256=cfg_sha,
+        input_sha256=v.sha256,
+        run_fingerprint=fingerprint,
+        status="RUNNING",
+        started_at=datetime.now(timezone.utc),
+    )
+    db.add(run)
+    db.commit()
+    db.refresh(run)
+
+    try:
+        parsed = parse_document(
+            path,
+            input_sha256=v.sha256,
+            extension=_version_extension(v),
+            config=config,
+        )
+
+        sequence_to_id: dict[int, UUID] = {}
+        rows: list[SourceUnit] = []
+        import uuid as _uuid
+
+        for unit in parsed["units"]:
+            unit_id = _uuid.uuid4()
+            sequence_to_id[unit.sequence_index] = unit_id
+            parent_id = (
+                sequence_to_id.get(unit.parent_sequence_index)
+                if unit.parent_sequence_index is not None
+                else None
+            )
+            rows.append(
+                SourceUnit(
+                    id=unit_id,
+                    parsing_run_id=run.id,
+                    document_version_id=v.id,
+                    parent_unit_id=parent_id,
+                    unit_type=unit.unit_type,
+                    sequence_index=unit.sequence_index,
+                    ordinal_in_parent=unit.ordinal_in_parent,
+                    page_start=unit.page_start,
+                    page_end=unit.page_end,
+                    section_path=unit.section_path,
+                    locator=unit.locator,
+                    structural_path=unit.structural_path,
+                    raw_text=unit.raw_text,
+                    normalized_text=unit.normalized_text,
+                    content_sha256=unit.content_sha256,
+                    unit_fingerprint=unit.unit_fingerprint,
+                )
+            )
+
+        db.add_all(rows)
+        run.status = "SUCCEEDED"
+        run.page_count = parsed["page_count"]
+        run.source_unit_count = parsed["source_unit_count"]
+        run.result_sha256 = parsed["result_sha256"]
+        run.completed_at = datetime.now(timezone.utc)
+        db.commit()
+        db.refresh(run)
+
+        record_event(
+            db,
+            "DOCUMENT_PARSED",
+            f"Document version parsed deterministically with {run.source_unit_count} source units",
+            "parsing_run",
+            str(run.id),
+            {
+                "document_version_id": str(v.id),
+                "parser_name": PARSER_NAME,
+                "parser_version": PARSER_VERSION,
+                "run_fingerprint": run.run_fingerprint,
+                "result_sha256": run.result_sha256,
+                "source_unit_count": run.source_unit_count,
+                "page_count": run.page_count,
+                "force": force,
+            },
+        )
+        return _parsing_run_payload(run, reused=False)
+
+    except Exception as exc:
+        db.rollback()
+        failed = db.get(ParsingRun, run.id)
+        if failed:
+            failed.status = "FAILED"
+            failed.error_message = str(exc)[:8000]
+            failed.completed_at = datetime.now(timezone.utc)
+            db.commit()
+            record_event(
+                db,
+                "DOCUMENT_PARSE_FAILED",
+                "Deterministic document parsing failed",
+                "parsing_run",
+                str(failed.id),
+                {
+                    "document_version_id": str(v.id),
+                    "parser_name": PARSER_NAME,
+                    "parser_version": PARSER_VERSION,
+                    "error": str(exc)[:1000],
+                },
+            )
+        raise HTTPException(422, f"Deterministic parsing failed: {exc}")
+
+
+@app.get("/api/document-versions/{document_version_id}/parsing-runs")
+def list_parsing_runs(document_version_id: UUID, db: Session = Depends(get_db)):
+    if not db.get(DocumentVersion, document_version_id):
+        raise HTTPException(404, "Document version not found")
+    rows = db.execute(
+        select(ParsingRun)
+        .where(ParsingRun.document_version_id == document_version_id)
+        .order_by(ParsingRun.created_at.desc())
+    ).scalars().all()
+    return [_parsing_run_payload(row) for row in rows]
+
+
+@app.get("/api/parsing-runs/{run_id}")
+def get_parsing_run(run_id: UUID, db: Session = Depends(get_db)):
+    run = db.get(ParsingRun, run_id)
+    if not run:
+        raise HTTPException(404, "Parsing run not found")
+    return _parsing_run_payload(run)
+
+
+@app.get("/api/parsing-runs/{run_id}/source-units")
+def list_source_units(
+    run_id: UUID,
+    offset: int = 0,
+    limit: int = 200,
+    db: Session = Depends(get_db),
+):
+    run = db.get(ParsingRun, run_id)
+    if not run:
+        raise HTTPException(404, "Parsing run not found")
+    safe_offset = max(offset, 0)
+    safe_limit = min(max(limit, 1), 1000)
+    rows = db.execute(
+        select(SourceUnit)
+        .where(SourceUnit.parsing_run_id == run_id)
+        .order_by(SourceUnit.sequence_index)
+        .offset(safe_offset)
+        .limit(safe_limit)
+    ).scalars().all()
+    return [{
+        "id": str(u.id),
+        "parsing_run_id": str(u.parsing_run_id),
+        "document_version_id": str(u.document_version_id),
+        "parent_unit_id": str(u.parent_unit_id) if u.parent_unit_id else None,
+        "unit_type": u.unit_type,
+        "sequence_index": u.sequence_index,
+        "ordinal_in_parent": u.ordinal_in_parent,
+        "page_start": u.page_start,
+        "page_end": u.page_end,
+        "section_path": u.section_path,
+        "locator": u.locator,
+        "structural_path": u.structural_path,
+        "raw_text": u.raw_text,
+        "normalized_text": u.normalized_text,
+        "content_sha256": u.content_sha256,
+        "unit_fingerprint": u.unit_fingerprint,
+    } for u in rows]
+
 
 @app.get("/api/regulations")
 def list_regulations(db: Session = Depends(get_db)):
