@@ -9,11 +9,20 @@ from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 from .db import get_db
-from .models import Jurisdiction, PlanningPeriod, Document, Regulation, Audit, AuditEvent, AppSetting
+from .models import (
+    Jurisdiction,
+    PlanningPeriod,
+    Document,
+    DocumentVersion,
+    Regulation,
+    Audit,
+    AuditEvent,
+    AppSetting,
+)
 from .schemas import ProjectCreate, AuditCreate, SettingUpdate
 from .audit import record_event
 
-app = FastAPI(title="Planning & Decision Intelligence V0.0", version="0.0.1")
+app = FastAPI(title="Planning & Decision Intelligence V0.1A", version="0.1.0-alpha.2")
 DATA_DIR = Path(os.getenv("APP_DATA_DIR", "/data"))
 FILES_DIR = DATA_DIR / "files"
 REG_DIR = DATA_DIR / "regulations"
@@ -31,9 +40,26 @@ def sha256_file(path: Path) -> str:
             h.update(chunk)
     return h.hexdigest()
 
+def save_upload(file: UploadFile, target_dir: Path) -> tuple[Path, str, int]:
+    target_dir.mkdir(parents=True, exist_ok=True)
+    safe = clean_filename(file.filename or "document.bin")
+    target = target_dir / safe
+    stem, suffix, idx = target.stem, target.suffix, 1
+    while target.exists():
+        target = target_dir / f"{stem}_{idx}{suffix}"
+        idx += 1
+    with target.open("wb") as out:
+        shutil.copyfileobj(file.file, out)
+    return target, sha256_file(target), target.stat().st_size
+
 @app.get("/health")
 def health():
-    return {"status": "ok", "version": "0.0.1", "ai_provider": os.getenv("AI_PROVIDER", "NO_AI")}
+    return {
+        "status": "ok",
+        "version": "0.1.0-alpha.2",
+        "ai_provider": os.getenv("AI_PROVIDER", "NO_AI"),
+        "capability": "PROVENANCE_INGESTION_FOUNDATION",
+    }
 
 @app.get("/api/projects")
 def list_projects(db: Session = Depends(get_db)):
@@ -78,28 +104,214 @@ def create_project(payload: ProjectCreate, db: Session = Depends(get_db)):
 @app.get("/api/documents")
 def list_documents(db: Session = Depends(get_db)):
     docs = db.execute(select(Document).order_by(Document.uploaded_at.desc())).scalars().all()
-    return [{"id": str(d.id), "title": d.title, "doc_type": d.doc_type, "original_name": d.original_name, "sha256": d.sha256, "size_bytes": d.size_bytes, "jurisdiction_id": str(d.jurisdiction_id), "planning_period_id": str(d.planning_period_id) if d.planning_period_id else None, "uploaded_at": d.uploaded_at.isoformat()} for d in docs]
+    out = []
+    for d in docs:
+        latest = db.execute(
+            select(DocumentVersion)
+            .where(DocumentVersion.document_id == d.id)
+            .order_by(DocumentVersion.version_number.desc())
+            .limit(1)
+        ).scalar_one_or_none()
+        out.append({
+            "id": str(d.id),
+            "title": d.title,
+            "doc_type": d.doc_type,
+            "original_name": d.original_name,
+            "sha256": d.sha256,
+            "size_bytes": d.size_bytes,
+            "jurisdiction_id": str(d.jurisdiction_id),
+            "planning_period_id": str(d.planning_period_id) if d.planning_period_id else None,
+            "uploaded_at": d.uploaded_at.isoformat(),
+            "latest_version_id": str(latest.id) if latest else None,
+            "latest_version_number": latest.version_number if latest else None,
+        })
+    return out
 
 @app.post("/api/documents")
 def upload_document(
-    jurisdiction_id: UUID = Form(...), planning_period_id: UUID | None = Form(None), doc_type: str = Form(...), title: str = Form(...), version_label: str | None = Form(None), file: UploadFile = File(...), db: Session = Depends(get_db)
+    jurisdiction_id: UUID = Form(...),
+    planning_period_id: UUID | None = Form(None),
+    doc_type: str = Form(...),
+    title: str = Form(...),
+    version_label: str | None = Form(None),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
 ):
     j = db.get(Jurisdiction, jurisdiction_id)
-    if not j: raise HTTPException(404, "Jurisdiction not found")
-    if planning_period_id and not db.get(PlanningPeriod, planning_period_id): raise HTTPException(404, "Planning period not found")
-    safe = clean_filename(file.filename or "document.bin")
-    target_dir = FILES_DIR / str(jurisdiction_id)
-    target_dir.mkdir(parents=True, exist_ok=True)
-    target = target_dir / safe
-    stem, suffix, idx = target.stem, target.suffix, 1
-    while target.exists():
-        target = target_dir / f"{stem}_{idx}{suffix}"; idx += 1
-    with target.open("wb") as out: shutil.copyfileobj(file.file, out)
-    digest = sha256_file(target)
-    d = Document(jurisdiction_id=jurisdiction_id, planning_period_id=planning_period_id, doc_type=doc_type, title=title, original_name=safe, relative_path=str(target.relative_to(DATA_DIR)), sha256=digest, size_bytes=target.stat().st_size, version_label=version_label)
-    db.add(d); db.commit(); db.refresh(d)
-    record_event(db, "DOCUMENT_UPLOADED", f"Document uploaded: {title}", "document", str(d.id), {"sha256": digest, "doc_type": doc_type})
-    return {"id": str(d.id), "sha256": digest}
+    if not j:
+        raise HTTPException(404, "Jurisdiction not found")
+    if planning_period_id and not db.get(PlanningPeriod, planning_period_id):
+        raise HTTPException(404, "Planning period not found")
+
+    target, digest, size_bytes = save_upload(file, FILES_DIR / str(jurisdiction_id))
+    safe = target.name
+    relative_path = str(target.relative_to(DATA_DIR))
+
+    d = Document(
+        jurisdiction_id=jurisdiction_id,
+        planning_period_id=planning_period_id,
+        doc_type=doc_type,
+        title=title,
+        original_name=safe,
+        relative_path=relative_path,
+        sha256=digest,
+        size_bytes=size_bytes,
+        version_label=version_label,
+    )
+    db.add(d)
+    db.flush()
+
+    v = DocumentVersion(
+        document_id=d.id,
+        version_number=1,
+        version_label=version_label,
+        original_name=safe,
+        relative_path=relative_path,
+        sha256=digest,
+        size_bytes=size_bytes,
+        mime_type=file.content_type,
+        file_extension=target.suffix.lower().lstrip(".") or None,
+        source_kind="UPLOAD",
+    )
+    db.add(v)
+    db.commit()
+    db.refresh(d)
+    db.refresh(v)
+
+    record_event(
+        db,
+        "DOCUMENT_UPLOADED",
+        f"Document uploaded: {title}",
+        "document",
+        str(d.id),
+        {
+            "sha256": digest,
+            "doc_type": doc_type,
+            "document_version_id": str(v.id),
+            "version_number": 1,
+        },
+    )
+    return {
+        "id": str(d.id),
+        "document_version_id": str(v.id),
+        "version_number": 1,
+        "sha256": digest,
+    }
+
+@app.get("/api/documents/{document_id}/versions")
+def list_document_versions(document_id: UUID, db: Session = Depends(get_db)):
+    d = db.get(Document, document_id)
+    if not d:
+        raise HTTPException(404, "Document not found")
+    versions = db.execute(
+        select(DocumentVersion)
+        .where(DocumentVersion.document_id == document_id)
+        .order_by(DocumentVersion.version_number.asc())
+    ).scalars().all()
+    return [{
+        "id": str(v.id),
+        "document_id": str(v.document_id),
+        "version_number": v.version_number,
+        "version_label": v.version_label,
+        "original_name": v.original_name,
+        "relative_path": v.relative_path,
+        "sha256": v.sha256,
+        "size_bytes": v.size_bytes,
+        "mime_type": v.mime_type,
+        "file_extension": v.file_extension,
+        "source_kind": v.source_kind,
+        "supersedes_version_id": str(v.supersedes_version_id) if v.supersedes_version_id else None,
+        "uploaded_at": v.uploaded_at.isoformat(),
+    } for v in versions]
+
+@app.post("/api/documents/{document_id}/versions")
+def upload_document_version(
+    document_id: UUID,
+    version_label: str | None = Form(None),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    d = db.get(Document, document_id)
+    if not d:
+        raise HTTPException(404, "Document not found")
+
+    target, digest, size_bytes = save_upload(file, FILES_DIR / str(d.jurisdiction_id))
+    relative_path = str(target.relative_to(DATA_DIR))
+
+    duplicate = db.execute(
+        select(DocumentVersion).where(
+            DocumentVersion.document_id == document_id,
+            DocumentVersion.sha256 == digest,
+        )
+    ).scalar_one_or_none()
+    if duplicate:
+        try:
+            target.unlink(missing_ok=True)
+        except Exception:
+            pass
+        return {
+            "id": str(duplicate.id),
+            "document_id": str(document_id),
+            "version_number": duplicate.version_number,
+            "sha256": duplicate.sha256,
+            "created": False,
+            "reason": "IDENTICAL_VERSION_ALREADY_REGISTERED",
+        }
+
+    previous = db.execute(
+        select(DocumentVersion)
+        .where(DocumentVersion.document_id == document_id)
+        .order_by(DocumentVersion.version_number.desc())
+        .limit(1)
+    ).scalar_one_or_none()
+    next_number = (previous.version_number if previous else 0) + 1
+
+    v = DocumentVersion(
+        document_id=document_id,
+        version_number=next_number,
+        version_label=version_label,
+        original_name=target.name,
+        relative_path=relative_path,
+        sha256=digest,
+        size_bytes=size_bytes,
+        mime_type=file.content_type,
+        file_extension=target.suffix.lower().lstrip(".") or None,
+        source_kind="UPLOAD",
+        supersedes_version_id=previous.id if previous else None,
+    )
+    db.add(v)
+
+    # Keep V0.0-compatible document fields pointed at the latest version.
+    d.original_name = target.name
+    d.relative_path = relative_path
+    d.sha256 = digest
+    d.size_bytes = size_bytes
+    d.version_label = version_label
+
+    db.commit()
+    db.refresh(v)
+    db.refresh(d)
+
+    record_event(
+        db,
+        "DOCUMENT_VERSION_UPLOADED",
+        f"Document version {next_number} uploaded: {d.title}",
+        "document_version",
+        str(v.id),
+        {
+            "document_id": str(document_id),
+            "version_number": next_number,
+            "sha256": digest,
+            "supersedes_version_id": str(previous.id) if previous else None,
+        },
+    )
+    return {
+        "id": str(v.id),
+        "document_id": str(document_id),
+        "version_number": next_number,
+        "sha256": digest,
+        "created": True,
+    }
 
 @app.get("/api/regulations")
 def list_regulations(db: Session = Depends(get_db)):
