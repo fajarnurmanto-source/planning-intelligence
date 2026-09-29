@@ -1,0 +1,19 @@
+﻿benchmark_id,corpus_group,planning_horizon,government_level,institution_level,target_document_type,expected_alignment,benchmark_role,required_format,required_characteristic,status
+NAT-20-01,substantive,20Y,national,national_government,RPJPN,,national_long_term_anchor,pdf,long-term national strategic planning,PLANNED
+NAT-5-01,substantive,5Y,national,national_government,RPJMN,NAT-20-01,national_medium_term_translation,pdf,goals priorities indicators,PLANNED
+KL-5-01,substantive,5Y,national,central_ministry_agency,RENSTRA_KL,NAT-5-01,national_sectoral_strategy,pdf,sectoral goals programs indicators,PLANNED
+NAT-1-01,substantive,1Y,national,national_government,RKP,NAT-5-01,national_annual_translation,pdf,annual priorities targets programs,PLANNED
+KL-1-01,substantive,1Y,national,central_ministry_agency,RENJA_KL,KL-5-01;NAT-1-01,national_sectoral_annual_plan,pdf,annual programs outputs funding,PLANNED
+PROV-20-01,alignment,20Y,province,provincial_government,RPJPD_PROV,NAT-20-01,provincial_long_term_alignment,pdf,long-term provincial planning,PLANNED
+PROV-5-01,alignment,5Y,province,provincial_government,RPJMD_PROV,PROV-20-01;NAT-5-01,provincial_medium_term_alignment,pdf,goals objectives programs indicators,PLANNED
+PROV-1-01,alignment,1Y,province,provincial_government,RKPD_PROV,PROV-5-01;NAT-1-01,provincial_annual_alignment,pdf,annual priorities programs targets,PLANNED
+CITY-20-01,substantive,20Y,kabupaten_kota,local_government,RPJPD_KABKOTA,NAT-20-01;PROV-20-01,local_long_term_anchor,pdf,long-term district-city planning,PLANNED
+CITY-5-01,substantive,5Y,kabupaten_kota,local_government,RPJMD_KABKOTA,CITY-20-01;NAT-5-01;PROV-5-01,local_medium_term_translation,pdf,goals objectives programs indicators,PLANNED
+PD-5-01,substantive,5Y,kabupaten_kota,local_agency,RENSTRA_PD,CITY-5-01;KL-5-01;PROV-5-01,agency_strategy_cascade,pdf,agency goals indicators programs,PLANNED
+CITY-1-01,substantive,1Y,kabupaten_kota,local_government,RKPD_KABKOTA,CITY-5-01;NAT-1-01;PROV-1-01,local_annual_translation,pdf,annual priorities programs targets,PLANNED
+PD-1-01,substantive,1Y,kabupaten_kota,local_agency,RENJA_PD,PD-5-01;CITY-1-01;KL-1-01;PROV-1-01,agency_tactical_cascade,pdf,program activities indicators funding,PLANNED
+TECH-TABLE-01,technical,NA,multi,multi,PLANNING_TABLE_HEAVY,,table_layout_stress,pdf,complex multi-page tables,PLANNED
+TECH-SCAN-01,technical,NA,multi,multi,SCANNED_PLANNING_DOCUMENT,,ocr_need_detection,pdf,image-only pages,PLANNED
+TECH-MIX-01,technical,NA,multi,multi,MIXED_TEXT_SCAN_DOCUMENT,,mixed_content_detection,pdf,digital text plus scanned pages,PLANNED
+TECH-XLSX-01,technical,NA,multi,multi,INDICATOR_BUDGET_DATA,,spreadsheet_provenance,xlsx,multiple sheets formulas merged cells,PLANNED
+TECH-DOCX-01,technical,NA,multi,multi,STRUCTURED_DOCX,,docx_structure_stress,docx,headings paragraphs complex tables,PLANNED

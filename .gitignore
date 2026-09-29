@@ -26,3 +26,5 @@ Thumbs.db
 
 *.tmp
 *.log
+# Real-document benchmark corpus
+data/benchmark_corpus/
