@@ -1,0 +1,52 @@
+{
+  "completion_verification_sha256": "D516E0AD2386D4DAA411CE4D641C8061BD8C890A440D7B4E0C2F63D7B8EC7414",
+  "freeze_candidate": {
+    "auxiliary_technical_binding_count": 4,
+    "benchmark_assets_sha256": "D37D2475D3459CE57775BFEBDD63684E7B9031D2A2D8598A77EB227B98D291B4",
+    "completion_verification": "PASS",
+    "completion_verification_sha256": "D516E0AD2386D4DAA411CE4D641C8061BD8C890A440D7B4E0C2F63D7B8EC7414",
+    "corpus_plan_sha256": "DE6B2DEE40FBC02549B966B574432DD6C67D71C9C0E48BA68EDD80D4800D8232",
+    "freeze_candidate_version": "A4.1-FREEZE-CANDIDATE-v1",
+    "freeze_invariants": [
+      "benchmark identities remain immutable",
+      "registered asset SHA256 values remain immutable",
+      "technical binding qualification semantics remain immutable",
+      "historical predecessor evidence is not reinterpreted by successor semantics",
+      "hierarchy is not lineage",
+      "period overlap is not derivation",
+      "technical suitability does not imply planning semantic lineage",
+      "no evidence means no qualification"
+    ],
+    "freeze_scope": "V0.1A.4.1_BENCHMARK_CORPUS",
+    "freeze_semantics": "SUBSTAGE_BASELINE_FREEZE",
+    "full_predecessor_freeze": false,
+    "manifest_sha256": "965E8708998DB7C1407DE8384BFCE56D06CE66528A6AC8FC399B0240438EF5AC",
+    "planning_asset_binding_count": 1,
+    "planning_asset_rows": 24,
+    "post_freeze_next_stage": "V0.1A.4.2_QUALITY_METRICS",
+    "source_branch": "v0.1-provenance-ingestion",
+    "source_head": "b78364f909eb2ec35d72d86848a00d8df60f3c14",
+    "substantive_slots": 13,
+    "successor_contract_activated": false,
+    "technical_benchmark_bindings_sha256": "9DAB632271DEA0E67B3EA6D55326BDB6C781EA97C0DBB964197DF09456B90770",
+    "technical_binding_rows": 5,
+    "technical_slots": 5,
+    "technical_source_assets_sha256": "DC43A74A1F49CB67D8352A44C7887ABD5532FE94347C2F40C169780CF25C111E",
+    "technical_source_rows": 4,
+    "total_slots": 18
+  },
+  "freeze_candidate_sha256": "FC2ADF6888EA06FDECBAC53314EF8277383CCF46F896D4D30B5611BD24AC9471",
+  "freeze_scope": "V0.1A.4.1_BENCHMARK_CORPUS",
+  "governance": {
+    "a4_1_frozen": true,
+    "amendment_rule": "Frozen A4.1 baseline may be changed only through an explicit controlled successor/amendment process; historical evidence and benchmark semantics must not be silently reinterpreted.",
+    "current_valid_contract": "V0.1A predecessor methodology",
+    "full_v0_1a_predecessor_frozen": false,
+    "next_stage": "V0.1A.4.2_QUALITY_METRICS",
+    "successor_contract_activated": false,
+    "successor_work_allowed": false
+  },
+  "record_state": "FROZEN",
+  "record_type": "CONTROLLED_SUBSTAGE_FREEZE",
+  "record_version": "A4.1-FREEZE-RECORD-v1"
+}
