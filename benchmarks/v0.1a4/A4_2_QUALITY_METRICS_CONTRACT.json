@@ -1,0 +1,282 @@
+{
+  "a4_1_freeze_record_semantic_sha256": "AF7136E48EE8DA689B3BD1474CB95E29DB1C14B74795584153269466CF91A1E6",
+  "approved_candidate": {
+    "aggregation_policy": {
+      "benchmark_pass_rule": "All applicable integrity gates and the benchmark-specific required-characteristic gate must PASS; REVIEW_REQUIRED blocks automatic PASS.",
+      "cross_benchmark_score": "PROHIBITED_AT_THIS_STAGE",
+      "universal_quality_score": false,
+      "weighted_composite_score": false
+    },
+    "authority_basis": {
+      "a4_1_freeze_record_semantic_sha256": "AF7136E48EE8DA689B3BD1474CB95E29DB1C14B74795584153269466CF91A1E6",
+      "contract_authority_reclassification_sha256": "84202CF6050F50D1D6E365EBE697273C31B0CCE42325F761CCE68DD4DC4439CC",
+      "existing_a4_2_metric_contract_found": false,
+      "frozen_technical_benchmark_count": 5
+    },
+    "benchmark_contracts": {
+      "TECH-DOCX-01": {
+        "characteristic_contract": "DOCX_STRUCTURAL_FEATURES_PRESENT",
+        "deterministic_method": "Inspect OOXML structure and independently cross-check with python-docx; compare structural predicates rather than requiring equal raw counts where parser semantics differ.",
+        "observations": [
+          "nonempty_paragraph_presence",
+          "heading_presence",
+          "table_presence",
+          "complex_table_structure_presence",
+          "cross_parser_structural_confirmation"
+        ],
+        "parser_disagreement_rule": "RAW_COUNT_DIFFERENCE_ALLOWED_WHEN_SEMANTICS_DIFFER; REVIEW_REQUIRED_ONLY_IF_REQUIRED_FEATURE_PREDICATE_DISAGREES",
+        "pass_predicate": "paragraphs present AND headings present AND tables present AND complex table markers present AND both structural paths confirm the required feature classes",
+        "predicate_origin": "FROZEN_REQUIRED_CHARACTERISTIC_headings_paragraphs_complex_tables"
+      },
+      "TECH-MIX-01": {
+        "characteristic_contract": "MIXED_DIGITAL_AND_IMAGE_ONLY_CONTENT_PRESENT",
+        "deterministic_method": "Classify every PDF page by presence of extractable digital text and image-only structure; verify complete page partition.",
+        "observations": [
+          "total_page_count",
+          "digital_text_page_count",
+          "image_only_page_count",
+          "unclassified_page_count",
+          "page_partition_completeness"
+        ],
+        "parser_disagreement_rule": "REVIEW_REQUIRED_IF_PAGE_CLASSIFICATION_DISAGREES",
+        "pass_predicate": "one or more digital-text pages AND one or more image-only pages AND classified page partition covers all pages",
+        "predicate_origin": "FROZEN_REQUIRED_CHARACTERISTIC_digital_text_plus_scanned_pages"
+      },
+      "TECH-SCAN-01": {
+        "characteristic_contract": "IMAGE_ONLY_OCR_NEED_PRESENT",
+        "deterministic_method": "Inspect every PDF page for extractable digital text and page image presence; classify image-only pages and OCR need.",
+        "observations": [
+          "total_page_count",
+          "text_page_count",
+          "zero_text_page_count",
+          "image_only_page_count",
+          "ocr_need_classification"
+        ],
+        "parser_disagreement_rule": "REVIEW_REQUIRED_IF_PAGE_CLASSIFICATION_DISAGREES",
+        "pass_predicate": "one or more pages are image-only with zero extractable digital text and OCR need is positively classified",
+        "predicate_origin": "FROZEN_REQUIRED_CHARACTERISTIC_image-only_pages"
+      },
+      "TECH-TABLE-01": {
+        "characteristic_contract": "MULTI_PAGE_TABLE_STRUCTURE_PRESENT",
+        "deterministic_method": "Scan all PDF pages using the frozen table-detection method; classify pages with observed table structure; group consecutive table pages into runs.",
+        "observations": [
+          "total_page_count",
+          "table_page_count",
+          "table_page_ratio",
+          "table_run_count",
+          "multi_page_table_run_count",
+          "longest_table_run_pages"
+        ],
+        "parser_disagreement_rule": "REVIEW_REQUIRED_IF_CONTRACT_RELEVANT_PREDICATE_DISAGREES",
+        "pass_predicate": "at least one detected table run spans two or more consecutive pages",
+        "predicate_origin": "FROZEN_REQUIRED_CHARACTERISTIC_complex_multi-page_tables"
+      },
+      "TECH-XLSX-01": {
+        "characteristic_contract": "WORKBOOK_STRUCTURAL_FEATURES_PRESENT",
+        "deterministic_method": "Inspect OOXML workbook structure and cross-check through the frozen spreadsheet parser path.",
+        "observations": [
+          "sheet_count",
+          "formula_count",
+          "merged_range_count"
+        ],
+        "parser_disagreement_rule": "REVIEW_REQUIRED_IF_FEATURE_PRESENCE_DISAGREES",
+        "pass_predicate": "sheet_count >= 2 AND formula_count >= 1 AND merged_range_count >= 1",
+        "predicate_origin": "FROZEN_REQUIRED_CHARACTERISTIC_multiple_sheets_formulas_merged_cells"
+      }
+    },
+    "benchmark_sources": {
+      "TECH-DOCX-01": {
+        "benchmark_role": "docx_structure_stress",
+        "evidence_summary": "Official government DOCX; SHA256=036D7B4CF0D0EFE46386560B32703ED89F71220925B1348C52243CF2BADD527B; OOXML nonempty_paragraphs=3210, headings=56, tables=29, gridSpan=55, vMerge=131; python-docx nonempty_paragraphs=507, headings=14, tables=29, gridSpan=24, vMerge=98; both structural paths confirm paragraphs, headings, tables, and complex tables.",
+        "file_format": "docx",
+        "file_sha256": "036D7B4CF0D0EFE46386560B32703ED89F71220925B1348C52243CF2BADD527B",
+        "qualification_method": "OOXML_STRUCTURAL_PROFILE_PYTHON_DOCX_EPHEMERAL_BACKEND_CROSSCHECK",
+        "relative_path": "data/benchmark_corpus/candidate/TECH-DOCX-01/candidate-01-bekasi-bpbd-renstra-2025-2029/RENSTRA BPBD 2025-2029 (19-09-2025).docx",
+        "required_characteristic": "headings paragraphs complex tables",
+        "source_class": "AUXILIARY_TECHNICAL_ASSET",
+        "source_identity": "TECH-DOCX-SRC-01|TECH-DOCX-SRC-01-A001"
+      },
+      "TECH-MIX-01": {
+        "benchmark_role": "mixed_content_detection",
+        "evidence_summary": "Deterministic full-document PyMuPDF mixed-content audit of the official 780-page PDF: 776/780 pages contain extractable digital text; 4/780 pages are semantic image-only pages (pages 2,3,4,780); pages 2-4 form a consecutive 3-page scanned run; zero zero-text pages remain unclassified; digital_text_ratio=0.994872; mixed_content_document=True.",
+        "file_format": "pdf",
+        "file_sha256": "12D32EE3975219BE413963B0F6EC885D451A7178410E75869EBD93F4A37BBFBD",
+        "qualification_method": "PyMuPDF_FULL_DOCUMENT_MIXED_CONTENT_AUDIT",
+        "relative_path": "data/benchmark_corpus/candidate/TECH-SCAN-01/candidate-03-bukittinggi-rkpd/scan perwako 21 th 2021.pdf",
+        "required_characteristic": "digital text plus scanned pages",
+        "source_class": "AUXILIARY_TECHNICAL_ASSET",
+        "source_identity": "TECH-MIX-SRC-01|TECH-MIX-SRC-01-A001"
+      },
+      "TECH-SCAN-01": {
+        "benchmark_role": "ocr_need_detection",
+        "evidence_summary": "Deterministic full-document PyMuPDF audit of the official 3-page JDIH PDF: 3/3 pages contain zero extractable text; 3/3 pages contain page-image content; all pages exceed the substantial-image threshold; maximum image coverage by page=0.692389,0.692389,0.692389; semantic_image_only_document=True; ocr_required_for_text_extraction=True.",
+        "file_format": "pdf",
+        "file_sha256": "5A94F7A6EF6C026F4D80537EDE7C9BCC7548F375F5E66C94072DDCC5C09640A9",
+        "qualification_method": "PyMuPDF_FULL_DOCUMENT_IMAGE_ONLY_OCR_NEED_AUDIT",
+        "relative_path": "data/benchmark_corpus/candidate/TECH-SCAN-01/candidate-05-banyumas-rkpd-2009/Perbup Banyumas Nomor 11 Tahun 2008 tentang RKPD Tahun 2009.pdf",
+        "required_characteristic": "image-only pages",
+        "source_class": "AUXILIARY_TECHNICAL_ASSET",
+        "source_identity": "TECH-SCAN-SRC-01|TECH-SCAN-SRC-01-A001"
+      },
+      "TECH-TABLE-01": {
+        "benchmark_role": "table_layout_stress",
+        "evidence_summary": "Exhaustive deterministic scan of 856-page PDF: 856/856 pages contain digital text; 698/856 pages contain detected tables (ratio 0.815421); 54 total table runs; 39 multi-page runs; longest consecutive table run 343 pages (pages 454-796); maximum 5 detected tables on one page; 0 table-detection errors.",
+        "file_format": "pdf",
+        "file_sha256": "56397218C338B0C44915141D58E5733B653B466BC5F54C78C06372C1D5C68E90",
+        "qualification_method": "PyMuPDF_1.28.2_EXHAUSTIVE_TABLE_SCAN",
+        "relative_path": "data/benchmark_corpus/raw/CITY-1-01/Peraturan Walikota Yogyakarta Nomor 34 Tahun 2025 tentang Rencana Kerja Pemerintah Daerah Tahun 2026.pdf",
+        "required_characteristic": "complex multi-page tables",
+        "source_class": "PLANNING_ASSET",
+        "source_identity": "CITY-1-01|CITY-1-01-A001"
+      },
+      "TECH-XLSX-01": {
+        "benchmark_role": "spreadsheet_provenance",
+        "evidence_summary": "Official government-published XLSX; authority confirmed; SHA256=97F80F61D6408C4584946019255A26AC94AE094AAB2C20F5F012E75D1001EA04; sheet_count=2; formula_count=2; merged_ranges=9; OOXML structural inspection and openpyxl cross-check passed.",
+        "file_format": "xlsx",
+        "file_sha256": "97F80F61D6408C4584946019255A26AC94AE094AAB2C20F5F012E75D1001EA04",
+        "qualification_method": "OOXML_STRUCTURAL_PROFILE_OPENPYXL_CROSSCHECK",
+        "relative_path": "data/benchmark_corpus/candidate/TECH-XLSX-01/candidate-07-bnpb-kalkulator-ppam/kalkulator_ppam.xlsx",
+        "required_characteristic": "multiple sheets formulas merged cells",
+        "source_class": "AUXILIARY_TECHNICAL_ASSET",
+        "source_identity": "TECH-XLSX-SRC-01|TECH-XLSX-SRC-01-A001"
+      }
+    },
+    "contract_state": "CANDIDATE",
+    "contract_version": "V0.1A.4.2-QUALITY-METRICS-CONTRACT-CANDIDATE-v1",
+    "failure_policy": {
+      "DEFERRED": "Does not count as PASS or FAIL; indicates that required evidence class does not yet exist.",
+      "FAIL": "Blocks benchmark quality qualification when a deterministic integrity or required-characteristic predicate is violated.",
+      "NOT_APPLICABLE": "Excluded from the benchmark-specific denominator because the metric is outside the frozen technical characteristic.",
+      "REVIEW_REQUIRED": "Blocks automatic qualification but preserves evidence for human adjudication; it is not silently converted to PASS."
+    },
+    "full_v0_1a_predecessor_frozen": false,
+    "global_metrics": [
+      {
+        "calculation": "Resolve binding identity by source_class; require exactly one registry match; compute SHA256 of physical source; compare byte-for-byte hash equality.",
+        "class": "INTEGRITY_GATE",
+        "failure": "FAIL",
+        "metric_id": "Q-INTEGRITY-001",
+        "name": "BOUND_ASSET_IDENTITY_INTEGRITY",
+        "pass_predicate": "unique_resolver_match AND physical_asset_exists AND actual_sha256 == registered_sha256",
+        "semantics": "The benchmark binding resolves to exactly one registered asset/source and the current physical file SHA256 equals the frozen registered SHA256.",
+        "threshold_origin": "NONE_IDENTITY_EQUALITY_ONLY"
+      },
+      {
+        "calculation": "Normalize required_format and resolved file_format to lowercase and test exact equality.",
+        "class": "INTEGRITY_GATE",
+        "failure": "FAIL",
+        "metric_id": "Q-INTEGRITY-002",
+        "name": "REQUIRED_FORMAT_CONFORMANCE",
+        "pass_predicate": "resolved_file_format == required_format",
+        "semantics": "The resolved source format equals the frozen required_format of the technical benchmark.",
+        "threshold_origin": "NONE_EXACT_CONTRACT_EQUALITY"
+      },
+      {
+        "calculation": "Test qualification_status == QUALIFIED and both qualification_method and evidence_summary are non-empty.",
+        "class": "INTEGRITY_GATE",
+        "failure": "FAIL",
+        "metric_id": "Q-EVIDENCE-001",
+        "name": "QUALIFICATION_EVIDENCE_COMPLETENESS",
+        "pass_predicate": "qualification_status == QUALIFIED AND qualification_method != empty AND evidence_summary != empty",
+        "semantics": "A qualified technical binding must retain a non-empty qualification method and non-empty evidence summary.",
+        "threshold_origin": "NONE_PRESENCE_REQUIREMENT"
+      },
+      {
+        "calculation": "Compare run identity tuple (asset_sha256, parser_name, parser_version, config_hash).",
+        "class": "REPRODUCIBILITY_GATE",
+        "failure": "REVIEW_REQUIRED",
+        "metric_id": "Q-REPRO-001",
+        "name": "COMPARABLE_RUN_REPRODUCIBILITY",
+        "pass_predicate": "run_identity_tuple_A == run_identity_tuple_B before deterministic output equality is evaluated",
+        "semantics": "Two parser observations are repeatability-comparable only when immutable input hash, parser implementation/version, and configuration are identical.",
+        "threshold_origin": "NONE_IDENTITY_EQUALITY_ONLY"
+      },
+      {
+        "calculation": "UNDEFINED_UNTIL_LABELED_GROUND_TRUTH_EXISTS",
+        "class": "GROUND_TRUTH_METRIC",
+        "failure": "DEFERRED",
+        "metric_id": "Q-GT-001",
+        "name": "EXTRACTION_CORRECTNESS_AGAINST_LABELED_TRUTH",
+        "pass_predicate": "NONE",
+        "semantics": "Extraction correctness metrics such as precision, recall, F1, cell accuracy, heading accuracy, or OCR character accuracy require independently labeled ground truth.",
+        "threshold_origin": "NONE_NO_GROUND_TRUTH"
+      }
+    ],
+    "global_rules": [
+      "NO_UNIVERSAL_QUALITY_SCORE",
+      "NO_HIDDEN_WEIGHTING",
+      "NO_EVIDENCE_NO_PASS",
+      "NO_PRECISION_RECALL_F1_WITHOUT_LABELED_GROUND_TRUTH",
+      "NO_ARBITRARY_NUMERIC_THRESHOLD",
+      "TECHNICAL_SUITABILITY_DOES_NOT_ESTABLISH_SEMANTIC_LINEAGE",
+      "PARSER_DISAGREEMENT_ON_NON_EQUIVALENT_COUNT_SEMANTICS_IS_NOT_AUTOMATIC_FAILURE",
+      "SAME_ASSET_HASH_PLUS_SAME_PARSER_VERSION_PLUS_SAME_CONFIG_REQUIRED_FOR_REPEATABILITY_COMPARISON"
+    ],
+    "ground_truth_policy": {
+      "accuracy_threshold_active": false,
+      "future_activation_requirement": "Independent labeled ground truth plus explicit measurement and acceptance contract.",
+      "labeled_ground_truth_available": false,
+      "precision_recall_f1_active": false
+    },
+    "metric_classes": {
+      "GROUND_TRUTH_METRIC": "Metric comparing extracted output with independently established labeled truth; DEFERRED until such truth exists.",
+      "INTEGRITY_GATE": "Boolean deterministic control protecting asset identity, hash integrity, binding resolution, and format contract.",
+      "REPRODUCIBILITY_GATE": "Control requiring comparable runs to use the same immutable asset hash, parser implementation/version, and configuration.",
+      "STRUCTURAL_CHARACTERISTIC_GATE": "Boolean deterministic control establishing only whether the frozen benchmark's required technical characteristic is observably present.",
+      "STRUCTURAL_OBSERVATION": "Deterministic count/classification emitted for audit and comparison; by itself it is not a quality score."
+    },
+    "quality_architecture_boundary": {
+      "does_not_measure_yet": [
+        "semantic_planning_correctness",
+        "causal_correctness",
+        "public_value",
+        "extraction_accuracy_without_ground_truth"
+      ],
+      "measures_here": [
+        "asset_and_binding_integrity",
+        "format_conformance",
+        "technical_characteristic_presence",
+        "repeatability_comparability"
+      ]
+    },
+    "repeatability_contract": {
+      "comparable_run_identity": [
+        "asset_sha256",
+        "parser_name",
+        "parser_version",
+        "config_hash"
+      ],
+      "contract_predicate_consistency_required": true,
+      "raw_count_equality_required_across_different_parsers": false,
+      "same_identity_required": true
+    },
+    "scope": "V0.1A.4.2_QUALITY_METRICS",
+    "state_semantics": {
+      "DEFERRED": "The metric would require evidence not yet available, such as labeled extraction ground truth; no synthetic score or threshold may substitute for missing evidence.",
+      "FAIL": "A deterministic invariant or explicitly required technical characteristic is violated.",
+      "NOT_APPLICABLE": "The metric is outside the technical characteristics required for the benchmark.",
+      "PASS": "All deterministic predicates applicable to the metric are satisfied by reproducible evidence.",
+      "REVIEW_REQUIRED": "Evidence exists but is ambiguous, parser outputs conflict on a contract-relevant predicate, or deterministic adjudication is not defensible."
+    },
+    "successor_activated": false
+  },
+  "approved_candidate_sha256": "7BF6AAB47C206B4F6E614C2C906EDBB4BF07F72FB9E5A2BB3A93D0C73FA4CAA9",
+  "candidate_adjudication_sha256": "25E58485E62D02F286DA3A0F4D8724DB0C45245CC0B335CB1734E828BC058446",
+  "contract_authority_reclassification_sha256": "84202CF6050F50D1D6E365EBE697273C31B0CCE42325F761CCE68DD4DC4439CC",
+  "governance": {
+    "a4_1_remains_frozen": true,
+    "active_precision_recall_f1_metric_count": 0,
+    "candidate_approved_for_write": true,
+    "contract_authoritative_for_a4_2": true,
+    "empirical_quality_threshold_count": 0,
+    "full_v0_1a_predecessor_frozen": false,
+    "next_stage": "V0.1A.4.2_CONTRACT_EXECUTION_BASELINE",
+    "successor_contract_activated": false,
+    "universal_quality_score_enabled": false
+  },
+  "record_state": "ACTIVE",
+  "record_type": "ACTIVE_PREDECESSOR_QUALITY_CONTRACT",
+  "record_version": "V0.1A.4.2-QUALITY-METRICS-CONTRACT-RECORD-v1",
+  "scope": "V0.1A.4.2_QUALITY_METRICS",
+  "source_head_before_contract_commit": "aebcecdc3298d483ed2894ec17c0c8a68dc824bb"
+}
