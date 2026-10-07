@@ -1,0 +1,221 @@
+{
+  "baseline_execution": {
+    "a4_1_frozen": true,
+    "baseline_file_written": false,
+    "baseline_state": "PASS",
+    "benchmark_fail_count": 0,
+    "benchmark_pass_count": 5,
+    "benchmark_results": {
+      "TECH-DOCX-01": {
+        "actual_sha256": "036D7B4CF0D0EFE46386560B32703ED89F71220925B1348C52243CF2BADD527B",
+        "benchmark_quality_state": "PASS",
+        "characteristic_gate": {
+          "evidence_source": "FROZEN_QUALIFICATION_EVIDENCE",
+          "executor_version": "A4_2_BASELINE_EXECUTOR_R1",
+          "observations": {
+            "both_structural_paths_named": true,
+            "complex_table_predicate": true,
+            "gridspan_counts": [
+              55,
+              24
+            ],
+            "heading_counts": [
+              56,
+              14
+            ],
+            "paragraph_counts": [
+              3210,
+              507
+            ],
+            "structural_feature_predicate": true,
+            "table_counts": [
+              29,
+              29
+            ],
+            "vmerge_counts": [
+              131,
+              98
+            ]
+          },
+          "reason": "frozen evidence confirms DOCX structural feature classes across both paths",
+          "state": "PASS"
+        },
+        "global_metrics": {
+          "Q-EVIDENCE-001": "PASS",
+          "Q-GT-001": "DEFERRED",
+          "Q-INTEGRITY-001": "PASS",
+          "Q-INTEGRITY-002": "PASS",
+          "Q-REPRO-001": "DEFERRED"
+        },
+        "source_class": "AUXILIARY_TECHNICAL_ASSET",
+        "source_identity": "TECH-DOCX-SRC-01|TECH-DOCX-SRC-01-A001"
+      },
+      "TECH-MIX-01": {
+        "actual_sha256": "12D32EE3975219BE413963B0F6EC885D451A7178410E75869EBD93F4A37BBFBD",
+        "benchmark_quality_state": "PASS",
+        "characteristic_gate": {
+          "evidence_source": "FROZEN_QUALIFICATION_EVIDENCE",
+          "executor_version": "A4_2_BASELINE_EXECUTOR_R1",
+          "observations": {
+            "digital_text_page_count": 776,
+            "image_only_page_count": 4,
+            "mixed_content_document": true,
+            "page_partition_complete": true,
+            "total_page_count": 780
+          },
+          "reason": "corrected executor confirms complete digital/image-only mixed-content partition",
+          "state": "PASS"
+        },
+        "global_metrics": {
+          "Q-EVIDENCE-001": "PASS",
+          "Q-GT-001": "DEFERRED",
+          "Q-INTEGRITY-001": "PASS",
+          "Q-INTEGRITY-002": "PASS",
+          "Q-REPRO-001": "DEFERRED"
+        },
+        "source_class": "AUXILIARY_TECHNICAL_ASSET",
+        "source_identity": "TECH-MIX-SRC-01|TECH-MIX-SRC-01-A001"
+      },
+      "TECH-SCAN-01": {
+        "actual_sha256": "5A94F7A6EF6C026F4D80537EDE7C9BCC7548F375F5E66C94072DDCC5C09640A9",
+        "benchmark_quality_state": "PASS",
+        "characteristic_gate": {
+          "evidence_source": "FROZEN_QUALIFICATION_EVIDENCE",
+          "executor_version": "A4_2_BASELINE_EXECUTOR_R1",
+          "observations": {
+            "image_page_count": 3,
+            "ocr_required_for_text_extraction": true,
+            "semantic_image_only_document": true,
+            "total_page_count": 3,
+            "zero_text_page_count": 3
+          },
+          "reason": "corrected executor confirms image-only document and OCR requirement",
+          "state": "PASS"
+        },
+        "global_metrics": {
+          "Q-EVIDENCE-001": "PASS",
+          "Q-GT-001": "DEFERRED",
+          "Q-INTEGRITY-001": "PASS",
+          "Q-INTEGRITY-002": "PASS",
+          "Q-REPRO-001": "DEFERRED"
+        },
+        "source_class": "AUXILIARY_TECHNICAL_ASSET",
+        "source_identity": "TECH-SCAN-SRC-01|TECH-SCAN-SRC-01-A001"
+      },
+      "TECH-TABLE-01": {
+        "actual_sha256": "56397218C338B0C44915141D58E5733B653B466BC5F54C78C06372C1D5C68E90",
+        "benchmark_quality_state": "PASS",
+        "characteristic_gate": {
+          "evidence_source": "FROZEN_QUALIFICATION_EVIDENCE",
+          "executor_version": "A4_2_BASELINE_EXECUTOR_R1",
+          "observations": {
+            "longest_table_run_pages": 343,
+            "multi_page_table_run_count": null
+          },
+          "reason": "frozen evidence confirms table run spanning at least two pages",
+          "state": "PASS"
+        },
+        "global_metrics": {
+          "Q-EVIDENCE-001": "PASS",
+          "Q-GT-001": "DEFERRED",
+          "Q-INTEGRITY-001": "PASS",
+          "Q-INTEGRITY-002": "PASS",
+          "Q-REPRO-001": "DEFERRED"
+        },
+        "source_class": "PLANNING_ASSET",
+        "source_identity": "CITY-1-01|CITY-1-01-A001"
+      },
+      "TECH-XLSX-01": {
+        "actual_sha256": "97F80F61D6408C4584946019255A26AC94AE094AAB2C20F5F012E75D1001EA04",
+        "benchmark_quality_state": "PASS",
+        "characteristic_gate": {
+          "evidence_source": "FROZEN_QUALIFICATION_EVIDENCE",
+          "executor_version": "A4_2_BASELINE_EXECUTOR_R1",
+          "observations": {
+            "crosscheck_confirmed": true,
+            "formula_count": 2,
+            "merged_range_count": 9,
+            "sheet_count": 2
+          },
+          "reason": "corrected executor confirms workbook structural feature contract",
+          "state": "PASS"
+        },
+        "global_metrics": {
+          "Q-EVIDENCE-001": "PASS",
+          "Q-GT-001": "DEFERRED",
+          "Q-INTEGRITY-001": "PASS",
+          "Q-INTEGRITY-002": "PASS",
+          "Q-REPRO-001": "DEFERRED"
+        },
+        "source_class": "AUXILIARY_TECHNICAL_ASSET",
+        "source_identity": "TECH-XLSX-SRC-01|TECH-XLSX-SRC-01-A001"
+      }
+    },
+    "benchmark_review_required_count": 0,
+    "benchmark_states": {
+      "TECH-DOCX-01": "PASS",
+      "TECH-MIX-01": "PASS",
+      "TECH-SCAN-01": "PASS",
+      "TECH-TABLE-01": "PASS",
+      "TECH-XLSX-01": "PASS"
+    },
+    "contract_changed": false,
+    "contract_record_semantic_sha256": "00891F8B0B68233A07291A356D7FF7DD3C780956C11315AF22D21B63393BEC12",
+    "empirical_quality_threshold_count": 0,
+    "execution_version": "V0.1A.4.2-CONTRACT-EXECUTION-BASELINE-R1-v1",
+    "executor_correction_scope": "EVIDENCE_PARSING_ONLY",
+    "executor_version": "A4_2_BASELINE_EXECUTOR_R1",
+    "frozen_evidence_changed": false,
+    "full_v0_1a_predecessor_frozen": false,
+    "ground_truth_correctness_metric_state": "DEFERRED",
+    "head": "24000ffbe05e0a608d7196200a3e9c9be3257c00",
+    "prior_baseline_invalidated": false,
+    "prior_baseline_preserved": true,
+    "prior_execution_baseline_sha256": "2DA78AB4F111A0E34F9CAC8458A6CA5DE28BE6AB91FB89416B8AE0470E89341D",
+    "reproducibility_metric_state": "DEFERRED",
+    "review_required_cause_adjudication_sha256": "F6E9EF210813E5CFECA6E6848A27F283E3B205680516BE11937DB3FC644D77E7",
+    "successor_activated": false,
+    "universal_quality_score": false
+  },
+  "baseline_r1_adjudication_sha256": "ACF37782C4B728FEAAAD164748ED76AC457C40E42C9A9003D727CC77E01A7610",
+  "contract_record_semantic_sha256": "00891F8B0B68233A07291A356D7FF7DD3C780956C11315AF22D21B63393BEC12",
+  "deferred_metrics": {
+    "Q-GT-001": {
+      "blocking_current_baseline": false,
+      "future_capability_complete": false,
+      "legitimate": true,
+      "reason": "NO_INDEPENDENT_LABELED_GROUND_TRUTH",
+      "state": "DEFERRED"
+    },
+    "Q-REPRO-001": {
+      "blocking_current_baseline": false,
+      "future_capability_complete": false,
+      "legitimate": true,
+      "reason": "NO_SECOND_COMPARABLE_RUN_RECORD_IN_BASELINE_SCOPE",
+      "state": "DEFERRED"
+    }
+  },
+  "execution_baseline_r1_sha256": "2331BAFC4CD7F14BEE2D4C9CA9B6B317F7DFC4968F052E1528285A07B6C3A300",
+  "governance": {
+    "a4_1_remains_frozen": true,
+    "a4_2_stage_complete": false,
+    "baseline_authoritative_for_a4_2": true,
+    "baseline_r1_approved_for_controlled_write": true,
+    "benchmark_fail_count": 0,
+    "benchmark_pass_count": 5,
+    "benchmark_review_required_count": 0,
+    "contract_amended": false,
+    "empirical_quality_threshold_count": 0,
+    "frozen_evidence_amended": false,
+    "full_v0_1a_predecessor_frozen": false,
+    "next_stage": "V0.1A.4.2_STAGE_COMPLETION_GATE_AUDIT",
+    "prior_baseline_invalidated": false,
+    "successor_activated": false,
+    "universal_quality_score_enabled": false
+  },
+  "record_state": "VERIFIED",
+  "record_type": "A4_2_CONTRACT_EXECUTION_BASELINE",
+  "record_version": "V0.1A.4.2-EXECUTION-BASELINE-R1-RECORD-v1",
+  "scope": "V0.1A.4.2_QUALITY_METRICS",
+  "source_head_before_baseline_commit": "24000ffbe05e0a608d7196200a3e9c9be3257c00"
+}
