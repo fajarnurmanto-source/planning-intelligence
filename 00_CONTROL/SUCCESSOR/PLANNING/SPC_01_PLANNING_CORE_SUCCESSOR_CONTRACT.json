@@ -1,0 +1,363 @@
+{
+  "acceptance_criteria": [
+    "planning object identity is explicit",
+    "authority and provenance remain explicit",
+    "hierarchy remains distinct from semantic lineage",
+    "temporal overlap does not establish derivation",
+    "planning lineage requires explicit evidence",
+    "observed condition remains distinct from problem frame",
+    "problem frame remains distinct from causal hypothesis",
+    "intervention representation does not establish effectiveness",
+    "baseline target and observed value remain distinct",
+    "indicator improvement does not establish policy impact",
+    "alignment is represented as an explicit reviewable claim",
+    "Planning Claim carries evidence counterevidence assumptions time version status reviewer and provenance",
+    "unknown and review-required states are preserved"
+  ],
+  "admission": {
+    "admission_basis": {
+      "sra08_sha256": "BFEEEEAC20013B5FF7C0D87877EC337910540FF533E9D7BDDF2FAA00C1B5D374",
+      "sra09_sha256": "FEAD4A342D93DC6D60F6284788534E101D60BDDEFD92548054E164C9410674E5",
+      "sra10_sha256": "79285FDF5E539E3F36D071D33F9F604A54B29E108BA087CC53B546BC8C421429"
+    },
+    "admission_stage": "SRA-11",
+    "authority_transition": {
+      "from": "PROPOSED_UNCOMMITTED",
+      "to": "COMMITTED_SUCCESSOR_AUTHORITY"
+    },
+    "authorized_scope": "WAVE_1_SPC_01_ONLY",
+    "dependencies": {
+      "SCF-00": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA",
+      "SDEA-01": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301"
+    },
+    "implementation_authorized": false,
+    "lifecycle_transition": {
+      "from": "CONTROLLED_WRITE_PENDING_POST_WRITE_VALIDATION",
+      "to": "ADMITTED_AND_COMMITTED"
+    },
+    "maturity_promotion_authorized": false,
+    "repository_parent_head": "5c68d55b3f010594527d7b51ad06dc5759076199"
+  },
+  "alignment_semantics": {
+    "alignment_claim_may_be_unknown": true,
+    "alignment_claim_requires_basis": true,
+    "alignment_claim_requires_provenance": true,
+    "alignment_must_be_explicit_claim": true,
+    "expected_alignment_is_authority": false,
+    "expected_alignment_is_evidence": false,
+    "expected_alignment_is_structural_expectation_only": true
+  },
+  "authority_rule": "This artifact is a proposed canonical Planning Core owner. It does not become committed successor authority until post-write validation, admission, and controlled commit pass.",
+  "authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+  "canonical_object_types": [
+    "PLANNING_DOCUMENT",
+    "PLANNING_OBJECT",
+    "GOAL_OR_OBJECTIVE",
+    "POLICY_OR_STRATEGY",
+    "PROGRAM",
+    "ACTIVITY",
+    "SUBACTIVITY",
+    "PROBLEM_EVIDENCE",
+    "PROBLEM_FRAME",
+    "CAUSAL_HYPOTHESIS_REFERENCE",
+    "INTERVENTION",
+    "INDICATOR",
+    "BASELINE",
+    "TARGET",
+    "OBSERVED_VALUE",
+    "PLANNING_ALTERNATIVE",
+    "PLANNING_CLAIM"
+  ],
+  "capability_family": "PLANNING_CORE",
+  "contract_id": "SPC-01",
+  "contract_name": "PLANNING_CORE_SUCCESSOR_CONTRACT",
+  "contract_type": "EXISTING_CAPABILITY_OWNER_CORRECTION",
+  "contract_version": "0.1",
+  "decision_value_traceability": {
+    "is_decision_value_proof": false,
+    "role": "CANONICAL_PLANNING_SEMANTIC_FOUNDATION",
+    "supports_test_families": [
+      "DV-P1",
+      "DV-F1",
+      "DV-A1",
+      "DV-X1"
+    ]
+  },
+  "dependencies": [
+    {
+      "contract_id": "SDEA-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301"
+    },
+    {
+      "contract_id": "SCF-00",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA"
+    }
+  ],
+  "destruction_guards": [
+    "hierarchy must not establish lineage",
+    "period overlap must not establish derivation",
+    "same institution plus nested period must not establish lineage",
+    "expected alignment must not establish authority",
+    "observed condition must not silently become problem frame",
+    "problem frame must not silently become causal conclusion",
+    "indicator improvement must not establish policy impact",
+    "derived representation must not replace authority record",
+    "future information must not silently rewrite historical planning state",
+    "absence of evidence must not become a qualified finding"
+  ],
+  "failure_semantics": {
+    "alignment_basis_missing": "NO_QUALIFIED_ALIGNMENT_CLAIM",
+    "authority_unknown": "REVIEW_REQUIRED_OR_UNKNOWN",
+    "causal_support_missing": "CAUSAL_HYPOTHESIS_ONLY",
+    "evidence_not_production_admitted": "NO_QUALIFIED_PLANNING_CLAIM",
+    "hierarchy_only_for_lineage": "NO_LINEAGE_QUALIFICATION",
+    "indicator_definition_incomplete": "REVIEW_REQUIRED",
+    "jurisdiction_unknown": "UNKNOWN_OR_REVIEW_REQUIRED",
+    "period_overlap_only_for_lineage": "NO_LINEAGE_QUALIFICATION",
+    "problem_without_evidence": "REVIEW_REQUIRED_NO_QUALIFIED_PROBLEM_FINDING",
+    "provenance_incomplete": "HOLD",
+    "same_institution_only_for_lineage": "NO_LINEAGE_QUALIFICATION"
+  },
+  "human_authority_boundary": {
+    "ai_may_commit_official_planning_state": false,
+    "ai_may_establish_authoritative_target": false,
+    "ai_may_establish_official_priority": false,
+    "ai_may_propose_planning_claims": true,
+    "ai_may_propose_planning_objects": true,
+    "authorized_human_commit_required": true
+  },
+  "indicator_semantics": {
+    "baseline_target_actual_are_distinct": true,
+    "indicator_improvement_establishes_policy_impact": false,
+    "indicator_is_proxy_until_outcome_relationship_supported": true,
+    "required_fields": [
+      "indicator_id",
+      "indicator_definition",
+      "unit",
+      "measurement_basis",
+      "baseline_reference",
+      "target_reference",
+      "observed_value_reference",
+      "period",
+      "source_reference",
+      "authority_reference",
+      "provenance_reference"
+    ]
+  },
+  "inputs": [
+    "Z2 production-admitted evidence references from SDEA-01",
+    "canonical identity/reference envelope from SCF-00",
+    "authoritative planning document references",
+    "planning object candidates",
+    "jurisdiction profile",
+    "planning period context",
+    "authority and provenance references",
+    "review state"
+  ],
+  "intervention_semantics": {
+    "intervention_representation_establishes_causality": false,
+    "intervention_representation_establishes_effectiveness": false,
+    "required_fields": [
+      "intervention_id",
+      "intervention_type",
+      "problem_reference",
+      "intended_mechanism_or_hypothesis_reference",
+      "intended_output_reference",
+      "intended_outcome_reference",
+      "assumptions",
+      "dependencies",
+      "authority_reference",
+      "provenance_reference",
+      "review_state"
+    ]
+  },
+  "jurisdiction_profile_rule": {
+    "indonesia_first_profile_not_hard_coded_global_boundary": true,
+    "jurisdiction_extension_allowed": true,
+    "local_agency_term": "local_agency",
+    "local_government_and_local_agency_distinct": true,
+    "universal_core": true
+  },
+  "lifecycle_state": "ADMITTED_AND_COMMITTED",
+  "lineage": {
+    "dependency_authority": {
+      "SCF-00": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA",
+      "SDEA-01": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301"
+    },
+    "predecessor_v0_1a_freeze_semantic_sha256": "BA8487E266D3AE022A9DC3D052925CC528D5508889A73B2A4E1E69291A68779A",
+    "repository_head_at_write": "5c68d55b3f010594527d7b51ad06dc5759076199",
+    "sra08_sha256": "BFEEEEAC20013B5FF7C0D87877EC337910540FF533E9D7BDDF2FAA00C1B5D374"
+  },
+  "maturity_rule": {
+    "contract_write_establishes_L1": false,
+    "controlled_commit_required": true,
+    "functional_verification_required_for_L3": true,
+    "implementation_required_for_L2": true,
+    "post_commit_verification_required": true,
+    "post_write_validation_required": true
+  },
+  "must_not_own": [
+    "Data Rights and Evidence Admission",
+    "shared cross-capability foundation",
+    "regulatory applicability or legal interpretation",
+    "empirical performance evaluation",
+    "causal attribution",
+    "Public Decision Case",
+    "Decision Ledger",
+    "Operational Traceability",
+    "assurance finding qualification",
+    "resource allocation decision logic",
+    "formal audit workflow",
+    "authorized public decision"
+  ],
+  "non_regression_guards": [
+    "Record of Authority remains separate from derived representation",
+    "derived representation never replaces authority record",
+    "no evidence means no qualified finding",
+    "hierarchy remains distinct from lineage",
+    "point-in-time historical state is preserved",
+    "AI proposes and authorized humans commit",
+    "compliance coherence feasibility effectiveness and public value remain distinct"
+  ],
+  "outputs": [
+    "canonical Planning Core object representation",
+    "explicit planning hierarchy relation",
+    "explicit planning lineage candidate or evidence-supported relation",
+    "planning problem representation",
+    "intervention representation",
+    "indicator-baseline-target-observed-value representation",
+    "planning alternative representation",
+    "Planning Claim representation",
+    "explicit alignment claim",
+    "review-required or abstention state"
+  ],
+  "owns": [
+    "canonical Planning Core object semantics",
+    "planning hierarchy semantics",
+    "planning lineage semantics",
+    "planning problem representation",
+    "planning intervention representation",
+    "planning indicator baseline target observed-value semantics",
+    "planning alternative representation",
+    "Planning Claim semantics",
+    "planning alignment claim semantics"
+  ],
+  "planning_alternative_semantics": {
+    "alternative_presence_is_not_authorized_decision": true,
+    "alternative_presence_is_not_recommendation": true,
+    "required_fields": [
+      "alternative_id",
+      "problem_reference",
+      "intervention_references",
+      "assumptions",
+      "dependencies",
+      "known_constraints",
+      "evidence_references",
+      "counterevidence_references",
+      "review_state"
+    ]
+  },
+  "planning_claim_semantics": {
+    "allowed_status": [
+      "CANDIDATE",
+      "EVIDENCE_SUPPORTED",
+      "REJECTED",
+      "UNKNOWN"
+    ],
+    "claim_graph_implementation_owned_here": false,
+    "claim_semantics_owned_here": true,
+    "required_fields": [
+      "claim_id",
+      "claim_type",
+      "subject_reference",
+      "predicate",
+      "object_reference_or_value",
+      "basis",
+      "evidence_references",
+      "counterevidence_references",
+      "assumptions",
+      "applicable_time",
+      "knowledge_time",
+      "version",
+      "status",
+      "reviewer_reference",
+      "provenance_reference"
+    ]
+  },
+  "planning_hierarchy_semantics": {
+    "hierarchy_establishes_alignment": false,
+    "hierarchy_establishes_derivation": false,
+    "hierarchy_establishes_semantic_lineage": false,
+    "hierarchy_may_be_recorded_from_authoritative_structure": true,
+    "purpose": "Represent structural containment or planning-level relationships."
+  },
+  "planning_lineage_semantics": {
+    "allowed_states": [
+      "CANDIDATE",
+      "EVIDENCE_SUPPORTED",
+      "REJECTED",
+      "UNKNOWN"
+    ],
+    "candidate_relation_types": [
+      "DERIVED_FROM",
+      "CONTINUES",
+      "REVISES",
+      "SUPERSEDES",
+      "SPLITS_FROM",
+      "MERGES_FROM",
+      "UNKNOWN"
+    ],
+    "explicit_evidence_required": true,
+    "hierarchy_sufficient": false,
+    "nested_period_sufficient": false,
+    "period_overlap_sufficient": false,
+    "same_institution_sufficient": false
+  },
+  "planning_object_identity": {
+    "identity_does_not_establish": [
+      "authority",
+      "semantic lineage",
+      "causal validity",
+      "regulatory compliance",
+      "effectiveness",
+      "public value"
+    ],
+    "required_fields": [
+      "planning_object_id",
+      "planning_object_type",
+      "authority_reference",
+      "provenance_reference",
+      "jurisdiction_reference",
+      "planning_period",
+      "applicable_time",
+      "knowledge_time",
+      "version",
+      "review_state"
+    ]
+  },
+  "problem_semantics": {
+    "causal_hypothesis_reference": "Reference to a causal hypothesis; Planning Core may represent it but does not establish causal validity.",
+    "observed_condition": "Evidence-backed observation or measured condition.",
+    "observed_condition_equals_problem_frame": false,
+    "problem_evidence": "Evidence supporting that a condition merits problem analysis.",
+    "problem_frame": "Explicit analytical framing of the planning problem.",
+    "problem_frame_equals_causal_conclusion": false
+  },
+  "project": "Planning Intelligence",
+  "purpose": "Define canonical Planning Core semantics for planning objects, hierarchy, lineage, problems, interventions, indicators, alternatives, planning claims, temporal context, provenance, review state, and explicit alignment relationships.",
+  "temporal_semantics": {
+    "future_information_may_rewrite_historical_state": false,
+    "relationship_states": [
+      "SAME_PERIOD",
+      "WITHIN",
+      "CONTAINS",
+      "PARTIAL_OVERLAP",
+      "PRECEDES",
+      "FOLLOWS",
+      "UNKNOWN"
+    ],
+    "temporal_relationship_is_not_lineage": true
+  }
+}
