@@ -1,0 +1,209 @@
+{
+  "acceptance_criteria": [
+    "planning reference is explicit",
+    "external operational authority owner is explicit",
+    "external record identifier is explicit where available",
+    "planned approved and actual references remain distinct",
+    "operational provenance is preserved",
+    "verification state is explicit",
+    "traceability gaps and conflicts remain visible",
+    "external reference does not become PI authority record",
+    "PI does not replace SIPD budget procurement accounting or GIS systems",
+    "variance does not itself establish effectiveness or public value"
+  ],
+  "admission": {
+    "admission_basis": {
+      "sra12_sha256": "6E946DC592A23524FF14799BB1DF6C7B3260A6E1F5DA02A0F52EF34CDDA97474",
+      "sra13_sha256": "3B33DF701BBD535B2D4EDF0D4EFC212765C0D9F8CDA66140401454B3B37804BF",
+      "sra14_sha256": "66D831F97672C998C585E507E2BA47EB86B518409DAAE5EA21C60C03BDA0158F"
+    },
+    "admission_stage": "SRA-15",
+    "authority_transition": {
+      "from": "PROPOSED_UNCOMMITTED",
+      "to": "COMMITTED_SUCCESSOR_AUTHORITY"
+    },
+    "authorized_scope": "WAVE_2_ONLY",
+    "implementation_authorized": false,
+    "lifecycle_transition": {
+      "from": "CONTROLLED_WRITE_PENDING_POST_WRITE_VALIDATION",
+      "to": "ADMITTED_AND_COMMITTED"
+    },
+    "maturity_promotion_authorized": false,
+    "repository_parent_head": "4450beb441e287e366e189d07afc648a0fc8b700"
+  },
+  "authority_rule": "This artifact is proposed successor contract authority only. It becomes committed authority only after post-write validation, controlled admission, commit, and post-commit verification.",
+  "authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+  "capability_family": "OPERATIONAL_TRACEABILITY",
+  "contract_id": "SOT-01",
+  "contract_name": "OPERATIONAL_TRACEABILITY_SUCCESSOR_CONTRACT",
+  "contract_type": "EXISTING_CAPABILITY_OWNER_CORRECTION",
+  "contract_version": "0.1",
+  "decision_value_traceability": {
+    "is_decision_value_proof": false,
+    "supports_test_families": [
+      "DV-F1",
+      "DV-A1",
+      "DV-X1"
+    ]
+  },
+  "dependencies": [
+    {
+      "contract_id": "SDEA-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301"
+    },
+    {
+      "contract_id": "SCF-00",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA"
+    },
+    {
+      "contract_id": "SPC-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "B12700F9F542063C22FFCB9726EDB0936E972DDCE79526194E0E55DFC2608066"
+    }
+  ],
+  "destruction_guards": [
+    "external system reference must not become PI authority record",
+    "planned must not silently become approved",
+    "approved must not silently become actual",
+    "missing operational record must not be fabricated",
+    "traceability variance must not become causal conclusion",
+    "PI must not duplicate authoritative operational systems"
+  ],
+  "external_system_reference_semantics": {
+    "PI_may_copy_operational_authority_by_default": false,
+    "external_reference_becomes_PI_authority_record": false,
+    "reference_must_preserve_external_authority_owner": true,
+    "required_fields": [
+      "system_name",
+      "record_type",
+      "external_record_id",
+      "authority_owner",
+      "retrieval_or_observation_time",
+      "applicable_period",
+      "provenance_reference",
+      "verification_state"
+    ]
+  },
+  "failure_semantics": {
+    "external_authority_unknown": "REVIEW_REQUIRED",
+    "external_record_missing": "TRACEABILITY_GAP",
+    "planned_approved_actual_mapping_ambiguous": "REVIEW_REQUIRED",
+    "provenance_missing": "UNVERIFIED",
+    "record_id_conflict": "CONFLICT",
+    "system_unavailable": "HOLD_OR_RETRY_NO_FABRICATION"
+  },
+  "human_authority_boundary": {
+    "ai_may_fabricate_missing_operational_record": false,
+    "ai_may_overwrite_external_authority": false,
+    "ai_may_propose_record_linkage": true,
+    "ai_may_surface_traceability_gap": true,
+    "material_conflict_requires_review": true
+  },
+  "inputs": [
+    "Planning Core planning-object references",
+    "external authoritative-system references",
+    "approved allocation references",
+    "implementation and delivery references",
+    "actual expenditure references",
+    "output/outcome operational references",
+    "verification evidence",
+    "provenance"
+  ],
+  "lifecycle_state": "ADMITTED_AND_COMMITTED",
+  "lineage": {
+    "dependency_authority": {
+      "SCF-00": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA",
+      "SDEA-01": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301",
+      "SPC-01": "B12700F9F542063C22FFCB9726EDB0936E972DDCE79526194E0E55DFC2608066"
+    },
+    "repository_head_at_write": "4450beb441e287e366e189d07afc648a0fc8b700",
+    "sra12_sha256": "6E946DC592A23524FF14799BB1DF6C7B3260A6E1F5DA02A0F52EF34CDDA97474"
+  },
+  "maturity_rule": {
+    "contract_write_establishes_L1": false,
+    "controlled_commit_required": true,
+    "functional_verification_required_for_L3": true,
+    "implementation_required_for_L2": true,
+    "post_commit_verification_required": true
+  },
+  "must_not_own": [
+    "Planning Core semantics",
+    "budget allocation decision",
+    "performance effectiveness judgment",
+    "regulatory interpretation",
+    "Public Decision Case decision authority",
+    "SIPD",
+    "budget execution system",
+    "procurement system",
+    "accounting system",
+    "GIS system"
+  ],
+  "non_regression_guards": [
+    "external authority remains external authority",
+    "operational references preserve provenance",
+    "planned approved and actual states remain distinct",
+    "traceability remains distinct from effectiveness judgment",
+    "PI remains intelligence layer rather than operational system replacement"
+  ],
+  "outputs": [
+    "planning-to-budget linkage",
+    "planning-to-implementation linkage",
+    "planned-approved-actual linkage",
+    "external authoritative-system reference",
+    "verification state",
+    "operational provenance chain",
+    "traceability conflict or gap"
+  ],
+  "owns": [
+    "planning-to-budget reference semantics",
+    "approved allocation reference semantics",
+    "implementation and delivery reference semantics",
+    "actual expenditure reference semantics",
+    "external authoritative-system reference semantics",
+    "planned approved actual operational linkage semantics",
+    "operational verification state",
+    "operational provenance chain semantics"
+  ],
+  "planned_actual_linkage_semantics": {
+    "actual_reference": true,
+    "approved_equals_actual": false,
+    "approved_reference": true,
+    "planned_equals_approved": false,
+    "planned_reference": true,
+    "variance_is_value_judgment": false
+  },
+  "project": "Planning Intelligence",
+  "purpose": "Define non-destructive traceability from planning intent to authoritative budget, implementation, expenditure, delivery, output, and outcome references without replacing operational government systems.",
+  "system_boundary": {
+    "replaces_GIS": false,
+    "replaces_SIPD": false,
+    "replaces_accounting_system": false,
+    "replaces_budget_execution_system": false,
+    "replaces_procurement_system": false,
+    "role": "INTELLIGENCE_AND_TRACEABILITY_LAYER"
+  },
+  "traceability_chain": [
+    "PLANNING_REFERENCE",
+    "BUDGET_REFERENCE",
+    "APPROVED_ALLOCATION_REFERENCE",
+    "IMPLEMENTATION_REFERENCE",
+    "PROCUREMENT_OR_DELIVERY_REFERENCE",
+    "ACTUAL_EXPENDITURE_REFERENCE",
+    "OUTPUT_REFERENCE",
+    "OUTCOME_OPERATIONAL_REFERENCE"
+  ],
+  "verification_semantics": {
+    "missing_external_record_may_be_silently_inferred": false,
+    "states": [
+      "UNVERIFIED",
+      "SOURCE_REFERENCED",
+      "SOURCE_VERIFIED",
+      "RECONCILED",
+      "CONFLICT",
+      "UNKNOWN"
+    ],
+    "verification_requires_provenance": true
+  }
+}

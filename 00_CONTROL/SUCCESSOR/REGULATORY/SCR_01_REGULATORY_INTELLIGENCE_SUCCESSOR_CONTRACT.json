@@ -1,0 +1,216 @@
+{
+  "acceptance_criteria": [
+    "authoritative regulatory source is explicit",
+    "jurisdiction is explicit",
+    "issuing authority is explicit",
+    "regulated object or subject is explicit",
+    "effective time is explicit or explicitly unknown",
+    "publication retrieval and system-knowledge time remain distinct",
+    "amendment repeal delegation and exception relations are explicit",
+    "applicability is represented as a reviewable claim",
+    "ambiguous legal interpretation remains review-required",
+    "secondary sources do not establish legal authority",
+    "historical rule state is not rewritten by future knowledge",
+    "automation does not produce autonomous definitive legal judgment"
+  ],
+  "admission": {
+    "admission_basis": {
+      "sra12_sha256": "6E946DC592A23524FF14799BB1DF6C7B3260A6E1F5DA02A0F52EF34CDDA97474",
+      "sra13_sha256": "3B33DF701BBD535B2D4EDF0D4EFC212765C0D9F8CDA66140401454B3B37804BF",
+      "sra14_sha256": "66D831F97672C998C585E507E2BA47EB86B518409DAAE5EA21C60C03BDA0158F"
+    },
+    "admission_stage": "SRA-15",
+    "authority_transition": {
+      "from": "PROPOSED_UNCOMMITTED",
+      "to": "COMMITTED_SUCCESSOR_AUTHORITY"
+    },
+    "authorized_scope": "WAVE_2_ONLY",
+    "implementation_authorized": false,
+    "lifecycle_transition": {
+      "from": "CONTROLLED_WRITE_PENDING_POST_WRITE_VALIDATION",
+      "to": "ADMITTED_AND_COMMITTED"
+    },
+    "maturity_promotion_authorized": false,
+    "repository_parent_head": "4450beb441e287e366e189d07afc648a0fc8b700"
+  },
+  "applicability_semantics": {
+    "applicability_is_explicit_claim": true,
+    "citation_presence_establishes_applicability": false,
+    "required_dimensions": [
+      "jurisdiction",
+      "issuing_authority",
+      "sector",
+      "regulated_object",
+      "effective_time",
+      "exceptions",
+      "authoritative_source",
+      "review_state"
+    ],
+    "same_jurisdiction_establishes_applicability": false
+  },
+  "authority_rule": "This artifact is proposed successor contract authority only. It becomes committed authority only after post-write validation, controlled admission, commit, and post-commit verification.",
+  "authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+  "capability_family": "REGULATORY_INTELLIGENCE",
+  "contract_id": "SCR-01",
+  "contract_name": "REGULATORY_INTELLIGENCE_SUCCESSOR_CONTRACT",
+  "contract_type": "EXISTING_CAPABILITY_FORMALIZATION",
+  "contract_version": "0.1",
+  "decision_value_traceability": {
+    "is_decision_value_proof": false,
+    "supports_test_families": [
+      "DV-P1",
+      "DV-R1",
+      "DV-F1",
+      "DV-A1",
+      "DV-X1"
+    ]
+  },
+  "dependencies": [
+    {
+      "contract_id": "SDEA-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301"
+    },
+    {
+      "contract_id": "SCF-00",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA"
+    }
+  ],
+  "destruction_guards": [
+    "citation presence must not establish compliance",
+    "same jurisdiction must not establish applicability",
+    "future rule state must not overwrite as-ruled-then",
+    "secondary source must not become authority record",
+    "legal interpretive principles must not become unconditional precedence algorithms",
+    "ambiguity must not become definitive legal conclusion"
+  ],
+  "failure_semantics": {
+    "authoritative_source_missing": "NO_QUALIFIED_RULE",
+    "conflicting_rules_unresolved": "CONFLICT_OR_AMBIGUITY",
+    "effective_time_unknown": "UNKNOWN_OR_REVIEW_REQUIRED",
+    "exception_status_unknown": "REVIEW_REQUIRED",
+    "jurisdiction_unknown": "UNKNOWN_OR_REVIEW_REQUIRED",
+    "legal_interpretation_ambiguous": "HUMAN_REVIEW_REQUIRED"
+  },
+  "human_authority_boundary": {
+    "ai_may_finalize_ambiguous_legal_interpretation": false,
+    "ai_may_issue_official_legal_opinion": false,
+    "ai_may_propose_applicability": true,
+    "ai_may_surface_rule_conflict": true,
+    "authorized_review_required_for_material_ambiguity": true
+  },
+  "inputs": [
+    "Z2 production-admitted regulatory evidence",
+    "canonical identity/provenance envelope",
+    "jurisdiction context",
+    "regulated object context",
+    "decision or planning time context",
+    "legal instrument/provision candidates"
+  ],
+  "legal_relationship_semantics": {
+    "amendment_explicit": true,
+    "delegation_explicit": true,
+    "exception_explicit": true,
+    "implicit_conflict_resolution_allowed": false,
+    "legal_interpretive_principles_context_sensitive": true,
+    "repeal_explicit": true,
+    "unconditional_precedence_algorithm_allowed": false
+  },
+  "legal_time_semantics": {
+    "as_known_now": true,
+    "as_known_then": true,
+    "as_ruled_now": true,
+    "as_ruled_then": true,
+    "effective_time": true,
+    "future_rule_state_may_rewrite_historical_rule_state": false,
+    "publication_time": true,
+    "retrieval_time": true,
+    "system_knowledge_time": true
+  },
+  "lifecycle_state": "ADMITTED_AND_COMMITTED",
+  "lineage": {
+    "dependency_authority": {
+      "SCF-00": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA",
+      "SDEA-01": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301"
+    },
+    "repository_head_at_write": "4450beb441e287e366e189d07afc648a0fc8b700",
+    "sra12_sha256": "6E946DC592A23524FF14799BB1DF6C7B3260A6E1F5DA02A0F52EF34CDDA97474"
+  },
+  "maturity_rule": {
+    "contract_write_establishes_L1": false,
+    "controlled_commit_required": true,
+    "functional_verification_required_for_L3": true,
+    "implementation_required_for_L2": true,
+    "post_commit_verification_required": true
+  },
+  "must_not_own": [
+    "Planning Core semantics",
+    "empirical performance evaluation",
+    "causal attribution",
+    "Public Decision Case decision authority",
+    "Decision Ledger",
+    "resource allocation decision",
+    "formal legal opinion",
+    "formal audit conclusion",
+    "public value judgment"
+  ],
+  "non_regression_guards": [
+    "AS-KNOWN-THEN remains distinct from AS-KNOWN-NOW",
+    "AS-RULED-THEN remains distinct from AS-RULED-NOW",
+    "authority remains distinct from retrieval",
+    "applicability remains distinct from citation presence",
+    "regulatory compliance does not establish effectiveness or public value"
+  ],
+  "outputs": [
+    "regulatory source authority state",
+    "applicability claim",
+    "effective ruleset reference",
+    "regulatory constraint reference",
+    "amendment/repeal/delegation/exception relation",
+    "regulatory uncertainty state",
+    "review-required state",
+    "regulatory change reference"
+  ],
+  "owns": [
+    "regulatory source authority semantics",
+    "legal instrument and provision semantics",
+    "regulatory applicability semantics",
+    "effective-time rule semantics",
+    "amendment repeal delegation and exception semantics",
+    "regulatory uncertainty and review state",
+    "regulatory change reference semantics"
+  ],
+  "project": "Planning Intelligence",
+  "purpose": "Define authoritative, jurisdiction-aware, temporally correct, reviewable regulatory intelligence semantics without converting regulatory retrieval into autonomous legal judgment.",
+  "regulatory_object_types": [
+    "LEGAL_INSTRUMENT",
+    "LEGAL_PROVISION",
+    "AMENDMENT",
+    "REPEAL",
+    "DELEGATION",
+    "EXCEPTION",
+    "APPLICABILITY_CLAIM",
+    "REGULATORY_CONSTRAINT",
+    "REGULATORY_CHANGE"
+  ],
+  "regulatory_source_semantics": {
+    "authoritative_source_required_for_qualified_rule": true,
+    "provenance_required": true,
+    "secondary_source_alone_establishes_authority": false,
+    "secondary_source_may_trigger_verification": true,
+    "source_authority_must_be_explicit": true
+  },
+  "regulatory_uncertainty": {
+    "ambiguous_interpretation_requires_human_review": true,
+    "automation_may_issue_definitive_legal_opinion": false,
+    "states": [
+      "APPLICABLE",
+      "NOT_APPLICABLE",
+      "POTENTIALLY_APPLICABLE",
+      "CONFLICT_OR_AMBIGUITY",
+      "REVIEW_REQUIRED",
+      "UNKNOWN"
+    ]
+  }
+}

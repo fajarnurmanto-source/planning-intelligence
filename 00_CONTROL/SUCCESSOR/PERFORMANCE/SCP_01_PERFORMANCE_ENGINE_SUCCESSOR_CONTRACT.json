@@ -1,0 +1,211 @@
+{
+  "acceptance_criteria": [
+    "output intermediate outcome final outcome impact and public value remain distinct",
+    "planned approved and actual values remain distinct",
+    "actual observations retain provenance",
+    "before-after comparison alone does not establish causal effect",
+    "causal attribution requires defensible counterfactual class or evidence",
+    "competing hypotheses confounders and falsification can be represented",
+    "indicator or proxy achievement does not establish outcome",
+    "Goodhart Campbell and proxy-leakage risks can be surfaced",
+    "contradictory evidence is preserved",
+    "public-value evidence does not become universal opaque score",
+    "learning does not silently overwrite historical decisions"
+  ],
+  "admission": {
+    "admission_basis": {
+      "sra12_sha256": "6E946DC592A23524FF14799BB1DF6C7B3260A6E1F5DA02A0F52EF34CDDA97474",
+      "sra13_sha256": "3B33DF701BBD535B2D4EDF0D4EFC212765C0D9F8CDA66140401454B3B37804BF",
+      "sra14_sha256": "66D831F97672C998C585E507E2BA47EB86B518409DAAE5EA21C60C03BDA0158F"
+    },
+    "admission_stage": "SRA-15",
+    "authority_transition": {
+      "from": "PROPOSED_UNCOMMITTED",
+      "to": "COMMITTED_SUCCESSOR_AUTHORITY"
+    },
+    "authorized_scope": "WAVE_2_ONLY",
+    "implementation_authorized": false,
+    "lifecycle_transition": {
+      "from": "CONTROLLED_WRITE_PENDING_POST_WRITE_VALIDATION",
+      "to": "ADMITTED_AND_COMMITTED"
+    },
+    "maturity_promotion_authorized": false,
+    "repository_parent_head": "4450beb441e287e366e189d07afc648a0fc8b700"
+  },
+  "authority_rule": "This artifact is proposed successor contract authority only. It becomes committed authority only after post-write validation, controlled admission, commit, and post-commit verification.",
+  "authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+  "capability_family": "PERFORMANCE_ENGINE",
+  "contract_id": "SCP-01",
+  "contract_name": "PERFORMANCE_ENGINE_SUCCESSOR_CONTRACT",
+  "contract_type": "EXISTING_CAPABILITY_FORMALIZATION",
+  "contract_version": "0.1",
+  "contradiction_learning_semantics": {
+    "contradictory_evidence_must_be_preserved": true,
+    "learning_may_silently_overwrite_prior_decision": false,
+    "learning_may_trigger_revision": true,
+    "negative_result_may_be_recorded": true,
+    "null_result_may_be_recorded": true
+  },
+  "decision_value_traceability": {
+    "is_decision_value_proof": false,
+    "supports_test_families": [
+      "DV-F1",
+      "DV-A1",
+      "DV-X1"
+    ]
+  },
+  "dependencies": [
+    {
+      "contract_id": "SDEA-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301"
+    },
+    {
+      "contract_id": "SCF-00",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA"
+    },
+    {
+      "contract_id": "SPC-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "B12700F9F542063C22FFCB9726EDB0936E972DDCE79526194E0E55DFC2608066"
+    }
+  ],
+  "destruction_guards": [
+    "output must not silently become outcome",
+    "after must not become because-of",
+    "indicator improvement must not become policy impact",
+    "proxy achievement must not become public value",
+    "before-after alone must not establish causal attribution",
+    "contradictory evidence must not be discarded",
+    "effectiveness must not be inferred from compliance alone",
+    "public value must not be collapsed into one opaque score"
+  ],
+  "empirical_effectiveness_semantics": {
+    "after_equals_because_of": false,
+    "before_after_alone_establishes_effect": false,
+    "causal_evidence_strength_must_be_explicit": true,
+    "competing_hypotheses_required_where_material": true,
+    "confounders_must_be_representable": true,
+    "counterfactual_class_required_for_causal_attribution": true,
+    "fake_numeric_causal_confidence_allowed": false,
+    "falsification_conditions_must_be_representable": true
+  },
+  "failure_semantics": {
+    "actual_value_missing": "NO_ACTUAL_PERFORMANCE_FINDING",
+    "confounders_unresolved": "CAUSAL_REVIEW_REQUIRED",
+    "contradictory_evidence_present": "PRESERVE_CONTRADICTION",
+    "counterfactual_evidence_missing": "NO_CAUSAL_ATTRIBUTION",
+    "outcome_evidence_missing": "NO_OUTCOME_CLAIM",
+    "proxy_outcome_link_missing": "PROXY_ONLY",
+    "public_value_basis_missing": "NO_PUBLIC_VALUE_CLAIM"
+  },
+  "human_authority_boundary": {
+    "ai_may_finalize_public_value_judgment": false,
+    "ai_may_finalize_unsupported_causal_attribution": false,
+    "ai_may_generate_performance_diagnosis_candidate": true,
+    "ai_may_surface_causal_hypothesis": true,
+    "authorized_review_required_for_material_causal_claim": true
+  },
+  "inputs": [
+    "production-admitted evidence",
+    "Planning Core intervention and indicator references",
+    "planned approved and actual references",
+    "outcome observations",
+    "counterfactual or comparison evidence where available",
+    "competing hypotheses",
+    "confounder references",
+    "falsification conditions"
+  ],
+  "lifecycle_state": "ADMITTED_AND_COMMITTED",
+  "lineage": {
+    "dependency_authority": {
+      "SCF-00": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA",
+      "SDEA-01": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301",
+      "SPC-01": "B12700F9F542063C22FFCB9726EDB0936E972DDCE79526194E0E55DFC2608066"
+    },
+    "repository_head_at_write": "4450beb441e287e366e189d07afc648a0fc8b700",
+    "sra12_sha256": "6E946DC592A23524FF14799BB1DF6C7B3260A6E1F5DA02A0F52EF34CDDA97474"
+  },
+  "maturity_rule": {
+    "contract_write_establishes_L1": false,
+    "controlled_commit_required": true,
+    "functional_verification_required_for_L3": true,
+    "implementation_required_for_L2": true,
+    "post_commit_verification_required": true
+  },
+  "must_not_own": [
+    "Planning Core authority",
+    "regulatory applicability",
+    "autonomous causal conclusion without evidence",
+    "Public Decision Case decision authority",
+    "Decision Ledger",
+    "resource allocation decision",
+    "formal audit opinion",
+    "universal public-value score"
+  ],
+  "non_regression_guards": [
+    "AFTER remains distinct from BECAUSE OF",
+    "proxy remains distinct from outcome",
+    "decision quality remains distinct from outcome luck",
+    "effectiveness remains distinct from compliance",
+    "public value remains distinct from empirical effectiveness",
+    "historical performance evidence is not silently overwritten"
+  ],
+  "outputs": [
+    "planned-versus-actual performance state",
+    "result-chain representation",
+    "implementation diagnosis",
+    "empirical-effectiveness evidence state",
+    "causal evidence state",
+    "proxy leakage or Goodhart risk flag",
+    "contradiction record",
+    "public-value evidence reference",
+    "learning/revision trigger"
+  ],
+  "owns": [
+    "planned versus actual performance semantics",
+    "output outcome impact public-value result-chain semantics",
+    "implementation diagnosis semantics",
+    "empirical-effectiveness evidence semantics",
+    "causal evidence state representation",
+    "proxy Goodhart Campbell risk semantics",
+    "performance contradiction semantics",
+    "outcome learning interface"
+  ],
+  "planned_actual_semantics": {
+    "actual_value_requires_observation_provenance": true,
+    "approved_value_distinct_from_actual_value": true,
+    "planned_value_distinct_from_approved_value": true,
+    "variance_is_not_causal_explanation": true
+  },
+  "project": "Planning Intelligence",
+  "proxy_goodhart_semantics": {
+    "campbell_risk_must_be_representable": true,
+    "goodhart_risk_must_be_representable": true,
+    "indicator_is_outcome_by_default": false,
+    "proxy_leakage_must_be_representable": true,
+    "proxy_to_outcome_relationship_requires_evidence": true
+  },
+  "purpose": "Define performance, outcome, effectiveness, causal-evidence, proxy-risk, public-value evidence, contradiction, and learning semantics without collapsing measurement into causal or public-value claims.",
+  "quality_layer_separation": {
+    "causal_coherence": "REPRESENTABLE_WITH_EXPLICIT_EVIDENCE_STATE",
+    "documentary_coherence": "EXTERNAL_REFERENCE_OR_INPUT",
+    "empirical_effectiveness": "OWNED",
+    "public_value": "EVIDENCE_REPRESENTATION_ONLY",
+    "universal_combined_quality_score_allowed": false
+  },
+  "result_chain_semantics": {
+    "impact_establishes_public_value": false,
+    "outcome_establishes_impact": false,
+    "output_establishes_outcome": false,
+    "stages": [
+      "OUTPUT",
+      "INTERMEDIATE_OUTCOME",
+      "FINAL_OUTCOME",
+      "IMPACT",
+      "PUBLIC_VALUE"
+    ],
+    "stages_must_remain_distinct": true
+  }
+}
