@@ -1,0 +1,170 @@
+{
+  "acceptance_criteria": [
+    "rights state is explicit",
+    "admission zone is explicit",
+    "source authority is explicit",
+    "point-in-time state is explicit",
+    "provenance is sufficient for reproducibility",
+    "ambiguous rights do not silently become production-admitted",
+    "research-only evidence cannot qualify a production finding",
+    "derived output cannot replace the authority record"
+  ],
+  "admission": {
+    "admission_basis": {
+      "sra03_r1_sha256": "3F4FD98AE287C6BD4C5132F043253FD09243905C0D6D7C5FE2A00DF03043288B",
+      "sra04_sha256": "CC4FFA7AC9A6C16929DB5091C9C12E7EE6E14335C60D5AEB18D445FB4F6F3D48",
+      "sra05_write_fingerprint_sha256": "3DF4ACE0E827DCBD0CA88DEB3F83FD9FE04EE433DCC0AFF422384D16770F5F05",
+      "sra06_sha256": "1198A77AE46246FB4F5FA08381686D22646FA2AFD8BDABAE3301BC6196C78A84",
+      "vpc_dva_06_sha256": "4A1C7DC7C52F5BEA32E336A7B4403097D946472E2712DA4A18C961DCDDBFFB6C"
+    },
+    "admission_stage": "SRA-07",
+    "authority_transition": {
+      "from": "PROPOSED_UNCOMMITTED",
+      "to": "COMMITTED_SUCCESSOR_AUTHORITY"
+    },
+    "authorized_scope": "WAVE_0_ONLY",
+    "implementation_authorized": false,
+    "lifecycle_transition": {
+      "from": "CONTROLLED_WRITE_PENDING_POST_WRITE_VALIDATION",
+      "to": "ADMITTED_AND_COMMITTED"
+    },
+    "maturity_promotion_authorized": false,
+    "repository_parent_head": "621e092951a594e7650c52c4a938a975886a84d3"
+  },
+  "admission_zones": {
+    "Z0_PROHIBITED": {
+      "meaning": "Source/evidence may not be used under the applicable control.",
+      "production_use": false,
+      "research_use": false
+    },
+    "Z1_RESEARCH_ONLY": {
+      "meaning": "May trigger research or verification activity but cannot support a production-qualified finding.",
+      "production_use": false,
+      "research_use": true
+    },
+    "Z2_PRODUCTION_ADMITTED": {
+      "meaning": "May support production analysis subject to provenance, applicability, point-in-time, and capability-specific controls.",
+      "production_use": true,
+      "research_use": true
+    },
+    "Z3_DERIVED_OUTPUT": {
+      "meaning": "Derived representation whose authority never exceeds its admitted source evidence and transformation provenance.",
+      "production_use": "CONDITIONAL",
+      "research_use": true
+    }
+  },
+  "authority_rule": "This artifact does not become committed successor authority until post-write validation, controlled commit, and any required admission/freeze gates pass.",
+  "authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+  "capability_family": "DATA_RIGHTS_AND_EVIDENCE_ADMISSION",
+  "contract_id": "SDEA-01",
+  "contract_name": "DATA_RIGHTS_AND_EVIDENCE_ADMISSION_FOUNDATION_CONTRACT",
+  "contract_type": "FOUNDATION_CONTRACT",
+  "contract_version": "0.1",
+  "core_semantics": {
+    "aggregate_first_personal_data": true,
+    "derived_output_is_not_authority_record": true,
+    "individual_profiling_default": "DISALLOWED_UNLESS_SEPARATELY_AUTHORIZED",
+    "no_clear_production_usage_right_no_production_evidence": true,
+    "no_security_bypass": true,
+    "point_in_time_admission_required": true,
+    "public_access_is_not_usage_right": true,
+    "research_signal_is_not_production_evidence": true,
+    "rights_jurisdiction_separate_from_relevance_geography": true
+  },
+  "decision_value_traceability": {
+    "is_decision_value_proof": false,
+    "role": "EVIDENCE_ADMISSION_PRECONDITION",
+    "supports_test_families": [
+      "DV-P1",
+      "DV-R1",
+      "DV-F1",
+      "DV-A1",
+      "DV-X1"
+    ]
+  },
+  "dependencies": [],
+  "failure_semantics": {
+    "prohibited_source": "REJECT",
+    "provenance_incomplete": "HOLD",
+    "research_only_source": "ALLOW_RESEARCH_DISALLOW_PRODUCTION_FINDING",
+    "rights_uncertain": "REVIEW_REQUIRED_NO_PRODUCTION_ADMISSION",
+    "source_authority_uncertain": "REVIEW_REQUIRED_NO_QUALIFIED_FINDING"
+  },
+  "inputs": [
+    "candidate source",
+    "candidate evidence",
+    "source-rights evidence",
+    "source authority evidence",
+    "retrieval context",
+    "rights jurisdiction",
+    "point-in-time context"
+  ],
+  "lifecycle_state": "ADMITTED_AND_COMMITTED",
+  "lineage": {
+    "predecessor_v0_1a_freeze_semantic_sha256": "BA8487E266D3AE022A9DC3D052925CC528D5508889A73B2A4E1E69291A68779A",
+    "repository_head_at_write": "621e092951a594e7650c52c4a938a975886a84d3",
+    "sra03_r1_sha256": "3F4FD98AE287C6BD4C5132F043253FD09243905C0D6D7C5FE2A00DF03043288B",
+    "sra04_sha256": "CC4FFA7AC9A6C16929DB5091C9C12E7EE6E14335C60D5AEB18D445FB4F6F3D48",
+    "vpc_dva_06_sha256": "4A1C7DC7C52F5BEA32E336A7B4403097D946472E2712DA4A18C961DCDDBFFB6C"
+  },
+  "must_not_own": [
+    "planning semantics",
+    "regulatory interpretation",
+    "performance evaluation",
+    "coherence findings",
+    "decision authority",
+    "resource allocation logic"
+  ],
+  "non_regression_guards": [
+    "Record of Authority remains separate from derived representation",
+    "no evidence means no qualified finding",
+    "future knowledge must not overwrite as-known-then state",
+    "rights uncertainty must remain explicit"
+  ],
+  "outputs": [
+    "admission zone",
+    "production eligibility state",
+    "research-only state",
+    "rights review requirement",
+    "retention/redistribution constraint",
+    "provenance requirement",
+    "abstention or rejection state"
+  ],
+  "preferred_acquisition_order": [
+    "official API",
+    "official RSS/feed",
+    "official public export",
+    "official sitemap",
+    "permitted static HTML",
+    "browser interaction only when necessary and permitted"
+  ],
+  "project": "Planning Intelligence",
+  "purpose": "Define the lawful, auditable, point-in-time-correct conditions under which data and evidence may enter, remain in, or be excluded from production decision analysis.",
+  "required_source_record": [
+    "source_identity",
+    "source_authority",
+    "retrieval_method",
+    "retrieval_time",
+    "rights_jurisdiction",
+    "usage_right_state",
+    "retention_constraint",
+    "redistribution_constraint",
+    "privacy_constraint",
+    "copyright_or_database_right_constraint",
+    "admission_zone",
+    "admission_basis",
+    "review_state",
+    "provenance",
+    "point_in_time_state",
+    "reproducibility_state"
+  ],
+  "source_reconciliation": {
+    "mode": "CONTROLLED_NON_DESTRUCTIVE_RECONCILIATION",
+    "source_authority": "UNTRACKED_NON_AUTHORITATIVE",
+    "source_file_sha256": "EB1ADDB29559E6CB9F2210E165B89FD38220DC1C59482FBEF1B820FE49DF60CC",
+    "source_mutation": false,
+    "source_path": "00_CONTROL/SUCCESSOR/FOUNDATION/DATA_RIGHTS_AND_EVIDENCE_ADMISSION_CONTRACT.json",
+    "source_semantic_sha256": "14D3B846D91B295B8B4D81D68D73A7F446B3273B5427EA850483D9BD71848B74",
+    "verbatim_promotion": false
+  }
+}

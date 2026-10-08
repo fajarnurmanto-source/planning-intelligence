@@ -1,0 +1,178 @@
+{
+  "acceptance_criteria": [
+    "canonical identity is explicit",
+    "authority state is not inferred from identity",
+    "provenance reference is preserved",
+    "point-in-time semantics are explicit",
+    "historical state is non-destructive",
+    "human decision authority is preserved",
+    "domain capability ownership remains outside SCF-00",
+    "hierarchy and lineage remain distinct"
+  ],
+  "admission": {
+    "admission_basis": {
+      "sra03_r1_sha256": "3F4FD98AE287C6BD4C5132F043253FD09243905C0D6D7C5FE2A00DF03043288B",
+      "sra04_sha256": "CC4FFA7AC9A6C16929DB5091C9C12E7EE6E14335C60D5AEB18D445FB4F6F3D48",
+      "sra05_write_fingerprint_sha256": "3DF4ACE0E827DCBD0CA88DEB3F83FD9FE04EE433DCC0AFF422384D16770F5F05",
+      "sra06_sha256": "1198A77AE46246FB4F5FA08381686D22646FA2AFD8BDABAE3301BC6196C78A84",
+      "vpc_dva_06_sha256": "4A1C7DC7C52F5BEA32E336A7B4403097D946472E2712DA4A18C961DCDDBFFB6C"
+    },
+    "admission_stage": "SRA-07",
+    "authority_transition": {
+      "from": "PROPOSED_UNCOMMITTED",
+      "to": "COMMITTED_SUCCESSOR_AUTHORITY"
+    },
+    "authorized_scope": "WAVE_0_ONLY",
+    "implementation_authorized": false,
+    "lifecycle_transition": {
+      "from": "CONTROLLED_WRITE_PENDING_POST_WRITE_VALIDATION",
+      "to": "ADMITTED_AND_COMMITTED"
+    },
+    "maturity_promotion_authorized": false,
+    "repository_parent_head": "621e092951a594e7650c52c4a938a975886a84d3"
+  },
+  "authority_rule": "This artifact defines shared successor interface semantics only. It does not become committed successor authority until post-write validation and controlled commit pass.",
+  "authority_semantics": {
+    "ai_may_commit_official_decision": false,
+    "ai_may_establish_source_authority": false,
+    "ai_may_finalize_ambiguous_legal_interpretation": false,
+    "ai_may_propose": true,
+    "human_authorized_decision_required": true,
+    "technical_log_equals_decision_ledger": false
+  },
+  "authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+  "canonical_reference_envelope": {
+    "identity_rule": "A canonical reference identifies an object but does not by itself establish authority, applicability, correctness, or decision status.",
+    "required_fields": [
+      "object_id",
+      "object_type",
+      "source_reference",
+      "authority_state",
+      "provenance_reference",
+      "applicable_time",
+      "knowledge_time",
+      "version",
+      "review_state"
+    ]
+  },
+  "capability_family": "CROSS_CAPABILITY_FOUNDATION",
+  "contract_id": "SCF-00",
+  "contract_name": "SUCCESSOR_SHARED_FOUNDATION_AND_INTERFACE_CONTRACT",
+  "contract_type": "SHARED_FOUNDATION_CONTRACT",
+  "contract_version": "0.1",
+  "decision_value_traceability": {
+    "is_decision_value_proof": false,
+    "role": "CROSS_CAPABILITY_TRACEABILITY_FOUNDATION",
+    "supports_test_families": [
+      "DV-P1",
+      "DV-R1",
+      "DV-F1",
+      "DV-A1",
+      "DV-X1"
+    ]
+  },
+  "dependencies": [],
+  "failure_semantics": {
+    "ambiguous_relationship": "CANDIDATE_OR_UNKNOWN",
+    "human_authority_missing": "NO_OFFICIAL_DECISION_COMMIT",
+    "missing_provenance": "HOLD_OR_REVIEW_REQUIRED",
+    "point_in_time_unknown": "EXPLICIT_UNKNOWN",
+    "unknown_authority": "NO_QUALIFIED_FINDING"
+  },
+  "inputs": [
+    "canonical or candidate object reference",
+    "source/provenance reference",
+    "authority state",
+    "point-in-time context",
+    "review state",
+    "capability-specific payload"
+  ],
+  "lifecycle_state": "ADMITTED_AND_COMMITTED",
+  "lineage": {
+    "predecessor_v0_1a_freeze_semantic_sha256": "BA8487E266D3AE022A9DC3D052925CC528D5508889A73B2A4E1E69291A68779A",
+    "repository_head_at_write": "621e092951a594e7650c52c4a938a975886a84d3",
+    "sra03_r1_sha256": "3F4FD98AE287C6BD4C5132F043253FD09243905C0D6D7C5FE2A00DF03043288B",
+    "sra04_sha256": "CC4FFA7AC9A6C16929DB5091C9C12E7EE6E14335C60D5AEB18D445FB4F6F3D48",
+    "vpc_dva_06_sha256": "4A1C7DC7C52F5BEA32E336A7B4403097D946472E2712DA4A18C961DCDDBFFB6C"
+  },
+  "must_not_own": [
+    "Data Rights and Evidence Admission",
+    "Planning Core",
+    "Public Decision Case",
+    "Decision Ledger",
+    "Operational Traceability",
+    "Regulatory Intelligence",
+    "Performance Engine",
+    "Coherence Auditor",
+    "Resource Allocation",
+    "formal audit workflow",
+    "government operational systems"
+  ],
+  "non_regression_guards": [
+    "historical decisions are never silently overwritten",
+    "derived representation never replaces authority record",
+    "AI proposes and authorized actors commit",
+    "no evidence means no qualified finding",
+    "compliance coherence feasibility effectiveness and public value remain distinct"
+  ],
+  "outputs": [
+    "canonical cross-capability reference envelope",
+    "provenance-preserving relationship reference",
+    "authority/review state",
+    "temporal state",
+    "abstention state",
+    "human-authority reference"
+  ],
+  "owns": [
+    "canonical identity and reference semantics",
+    "shared provenance interface",
+    "point-in-time interface semantics",
+    "cross-capability input/output envelope",
+    "common abstention and review semantics",
+    "human authority reference interface"
+  ],
+  "point_in_time_semantics": {
+    "as_known_now": true,
+    "as_known_then": true,
+    "as_ruled_now": true,
+    "as_ruled_then": true,
+    "future_information_may_rewrite_historical_state": false
+  },
+  "project": "Planning Intelligence",
+  "provenance_semantics": {
+    "authority_record_separate_from_derived_output": true,
+    "derived_representation_may_replace_authority_record": false,
+    "retrieval_or_observation_time_required_where_material": true,
+    "source_identity_required": true,
+    "transformation_lineage_required": true
+  },
+  "purpose": "Define shared identity, provenance, temporal, authority, review, abstention, and interface semantics used across Planning Intelligence successor capabilities without absorbing domain-specific capability ownership.",
+  "semantic_relationship_states": [
+    "CANDIDATE",
+    "EVIDENCE_SUPPORTED",
+    "REJECTED",
+    "UNKNOWN"
+  ],
+  "shared_relationship_guards": {
+    "expected_alignment_is_authority": false,
+    "hierarchy_is_lineage": false,
+    "period_overlap_is_derivation": false,
+    "same_institution_plus_nested_period_is_semantic_lineage": false
+  },
+  "shared_state_semantics": {
+    "hold": "Processing may continue only outside the blocked authoritative action.",
+    "qualified": "Evidence and applicable gates are sufficient for the specific claim.",
+    "rejected": "Candidate cannot support the requested authoritative use.",
+    "review_required": "Material uncertainty or ambiguity requires authorized review.",
+    "unknown": "State cannot be established from available evidence."
+  },
+  "temporal_relationships": [
+    "SAME_PERIOD",
+    "WITHIN",
+    "CONTAINS",
+    "PARTIAL_OVERLAP",
+    "PRECEDES",
+    "FOLLOWS",
+    "UNKNOWN"
+  ]
+}
