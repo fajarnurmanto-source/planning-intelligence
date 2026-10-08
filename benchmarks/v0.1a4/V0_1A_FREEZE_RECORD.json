@@ -1,0 +1,164 @@
+{
+  "amendment_rule": "Future completion of Q-REPRO-001, Q-GT-001, or successor capabilities must be additive and must not rewrite, reinterpret, or retroactively alter the frozen V0.1A predecessor historical state.",
+  "approved_freeze_candidate": {
+    "authority_anchors": {
+      "a4_1_freeze_record_semantic_sha256": "AF7136E48EE8DA689B3BD1474CB95E29DB1C14B74795584153269466CF91A1E6",
+      "a4_2_baseline_execution_r1_sha256": "2331BAFC4CD7F14BEE2D4C9CA9B6B317F7DFC4968F052E1528285A07B6C3A300",
+      "a4_2_baseline_record_semantic_sha256": "5A1BF9607906E8E4222FAB06372A567336B5287744DB63DB2579994280C9EB00",
+      "a4_2_contract_semantic_sha256": "00891F8B0B68233A07291A356D7FF7DD3C780956C11315AF22D21B63393BEC12",
+      "a4_2_freeze_record_semantic_sha256": "898BF1D40BEE4B8D17724AD68FE0CF617CF1DB31BDE0A0608F5E61DC167E799D",
+      "v0_1a_completion_verification_sha256": "BEF12FAFF6F130626C45E3E18AA1675DF9B48D46E692FF67DAADF87379962272"
+    },
+    "candidate_only": true,
+    "candidate_state": "CANDIDATE",
+    "candidate_type": "CONTROLLED_PREDECESSOR_FREEZE_CANDIDATE",
+    "candidate_version": "V0.1A-PREDECESSOR-FREEZE-CANDIDATE-v1",
+    "carry_forward_obligations": {
+      "Q-GT-001": {
+        "classification": "PREDECESSOR_CARRY_FORWARD_OBLIGATION",
+        "future_requirement": "Establish independently labeled ground truth plus explicit correctness measurement and acceptance methodology before activating precision, recall, F1, or comparable accuracy metrics.",
+        "historical_effect": "NON_BLOCKING_FOR_FROZEN_PREDECESSOR_SCOPE",
+        "origin_stage": "V0.1A.4.2_QUALITY_METRICS",
+        "retroactive_reinterpretation_allowed": false,
+        "state": "DEFERRED"
+      },
+      "Q-REPRO-001": {
+        "classification": "PREDECESSOR_CARRY_FORWARD_OBLIGATION",
+        "future_requirement": "Establish at least one controlled comparable second-run record using identical asset SHA256, parser implementation/version, and config hash before repeatability qualification can be claimed.",
+        "historical_effect": "NON_BLOCKING_FOR_FROZEN_PREDECESSOR_SCOPE",
+        "origin_stage": "V0.1A.4.2_QUALITY_METRICS",
+        "retroactive_reinterpretation_allowed": false,
+        "state": "DEFERRED"
+      }
+    },
+    "completion_facts": {
+      "a4_1_frozen": true,
+      "a4_2_frozen": true,
+      "all_future_quality_capabilities_complete": false,
+      "completion_disposition": "PASS_WITH_REVIEW",
+      "corpus_total_count": 18,
+      "physical_asset_integrity": "PASS",
+      "planning_asset_count": 24,
+      "predecessor_scope_complete": true,
+      "substantive_benchmark_count": 13,
+      "technical_benchmark_count": 5,
+      "technical_binding_count": 5,
+      "technical_binding_resolution": "PASS",
+      "technical_source_asset_count": 4
+    },
+    "freeze_disposition": "PASS_WITH_REVIEW",
+    "freeze_record_written": false,
+    "freeze_scope": "V0.1A_PREDECESSOR",
+    "immutability_rules": [
+      "A4_1_FREEZE_RECORD_SEMANTIC_ANCHOR_IMMUTABLE",
+      "A4_2_FREEZE_RECORD_SEMANTIC_ANCHOR_IMMUTABLE",
+      "V0_1A_COMPLETION_VERIFICATION_ANCHOR_IMMUTABLE",
+      "FROZEN_BENCHMARK_IDENTITIES_REMAIN_IMMUTABLE",
+      "REGISTERED_PHYSICAL_ASSET_SHA256_REMAINS_IMMUTABLE",
+      "TECHNICAL_BINDING_HISTORY_REMAINS_IMMUTABLE",
+      "A4_2_PASS_WITH_REVIEW_DISPOSITION_REMAINS_HISTORICALLY_EXPLICIT",
+      "Q_REPRO_DEFERRED_STATE_REMAINS_HISTORICALLY_EXPLICIT",
+      "Q_GT_DEFERRED_STATE_REMAINS_HISTORICALLY_EXPLICIT",
+      "CARRY_FORWARD_COMPLETION_MUST_BE_ADDITIVE_AND_NON_RETROACTIVE",
+      "SUCCESSOR_SEMANTICS_MUST_NOT_REINTERPRET_FROZEN_PREDECESSOR_HISTORY",
+      "FULL_PREDECESSOR_FREEZE_DOES_NOT_ACTIVATE_SUCCESSOR"
+    ],
+    "proposed_freeze_record_path": "benchmarks/v0.1a4/V0_1A_FREEZE_RECORD.json",
+    "proposed_post_freeze_state": {
+      "full_v0_1a_predecessor_frozen": true,
+      "next_stage": "V0_1A_POST_FREEZE_VERIFICATION",
+      "successor_activated": false,
+      "successor_capability_implementation_authorised": false,
+      "v0_1a_complete": true
+    },
+    "quality_governance": {
+      "active_precision_recall_f1_metric_count": 0,
+      "carry_forward_non_retroactive": true,
+      "empirical_quality_threshold_count": 0,
+      "universal_quality_score_enabled": false
+    },
+    "repository_mutated": false,
+    "source_head": "dd586452ce489f8029d7b64ec67904871b8a9c5d"
+  },
+  "approved_predecessor_freeze_candidate_sha256": "C5A441AB11ED3E079F38ADA83217117C132D4E61EC5CBE58F29550F3D93E0A71",
+  "authority_anchors": {
+    "a4_1_freeze_record_semantic_sha256": "AF7136E48EE8DA689B3BD1474CB95E29DB1C14B74795584153269466CF91A1E6",
+    "a4_2_baseline_execution_r1_sha256": "2331BAFC4CD7F14BEE2D4C9CA9B6B317F7DFC4968F052E1528285A07B6C3A300",
+    "a4_2_baseline_record_semantic_sha256": "5A1BF9607906E8E4222FAB06372A567336B5287744DB63DB2579994280C9EB00",
+    "a4_2_contract_semantic_sha256": "00891F8B0B68233A07291A356D7FF7DD3C780956C11315AF22D21B63393BEC12",
+    "a4_2_freeze_record_semantic_sha256": "898BF1D40BEE4B8D17724AD68FE0CF617CF1DB31BDE0A0608F5E61DC167E799D",
+    "v0_1a_completion_verification_sha256": "BEF12FAFF6F130626C45E3E18AA1675DF9B48D46E692FF67DAADF87379962272"
+  },
+  "carry_forward_obligations": {
+    "Q-GT-001": {
+      "classification": "PREDECESSOR_CARRY_FORWARD_OBLIGATION",
+      "future_requirement": "Establish independently labeled ground truth plus explicit correctness measurement and acceptance methodology before activating precision, recall, F1, or comparable accuracy metrics.",
+      "historical_effect": "NON_BLOCKING_FOR_FROZEN_PREDECESSOR_SCOPE",
+      "origin_stage": "V0.1A.4.2_QUALITY_METRICS",
+      "retroactive_reinterpretation_allowed": false,
+      "state": "DEFERRED"
+    },
+    "Q-REPRO-001": {
+      "classification": "PREDECESSOR_CARRY_FORWARD_OBLIGATION",
+      "future_requirement": "Establish at least one controlled comparable second-run record using identical asset SHA256, parser implementation/version, and config hash before repeatability qualification can be claimed.",
+      "historical_effect": "NON_BLOCKING_FOR_FROZEN_PREDECESSOR_SCOPE",
+      "origin_stage": "V0.1A.4.2_QUALITY_METRICS",
+      "retroactive_reinterpretation_allowed": false,
+      "state": "DEFERRED"
+    }
+  },
+  "completion_facts": {
+    "a4_1_frozen": true,
+    "a4_2_frozen": true,
+    "all_future_quality_capabilities_complete": false,
+    "completion_disposition": "PASS_WITH_REVIEW",
+    "corpus_total_count": 18,
+    "physical_asset_integrity": "PASS",
+    "planning_asset_count": 24,
+    "predecessor_scope_complete": true,
+    "substantive_benchmark_count": 13,
+    "technical_benchmark_count": 5,
+    "technical_binding_count": 5,
+    "technical_binding_resolution": "PASS",
+    "technical_source_asset_count": 4
+  },
+  "freeze_disposition": "PASS_WITH_REVIEW",
+  "freeze_scope": "V0.1A_PREDECESSOR",
+  "governance": {
+    "all_future_quality_capabilities_complete": false,
+    "carry_forward_obligation_count": 2,
+    "full_v0_1a_predecessor_frozen": true,
+    "next_stage": "V0_1A_POST_FREEZE_VERIFICATION",
+    "post_freeze_verification_required": true,
+    "predecessor_freeze_verified": false,
+    "retroactive_reinterpretation_allowed": false,
+    "successor_activated": false,
+    "successor_capability_implementation_authorised": false,
+    "v0_1a_complete": true
+  },
+  "immutability_rules": [
+    "A4_1_FREEZE_RECORD_SEMANTIC_ANCHOR_IMMUTABLE",
+    "A4_2_FREEZE_RECORD_SEMANTIC_ANCHOR_IMMUTABLE",
+    "V0_1A_COMPLETION_VERIFICATION_ANCHOR_IMMUTABLE",
+    "FROZEN_BENCHMARK_IDENTITIES_REMAIN_IMMUTABLE",
+    "REGISTERED_PHYSICAL_ASSET_SHA256_REMAINS_IMMUTABLE",
+    "TECHNICAL_BINDING_HISTORY_REMAINS_IMMUTABLE",
+    "A4_2_PASS_WITH_REVIEW_DISPOSITION_REMAINS_HISTORICALLY_EXPLICIT",
+    "Q_REPRO_DEFERRED_STATE_REMAINS_HISTORICALLY_EXPLICIT",
+    "Q_GT_DEFERRED_STATE_REMAINS_HISTORICALLY_EXPLICIT",
+    "CARRY_FORWARD_COMPLETION_MUST_BE_ADDITIVE_AND_NON_RETROACTIVE",
+    "SUCCESSOR_SEMANTICS_MUST_NOT_REINTERPRET_FROZEN_PREDECESSOR_HISTORY",
+    "FULL_PREDECESSOR_FREEZE_DOES_NOT_ACTIVATE_SUCCESSOR"
+  ],
+  "predecessor_freeze_candidate_adjudication_sha256": "411D53D8D58EA961E5D2B50C4A4357501C68ABB42C138D868B4161D3F86A9E32",
+  "quality_governance": {
+    "active_precision_recall_f1_metric_count": 0,
+    "carry_forward_non_retroactive": true,
+    "empirical_quality_threshold_count": 0,
+    "universal_quality_score_enabled": false
+  },
+  "record_state": "FROZEN",
+  "record_type": "CONTROLLED_PREDECESSOR_FREEZE",
+  "record_version": "V0.1A-PREDECESSOR-FREEZE-RECORD-v1",
+  "source_head_before_freeze_commit": "dd586452ce489f8029d7b64ec67904871b8a9c5d"
+}
