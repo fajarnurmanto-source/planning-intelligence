@@ -1,0 +1,304 @@
+{
+  "acceptance_criteria": [
+    "mandatory and protected obligations are evaluated before discretionary allocation",
+    "allocatable and reallocatable fiscal space are explicit",
+    "funding restrictions remain explicit",
+    "multi-year commitments remain visible",
+    "marginal resource claims require evidence",
+    "diminishing returns saturation and minimum viable funding are used only when evidenced",
+    "lifecycle CAPEX OPEX staffing maintenance renewal and exit consequences can be represented",
+    "implementation and absorption capacity can constrain funding analysis",
+    "allocation alternatives preserve multiple objectives separately",
+    "Pareto and trade-off exposure does not become hidden normative weighting",
+    "allocation action remains an analytical attribute rather than official budget decision",
+    "funding mode remains distinct from authorized appropriation",
+    "fiscal shock scenarios preserve protected obligations",
+    "actual expenditure and outcome evidence can feed allocation learning"
+  ],
+  "admission": {
+    "admission_basis": {
+      "sra16_sha256": "8B352F35EEF57BFFE03A4D91A611F31612D853266F4DE87D0FA54AEAF193A1A7",
+      "sra17_sha256": "CC8A628A5A86B95A9C1ED6EBE020FA29BAC6AAD0AE23796D910C4B8CF1D1C621",
+      "sra18_sha256": "685F606AB3E5CD0E7196A803A59F153CE9AED44D52679EA4FEFF1196956B7787"
+    },
+    "admission_stage": "SRA-19",
+    "authority_transition": {
+      "from": "PROPOSED_UNCOMMITTED",
+      "to": "COMMITTED_SUCCESSOR_AUTHORITY"
+    },
+    "authorized_scope": "WAVE_3_ONLY",
+    "implementation_authorized": false,
+    "lifecycle_transition": {
+      "from": "CONTROLLED_WRITE_PENDING_POST_WRITE_VALIDATION",
+      "to": "ADMITTED_AND_COMMITTED"
+    },
+    "maturity_promotion_authorized": false,
+    "repository_parent_head": "ef00a4140e9d48d3ce005b07eda4e25419b52c9c"
+  },
+  "allocation_action_semantics": {
+    "actions_are_analysis_attributes_not_generic_workflow_states": true,
+    "supported_actions": [
+      "PROTECT",
+      "INCREASE",
+      "MAINTAIN",
+      "STAGE",
+      "REDUCE",
+      "HOLD",
+      "WITHHOLD",
+      "REALLOCATE"
+    ],
+    "system_action_is_authorized_budget_decision": false
+  },
+  "allocation_learning_semantics": {
+    "actual_expenditure_reference": true,
+    "allocation_to_spend_to_outcome_learning_supported": true,
+    "approved_allocation_reference": true,
+    "historical_allocation_decision_may_be_silently_overwritten": false,
+    "outcome_evidence_reference": true,
+    "planned_allocation_reference": true
+  },
+  "authority_rule": "This artifact is proposed successor contract authority only. It becomes committed authority only after validation, controlled admission, commit, and post-commit verification.",
+  "authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+  "capability_family": "RESOURCE_ALLOCATION",
+  "contract_id": "SRA-01",
+  "contract_name": "RESOURCE_ALLOCATION_SUCCESSOR_CONTRACT",
+  "contract_type": "EXISTING_CAPABILITY_FORMALIZATION",
+  "contract_version": "0.1",
+  "decision_value_traceability": {
+    "is_decision_value_proof": false,
+    "supports_test_families": [
+      "DV-F1",
+      "DV-X1"
+    ]
+  },
+  "dependencies": [
+    {
+      "contract_id": "SDEA-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301"
+    },
+    {
+      "contract_id": "SCF-00",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA"
+    },
+    {
+      "contract_id": "SPC-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "B12700F9F542063C22FFCB9726EDB0936E972DDCE79526194E0E55DFC2608066"
+    },
+    {
+      "contract_id": "SCR-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "43474C7AC6AD10A833D13AF08AE0BABEBF0F43518DAAEDF4ADA50CC4B55C228D"
+    },
+    {
+      "contract_id": "SCP-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "F064F76A357E7CE4011B385BF2C6A337A9CA2AA3199699CB3E8CD8628A5CA89F"
+    },
+    {
+      "contract_id": "SCDG-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "7C759B259FAEFD4108E15CC5F78CBA3F8B6C618CCE2368FDD0C50D9095CAFD42"
+    },
+    {
+      "contract_id": "SOT-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "808E0AF300B99339EDD6BD4B99A2D97AF2C3C543C9FD34CDAD0EF6EBB0492D60"
+    }
+  ],
+  "destruction_guards": [
+    "no evidence must mean no marginal resource claim",
+    "opaque universal score must not choose allocation",
+    "hidden normative weights must not be introduced",
+    "budget availability must not establish deliverability",
+    "compliance must not establish effectiveness",
+    "effectiveness must not automatically establish public value",
+    "PI must not autonomously allocate public budget",
+    "PI must not replace authoritative budgeting systems",
+    "actual expenditure must not be silently treated as outcome",
+    "historical allocation decisions must not be silently overwritten"
+  ],
+  "failure_semantics": {
+    "authorized_budget_actor_missing": "NO_OFFICIAL_ALLOCATION_COMMIT",
+    "cross_domain_comparability_weak": "EXPOSE_TRADEOFF_NO_FORCED_RANKING",
+    "implementation_capacity_unknown": "REVIEW_REQUIRED",
+    "lifecycle_cost_incomplete": "INCOMPLETE_FISCAL_VIEW",
+    "mandatory_constraint_unknown": "HOLD_OR_REVIEW_REQUIRED",
+    "marginal_evidence_missing": "NO_MARGINAL_CLAIM",
+    "normative_weight_missing": "NO_HIDDEN_DEFAULT_WEIGHT",
+    "resource_envelope_unknown": "NO_QUALIFIED_ALLOCATION_ANALYSIS"
+  },
+  "fiscal_shock_semantics": {
+    "automatic_reallocation_allowed": false,
+    "protected_obligations_remain_explicit": true,
+    "reallocation_options_may_be_generated": true,
+    "shock_scenarios_representable": true
+  },
+  "funding_mode_semantics": {
+    "funding_mode_is_authorized_appropriation": false,
+    "mode_may_reflect_real_options_logic": true,
+    "supported_modes": [
+      "FULL",
+      "STAGED",
+      "PILOT",
+      "OPTION",
+      "WAIT",
+      "SCALE",
+      "REDUCE",
+      "TERMINATE"
+    ]
+  },
+  "human_authority_boundary": {
+    "ai_may_commit_public_budget_allocation": false,
+    "ai_may_generate_allocation_alternative": true,
+    "ai_may_override_statutory_or_mandatory_constraint": false,
+    "ai_may_propose_funding_mode": true,
+    "ai_may_surface_tradeoffs": true,
+    "authorized_human_governance_required": true
+  },
+  "implementation_capacity_semantics": {
+    "absorption_capacity": true,
+    "budget_availability_establishes_deliverability": false,
+    "delivery_capacity": true,
+    "dependency_capacity": true,
+    "implementation_capacity_may_constrain_funding": true,
+    "staffing_capacity": true
+  },
+  "inputs": [
+    "Planning Core problems interventions alternatives and claims",
+    "Regulatory Intelligence mandatory and restricted constraints",
+    "Performance Engine effectiveness and outcome evidence",
+    "Public Decision Case alternatives and decision context",
+    "Operational Traceability planned approved and actual references",
+    "production-admitted fiscal and resource evidence",
+    "resource envelope",
+    "multi-year commitments",
+    "implementation and absorption capacity evidence"
+  ],
+  "lifecycle_fiscal_semantics": {
+    "dimensions": [
+      "CAPEX",
+      "OPEX",
+      "staffing",
+      "maintenance",
+      "renewal",
+      "termination_or_exit_cost",
+      "multi_year_commitment"
+    ],
+    "future_fiscal_consequence_must_be_representable": true,
+    "one_time_cost_equals_lifecycle_cost": false
+  },
+  "lifecycle_state": "ADMITTED_AND_COMMITTED",
+  "lineage": {
+    "dependency_authority": {
+      "SCDG-01": "7C759B259FAEFD4108E15CC5F78CBA3F8B6C618CCE2368FDD0C50D9095CAFD42",
+      "SCF-00": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA",
+      "SCP-01": "F064F76A357E7CE4011B385BF2C6A337A9CA2AA3199699CB3E8CD8628A5CA89F",
+      "SCR-01": "43474C7AC6AD10A833D13AF08AE0BABEBF0F43518DAAEDF4ADA50CC4B55C228D",
+      "SDEA-01": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301",
+      "SOT-01": "808E0AF300B99339EDD6BD4B99A2D97AF2C3C543C9FD34CDAD0EF6EBB0492D60",
+      "SPC-01": "B12700F9F542063C22FFCB9726EDB0936E972DDCE79526194E0E55DFC2608066"
+    },
+    "repository_head_at_write": "ef00a4140e9d48d3ce005b07eda4e25419b52c9c",
+    "sra16_sha256": "8B352F35EEF57BFFE03A4D91A611F31612D853266F4DE87D0FA54AEAF193A1A7"
+  },
+  "marginal_resource_claim_semantics": {
+    "diminishing_returns_may_be_represented_when_evidenced": true,
+    "marginal_claim_requires_applicable_range": true,
+    "marginal_claim_requires_basis": true,
+    "marginal_claim_requires_evidence": true,
+    "minimum_viable_funding_may_be_represented_when_evidenced": true,
+    "no_evidence_no_marginal_claim": true,
+    "saturation_may_be_represented_when_evidenced": true,
+    "unsupported_numeric_return_claim_allowed": false
+  },
+  "maturity_rule": {
+    "contract_write_establishes_L1": false,
+    "controlled_commit_required": true,
+    "functional_verification_required_for_L3": true,
+    "implementation_required_for_L2": true,
+    "post_commit_verification_required": true
+  },
+  "must_not_own": [
+    "Planning Core canonical semantics",
+    "regulatory applicability authority",
+    "empirical effectiveness authority",
+    "causal attribution authority",
+    "Public Decision Case official decision authority",
+    "Decision Ledger authority",
+    "Operational Traceability authority",
+    "formal audit finding authority",
+    "tax administration",
+    "treasury or cash management",
+    "debt or liquidity management",
+    "autonomous revenue forecasting",
+    "fiscal accounting system",
+    "SIPD replacement",
+    "autonomous public-budget allocation"
+  ],
+  "non_regression_guards": [
+    "COMPLIANCE remains distinct from COHERENCE",
+    "COHERENCE remains distinct from FEASIBILITY",
+    "FEASIBILITY remains distinct from EFFECTIVENESS",
+    "EFFECTIVENESS remains distinct from PUBLIC VALUE",
+    "resource recommendation remains distinct from authorized allocation",
+    "allocation analysis remains distinct from authoritative budget execution",
+    "marginal claims remain evidence-bound",
+    "historical allocation decisions remain point-in-time reconstructable"
+  ],
+  "outputs": [
+    "resource and fiscal envelope state",
+    "protected mandatory and restricted resource state",
+    "allocatable and reallocatable space",
+    "lifecycle fiscal consequence",
+    "marginal resource claim",
+    "implementation-capacity constraint",
+    "allocation alternative",
+    "allocation action attribute",
+    "funding mode",
+    "portfolio trade-off representation",
+    "fiscal shock scenario",
+    "human-governance review requirement"
+  ],
+  "owns": [
+    "resource and fiscal envelope analysis semantics",
+    "mandatory restricted and protected resource semantics",
+    "allocatable and reallocatable resource-space semantics",
+    "marginal resource-claim semantics",
+    "lifecycle fiscal-consequence semantics",
+    "implementation and absorption-capacity allocation semantics",
+    "allocation-alternative and action-attribute semantics",
+    "funding-mode semantics",
+    "portfolio trade-off and reallocation semantics",
+    "fiscal-shock allocation-analysis semantics",
+    "allocation-to-spend-to-outcome learning semantics"
+  ],
+  "portfolio_tradeoff_semantics": {
+    "autonomous_cross_sector_optimization_allowed": false,
+    "cross_domain_tradeoffs_must_remain_explicit": true,
+    "hidden_normative_weights_allowed": false,
+    "multi_objective_attributes_kept_separate": true,
+    "pareto_tradeoff_exposure_supported": true,
+    "universal_quality_or_public_value_score_allowed": false,
+    "within_domain_comparability_preferred": true
+  },
+  "project": "Planning Intelligence",
+  "purpose": "Define evidence-based resource and fiscal allocation analysis semantics that expose obligations, constraints, trade-offs, marginal claims, implementation capacity, funding modes, and portfolio reallocation without autonomously allocating public resources.",
+  "resource_fiscal_envelope_semantics": {
+    "allocatable_equals_total_envelope": false,
+    "obligations_evaluated_before_discretionary_allocation": true,
+    "required_components": [
+      "total_resource_envelope",
+      "mandatory_or_protected_commitments",
+      "earmarked_or_restricted_resources",
+      "minimum_service_or_statutory_constraints",
+      "multi_year_commitments",
+      "allocatable_space",
+      "reallocatable_space",
+      "contingency_or_shock_space_where_applicable"
+    ],
+    "restricted_resource_may_be_silently_reallocated": false
+  }
+}

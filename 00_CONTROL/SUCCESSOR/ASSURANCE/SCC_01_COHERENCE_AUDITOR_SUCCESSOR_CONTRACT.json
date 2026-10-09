@@ -1,0 +1,269 @@
+{
+  "acceptance_criteria": [
+    "documentary coherence is reviewable",
+    "planning coherence is reviewable",
+    "evidence sufficiency is explicit",
+    "counterevidence and contradictions are preserved",
+    "regulatory consistency consumes explicit applicability state",
+    "citation presence does not establish compliance",
+    "materiality and review priority remain explicit attributes",
+    "automated flags remain finding candidates rather than formal audit findings",
+    "human reviewer disposition is required before formal escalation",
+    "missing evidence remains an evidence gap rather than an adverse finding",
+    "compliance does not establish effectiveness",
+    "compliance does not establish public value"
+  ],
+  "admission": {
+    "admission_basis": {
+      "sra16_sha256": "8B352F35EEF57BFFE03A4D91A611F31612D853266F4DE87D0FA54AEAF193A1A7",
+      "sra17_sha256": "CC8A628A5A86B95A9C1ED6EBE020FA29BAC6AAD0AE23796D910C4B8CF1D1C621",
+      "sra18_sha256": "685F606AB3E5CD0E7196A803A59F153CE9AED44D52679EA4FEFF1196956B7787"
+    },
+    "admission_stage": "SRA-19",
+    "authority_transition": {
+      "from": "PROPOSED_UNCOMMITTED",
+      "to": "COMMITTED_SUCCESSOR_AUTHORITY"
+    },
+    "authorized_scope": "WAVE_3_ONLY",
+    "implementation_authorized": false,
+    "lifecycle_transition": {
+      "from": "CONTROLLED_WRITE_PENDING_POST_WRITE_VALIDATION",
+      "to": "ADMITTED_AND_COMMITTED"
+    },
+    "maturity_promotion_authorized": false,
+    "repository_parent_head": "ef00a4140e9d48d3ce005b07eda4e25419b52c9c"
+  },
+  "assurance_scope": {
+    "PI_is_formal_APIP_audit_management_system": false,
+    "automated_flag_is_formal_audit_finding": false,
+    "core_v1_level": "COHERENCE_AND_COMPLIANCE_ASSURANCE",
+    "formal_audit_support": "DEFERRED_OR_EXTERNAL",
+    "selective_level": "PERFORMANCE_AND_DECISION_ASSURANCE"
+  },
+  "authority_rule": "This artifact is proposed successor contract authority only. It becomes committed authority only after validation, controlled admission, commit, and post-commit verification.",
+  "authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+  "capability_family": "COHERENCE_AUDITOR",
+  "coherence_dimensions": {
+    "all_dimensions_collapse_into_one_score": false,
+    "decision_basis_consistency": true,
+    "documentary_coherence": true,
+    "evidence_sufficiency": true,
+    "operational_traceability_consistency": true,
+    "performance_consistency": true,
+    "planning_coherence": true,
+    "regulatory_consistency": true
+  },
+  "contract_id": "SCC-01",
+  "contract_name": "COHERENCE_AUDITOR_SUCCESSOR_CONTRACT",
+  "contract_type": "EXISTING_CAPABILITY_FORMALIZATION",
+  "contract_version": "0.1",
+  "decision_value_traceability": {
+    "is_decision_value_proof": false,
+    "supports_test_families": [
+      "DV-P1",
+      "DV-R1",
+      "DV-A1",
+      "DV-X1"
+    ]
+  },
+  "dependencies": [
+    {
+      "contract_id": "SDEA-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301"
+    },
+    {
+      "contract_id": "SCF-00",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA"
+    },
+    {
+      "contract_id": "SPC-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "B12700F9F542063C22FFCB9726EDB0936E972DDCE79526194E0E55DFC2608066"
+    },
+    {
+      "contract_id": "SCR-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "43474C7AC6AD10A833D13AF08AE0BABEBF0F43518DAAEDF4ADA50CC4B55C228D"
+    },
+    {
+      "contract_id": "SCP-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "F064F76A357E7CE4011B385BF2C6A337A9CA2AA3199699CB3E8CD8628A5CA89F"
+    },
+    {
+      "contract_id": "SCDG-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "7C759B259FAEFD4108E15CC5F78CBA3F8B6C618CCE2368FDD0C50D9095CAFD42"
+    },
+    {
+      "contract_id": "SOT-01",
+      "required_authority_state": "COMMITTED_SUCCESSOR_AUTHORITY",
+      "semantic_sha256": "808E0AF300B99339EDD6BD4B99A2D97AF2C3C543C9FD34CDAD0EF6EBB0492D60"
+    }
+  ],
+  "destruction_guards": [
+    "review flag must not automatically become formal audit finding",
+    "missing evidence must not become adverse qualified finding",
+    "regulatory ambiguity must not become autonomous legal conclusion",
+    "contradiction must not be discarded",
+    "counterevidence must not be discarded",
+    "formal fraud determination must not be produced",
+    "financial-loss determination must not be produced",
+    "compliance must not become effectiveness",
+    "one opaque assurance score must not replace separate quality dimensions"
+  ],
+  "documentary_coherence_semantics": {
+    "cross_document_consistency_check": true,
+    "expected_alignment_establishes_compliance": false,
+    "hierarchy_establishes_lineage": false,
+    "hierarchy_may_be_checked": true,
+    "internal_consistency_check": true
+  },
+  "evidence_sufficiency_semantics": {
+    "contradiction_must_be_preserved": true,
+    "counterevidence_must_be_preserved": true,
+    "missing_evidence_may_be_converted_to_adverse_finding": false,
+    "missing_evidence_may_be_reported_as_gap": true,
+    "qualified_finding_requires_evidence": true
+  },
+  "failure_semantics": {
+    "authority_unknown": "NO_QUALIFIED_ASSURANCE_FINDING",
+    "counterevidence_present": "PRESERVE_AND_REVIEW",
+    "cross_document_conflict": "CONTRADICTION",
+    "evidence_missing": "EVIDENCE_GAP_NOT_FORMAL_FINDING",
+    "human_review_missing": "NO_FORMAL_ESCALATION",
+    "materiality_unknown": "UNKNOWN_OR_REVIEW_REQUIRED",
+    "regulatory_applicability_ambiguous": "REGULATORY_REVIEW_REQUIRED"
+  },
+  "finding_candidate_semantics": {
+    "candidate_is_formal_finding": false,
+    "required_fields": [
+      "finding_candidate_id",
+      "assurance_dimension",
+      "subject_reference",
+      "basis",
+      "evidence_references",
+      "counterevidence_references",
+      "rule_references",
+      "materiality_state",
+      "review_priority",
+      "applicable_time",
+      "knowledge_time",
+      "provenance_reference",
+      "reviewer_disposition"
+    ],
+    "review_required_before_formal_escalation": true,
+    "states": [
+      "NO_MATERIAL_ISSUE_IDENTIFIED",
+      "REVIEW_FLAG",
+      "FINDING_CANDIDATE",
+      "EVIDENCE_GAP",
+      "CONTRADICTION",
+      "REGULATORY_REVIEW_REQUIRED",
+      "UNKNOWN"
+    ]
+  },
+  "human_authority_boundary": {
+    "ai_may_determine_financial_loss": false,
+    "ai_may_determine_fraud": false,
+    "ai_may_finalize_formal_audit_finding": false,
+    "ai_may_generate_finding_candidate": true,
+    "ai_may_generate_review_flag": true,
+    "authorized_reviewer_disposition_required": true
+  },
+  "inputs": [
+    "Planning Core objects and Planning Claims",
+    "Regulatory Intelligence applicability and constraints",
+    "Performance Engine evidence states",
+    "Public Decision Case and Decision Ledger references",
+    "Operational Traceability references",
+    "production-admitted evidence",
+    "authority and provenance references",
+    "point-in-time context"
+  ],
+  "lifecycle_state": "ADMITTED_AND_COMMITTED",
+  "lineage": {
+    "dependency_authority": {
+      "SCDG-01": "7C759B259FAEFD4108E15CC5F78CBA3F8B6C618CCE2368FDD0C50D9095CAFD42",
+      "SCF-00": "1EDC916CAE03620760E072329EA35691B487AB98CDCB35401F55155FF55806FA",
+      "SCP-01": "F064F76A357E7CE4011B385BF2C6A337A9CA2AA3199699CB3E8CD8628A5CA89F",
+      "SCR-01": "43474C7AC6AD10A833D13AF08AE0BABEBF0F43518DAAEDF4ADA50CC4B55C228D",
+      "SDEA-01": "08700685E0AE6192BAEEFF0C3D1E2FD1D8B46407907AA2379EEEFC1529DC4301",
+      "SOT-01": "808E0AF300B99339EDD6BD4B99A2D97AF2C3C543C9FD34CDAD0EF6EBB0492D60",
+      "SPC-01": "B12700F9F542063C22FFCB9726EDB0936E972DDCE79526194E0E55DFC2608066"
+    },
+    "repository_head_at_write": "ef00a4140e9d48d3ce005b07eda4e25419b52c9c",
+    "sra16_sha256": "8B352F35EEF57BFFE03A4D91A611F31612D853266F4DE87D0FA54AEAF193A1A7"
+  },
+  "materiality_review_semantics": {
+    "materiality_may_be_unknown": true,
+    "materiality_must_be_explicit": true,
+    "opaque_universal_risk_score_allowed": false,
+    "review_priority_is_not_formal_audit_severity": true,
+    "review_priority_must_be_explicit": true
+  },
+  "maturity_rule": {
+    "contract_write_establishes_L1": false,
+    "controlled_commit_required": true,
+    "functional_verification_required_for_L3": true,
+    "implementation_required_for_L2": true,
+    "post_commit_verification_required": true
+  },
+  "must_not_own": [
+    "Planning Core canonical semantics",
+    "regulatory applicability determination authority",
+    "empirical performance evaluation authority",
+    "causal attribution",
+    "Public Decision Case decision authority",
+    "Decision Ledger authority",
+    "Operational Traceability authority",
+    "resource allocation decision logic",
+    "formal APIP audit engagement workflow",
+    "fraud determination",
+    "financial-loss determination",
+    "autonomous legal-violation conclusion"
+  ],
+  "non_regression_guards": [
+    "planning improvement remains distinct from formal audit",
+    "finding candidate remains distinct from formal finding",
+    "missing evidence remains distinct from adverse evidence",
+    "compliance remains distinct from coherence",
+    "coherence remains distinct from effectiveness",
+    "effectiveness remains distinct from public value",
+    "contradictory evidence remains preserved"
+  ],
+  "outputs": [
+    "documentary coherence state",
+    "planning coherence state",
+    "evidence sufficiency state",
+    "regulatory consistency state",
+    "cross-document contradiction",
+    "materiality state",
+    "review priority",
+    "reviewable assurance finding candidate",
+    "evidence-gap state",
+    "human reviewer disposition requirement"
+  ],
+  "owns": [
+    "documentary coherence assurance semantics",
+    "planning coherence assurance semantics",
+    "evidence sufficiency assurance semantics",
+    "regulatory consistency assurance semantics",
+    "cross-document contradiction assurance semantics",
+    "assurance materiality and review-priority semantics",
+    "reviewable assurance finding-candidate semantics",
+    "human assurance-review disposition semantics"
+  ],
+  "project": "Planning Intelligence",
+  "purpose": "Define reviewable planning, documentary, evidentiary, and regulatory coherence assurance semantics without converting automated checks into formal audit findings or legal conclusions.",
+  "regulatory_consistency_semantics": {
+    "auditor_may_finalize_ambiguous_legal_interpretation": false,
+    "citation_presence_is_compliance": false,
+    "compliance_establishes_effectiveness": false,
+    "compliance_establishes_public_value": false,
+    "consumes_SCR_applicability": true,
+    "regulatory_ambiguity_requires_review": true
+  }
+}
