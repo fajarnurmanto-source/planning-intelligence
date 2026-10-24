@@ -15,6 +15,7 @@ from app.vs3.service import canonical_engine
 from . import service
 from app.vs5.intake import analyze_and_archive
 from app.graph_core.intake import analyze_and_archive_four
+from app.graph_g2.intake import analyze_g1_archive_and_ledger
 
 
 
@@ -111,6 +112,21 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
                        'tidak membuktikan hubungan sebab-akibat atau kepatuhan hukum.').format(**graph)
         return (*response, explanation)
 
+    def run_g2(g1_digest, claim_file, request: gr.Request):
+        user=actor(request)
+        if not g1_digest or not claim_file:
+            raise gr.Error('PILIH_ARSIP_GRAPH_G1_DAN_LEDGER_SINTETIS')
+        try:
+            analysis=analyze_g1_archive_and_ledger(store,g1_digest,claim_file,
+                                                    actor=user,roles=roles)
+        except (ValueError,LookupError,PermissionError,OSError) as exc:
+            raise gr.Error(str(exc)) from exc
+        response=present(analysis,user)
+        m=analysis['graph_metrics']
+        return (*response,(f"G2: {m['nodes']} entitas, {m['edges']} relasi eksplisit, "
+                f"{m['evidence_link_declarations']} deklarasi dengan locator, "
+                f"{m['findings']} temuan/gap. Ini BUKAN bukti kausalitas."))
+
     def source_runs(request:gr.Request):
         actor(request)
         if source is None:raise gr.Error('POSTGRESQL_SOURCE_NOT_CONFIGURED')
@@ -149,8 +165,8 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         except (ValueError,LookupError,PermissionError) as exc:raise gr.Error(str(exc)) from exc
         return _stage_reports_for_gradio(paths, output)
 
-    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5 · Knowledge Graph G1') as app:
-        gr.Markdown('# Planning Intelligence · Document Review + Knowledge Graph G1')
+    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5 · Knowledge Graph G1 · Substantive G2') as app:
+        gr.Markdown('# Planning Intelligence · Document Review + Knowledge Graph G1 / G2')
         gr.Markdown('**SINTETIS / NON-PRODUKSI.** Analisis tersimpan dapat dibuka kembali; keputusan reviewer dicatat sebagai event dan laporan dapat diekspor.')
         with gr.Row():
             whoami=gr.Button('Cek akun dan peran sesi',scale=1)
@@ -201,6 +217,14 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
                 graph_scope=gr.Textbox(label='Lingkup yang dinyatakan',value='Target tahunan')
             graphbutton=gr.Button('Bangun graph dan periksa koherensi 4 dokumen',variant='primary')
             graph_summary=gr.Textbox(label='Ringkasan graph',interactive=False)
+        with gr.Accordion('G2 · Hubungan substantif program–sasaran (klaim eksplisit)',open=True):
+            gr.Markdown('Pilih dahulu arsip analisis **G1** yang sudah berjalan. '
+                        'Unggah *G2_CLAIM_LEDGER_SYNTHETIC.xlsx* berisi entitas dan relasi yang '
+                        'dinamai secara eksplisit. Kutipan dalam ledger adalah deklarasi penguji, '
+                        '**bukan** bukti kausalitas atau verifikasi teks dokumen asli.')
+            g2_claim=gr.File(label='Ledger relasi G2 (XLSX sintetis)',file_types=['.xlsx'],type='filepath')
+            g2_execute=gr.Button('Analisis graph substantif dari arsip G1',variant='primary')
+            g2_summary=gr.Textbox(label='Ringkasan G2',interactive=False)
         finding_table=gr.Dataframe(headers=['Indikator','Tahun','Status','Review','Bukti'],interactive=False)
         selected_finding=gr.Dropdown(label='Pilih temuan',choices=[])
         evidence=gr.Textbox(label='Bukti & locator sumber',interactive=False,lines=10,max_lines=22)
@@ -213,6 +237,8 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         graphbutton.click(upload_four,
                           inputs=[graph_rpjmd,graph_rkpd,graph_renstra,graph_renja,graph_group,graph_scope],
                           outputs=[current,finding_table,selected_finding,status,graph_summary],api_name=False)
+        g2_execute.click(run_g2,inputs=[current,g2_claim],
+                          outputs=[current,finding_table,selected_finding,status,g2_summary],api_name=False)
         selected_finding.change(show_proof,inputs=[current,selected_finding],outputs=evidence,api_name=False)
         with gr.Row():
             selected_decision=gr.Dropdown(label='Keputusan simulasi',choices=sorted(ALLOWED),value='NEEDS_EVIDENCE')
