@@ -1,0 +1,53 @@
+name: PI Stable Local Auth + G3 Runtime
+on:
+  pull_request:
+    paths:
+      - 'scripts/start_pi_*.py'
+      - 'scripts/pi_shared_auth.py'
+      - 'scripts/check_pi_g3_pipeline.py'
+      - 'backend/tests/test_shared_auth_launchers.py'
+      - '.github/workflows/pi-stable-auth-g3-runtime.yml'
+  push:
+    paths:
+      - 'scripts/start_pi_*.py'
+      - 'scripts/pi_shared_auth.py'
+      - 'scripts/check_pi_g3_pipeline.py'
+      - 'backend/tests/test_shared_auth_launchers.py'
+      - '.github/workflows/pi-stable-auth-g3-runtime.yml'
+permissions:
+  contents: read
+jobs:
+  stable-auth-g3-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reuse PI G3 dependency chain
+        run: python -m pip install -r backend/requirements-graph-g3.txt
+      - name: Compile all demo launchers and encrypted login reader
+        run: |
+          python -m py_compile \
+            scripts/start_pi_vs4_demo.py \
+            scripts/start_pi_vs5_demo.py \
+            scripts/start_pi_graph_g1.py \
+            scripts/start_pi_graph_g2.py \
+            scripts/start_pi_graph_g3.py \
+            scripts/pi_shared_auth.py \
+            scripts/check_pi_g3_pipeline.py
+      - name: Consolidated PI VS1-VS5 G1-G3 regression plus login checks
+        working-directory: backend
+        run: |
+          python -m pytest -q \
+            tests/test_coherence_vs1.py \
+            tests/test_review_vs2.py \
+            tests/test_canonical_review_vs3.py \
+            tests/test_operational_continuity_vs4.py \
+            tests/test_browser_intake_vs5.py \
+            tests/test_planning_graph_g1.py \
+            tests/test_substantive_graph_g2.py \
+            tests/test_document_grounding_g3.py \
+            tests/test_shared_auth_launchers.py
+      - name: Synthetic G1-G2-G3 end-to-end negative and positive chains
+        run: python scripts/check_pi_g3_pipeline.py
