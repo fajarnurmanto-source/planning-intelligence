@@ -16,6 +16,7 @@ from . import service
 from app.vs5.intake import analyze_and_archive
 from app.graph_core.intake import analyze_and_archive_four
 from app.graph_g2.intake import analyze_g1_archive_and_ledger
+from app.graph_g3.intake import analyze_g2_archive_and_originals
 
 
 
@@ -127,6 +128,27 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
                 f"{m['evidence_link_declarations']} deklarasi dengan locator, "
                 f"{m['findings']} temuan/gap. Ini BUKAN bukti kausalitas."))
 
+    def run_g3(g2_digest, claim_file, original_rpjmd, original_rkpd,
+               original_renstra, original_renja, request:gr.Request):
+        user=actor(request)
+        if not g2_digest or not claim_file or any(not x for x in
+                [original_rpjmd, original_rkpd,original_renstra, original_renja]):
+            raise gr.Error('PILIH_ARSIP_G2_LEDGER_DAN_4_DOKUMEN_ASLI_YANG_SAMA')
+        files={'RPJMD':original_rpjmd,'RKPD':original_rkpd,
+               'RENSTRA':original_renstra,'RENJA':original_renja}
+        try:
+            report=analyze_g2_archive_and_originals(store,g2_digest,claim_file,files,
+                                                      actor=user,roles=roles)
+        except (ValueError, LookupError,PermissionError,OSError) as exc:
+            raise gr.Error(str(exc)) from exc
+        response=present(report,user)
+        m=report['verification_metrics']
+        msg=(f"G3: {m['node_quotes_verified']}/{m['node_quotes_total']} kutipan entitas, "
+             f"{m['edge_quotes_verified']}/{m['edge_quotes_total']} kutipan relasi cocok "
+             f"di SourceUnit. {m['source_gaps']} gap. "
+             'KECOCOKAN TEKS BUKAN PEMBUKTIAN HUBUNGAN KAUSAL/LEGAL.')
+        return (*response,msg)
+
     def source_runs(request:gr.Request):
         actor(request)
         if source is None:raise gr.Error('POSTGRESQL_SOURCE_NOT_CONFIGURED')
@@ -165,7 +187,7 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         except (ValueError,LookupError,PermissionError) as exc:raise gr.Error(str(exc)) from exc
         return _stage_reports_for_gradio(paths, output)
 
-    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5 · Knowledge Graph G1 · Substantive G2') as app:
+    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5 · Graph G1 / G2 / G3') as app:
         gr.Markdown('# Planning Intelligence · Document Review + Knowledge Graph G1 / G2')
         gr.Markdown('**SINTETIS / NON-PRODUKSI.** Analisis tersimpan dapat dibuka kembali; keputusan reviewer dicatat sebagai event dan laporan dapat diekspor.')
         with gr.Row():
@@ -225,6 +247,20 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
             g2_claim=gr.File(label='Ledger relasi G2 (XLSX sintetis)',file_types=['.xlsx'],type='filepath')
             g2_execute=gr.Button('Analisis graph substantif dari arsip G1',variant='primary')
             g2_summary=gr.Textbox(label='Ringkasan G2',interactive=False)
+        with gr.Accordion('G3 · Periksa kutipan pada dokumen asli SourceUnit',open=True):
+            gr.Markdown('Pilih arsip **G2** (bukan G1), ledger yang sama, dan empat **dokumen asli '
+                        'identik byte-per-byte** dengan yang digunakan saat G1. '
+                        'G3 hanya mengonfirmasi keberadaan teks pada locator parser; **BUKAN** '
+                        'bukti relevansi semantik, efektivitas, kausalitas, atau kesesuaian hukum.')
+            g3_ledger=gr.File(label='Ledger G2 asli untuk verifikasi G3',file_types=['.xlsx'],type='filepath')
+            with gr.Row():
+                g3_rpjmd=gr.File(label='RPJMD original',file_types=['.pdf','.docx','.xlsx'],type='filepath')
+                g3_rkpd=gr.File(label='RKPD original',file_types=['.pdf','.docx','.xlsx'],type='filepath')
+            with gr.Row():
+                g3_renstra=gr.File(label='Renstra original',file_types=['.pdf','.docx','.xlsx'],type='filepath')
+                g3_renja=gr.File(label='Renja original',file_types=['.pdf','.docx','.xlsx'],type='filepath')
+            g3_execute=gr.Button('Periksa kutipan berdasarkan SourceUnit (G3)',variant='primary')
+            g3_summary=gr.Textbox(label='Hasil verifikasi sumber G3',interactive=False)
         finding_table=gr.Dataframe(headers=['Indikator','Tahun','Status','Review','Bukti'],interactive=False)
         selected_finding=gr.Dropdown(label='Pilih temuan',choices=[])
         evidence=gr.Textbox(label='Bukti & locator sumber',interactive=False,lines=10,max_lines=22)
@@ -239,6 +275,8 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
                           outputs=[current,finding_table,selected_finding,status,graph_summary],api_name=False)
         g2_execute.click(run_g2,inputs=[current,g2_claim],
                           outputs=[current,finding_table,selected_finding,status,g2_summary],api_name=False)
+        g3_execute.click(run_g3,inputs=[current,g3_ledger,g3_rpjmd,g3_rkpd,g3_renstra,g3_renja],
+                         outputs=[current,finding_table,selected_finding,status,g3_summary],api_name=False)
         selected_finding.change(show_proof,inputs=[current,selected_finding],outputs=evidence,api_name=False)
         with gr.Row():
             selected_decision=gr.Dropdown(label='Keputusan simulasi',choices=sorted(ALLOWED),value='NEEDS_EVIDENCE')

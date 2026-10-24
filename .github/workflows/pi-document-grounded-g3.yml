@@ -1,0 +1,40 @@
+name: PI Document Grounding G3
+on:
+  pull_request:
+    paths:
+      - 'backend/app/graph_g3/**'
+      - 'backend/app/vs4/reviewer_ui.py'
+      - 'backend/tests/test_document_grounding_g3.py'
+      - 'backend/requirements-graph-g3.txt'
+      - '.github/workflows/pi-document-grounded-g3.yml'
+  push:
+    paths:
+      - 'backend/app/graph_g3/**'
+      - 'backend/app/vs4/reviewer_ui.py'
+      - 'backend/tests/test_document_grounding_g3.py'
+      - 'backend/requirements-graph-g3.txt'
+      - '.github/workflows/pi-document-grounded-g3.yml'
+permissions:
+  contents: read
+jobs:
+  document-grounded-g3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reuse existing stack
+        run: python -m pip install -r backend/requirements-graph-g3.txt
+      - name: Consolidated VS1–VS5, G1–G3 regression
+        working-directory: backend
+        run: |
+          python -m pytest -q \
+            tests/test_coherence_vs1.py \
+            tests/test_review_vs2.py \
+            tests/test_canonical_review_vs3.py \
+            tests/test_operational_continuity_vs4.py \
+            tests/test_browser_intake_vs5.py \
+            tests/test_planning_graph_g1.py \
+            tests/test_substantive_graph_g2.py \
+            tests/test_document_grounding_g3.py
