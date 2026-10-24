@@ -1,0 +1,27 @@
+name: PI VS1 Synthetic Candidate Tests
+on:
+  pull_request:
+    paths:
+      - 'backend/app/vs1/**'
+      - 'backend/tests/test_coherence_vs1.py'
+      - 'backend/tests/fixtures/pi_vs1_canonical_pair.json'
+      - '.github/workflows/pi-vs1-candidate-ci.yml'
+  workflow_dispatch:
+jobs:
+  vs1-candidate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install existing PI backend dependencies
+        run: |
+          python -m pip install --disable-pip-version-check -r backend/requirements.txt pytest
+      - name: Test canonical SourceUnit to findings
+        run: python -m pytest -q backend/tests/test_coherence_vs1.py
+      - name: Contract reminder
+        run: echo 'CI PASS != RIGHTS ADMISSION, REVIEW APPROVAL OR PRODUCTION ACTIVATION'
