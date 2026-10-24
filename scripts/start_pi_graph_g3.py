@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 import json
 import os
-import secrets
 import subprocess
 import sys
 
@@ -25,28 +24,30 @@ def main():
     if check.returncode:
         subprocess.run([str(python),'-m','pip','install','-r',str(root/'backend/requirements-graph-g2.txt')],check=True)
     inputs=state/'inputs'
-    code=("from pathlib import Path; from app.graph_core.samples import make_four; "
-          "from app.graph_g3.samples import make_grounded_set; "
-          "p=Path(r"+repr(str(inputs))+"); make_grounded_set(p); make_grounded_set(p / "tampered",change_quote=True)")
+    code = (
+        "from pathlib import Path; "
+        "from app.graph_g3.samples import make_grounded_set; "
+        f"p=Path({str(inputs)!r}); "
+        "make_grounded_set(p); "
+        "make_grounded_set(p / 'tampered', change_quote=True)"
+    )
     subprocess.run([str(python),'-c',code],cwd=str(root/'backend'),check=True)
-    reviewer=secrets.token_urlsafe(28)
-    viewer=secrets.token_urlsafe(28)
-    auth_file=state/'login-local.txt'
-    fd=os.open(str(auth_file),os.O_WRONLY|os.O_CREAT|os.O_TRUNC,0o600)
-    with os.fdopen(fd,'w',encoding='utf-8') as out:
-        out.write('PI G3 — SYNTHETIC, LOCAL ONLY\n')
-        out.write('reviewer: local-reviewer\npassword: '+reviewer+'\n')
-        out.write('viewer: local-viewer\npassword: '+viewer+'\n')
-        out.write('Regenerated each launch; do not post credentials.\n')
-    env=dict(os.environ)
-    env.update({'PI_VS4_LOCAL_AUTH_JSON':json.dumps({'local-reviewer':reviewer,'local-viewer':viewer}),
-                'PI_VS4_ROLES_JSON':json.dumps({'local-reviewer':'reviewer','local-viewer':'viewer'}),
-                'PI_VS4_REVIEW_SQLITE_PATH':str(state/'review.sqlite'),
-                'PI_VS4_OUTPUT_DIR':str(state/'reports')})
-    env.pop('PI_VS4_CANONICAL_DATABASE_URL',None)
+    # PI_UNIFIED_LOCAL_LOGIN_V1: shared encrypted reviewer account across phases.
+    from pi_shared_auth import load_credentials
+    user, password = load_credentials()
+    env = dict(os.environ)
+    env.update({
+        'PI_VS4_LOCAL_AUTH_JSON': json.dumps({user: password}),
+        'PI_VS4_ROLES_JSON': json.dumps({user: 'reviewer'}),
+        'PI_VS4_REVIEW_SQLITE_PATH': str(state / 'review.sqlite'),
+        'PI_VS4_OUTPUT_DIR': str(state / 'reports'),
+    })
+    env.pop('PI_VS4_CANONICAL_DATABASE_URL', None)
+    print('PI_SHARED_ACCOUNT=' + user, flush=True)
+    print('PI_SHARED_AUTH=WINDOWS_DPAPI', flush=True)
+
     print('PI_GRAPH_G3=SYNTHETIC_DOCUMENT_SOURCE_VERIFICATION',flush=True)
     print('LOCAL_URL=http://127.0.0.1:8099',flush=True)
-    print('LOCAL_CREDENTIALS_FILE='+str(auth_file),flush=True)
     print('SAMPLE_FOLDER='+str(inputs),flush=True)
     print('PRODUCTION_ADMISSION=DENIED',flush=True)
     subprocess.run([str(python),'-m','app.vs4.reviewer_ui','--port','8099'],

@@ -7,7 +7,6 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-import secrets
 import subprocess
 import sys
 
@@ -28,24 +27,23 @@ def main():
         raise SystemExit('VENV_PYTHON_MISSING')
     subprocess.run([str(interpreter),'-m','pip','install','-r',
                     str(root/'backend'/'requirements-vs4.txt')],check=True)
-    user='local-reviewer'
-    password=secrets.token_urlsafe(24)
-    viewer_password=secrets.token_urlsafe(24)
-    env=dict(os.environ)
+    # PI_UNIFIED_LOCAL_LOGIN_V1: shared encrypted reviewer account across phases.
+    from pi_shared_auth import load_credentials
+    user, password = load_credentials()
+    env = dict(os.environ)
     env.update({
-        'PI_VS4_LOCAL_AUTH_JSON':json.dumps({user:password,'local-viewer':viewer_password}),
-        'PI_VS4_ROLES_JSON':json.dumps({user:'reviewer','local-viewer':'viewer'}),
-        'PI_VS4_REVIEW_SQLITE_PATH':str(state/'reviews.sqlite'),
-        'PI_VS4_OUTPUT_DIR':str(state/'exports'),
+        'PI_VS4_LOCAL_AUTH_JSON': json.dumps({user: password}),
+        'PI_VS4_ROLES_JSON': json.dumps({user: 'reviewer'}),
+        'PI_VS4_REVIEW_SQLITE_PATH': str(state / 'reviews.sqlite'),
+        'PI_VS4_OUTPUT_DIR': str(state / 'exports'),
     })
-    # The original PI database is never attached in demo launch.
-    env.pop('PI_VS4_CANONICAL_DATABASE_URL',None)
+    env.pop('PI_VS4_CANONICAL_DATABASE_URL', None)
+    print('PI_SHARED_ACCOUNT=' + user, flush=True)
+    print('PI_SHARED_AUTH=WINDOWS_DPAPI', flush=True)
+
     print('PI_VS4_MODE=SYNTHETIC_ONLY')
     print('PI_VS4_URL=http://127.0.0.1:8095')
-    print('REVIEWER_LOGIN='+user+'  PASSWORD='+password)
-    print('VIEWER_LOGIN=local-viewer  PASSWORD='+viewer_password)
     print('CANDIDATE_STORE='+str(state))
-    print('Credentials apply to this session; do not paste them into chat or commit them.')
     subprocess.run([str(interpreter),'-m','app.vs4.reviewer_ui','--port','8095'],
                    check=True,cwd=str(root/'backend'),env=env)
 
