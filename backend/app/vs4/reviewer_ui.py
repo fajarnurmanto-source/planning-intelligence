@@ -7,11 +7,33 @@ import argparse
 import json
 import os
 from pathlib import Path
+import tempfile
+import shutil
 import gradio as gr
 from app.vs2.reviews import ALLOWED
 from app.vs3.service import canonical_engine
 from . import service
+from app.vs5.intake import analyze_and_archive
 
+
+
+def _stage_reports_for_gradio(paths, output: Path) -> tuple[str, str]:
+    """Copy only this export's Word/JSON into Gradio's allowed OS temp path.
+
+    Do not expose the entire persistent archive with allowed_paths.
+    """
+    base = Path(output).resolve(strict=True)
+    items = [Path(p).resolve(strict=True) for p in paths]
+    if (len(items) != 2 or {p.suffix.lower() for p in items} != {'.json', '.docx'}
+            or any(not p.is_file() or not p.is_relative_to(base) for p in items)):
+        raise ValueError('INVALID_CANDIDATE_REPORT_PATHS')
+    tmp = Path(tempfile.mkdtemp(prefix='pi-gradio-export-'))
+    results = []
+    for source_file in items:
+        candidate = tmp / source_file.name
+        shutil.copyfile(source_file, candidate)
+        results.append(str(candidate))
+    return tuple(results)
 
 def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture: Path | None=None):
     def actor(request: gr.Request, *, write=False):
@@ -30,7 +52,7 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
     def restore(digest: str,request: gr.Request):
         user=actor(request)
         if not digest:
-            raise gr.Error('PILIH_ANALISIS_TERSIMPAN')
+            return None, [], gr.update(choices=[],value=None), 'Pilih arsip pada daftar, lalu klik Buka analisis.'
         analysis=service.resume(store,digest,actor=user,roles=roles)
         choices=[(f"{f['indicator']} ({f['year']})",f['id']) for f in analysis['findings']]
         return (digest,service.table(store,digest,actor=user,roles=roles),
@@ -50,6 +72,17 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         if fixture is None:
             raise gr.Error('DEMO_FIXTURE_UNAVAILABLE')
         return present(service.from_demo(store,fixture,user,roles),user)
+
+    def upload_pair(left_file,right_file,group,scope,request:gr.Request):
+        user=actor(request)
+        if not left_file or not right_file:
+            raise gr.Error('PILIH_DUA_BERKAS_SINTETIS')
+        try:
+            analysis=analyze_and_archive(store,left_file,right_file,group=group,
+                                         scope=scope,actor=user,roles=roles)
+        except (ValueError, PermissionError, OSError) as exc:
+            raise gr.Error(str(exc)) from exc
+        return present(analysis,user)
 
     def source_runs(request:gr.Request):
         actor(request)
@@ -87,10 +120,10 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         if not digest:raise gr.Error('PILIH_ANALISIS')
         try:paths=service.export(store,digest,output,user,roles)
         except (ValueError,LookupError,PermissionError) as exc:raise gr.Error(str(exc)) from exc
-        return str(paths[0]),str(paths[1])
+        return _stage_reports_for_gradio(paths, output)
 
-    with gr.Blocks(title='Planning Intelligence · Review VS4') as app:
-        gr.Markdown('# Planning Intelligence · Review Workspace VS4')
+    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5') as app:
+        gr.Markdown('# Planning Intelligence · Document Review VS5')
         gr.Markdown('**SINTETIS / NON-PRODUKSI.** Analisis tersimpan dapat dibuka kembali; keputusan reviewer dicatat sebagai event dan laporan dapat diekspor.')
         current=gr.State(value=None)
         with gr.Row():
@@ -113,10 +146,20 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
                     group=gr.Textbox(label='Kelompok indikator',value='Sasaran strategis')
                     scope=gr.Textbox(label='Lingkup analisis',value='Target tahunan')
                 execute=gr.Button('Analisis PostgreSQL',variant='primary')
+        with gr.Accordion('Bandingkan dua dokumen sintetis · PDF/DOCX/XLSX',open=True):
+            gr.Markdown('Dokumen harus dibuat khusus pengujian dan mengandung marker **PI_SYNTHETIC_FIXTURE_ONLY**. Gunakan dua contoh XLSX dari paket VS5. Tidak untuk dokumen resmi atau produksi.')
+            with gr.Row():
+                file_left=gr.File(label='Dokumen sumber A (sintetis)',file_types=['.pdf','.docx','.xlsx'],type='filepath')
+                file_right=gr.File(label='Dokumen sumber B (sintetis)',file_types=['.pdf','.docx','.xlsx'],type='filepath')
+            with gr.Row():
+                file_group=gr.Textbox(label='Kelompok perbandingan',value='Sasaran strategis')
+                file_scope=gr.Textbox(label='Lingkup',value='Target tahunan')
+            compare_files=gr.Button('Analisis dua dokumen dan simpan',variant='primary')
         finding_table=gr.Dataframe(headers=['Indikator','Tahun','Status','Review','Bukti'],interactive=False)
         selected_finding=gr.Dropdown(label='Pilih temuan',choices=[])
         evidence=gr.Textbox(label='Bukti & locator sumber',interactive=False,lines=10,max_lines=22)
         reopen.click(restore,inputs=archived,outputs=[current,finding_table,selected_finding,status],api_name=False)
+        compare_files.click(upload_pair,inputs=[file_left,file_right,file_group,file_scope],outputs=[current,finding_table,selected_finding,status],api_name=False)
         if fixture is not None:
             demobutton.click(demo,outputs=[current,finding_table,selected_finding,status],api_name=False)
         if source is not None:
