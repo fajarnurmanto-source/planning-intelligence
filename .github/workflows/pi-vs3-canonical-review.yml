@@ -1,0 +1,28 @@
+name: PI VS3 canonical PostgreSQL reviewer candidate
+on:
+  pull_request:
+    branches:
+      - v0.1-provenance-ingestion
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-canonical-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      GRADIO_ANALYTICS_ENABLED: 'False'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - name: Install existing dependencies and Gradio
+        run: |
+          python -m pip install -r backend/requirements-vs3.txt
+          python -m pip install 'pytest>=8,<10'
+      - name: Run consolidated VS1 VS2 VS3 acceptance
+        working-directory: backend
+        run: python -m pytest -q tests/test_coherence_vs1.py tests/test_review_vs2.py tests/test_canonical_review_vs3.py
