@@ -1,0 +1,175 @@
+"""Gradio's prebuilt login, tables, selectors and downloads: no UI framework rewrite.
+
+Loopback synthetic candidate only, not an institutional identity provider.
+"""
+from __future__ import annotations
+import argparse
+import json
+import os
+from pathlib import Path
+import gradio as gr
+from app.vs2.reviews import ALLOWED
+from app.vs3.service import canonical_engine
+from . import service
+
+
+def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture: Path | None=None):
+    def actor(request: gr.Request, *, write=False):
+        username=getattr(request,'username',None)
+        try:
+            return service.require_role(username,roles,write=write)
+        except PermissionError as exc:
+            raise gr.Error(str(exc)) from exc
+
+    def refresh(request: gr.Request):
+        user=actor(request)
+        entries=service.history(store,actor=user,roles=roles)
+        choices=[(e['digest'][:12]+'  ·  '+e['created_by']+'  ·  '+e['created_at_utc'],e['digest']) for e in entries]
+        return gr.update(choices=choices,value=None),f'{len(entries)} analisis tersimpan.'
+
+    def restore(digest: str,request: gr.Request):
+        user=actor(request)
+        if not digest:
+            raise gr.Error('PILIH_ANALISIS_TERSIMPAN')
+        analysis=service.resume(store,digest,actor=user,roles=roles)
+        choices=[(f"{f['indicator']} ({f['year']})",f['id']) for f in analysis['findings']]
+        return (digest,service.table(store,digest,actor=user,roles=roles),
+                gr.update(choices=choices,value=choices[0][1] if choices else None),
+                'Arsip dibuka: '+digest[:16])
+
+    def present(analysis:dict, user:str):
+        digest=analysis['report_sha256']
+        findings=analysis['findings']
+        choices=[(f"{f['indicator']} ({f['year']})",f['id']) for f in findings]
+        return (digest,service.table(store,digest,actor=user,roles=roles),
+                gr.update(choices=choices,value=choices[0][1] if choices else None),
+                f"Analisis {digest[:16]} tersimpan. {len(findings)} temuan.")
+
+    def demo(request:gr.Request):
+        user=actor(request)
+        if fixture is None:
+            raise gr.Error('DEMO_FIXTURE_UNAVAILABLE')
+        return present(service.from_demo(store,fixture,user,roles),user)
+
+    def source_runs(request:gr.Request):
+        actor(request)
+        if source is None:raise gr.Error('POSTGRESQL_SOURCE_NOT_CONFIGURED')
+        runs=service.list_candidate_runs(source)
+        choices=[(f"{r['title']} · {r['document_type']} · {r['run_id']}",r['run_id']) for r in runs]
+        return gr.update(choices=choices,value=None),gr.update(choices=choices,value=None)
+
+    def compare(left,right,group,scope,request:gr.Request):
+        user=actor(request)
+        if source is None:raise gr.Error('POSTGRESQL_SOURCE_NOT_CONFIGURED')
+        try:
+            analysis=service.from_database(source,store,left,right,group=group,scope=scope,actor=user,roles=roles)
+        except (ValueError,PermissionError) as exc:
+            raise gr.Error(str(exc)) from exc
+        return present(analysis,user)
+
+    def show_proof(digest,fid,request:gr.Request):
+        user=actor(request)
+        if not digest or not fid:return 'Pilih temuan.'
+        try:return service.proof(store,digest,fid,actor=user,roles=roles)
+        except (ValueError,LookupError,PermissionError) as exc:raise gr.Error(str(exc)) from exc
+
+    def save(digest,fid,selected,note,request:gr.Request):
+        user=actor(request,write=True)
+        if not digest or not fid:raise gr.Error('PILIH_ANALISIS_DAN_TEMUAN')
+        try:
+            event=service.decision(store,digest,fid,user,roles,selected,note)
+        except (ValueError,LookupError,PermissionError) as exc:
+            raise gr.Error(str(exc)) from exc
+        return 'Aksi tersimpan: '+event['event_id'],service.table(store,digest,actor=user,roles=roles)
+
+    def make_report(digest,request:gr.Request):
+        user=actor(request)
+        if not digest:raise gr.Error('PILIH_ANALISIS')
+        try:paths=service.export(store,digest,output,user,roles)
+        except (ValueError,LookupError,PermissionError) as exc:raise gr.Error(str(exc)) from exc
+        return str(paths[0]),str(paths[1])
+
+    with gr.Blocks(title='Planning Intelligence · Review VS4') as app:
+        gr.Markdown('# Planning Intelligence · Review Workspace VS4')
+        gr.Markdown('**SINTETIS / NON-PRODUKSI.** Analisis tersimpan dapat dibuka kembali; keputusan reviewer dicatat sebagai event dan laporan dapat diekspor.')
+        current=gr.State(value=None)
+        with gr.Row():
+            archived=gr.Dropdown(label='Arsip analisis',choices=[],scale=4)
+            update=gr.Button('Muat arsip',scale=1)
+            reopen=gr.Button('Buka analisis',scale=1)
+        status=gr.Textbox(label='Status',interactive=False)
+        update.click(refresh,outputs=[archived,status],api_name=False)
+        with gr.Accordion('Buat analisis baru',open=True):
+            if fixture is not None:
+                gr.Markdown('**Demo tanpa PostgreSQL:** gunakan fixture kanonis VS1 yang disertakan di repository.')
+                demobutton=gr.Button('Jalankan demo sintetis',variant='primary')
+            if source is not None:
+                loadruns=gr.Button('Muat ParsingRun PostgreSQL (sintetis)')
+                with gr.Row():
+                    left=gr.Dropdown(label='ParsingRun kiri',choices=[])
+                    right=gr.Dropdown(label='ParsingRun kanan',choices=[])
+                loadruns.click(source_runs,outputs=[left,right],api_name=False)
+                with gr.Row():
+                    group=gr.Textbox(label='Kelompok indikator',value='Sasaran strategis')
+                    scope=gr.Textbox(label='Lingkup analisis',value='Target tahunan')
+                execute=gr.Button('Analisis PostgreSQL',variant='primary')
+        finding_table=gr.Dataframe(headers=['Indikator','Tahun','Status','Review','Bukti'],interactive=False)
+        selected_finding=gr.Dropdown(label='Pilih temuan',choices=[])
+        evidence=gr.Textbox(label='Bukti & locator sumber',interactive=False,lines=10,max_lines=22)
+        reopen.click(restore,inputs=archived,outputs=[current,finding_table,selected_finding,status],api_name=False)
+        if fixture is not None:
+            demobutton.click(demo,outputs=[current,finding_table,selected_finding,status],api_name=False)
+        if source is not None:
+            execute.click(compare,inputs=[left,right,group,scope],outputs=[current,finding_table,selected_finding,status],api_name=False)
+        selected_finding.change(show_proof,inputs=[current,selected_finding],outputs=evidence,api_name=False)
+        with gr.Row():
+            selected_decision=gr.Dropdown(label='Keputusan simulasi',choices=sorted(ALLOWED),value='NEEDS_EVIDENCE')
+            note=gr.Textbox(label='Catatan reviewer',lines=2,max_length=2000)
+        submit=gr.Button('Simpan keputusan reviewer')
+        feedback=gr.Textbox(label='Hasil simpan',interactive=False)
+        submit.click(save,inputs=[current,selected_finding,selected_decision,note],outputs=[feedback,finding_table],api_name=False)
+        export_button=gr.Button('Ekspor laporan Word + JSON')
+        with gr.Row():
+            json_file=gr.File(label='JSON')
+            word_file=gr.File(label='Word')
+        export_button.click(make_report,inputs=current,outputs=[json_file,word_file],api_name=False)
+    return app
+
+
+def main():
+    cli=argparse.ArgumentParser()
+    cli.add_argument('--port',type=int,default=8095)
+    args=cli.parse_args()
+    if args.port in range(8080,8087) or not 1024<=args.port<=65535:
+        raise SystemExit('PORT_NOT_ALLOWED')
+    raw_auth=os.environ.get('PI_VS4_LOCAL_AUTH_JSON','')
+    raw_roles=os.environ.get('PI_VS4_ROLES_JSON','')
+    if not raw_auth or not raw_roles:raise SystemExit('LOCAL_AUTH_AND_ROLES_REQUIRED')
+    users=json.loads(raw_auth)
+    roles=json.loads(raw_roles)
+    if (not isinstance(users,dict) or not isinstance(roles,dict) or not users or
+        set(users)!=set(roles) or
+        any(not isinstance(k,str) or len(k)<2 or
+            not isinstance(v,str) or len(v)<16 for k,v in users.items()) or
+        any(x not in ('viewer','reviewer') for x in roles.values())):
+        raise SystemExit('INVALID_LOCAL_USER_AND_ROLE_CONFIG')
+    db_file=os.environ.get('PI_VS4_REVIEW_SQLITE_PATH','')
+    export_dir=os.environ.get('PI_VS4_OUTPUT_DIR','')
+    if not db_file or not export_dir:raise SystemExit('SEPARATE_REVIEW_STORE_AND_EXPORT_PATH_REQUIRED')
+    db_file=Path(db_file).resolve()
+    export_dir=Path(export_dir).resolve()
+    root=Path(__file__).resolve().parents[3]
+    if (db_file.is_relative_to(root) or export_dir.is_relative_to(root)
+            or db_file.parent == Path.cwd() or export_dir==Path.cwd()):
+        raise SystemExit('CANDIDATE_FILES_MUST_BE_OUTSIDE_REPOSITORY')
+    db_file.parent.mkdir(parents=True,exist_ok=True)
+    export_dir.mkdir(parents=True,exist_ok=True)
+    source_url=os.environ.get('PI_VS4_CANONICAL_DATABASE_URL','')
+    source=canonical_engine(source_url) if source_url else None
+    store=service.build_candidate_store('sqlite:///'+db_file.as_posix(),canonical_database_url=source_url)
+    fixture=root / 'backend' / 'tests' / 'fixtures' / 'pi_vs1_canonical_pair.json'
+    app=build_app(store,export_dir,roles,source=source,fixture=fixture if fixture.exists() else None)
+    app.launch(server_name='127.0.0.1',server_port=args.port,auth=list(users.items()),
+               share=False,inbrowser=False,show_error=False,max_file_size='10mb',enable_monitoring=False)
+
+if __name__=='__main__':main()
