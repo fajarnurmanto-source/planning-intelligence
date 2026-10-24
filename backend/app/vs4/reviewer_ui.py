@@ -14,6 +14,7 @@ from app.vs2.reviews import ALLOWED
 from app.vs3.service import canonical_engine
 from . import service
 from app.vs5.intake import analyze_and_archive
+from app.graph_core.intake import analyze_and_archive_four
 
 
 
@@ -84,6 +85,32 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
             raise gr.Error(str(exc)) from exc
         return present(analysis,user)
 
+    def session_identity(request: gr.Request):
+        user = actor(request)
+        role = roles[user]
+        message = f'Sesi aktif: {user} | Peran: {role}.'
+        if role != 'reviewer':
+            message += ' Viewer tidak dapat menyimpan keputusan. Login ulang sebagai local-reviewer untuk review.'
+        return message
+
+    def upload_four(a, b, c, d, group, scope, request: gr.Request):
+        user = actor(request)
+        paths = {'RPJMD':a, 'RKPD':b, 'RENSTRA':c, 'RENJA':d}
+        if any(not p for p in paths.values()):
+            raise gr.Error('PILIH_KEEMPAT_DOKUMEN_SINTETIS')
+        try:
+            analysis = analyze_and_archive_four(store, paths, group=group, scope=scope,
+                                                actor=user, roles=roles)
+        except (ValueError, PermissionError, OSError) as exc:
+            raise gr.Error(str(exc)) from exc
+        response = present(analysis, user)
+        graph = analysis['graph_metrics']
+        explanation = ('Graph: {nodes} node, {edges} edge, '
+                       '{compared_observation_pairs} pasangan indikator, '
+                       '{findings} temuan. Hierarki hanya hipotesis struktural; '
+                       'tidak membuktikan hubungan sebab-akibat atau kepatuhan hukum.').format(**graph)
+        return (*response, explanation)
+
     def source_runs(request:gr.Request):
         actor(request)
         if source is None:raise gr.Error('POSTGRESQL_SOURCE_NOT_CONFIGURED')
@@ -122,9 +149,13 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         except (ValueError,LookupError,PermissionError) as exc:raise gr.Error(str(exc)) from exc
         return _stage_reports_for_gradio(paths, output)
 
-    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5') as app:
-        gr.Markdown('# Planning Intelligence · Document Review VS5')
+    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5 · Knowledge Graph G1') as app:
+        gr.Markdown('# Planning Intelligence · Document Review + Knowledge Graph G1')
         gr.Markdown('**SINTETIS / NON-PRODUKSI.** Analisis tersimpan dapat dibuka kembali; keputusan reviewer dicatat sebagai event dan laporan dapat diekspor.')
+        with gr.Row():
+            whoami=gr.Button('Cek akun dan peran sesi',scale=1)
+            identity=gr.Textbox(label='Akses saat ini',interactive=False,scale=3)
+        whoami.click(session_identity,outputs=identity,api_name=False)
         current=gr.State(value=None)
         with gr.Row():
             archived=gr.Dropdown(label='Arsip analisis',choices=[],scale=4)
@@ -155,6 +186,21 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
                 file_group=gr.Textbox(label='Kelompok perbandingan',value='Sasaran strategis')
                 file_scope=gr.Textbox(label='Lingkup',value='Target tahunan')
             compare_files=gr.Button('Analisis dua dokumen dan simpan',variant='primary')
+        with gr.Accordion('Planning Knowledge Graph · 4 dokumen uji', open=True):
+            gr.Markdown('**SINTETIS ONLY.** Pilih jenis dokumen sesuai kolom; relasi RPJMD→RKPD, '
+                        'RPJMD→Renstra, Renstra→Renja hanyalah hipotesis struktur untuk pre-review. '
+                        'Semua dokumen harus memuat marker PI_SYNTHETIC_FIXTURE_ONLY.')
+            with gr.Row():
+                graph_rpjmd=gr.File(label='RPJMD (sintetis)',file_types=['.pdf','.docx','.xlsx'],type='filepath')
+                graph_rkpd=gr.File(label='RKPD (sintetis)',file_types=['.pdf','.docx','.xlsx'],type='filepath')
+            with gr.Row():
+                graph_renstra=gr.File(label='Renstra (sintetis)',file_types=['.pdf','.docx','.xlsx'],type='filepath')
+                graph_renja=gr.File(label='Renja (sintetis)',file_types=['.pdf','.docx','.xlsx'],type='filepath')
+            with gr.Row():
+                graph_group=gr.Textbox(label='Kelompok indikator yang dinyatakan',value='Sasaran strategis')
+                graph_scope=gr.Textbox(label='Lingkup yang dinyatakan',value='Target tahunan')
+            graphbutton=gr.Button('Bangun graph dan periksa koherensi 4 dokumen',variant='primary')
+            graph_summary=gr.Textbox(label='Ringkasan graph',interactive=False)
         finding_table=gr.Dataframe(headers=['Indikator','Tahun','Status','Review','Bukti'],interactive=False)
         selected_finding=gr.Dropdown(label='Pilih temuan',choices=[])
         evidence=gr.Textbox(label='Bukti & locator sumber',interactive=False,lines=10,max_lines=22)
@@ -164,6 +210,9 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
             demobutton.click(demo,outputs=[current,finding_table,selected_finding,status],api_name=False)
         if source is not None:
             execute.click(compare,inputs=[left,right,group,scope],outputs=[current,finding_table,selected_finding,status],api_name=False)
+        graphbutton.click(upload_four,
+                          inputs=[graph_rpjmd,graph_rkpd,graph_renstra,graph_renja,graph_group,graph_scope],
+                          outputs=[current,finding_table,selected_finding,status,graph_summary],api_name=False)
         selected_finding.change(show_proof,inputs=[current,selected_finding],outputs=evidence,api_name=False)
         with gr.Row():
             selected_decision=gr.Dropdown(label='Keputusan simulasi',choices=sorted(ALLOWED),value='NEEDS_EVIDENCE')

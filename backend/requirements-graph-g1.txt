@@ -1,0 +1,2 @@
+-r requirements-vs4.txt
+networkx>=3.4,<4
