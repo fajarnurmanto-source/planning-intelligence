@@ -1,0 +1,31 @@
+name: PI Planning Knowledge Graph G1
+on:
+  pull_request:
+    paths:
+      - 'backend/app/graph_core/**'
+      - 'backend/app/vs4/reviewer_ui.py'
+      - 'backend/tests/test_planning_graph_g1.py'
+      - 'backend/requirements-graph-g1.txt'
+      - '.github/workflows/pi-planning-graph-g1.yml'
+  push:
+    paths:
+      - 'backend/app/graph_core/**'
+      - 'backend/app/vs4/reviewer_ui.py'
+      - 'backend/tests/test_planning_graph_g1.py'
+      - 'backend/requirements-graph-g1.txt'
+      - '.github/workflows/pi-planning-graph-g1.yml'
+jobs:
+  planning-graph-g1:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install backend with graph dependency
+        run: python -m pip install -r backend/requirements-graph-g1.txt
+      - name: Graph + existing reviewer regressions
+        working-directory: backend
+        run: python -m pytest -q tests/test_planning_graph_g1.py tests/test_browser_intake_vs5.py tests/test_operational_continuity_vs4.py tests/test_canonical_review_vs3.py tests/test_review_vs2.py tests/test_coherence_vs1.py
