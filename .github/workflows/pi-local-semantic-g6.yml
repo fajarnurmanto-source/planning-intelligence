@@ -1,0 +1,44 @@
+name: PI Local Semantic G6
+on:
+  pull_request:
+    paths:
+      - 'backend/app/graph_g6/**'
+      - 'backend/app/vs4/reviewer_ui.py'
+      - 'backend/tests/test_semantic_relevance_g6.py'
+      - 'scripts/check_pi_g6_pipeline.py'
+      - 'scripts/start_pi_graph_g6.py'
+      - 'scripts/benchmark_pi_g6.py'
+      - '.github/workflows/pi-local-semantic-g6.yml'
+  push:
+    paths:
+      - 'backend/app/graph_g6/**'
+      - 'backend/app/vs4/reviewer_ui.py'
+      - 'backend/tests/test_semantic_relevance_g6.py'
+      - 'scripts/check_pi_g6_pipeline.py'
+      - 'scripts/start_pi_graph_g6.py'
+      - 'scripts/benchmark_pi_g6.py'
+      - '.github/workflows/pi-local-semantic-g6.yml'
+permissions:
+  contents: read
+jobs:
+  local-semantic-g6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Adopt existing PI dependencies
+        run: python -m pip install -r backend/requirements-graph-g3.txt
+      - name: Compile G6 engine, interface, launcher and benchmark
+        run: |
+          python -m compileall -q backend/app/graph_g6 backend/app/vs4/reviewer_ui.py \
+            scripts/check_pi_g6_pipeline.py scripts/start_pi_graph_g6.py scripts/benchmark_pi_g6.py
+      - name: Regression VS1-VS5 and G1-G6
+        working-directory: backend
+        run: python -m pytest -q tests
+      - name: Synthetic E2E with no model, no network, no paid API
+        run: python scripts/check_pi_g6_pipeline.py --internal
+      - name: Benchmark must abstain if no local model
+        run: |
+          test "$(python scripts/benchmark_pi_g6.py | grep -c NOT_RUN_NO_LOCAL_MODEL)" -eq 1
