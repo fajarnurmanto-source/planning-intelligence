@@ -19,6 +19,10 @@ from app.graph_g2.intake import analyze_g1_archive_and_ledger
 from app.graph_g3.intake import analyze_g2_archive_and_originals
 from app.graph_g4.intake import analyze_archived_g2_g3, synthetic_g4_example
 from app.graph_g5.intake import analyze_archived_g4, synthetic_g5_example
+from app.graph_g6.intake import analyze_archived_g5
+from app.graph_g6.benchmark import evaluate_benchmark
+from app.graph_g6.provider import choose_provider
+from app.graph_g6.engine import EmbeddingUnavailable
 
 
 
@@ -204,6 +208,48 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         return (*response,(f"G5 sintetis: {m['status_counts']}; "
                            f"{m['high_priority']} prioritas tinggi; semua memerlukan review."))
 
+    def _g6_model():
+        # User configured local providers only; never silently install/download or transmit outside localhost.
+        return choose_provider(os.environ.get('PI_G6_PROVIDER','disabled'),
+                               os.environ.get('PI_G6_OLLAMA_MODEL','embeddinggemma'),
+                               os.environ.get('PI_G6_LOCAL_MODEL_DIR',''))
+
+    def run_g6(g5_digest,request:gr.Request):
+        user=actor(request)
+        if not g5_digest:raise gr.Error('PILIH_ARSIP_G5_UNTUK_G6')
+        try:
+            result=analyze_archived_g5(store,g5_digest,actor=user,roles=roles,embedder=_g6_model())
+        except (ValueError, LookupError, PermissionError, OSError, EmbeddingUnavailable) as exc:
+            raise gr.Error(str(exc)) from exc
+        response=present(result,user)
+        m=result['assessment_metrics']
+        return (*response, (f"G6: {m['edges']} relasi, {m['scored']} diperiksa model lokal; "
+                  f"{m['status_counts']}. Skor kemiripan bukan bukti koherensi, "
+                  'entailment, dampak atau kepatuhan. Reviewer wajib.'))
+
+    def g6_demo(request:gr.Request):
+        user=actor(request)
+        folder=os.environ.get('PI_G4_SYNTHETIC_SAMPLES_DIR','')
+        if not folder:raise gr.Error('G6_LOCAL_SAMPLE_DIR_NOT_CONFIGURED')
+        try:
+            g5=synthetic_g5_example(store,folder,actor=user,roles=roles)
+            result=analyze_archived_g5(store,g5['report_sha256'],actor=user,
+                                       roles=roles,embedder=_g6_model())
+        except (ValueError,LookupError,PermissionError,OSError,EmbeddingUnavailable) as exc:
+            raise gr.Error(str(exc)) from exc
+        response=present(result,user)
+        m=result['assessment_metrics']
+        return (*response, f"G6 sintetis: {m['status_counts']}; "
+                  'tak ada klaim hubungan otomatis disahkan.')
+
+    def benchmark_g6(request:gr.Request):
+        actor(request)
+        try:
+            result=evaluate_benchmark(_g6_model())
+        except (ValueError,OSError,EmbeddingUnavailable) as exc:
+            raise gr.Error(str(exc)) from exc
+        return json.dumps(result,ensure_ascii=False,indent=2)
+
     def source_runs(request:gr.Request):
         actor(request)
         if source is None:raise gr.Error('POSTGRESQL_SOURCE_NOT_CONFIGURED')
@@ -242,8 +288,8 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         except (ValueError,LookupError,PermissionError) as exc:raise gr.Error(str(exc)) from exc
         return _stage_reports_for_gradio(paths, output)
 
-    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5 · Graph G1 / G2 / G3 / G4 / G5') as app:
-        gr.Markdown('# Planning Intelligence · Evidence Review + Planning Knowledge Graph G1–G5')
+    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5 · Graph G1 / G2 / G3 / G4 / G5 / G6') as app:
+        gr.Markdown('# Planning Intelligence · Evidence Review + Planning Knowledge Graph G1–G6')
         gr.Markdown('**SINTETIS / NON-PRODUKSI.** Analisis tersimpan dapat dibuka kembali; keputusan reviewer dicatat sebagai event dan laporan dapat diekspor.')
         with gr.Row():
             whoami=gr.Button('Cek akun dan peran sesi',scale=1)
@@ -332,6 +378,17 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
             g5_execute=gr.Button('Triase relasi G5 dari arsip G4',variant='primary')
             g5_demo_button=gr.Button('Jalankan satu contoh G1–G5 (tanpa unggah ulang)')
             g5_summary=gr.Textbox(label='Ringkasan triase G5',interactive=False)
+        with gr.Accordion('G6 · Kedekatan semantik lokal (arsip G5)',open=True):
+            gr.Markdown('Pilih **arsip G5** untuk pemeriksaan kemiripan makna menggunakan '
+                        'embedding **lokal saja**. Tanpa model: **NO_MODEL_ABSTAIN**, tidak ada '
+                        'skor palsu. Negasi/arah salah dari G5 tetap menghalangi status dukungan. '
+                        'Kemiripan bukan entailment, rekomendasi kebijakan, atau bukti kausalitas.')
+            g6_execute=gr.Button('Periksa relevansi semantik dari arsip G5',variant='primary')
+            g6_demo_button=gr.Button('Jalankan contoh sintetis G1–G6 tanpa unggah ulang')
+            g6_summary=gr.Textbox(label='Ringkasan semantik G6',interactive=False)
+            g6_benchmark_button=gr.Button('Uji benchmark relevansi sintetis (40 pasangan)')
+            g6_benchmark_output=gr.Textbox(label='Benchmark: akurasi relevansi, bukan validitas kebijakan',
+                                            lines=8,interactive=False)
         finding_table=gr.Dataframe(headers=['Indikator','Tahun','Status','Review','Bukti'],interactive=False)
         selected_finding=gr.Dropdown(label='Pilih temuan',choices=[])
         evidence=gr.Textbox(label='Bukti & locator sumber',interactive=False,lines=10,max_lines=22)
@@ -356,6 +413,11 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
                          outputs=[current,finding_table,selected_finding,status,g5_summary],api_name=False)
         g5_demo_button.click(g5_demo,
                              outputs=[current,finding_table,selected_finding,status,g5_summary],api_name=False)
+        g6_execute.click(run_g6,inputs=[current],
+                         outputs=[current,finding_table,selected_finding,status,g6_summary],api_name=False)
+        g6_demo_button.click(g6_demo,
+                             outputs=[current,finding_table,selected_finding,status,g6_summary],api_name=False)
+        g6_benchmark_button.click(benchmark_g6,outputs=g6_benchmark_output,api_name=False)
         selected_finding.change(show_proof,inputs=[current,selected_finding],outputs=evidence,api_name=False)
         with gr.Row():
             selected_decision=gr.Dropdown(label='Keputusan simulasi',choices=sorted(ALLOWED),value='NEEDS_EVIDENCE')
