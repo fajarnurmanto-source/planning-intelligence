@@ -33,6 +33,8 @@ from .parser import (
 )
 
 app = FastAPI(title="Planning & Decision Intelligence V0.1A", version="0.1.0-alpha.2")
+from .planning_entities.workbench_api import router as m2_workbench_router
+app.include_router(m2_workbench_router)
 DATA_DIR = Path(os.getenv("APP_DATA_DIR", "/data"))
 FILES_DIR = DATA_DIR / "files"
 REG_DIR = DATA_DIR / "regulations"
