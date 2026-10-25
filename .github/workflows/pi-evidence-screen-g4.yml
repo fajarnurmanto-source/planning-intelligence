@@ -1,0 +1,51 @@
+name: PI Explicit Evidence Screen G4
+on:
+  pull_request:
+    paths:
+      - 'backend/app/graph_g4/**'
+      - 'backend/app/vs4/reviewer_ui.py'
+      - 'backend/tests/test_evidence_screen_g4.py'
+      - 'scripts/check_pi_g4_pipeline.py'
+      - 'scripts/start_pi_graph_g4.py'
+      - '.github/workflows/pi-evidence-screen-g4.yml'
+  push:
+    paths:
+      - 'backend/app/graph_g4/**'
+      - 'backend/app/vs4/reviewer_ui.py'
+      - 'backend/tests/test_evidence_screen_g4.py'
+      - 'scripts/check_pi_g4_pipeline.py'
+      - 'scripts/start_pi_graph_g4.py'
+      - '.github/workflows/pi-evidence-screen-g4.yml'
+permissions:
+  contents: read
+jobs:
+  explicit-evidence-g4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Use existing verified dependencies
+        run: python -m pip install -r backend/requirements-graph-g3.txt
+      - name: Compile every UI and launcher
+        run: |
+          python -m py_compile backend/app/vs4/reviewer_ui.py \
+            scripts/start_pi_graph_g4.py scripts/check_pi_g4_pipeline.py \
+            scripts/start_pi_graph_g3.py
+      - name: Consolidated regression VS1–VS5 G1–G4
+        working-directory: backend
+        run: |
+          python -m pytest -q \
+            tests/test_coherence_vs1.py \
+            tests/test_review_vs2.py \
+            tests/test_canonical_review_vs3.py \
+            tests/test_operational_continuity_vs4.py \
+            tests/test_browser_intake_vs5.py \
+            tests/test_planning_graph_g1.py \
+            tests/test_substantive_graph_g2.py \
+            tests/test_document_grounding_g3.py \
+            tests/test_shared_auth_launchers.py \
+            tests/test_evidence_screen_g4.py
+      - name: Full G4 synthetic workflow
+        run: python scripts/check_pi_g4_pipeline.py --internal
