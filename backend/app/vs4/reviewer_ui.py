@@ -18,6 +18,7 @@ from app.graph_core.intake import analyze_and_archive_four
 from app.graph_g2.intake import analyze_g1_archive_and_ledger
 from app.graph_g3.intake import analyze_g2_archive_and_originals
 from app.graph_g4.intake import analyze_archived_g2_g3, synthetic_g4_example
+from app.graph_g5.intake import analyze_archived_g4, synthetic_g5_example
 
 
 
@@ -176,6 +177,33 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         m=report['assessment_metrics']
         return (*response, f"Contoh sintetis G4: {m['status_counts']}; seluruh relasi perlu review.")
 
+    def run_g5(g4_digest, request:gr.Request):
+        user=actor(request)
+        if not g4_digest:
+            raise gr.Error('PILIH_ARSIP_G4_UNTUK_G5')
+        try:
+            report=analyze_archived_g4(store,g4_digest,actor=user,roles=roles)
+        except (ValueError,LookupError,PermissionError,OSError) as exc:
+            raise gr.Error(str(exc)) from exc
+        response=present(report,user)
+        metrics=report['assessment_metrics']
+        return (*response,(f"G5: {metrics['edges']} relasi: {metrics['status_counts']}; "
+                f"{metrics['high_priority']} prioritas tinggi. "
+                'Periksa arah, negasi dan modalitas; bukan validasi kausalitas.'))
+
+    def g5_demo(request:gr.Request):
+        user=actor(request)
+        folder=os.environ.get('PI_G4_SYNTHETIC_SAMPLES_DIR','')
+        if not folder:raise gr.Error('G5_LOCAL_SAMPLE_DIR_NOT_CONFIGURED')
+        try:
+            report=synthetic_g5_example(store,folder,actor=user,roles=roles)
+        except (ValueError,LookupError,PermissionError,OSError) as exc:
+            raise gr.Error(str(exc)) from exc
+        response=present(report,user)
+        m=report['assessment_metrics']
+        return (*response,(f"G5 sintetis: {m['status_counts']}; "
+                           f"{m['high_priority']} prioritas tinggi; semua memerlukan review."))
+
     def source_runs(request:gr.Request):
         actor(request)
         if source is None:raise gr.Error('POSTGRESQL_SOURCE_NOT_CONFIGURED')
@@ -214,8 +242,8 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         except (ValueError,LookupError,PermissionError) as exc:raise gr.Error(str(exc)) from exc
         return _stage_reports_for_gradio(paths, output)
 
-    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5 · Graph G1 / G2 / G3 / G4') as app:
-        gr.Markdown('# Planning Intelligence · Evidence Review + Planning Knowledge Graph G1–G4')
+    with gr.Blocks(title='Planning Intelligence · Review VS4 · Intake VS5 · Graph G1 / G2 / G3 / G4 / G5') as app:
+        gr.Markdown('# Planning Intelligence · Evidence Review + Planning Knowledge Graph G1–G5')
         gr.Markdown('**SINTETIS / NON-PRODUKSI.** Analisis tersimpan dapat dibuka kembali; keputusan reviewer dicatat sebagai event dan laporan dapat diekspor.')
         with gr.Row():
             whoami=gr.Button('Cek akun dan peran sesi',scale=1)
@@ -297,6 +325,13 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
             g4_execute=gr.Button('Nilai kekuatan pernyataan relasi dari arsip G3',variant='primary')
             g4_demo_button=gr.Button('Jalankan satu contoh G1–G4 (tanpa unggah ulang)')
             g4_summary=gr.Textbox(label='Ringkasan penilaian bukti G4',interactive=False)
+        with gr.Accordion('G5 · Audit arah, negasi dan modalitas relasi (arsip G4)',open=True):
+            gr.Markdown('Gunakan arsip **G4** yang telah disimpan. G5 menguji urutan '
+                        'subjek–predikat–objek, pernyataan yang baru berupa rencana, '
+                        'sangkalan serta gap bukti. Ini triase eksplisit, **bukan** inferensi semantik atau kausal.')
+            g5_execute=gr.Button('Triase relasi G5 dari arsip G4',variant='primary')
+            g5_demo_button=gr.Button('Jalankan satu contoh G1–G5 (tanpa unggah ulang)')
+            g5_summary=gr.Textbox(label='Ringkasan triase G5',interactive=False)
         finding_table=gr.Dataframe(headers=['Indikator','Tahun','Status','Review','Bukti'],interactive=False)
         selected_finding=gr.Dropdown(label='Pilih temuan',choices=[])
         evidence=gr.Textbox(label='Bukti & locator sumber',interactive=False,lines=10,max_lines=22)
@@ -317,6 +352,10 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
                              outputs=[current,finding_table,selected_finding,status,g4_summary],api_name=False)
         g4_execute.click(run_g4,inputs=[current],
                          outputs=[current,finding_table,selected_finding,status,g4_summary],api_name=False)
+        g5_execute.click(run_g5,inputs=[current],
+                         outputs=[current,finding_table,selected_finding,status,g5_summary],api_name=False)
+        g5_demo_button.click(g5_demo,
+                             outputs=[current,finding_table,selected_finding,status,g5_summary],api_name=False)
         selected_finding.change(show_proof,inputs=[current,selected_finding],outputs=evidence,api_name=False)
         with gr.Row():
             selected_decision=gr.Dropdown(label='Keputusan simulasi',choices=sorted(ALLOWED),value='NEEDS_EVIDENCE')
