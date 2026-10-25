@@ -1,0 +1,46 @@
+name: PI Direction and Modality G5
+on:
+  pull_request:
+    paths:
+      - 'backend/app/graph_g5/**'
+      - 'backend/app/vs4/reviewer_ui.py'
+      - 'backend/tests/test_direction_modality_g5.py'
+      - 'scripts/check_pi_g5_pipeline.py'
+      - 'scripts/start_pi_graph_g5.py'
+      - '.github/workflows/pi-direction-evidence-g5.yml'
+  push:
+    paths:
+      - 'backend/app/graph_g5/**'
+      - 'backend/app/vs4/reviewer_ui.py'
+      - 'backend/tests/test_direction_modality_g5.py'
+      - 'scripts/check_pi_g5_pipeline.py'
+      - 'scripts/start_pi_graph_g5.py'
+      - '.github/workflows/pi-direction-evidence-g5.yml'
+permissions:
+  contents: read
+jobs:
+  direction-evidence-g5:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Use already adopted PI dependencies
+        run: python -m pip install -r backend/requirements-graph-g3.txt
+      - name: Compile graph engines and launchers
+        run: |
+          python -m py_compile backend/app/graph_g5/*.py backend/app/vs4/reviewer_ui.py \
+            scripts/start_pi_graph_g5.py scripts/check_pi_g5_pipeline.py
+      - name: VS1–VS5 and G1–G5 regression
+        working-directory: backend
+        run: |
+          python -m pytest -q \
+            tests/test_coherence_vs1.py tests/test_review_vs2.py \
+            tests/test_canonical_review_vs3.py tests/test_operational_continuity_vs4.py \
+            tests/test_browser_intake_vs5.py tests/test_planning_graph_g1.py \
+            tests/test_substantive_graph_g2.py tests/test_document_grounding_g3.py \
+            tests/test_shared_auth_launchers.py tests/test_evidence_screen_g4.py \
+            tests/test_direction_modality_g5.py
+      - name: Full G5 synthetic archived review
+        run: python scripts/check_pi_g5_pipeline.py --internal
