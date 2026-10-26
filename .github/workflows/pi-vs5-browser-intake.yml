@@ -7,6 +7,8 @@ on:
       - 'backend/app/parser.py'
       - 'backend/app/vs4/reviewer_ui.py'
       - 'backend/tests/**'
+      - 'frontend/src/PlanningWorkbenchM2.tsx'
+      - 'frontend/package.json'
       - '.github/workflows/pi-vs5-browser-intake.yml'
   workflow_dispatch:
 jobs:
@@ -27,10 +29,30 @@ jobs:
         run: |
           python -m pytest -q backend/tests/test_coherence_vs1.py backend/tests/test_review_vs2.py backend/tests/test_canonical_review_vs3.py backend/tests/test_operational_continuity_vs4.py backend/tests/test_browser_intake_vs5.py \
             backend/tests/test_planning_entities_m2.py \
-            backend/tests/test_planning_pipeline_m2.py
+            backend/tests/test_planning_pipeline_m2.py \
+            backend/tests/test_substantive_screen_m3.py
       - name: M2 cold-process deterministic digest
         working-directory: backend
         env:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
           python -c "import subprocess, sys; code = 'from app.planning_entities.synthetic_demo import cached_synthetic_result; print(cached_synthetic_result()[\"report_sha256\"])'; hashes = [subprocess.check_output([sys.executable, '-c', code], text=True).strip().splitlines()[-1] for _ in range(2)]; assert hashes[0] == hashes[1] and len(hashes[0]) == 64, f'M2_CROSS_PROCESS_DIGEST_MISMATCH:{hashes}'; print('PI_M2_CROSS_PROCESS_DETERMINISM=PASS')"
+      - name: M3 synthetic API handler smoke
+        working-directory: backend
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python -c 'from app.planning_entities.workbench_api import m3_synthetic_target_screen; result=m3_synthetic_target_screen(); assert result["metrics"]["candidate_findings"] == 1; assert result["metrics"]["confirmed_contradictions"] == 0; print("PI_M3_SYNTHETIC_API=PASS")'
+      - name: M3 cold-process deterministic digest
+        working-directory: backend
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python -c "import subprocess, sys; code = 'from app.planning_entities.synthetic_demo import cached_synthetic_result; from app.planning_entities.substantive_m3 import screen_substantive_candidates; print(screen_substantive_candidates(cached_synthetic_result())[\"report_sha256\"])'; hashes = [subprocess.check_output([sys.executable, '-c', code], text=True).strip().splitlines()[-1] for _ in range(2)]; assert hashes[0] == hashes[1] and len(hashes[0]) == 64, f'M3_CROSS_PROCESS_DIGEST_MISMATCH:{hashes}'; print('PI_M3_CROSS_PROCESS_DETERMINISM=PASS')"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build M2/M3 workbench frontend
+        run: |
+          npm --prefix frontend install --no-audit --no-fund
+          npm --prefix frontend run build
