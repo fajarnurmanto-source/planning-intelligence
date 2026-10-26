@@ -60,6 +60,9 @@ def make_documents(root: Path):
     word.core_properties.created = FIXTURE_TIME
     word.core_properties.modified = FIXTURE_TIME
     word.add_paragraph("Program: Transformasi layanan publik")
+    # Explicit synthetic claim for M3.2; the relationship is still not
+    # independently established merely because a source sentence says so.
+    word.add_paragraph("Transformasi layanan publik mendukung Pelayanan publik membaik.")
     table = word.add_table(rows=2, cols=7)
     for i, value in enumerate(("Jenis", "Kode", "Uraian", "Indikator Kinerja", "Target", "Tahun", "Satuan")):
         table.cell(0, i).text = value
