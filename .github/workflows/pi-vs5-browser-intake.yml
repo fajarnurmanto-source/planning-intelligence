@@ -5,6 +5,7 @@ on:
       - 'backend/app/vs5/**'
       - 'backend/app/planning_entities/**'
       - 'backend/app/graph_g2/**'
+      - 'backend/app/graph_g3/**'
       - 'backend/app/graph_g4/**'
       - 'backend/app/graph_g5/**'
       - 'backend/app/parser.py'
@@ -36,7 +37,9 @@ jobs:
             backend/tests/test_planning_pipeline_m2.py \
             backend/tests/test_substantive_screen_m3.py \
             backend/tests/test_declared_relations_m3.py \
+            backend/tests/test_original_source_reverify_m3.py \
             backend/tests/test_substantive_graph_g2.py \
+            backend/tests/test_document_grounding_g3.py \
             backend/tests/test_evidence_screen_g4.py \
             backend/tests/test_direction_modality_g5.py
       - name: M2 cold-process deterministic digest
@@ -79,6 +82,33 @@ jobs:
           assert hashes[0] == hashes[1] and len(hashes[0]) == 64, hashes
           print('PI_M32_CROSS_PROCESS_DETERMINISM=PASS')
           PY
+      - name: M3.3 cold-process original-byte re-verification
+        working-directory: backend
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python - <<'PY'
+          import subprocess
+          import sys
+          probe = '''
+          from pathlib import Path
+          from tempfile import TemporaryDirectory
+          from app.planning_entities.synthetic_demo import cached_synthetic_result, make_documents
+          from app.planning_entities.source_reverify_m3 import reverify_declared_relation_sources
+          p = cached_synthetic_result()
+          a = next(e for e in p["documents"]["RKPD"]["entities"] if e["title"] == "Transformasi layanan publik")
+          b = next(e for e in p["documents"]["RPJMD"]["entities"] if e["title"] == "Pelayanan publik membaik")
+          s = next(e for e in p["source_unit_index"]["RKPD"] if "mendukung" in e["excerpt"])
+          claim = dict(from_role="RKPD", from_entity_id=a["id"], to_role="RPJMD", to_entity_id=b["id"], relation="SUPPORTS", source_role="RKPD", source_unit_fingerprint=s["unit_fingerprint"], quote=s["excerpt"])
+          with TemporaryDirectory() as tmp:
+              r = reverify_declared_relation_sources(p, [claim], make_documents(Path(tmp)))
+          assert r["metrics"]["exact_original_source_quotes_located"] == 1
+          print(r["report_sha256"])
+          '''
+          hashes = [subprocess.check_output([sys.executable, '-c', probe], text=True).strip().splitlines()[-1] for _ in range(2)]
+          assert hashes[0] == hashes[1] and len(hashes[0]) == 64, hashes
+          print('PI_M33_CROSS_PROCESS_DETERMINISM=PASS')
+          PY
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -86,4 +116,3 @@ jobs:
         run: |
           npm --prefix frontend install --no-audit --no-fund
           npm --prefix frontend run build
-
