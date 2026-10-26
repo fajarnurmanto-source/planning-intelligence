@@ -141,6 +141,16 @@ def test_ui_reuses_gradio_off_the_shelf(store,tmp_path):
     assert 'VS4' in ui.title
 
 
+def test_rs2_m2_synthetic_review_uses_existing_vs4_gradio_components(store, tmp_path):
+    from app.vs4.reviewer_ui import build_app
+    engine, _ = store
+    ui = build_app(engine, tmp_path, ROLES, fixture=FIXTURE)
+    labels = [component.get('props', {}).get('value')
+              for component in ui.config.get('components', [])
+              if component.get('type') == 'button']
+    assert 'Arsipkan kandidat M2 sintetis untuk review' in labels
+
+
 def test_invalid_digest_rejected(store):
     engine,_=store
     with pytest.raises(ValueError,match='ANALYSIS_DIGEST_INVALID'):
