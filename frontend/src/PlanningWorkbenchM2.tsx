@@ -4,6 +4,8 @@ type Evidence = { unit_fingerprint: string; excerpt?: string; locator: Record<st
 type Entity = { id: string; kind: string; title: string; code?: string; attributes: Record<string, string>; evidence: Evidence[] }
 type Finding = { id: string; upstream_role: string; downstream_role: string; match_type: string; target_comparison: string; evidence: Record<string, Evidence[]>; status: string }
 type Pipeline = { schema: string; report_sha256: string; production_admission: string; regulatory_taxonomy: string; documents: Record<string, { entities: Entity[] }>; coherence: { findings: Finding[] } }
+type TargetScreenFinding = { id: string; upstream_role: string; downstream_role: string; match_types: string[]; status: string; reason: string; declared_target_texts: string[]; normalized_numeric_targets: string[]; source_m2_finding_ids: string[]; evidence: Record<string, Evidence[]>; review_required: boolean }
+type TargetScreen = { schema: string; report_sha256: string; source_m2_report_sha256: string; production_admission: string; regulatory_taxonomy: string; findings: TargetScreenFinding[]; metrics: { candidate_findings: number; source_m2_match_findings: number; verified_substantive_relationships: number; confirmed_contradictions: number } }
 type ReviewResponse = { review: unknown; report_markdown: string }
 
 const choices = ['NEEDS_MORE_EVIDENCE', 'ACCEPT_CANDIDATE', 'REJECT_CANDIDATE'] as const
@@ -20,6 +22,8 @@ function download(filename: string, content: string, type: string) {
 
 export default function PlanningWorkbenchM2() {
   const [pipeline, setPipeline] = useState<Pipeline | null>(null)
+  const [targetScreen, setTargetScreen] = useState<TargetScreen | null>(null)
+  const [targetScreenError, setTargetScreenError] = useState('')
   const [decisions, setDecisions] = useState<Record<string, string>>({})
   const [report, setReport] = useState<ReviewResponse | null>(null)
   const [error, setError] = useState('')
@@ -34,6 +38,13 @@ export default function PlanningWorkbenchM2() {
       })
       .then((data: Pipeline) => { if (active) setPipeline(data) })
       .catch((err: Error) => { if (active) setError(err.message) })
+    fetch('/api/m3/synthetic-target-screen')
+      .then(async response => {
+        if (!response.ok) throw new Error(`M3 HTTP ${response.status}`)
+        return response.json()
+      })
+      .then((data: TargetScreen) => { if (active) setTargetScreen(data) })
+      .catch((err: Error) => { if (active) setTargetScreenError(err.message) })
     return () => { active = false }
   }, [])
 
@@ -65,6 +76,22 @@ export default function PlanningWorkbenchM2() {
           <td><details><summary>{entity.evidence.length} bukti</summary>{entity.evidence.map(ev => <div key={ev.unit_fingerprint}><small>{ev.excerpt}<br />{JSON.stringify(ev.locator)}<br />{ev.unit_fingerprint}</small></div>)}</details></td>
         </tr>))}
       </tbody></table></div>
+      <h3>M3.1 — Penyaringan target substantif</h3>
+      <p>Perbandingan angka hanya dilakukan bila indikator, tahun, dan satuan dinyatakan sebanding. Satu pasangan entitas dihitung satu kali meski cocok lewat beberapa kunci. <strong>Temuan ini bukan bukti kontradiksi kebijakan maupun keputusan hukum.</strong></p>
+      {targetScreenError && <p role="alert">Layanan penyaringan M3 belum tersedia: {targetScreenError}. Analisis M2 tetap dapat digunakan.</p>}
+      {!targetScreen && !targetScreenError && <p>Menyaring kandidat dengan aturan deterministik…</p>}
+      {targetScreen && targetScreen.source_m2_report_sha256 !== pipeline.report_sha256 && <p role="alert">Digest sumber M3 tidak cocok dengan laporan M2. Hasil M3 disembunyikan hingga data konsisten.</p>}
+      {targetScreen && targetScreen.source_m2_report_sha256 === pipeline.report_sha256 && <>
+        <p><small>Pasangan entitas: {targetScreen.metrics.candidate_findings} · kecocokan M2: {targetScreen.metrics.source_m2_match_findings} · kontradiksi terkonfirmasi: {targetScreen.metrics.confirmed_contradictions} · relasi substantif terverifikasi: {targetScreen.metrics.verified_substantive_relationships} · Regulatory taxonomy: {targetScreen.regulatory_taxonomy}</small></p>
+        {targetScreen.findings.length === 0 && <p>Belum ada pasangan entitas yang dapat disaring.</p>}
+        {targetScreen.findings.map(finding => <div className="panel" key={finding.id}>
+          <p><strong>{finding.upstream_role} → {finding.downstream_role}</strong> · {finding.status}</p>
+          <p>{finding.reason}</p>
+          <small>Target sumber: {finding.declared_target_texts.join(' vs ')} · Kecocokan: {finding.match_types.join(', ')} · ID M2: {finding.source_m2_finding_ids.join(', ')}</small>
+          <details><summary>Telusuri bukti dan lokasi sumber</summary>{Object.entries(finding.evidence).map(([role, items]) => <div key={role}><b>{role}</b>{items.map(ev => <p key={ev.unit_fingerprint}><small>{ev.excerpt}<br />Locator: {JSON.stringify(ev.locator)}<br />Fingerprint: {ev.unit_fingerprint}</small></p>)}</div>)}</details>
+        </div>)}
+        <button onClick={() => download('pi_m3_synthetic_target_screen.json', JSON.stringify(targetScreen, null, 2), 'application/json')}>Unduh hasil penyaringan M3 (JSON)</button>
+      </>}
       <h3>Temuan kandidat dan anotasi reviewer</h3>
       {pipeline.coherence.findings.length === 0 && <p>Belum ada temuan kandidat.</p>}
       {pipeline.coherence.findings.map(finding => <div className="panel" key={finding.id}>
@@ -86,3 +113,4 @@ export default function PlanningWorkbenchM2() {
     </>}
   </section>
 }
+
