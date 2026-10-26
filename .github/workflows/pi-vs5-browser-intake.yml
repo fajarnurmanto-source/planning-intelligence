@@ -62,8 +62,7 @@ jobs:
           report = m3_synthetic_source_reverification(request)
           assert report['metrics']['exact_original_source_quotes_located'] == 1
           assert report['production_admission'] == 'DENIED'
-          assert any(route.path == '/api/m3/synthetic-source-reverification'
-                     for route in app.routes)
+          assert '/api/m3/synthetic-source-reverification' in app.openapi()['paths']
           print('PI_DOCKER_REQUIREMENTS_M33_RUNTIME=PASS')
           PY
   vs5-acceptance:
