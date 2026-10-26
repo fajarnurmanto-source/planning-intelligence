@@ -9,6 +9,8 @@ on:
       - 'backend/app/graph_g4/**'
       - 'backend/app/graph_g5/**'
       - 'backend/app/parser.py'
+      - 'backend/requirements.txt'
+      - 'backend/Dockerfile'
       - 'backend/app/vs4/reviewer_ui.py'
       - 'backend/tests/**'
       - 'frontend/src/PlanningWorkbenchM2.tsx'
@@ -17,6 +19,52 @@ on:
       - '.github/workflows/pi-vs5-browser-intake.yml'
   workflow_dispatch:
 jobs:
+  runtime-dependency-smoke:
+    name: PI Docker-runtime dependency import smoke
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact dependency file used by backend Dockerfile
+        run: python -m pip install -r backend/requirements.txt
+      - name: Verify main app import and synthetic M3.3 route with runtime packages
+        working-directory: backend
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          APP_DATA_DIR: /tmp/pi_m33_runtime_import
+        run: |
+          python - <<'PY'
+          from app.main import app
+          from app.planning_entities.workbench_api import (
+              RelationClaim, RelationReviewRequest, m3_synthetic_source_reverification,
+          )
+          from app.planning_entities.synthetic_demo import cached_synthetic_result
+
+          pipeline = cached_synthetic_result()
+          source = next(item for item in pipeline['source_unit_index']['RKPD']
+                        if 'mendukung' in item['excerpt'])
+          left = next(item for item in pipeline['documents']['RKPD']['entities']
+                      if item['title'] == 'Transformasi layanan publik')
+          right = next(item for item in pipeline['documents']['RPJMD']['entities']
+                       if item['title'] == 'Pelayanan publik membaik')
+          claim = RelationClaim(
+              from_role='RKPD', from_entity_id=left['id'],
+              to_role='RPJMD', to_entity_id=right['id'], relation='SUPPORTS',
+              source_role='RKPD', source_unit_fingerprint=source['unit_fingerprint'],
+              quote=source['excerpt'],
+          )
+          request = RelationReviewRequest(
+              pipeline_report_sha256=pipeline['report_sha256'], claims=[claim])
+          report = m3_synthetic_source_reverification(request)
+          assert report['metrics']['exact_original_source_quotes_located'] == 1
+          assert report['production_admission'] == 'DENIED'
+          assert '/api/m3/synthetic-source-reverification' in app.openapi()['paths']
+          print('PI_DOCKER_REQUIREMENTS_M33_RUNTIME=PASS')
+          PY
   vs5-acceptance:
     name: VS5 original parser to reviewer end-to-end
     runs-on: ubuntu-latest
