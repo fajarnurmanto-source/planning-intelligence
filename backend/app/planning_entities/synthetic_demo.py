@@ -60,10 +60,10 @@ def make_documents(root: Path):
     word.core_properties.created = FIXTURE_TIME
     word.core_properties.modified = FIXTURE_TIME
     word.add_paragraph("Program: Transformasi layanan publik")
-    table = word.add_table(rows=2, cols=6)
-    for i, value in enumerate(("Jenis", "Kode", "Uraian", "Indikator Kinerja", "Target", "Tahun")):
+    table = word.add_table(rows=2, cols=7)
+    for i, value in enumerate(("Jenis", "Kode", "Uraian", "Indikator Kinerja", "Target", "Tahun", "Satuan")):
         table.cell(0, i).text = value
-    for i, value in enumerate(("Program", "2.16.01", "Layanan Informasi", "Persentase layanan", "82", "2026")):
+    for i, value in enumerate(("Program", "2.16.01", "Layanan Informasi", "Persentase layanan", "82", "2026", "%")):
         table.cell(1, i).text = value
     word.save(docx)
     _stable_office_archive(docx)
@@ -75,8 +75,8 @@ def make_documents(root: Path):
         wb.properties.modified = FIXTURE_TIME
         sheet = wb.active
         sheet.title = "Rencana"
-        sheet.append(["Jenis", "Kode", "Uraian", "Indikator Kinerja", "Target", "Tahun"])
-        sheet.append(["Program", "2.16.01", "Layanan Informasi", "Persentase layanan", target, 2026])
+        sheet.append(["Jenis", "Kode", "Uraian", "Indikator Kinerja", "Target", "Tahun", "Satuan"])
+        sheet.append(["Program", "2.16.01", "Layanan Informasi", "Persentase layanan", target, 2026, "%"])
         path = root / f"synthetic_{role.lower()}.xlsx"
         wb.save(path)
         wb.close()
@@ -96,3 +96,4 @@ def cached_synthetic_result():
             jurisdiction_id="SYNTHETIC-JOGJA",
             planning_period_id="2025-2029",
         )
+
