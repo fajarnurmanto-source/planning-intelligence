@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import PlanningRelationsM3 from './PlanningRelationsM3'
 
 type Evidence = { unit_fingerprint: string; excerpt?: string; locator: Record<string, unknown> }
 type Entity = { id: string; kind: string; title: string; code?: string; attributes: Record<string, string>; evidence: Evidence[] }
@@ -92,6 +93,7 @@ export default function PlanningWorkbenchM2() {
         </div>)}
         <button onClick={() => download('pi_m3_synthetic_target_screen.json', JSON.stringify(targetScreen, null, 2), 'application/json')}>Unduh hasil penyaringan M3 (JSON)</button>
       </>}
+      <PlanningRelationsM3 pipeline={pipeline} />
       <h3>Temuan kandidat dan anotasi reviewer</h3>
       {pipeline.coherence.findings.length === 0 && <p>Belum ada temuan kandidat.</p>}
       {pipeline.coherence.findings.map(finding => <div className="panel" key={finding.id}>
