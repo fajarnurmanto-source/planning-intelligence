@@ -3,11 +3,14 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from .pipeline import apply_synthetic_review, render_synthetic_report
-from .synthetic_demo import cached_synthetic_result
+from .synthetic_demo import cached_synthetic_result, make_documents
 from .substantive_m3 import screen_substantive_candidates
 from .relation_m3 import allowed_relations, screen_declared_relations
+from .source_reverify_m3 import reverify_declared_relation_sources
 
 router = APIRouter(prefix="/api/m2", tags=["M2 Synthetic Workbench"])
 
@@ -78,6 +81,24 @@ def m3_synthetic_relation_review(request: RelationReviewRequest):
     try:
         return screen_declared_relations(
             pipeline, [claim.model_dump() for claim in request.claims])
+    except (PermissionError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@m3_router.post("/synthetic-source-reverification")
+def m3_synthetic_source_reverification(request: RelationReviewRequest):
+    """Regenerate four synthetic originals and independently reparse pinned bytes.
+
+    No user-file paths or uploads are accepted by this endpoint.
+    """
+    pipeline = cached_synthetic_result()
+    if request.pipeline_report_sha256 != pipeline["report_sha256"]:
+        raise HTTPException(status_code=409, detail="M3_M2_PIPELINE_DIGEST_MISMATCH")
+    try:
+        with TemporaryDirectory(prefix="pi_m33_original_synthetic_") as tmp:
+            return reverify_declared_relation_sources(
+                pipeline, [claim.model_dump() for claim in request.claims],
+                make_documents(Path(tmp)))
     except (PermissionError, ValueError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
