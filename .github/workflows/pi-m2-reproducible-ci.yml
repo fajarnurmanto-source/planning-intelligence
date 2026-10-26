@@ -6,6 +6,7 @@ on:
       - "backend/app/planning_entities/**"
       - "backend/tests/test_planning_entities_m2.py"
       - "backend/tests/test_planning_pipeline_m2.py"
+      - "backend/tests/test_m2_vs4_bridge_rs2.py"
       - "frontend/**"
       - ".github/workflows/pi-m2-reproducible-ci.yml"
   workflow_dispatch:
@@ -27,7 +28,7 @@ jobs:
       - name: Run existing M2 tests
         working-directory: backend
         run: |
-          python -m pytest -q tests/test_planning_entities_m2.py tests/test_planning_pipeline_m2.py
+          python -m pytest -q tests/test_planning_entities_m2.py tests/test_planning_pipeline_m2.py tests/test_m2_vs4_bridge_rs2.py
 
       - name: Verify cross-process determinism
         working-directory: backend
