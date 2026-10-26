@@ -9,11 +9,12 @@ from hashlib import sha256
 from pathlib import Path
 import json
 
-from .normalize import normalize_source_units
+from .normalize import normalize_source_units, _as_unit_dict, _source
 from .coherence import assess_candidates, ROLES
 
 EXTENSIONS = {".pdf", ".docx", ".xlsx"}
 DECISIONS = {"ACCEPT_CANDIDATE", "REJECT_CANDIDATE", "NEEDS_MORE_EVIDENCE"}
+MAX_INDEXED_SOURCE_UNITS_PER_DOCUMENT = 512
 
 
 def _digest(obj):
@@ -35,6 +36,8 @@ def run_synthetic_pipeline(documents, *, jurisdiction_id, planning_period_id,
 
     normalized = {}
     parser_runs = {}
+    source_unit_index = {}
+    source_index_dropped_units = {}
     for role in ROLES:
         path = Path(documents[role])
         if path.suffix.lower() not in EXTENSIONS or not path.is_file():
@@ -49,6 +52,20 @@ def run_synthetic_pipeline(documents, *, jurisdiction_id, planning_period_id,
             jurisdiction_id=jurisdiction_id, planning_period_id=planning_period_id,
             planning_scope=planning_scope,
         )
+        # Reuse units already parsed for M2. This is a bounded, synthetic-only
+        # quote index for M3; it does not initiate another parser run.
+        indexed = []
+        dropped = 0
+        for parsed_unit in parsed["units"]:
+            unit = _as_unit_dict(parsed_unit)
+            if not str(unit.get("raw_text") or "").strip():
+                continue
+            if len(indexed) < MAX_INDEXED_SOURCE_UNITS_PER_DOCUMENT:
+                indexed.append(_source(unit, digest))
+            else:
+                dropped += 1
+        source_unit_index[role] = indexed
+        source_index_dropped_units[role] = dropped
         parser_runs[role] = {
             "parser_name": parsed["parser_name"], "parser_version": parsed["parser_version"],
             "run_fingerprint": parsed["run_fingerprint"],
@@ -62,6 +79,8 @@ def run_synthetic_pipeline(documents, *, jurisdiction_id, planning_period_id,
         "review_authority": "NOT_GRANTED",
         "regulatory_taxonomy": "NOT_ACTIVATED",
         "documents": normalized, "parser_runs": parser_runs,
+        "source_unit_index": source_unit_index,
+        "source_index_dropped_units": source_index_dropped_units,
         "coherence": assessment,
     }
     output["report_sha256"] = _digest(output)
