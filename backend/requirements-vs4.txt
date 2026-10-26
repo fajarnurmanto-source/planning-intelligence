@@ -1,2 +1,3 @@
 -r requirements-vs3.txt
 pytest>=8,<10
+networkx>=3.2,<4.0
