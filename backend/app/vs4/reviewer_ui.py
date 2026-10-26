@@ -23,6 +23,7 @@ from app.graph_g6.intake import analyze_archived_g5
 from app.graph_g6.benchmark import evaluate_benchmark
 from app.graph_g6.provider import choose_provider
 from app.graph_g6.engine import EmbeddingUnavailable
+from app.planning_entities.vs4_bridge_rs2 import archive_cached_m2_for_vs4
 
 
 
@@ -81,6 +82,15 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         if fixture is None:
             raise gr.Error('DEMO_FIXTURE_UNAVAILABLE')
         return present(service.from_demo(store,fixture,user,roles),user)
+
+    def m2_synthetic_archive(request: gr.Request):
+        """Use existing VS4 authenticated reviewer/session and archive controls."""
+        user = actor(request, write=True)
+        try:
+            analysis = archive_cached_m2_for_vs4(store, actor=user, roles=roles)
+        except (ValueError, PermissionError, OSError) as exc:
+            raise gr.Error(str(exc)) from exc
+        return present(analysis, user)
 
     def upload_pair(left_file,right_file,group,scope,request:gr.Request):
         user=actor(request)
@@ -316,6 +326,13 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
                     group=gr.Textbox(label='Kelompok indikator',value='Sasaran strategis')
                     scope=gr.Textbox(label='Lingkup analisis',value='Target tahunan')
                 execute=gr.Button('Analisis PostgreSQL',variant='primary')
+        with gr.Accordion('M2 · Entitas perencanaan sintetis ke reviewer VS4', open=False):
+            gr.Markdown('**HANYA DATA UJI.** Buat kandidat M2 menggunakan parser PI, '
+                        'simpan proyeksi ke arsip VS4, lalu gunakan tabel, bukti, '
+                        'keputusan reviewer dan ekspor yang sudah tersedia. '
+                        'Memerlukan login dengan peran **reviewer**. '
+                        'Tidak menerima dokumen pengguna atau mengaktifkan regulasi.')
+            m2_archive_button = gr.Button('Arsipkan kandidat M2 sintetis untuk review')
         with gr.Accordion('Bandingkan dua dokumen sintetis · PDF/DOCX/XLSX',open=True):
             gr.Markdown('Dokumen harus dibuat khusus pengujian dan mengandung marker **PI_SYNTHETIC_FIXTURE_ONLY**. Gunakan dua contoh XLSX dari paket VS5. Tidak untuk dokumen resmi atau produksi.')
             with gr.Row():
@@ -393,6 +410,8 @@ def build_app(store, output: Path, roles: dict[str,str], *, source=None, fixture
         selected_finding=gr.Dropdown(label='Pilih temuan',choices=[])
         evidence=gr.Textbox(label='Bukti & locator sumber',interactive=False,lines=10,max_lines=22)
         reopen.click(restore,inputs=archived,outputs=[current,finding_table,selected_finding,status],api_name=False)
+        m2_archive_button.click(m2_synthetic_archive,
+                                outputs=[current,finding_table,selected_finding,status],api_name=False)
         compare_files.click(upload_pair,inputs=[file_left,file_right,file_group,file_scope],outputs=[current,finding_table,selected_finding,status],api_name=False)
         if fixture is not None:
             demobutton.click(demo,outputs=[current,finding_table,selected_finding,status],api_name=False)
