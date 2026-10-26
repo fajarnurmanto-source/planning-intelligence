@@ -8,3 +8,7 @@ pydantic>=2.9,<3.0
 PyMuPDF>=1.24,<2.0
 python-docx>=1.1,<2.0
 openpyxl>=3.1,<4.0
+# M3.2's declared-relation workbench imports the existing G2 NetworkX graph
+# engine during FastAPI startup. Include it in the actual Docker runtime,
+# not just the VS4/CI testing requirements.
+networkx>=3.2,<4.0
