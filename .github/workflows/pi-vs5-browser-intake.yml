@@ -7,6 +7,8 @@ on:
       - 'backend/app/parser.py'
       - 'backend/app/vs4/reviewer_ui.py'
       - 'backend/tests/**'
+      - 'frontend/src/PlanningWorkbenchM2.tsx'
+      - 'frontend/package.json'
       - '.github/workflows/pi-vs5-browser-intake.yml'
   workflow_dispatch:
 jobs:
@@ -47,3 +49,10 @@ jobs:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
           python -c "import subprocess, sys; code = 'from app.planning_entities.synthetic_demo import cached_synthetic_result; from app.planning_entities.substantive_m3 import screen_substantive_candidates; print(screen_substantive_candidates(cached_synthetic_result())[\"report_sha256\"])'; hashes = [subprocess.check_output([sys.executable, '-c', code], text=True).strip().splitlines()[-1] for _ in range(2)]; assert hashes[0] == hashes[1] and len(hashes[0]) == 64, f'M3_CROSS_PROCESS_DIGEST_MISMATCH:{hashes}'; print('PI_M3_CROSS_PROCESS_DETERMINISM=PASS')"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build M2/M3 workbench frontend
+        run: |
+          npm --prefix frontend install --no-audit --no-fund
+          npm --prefix frontend run build
