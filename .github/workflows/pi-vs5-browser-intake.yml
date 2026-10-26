@@ -4,10 +4,14 @@ on:
     paths:
       - 'backend/app/vs5/**'
       - 'backend/app/planning_entities/**'
+      - 'backend/app/graph_g2/**'
+      - 'backend/app/graph_g4/**'
+      - 'backend/app/graph_g5/**'
       - 'backend/app/parser.py'
       - 'backend/app/vs4/reviewer_ui.py'
       - 'backend/tests/**'
       - 'frontend/src/PlanningWorkbenchM2.tsx'
+      - 'frontend/src/PlanningRelationsM3.tsx'
       - 'frontend/package.json'
       - '.github/workflows/pi-vs5-browser-intake.yml'
   workflow_dispatch:
@@ -23,14 +27,18 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -r backend/requirements-vs4.txt
-      - name: Integration and regression (VS1-VS5 and M2)
+      - name: Integration and regression (VS1-VS5 M2 M3 and G2-G5)
         env:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
           python -m pytest -q backend/tests/test_coherence_vs1.py backend/tests/test_review_vs2.py backend/tests/test_canonical_review_vs3.py backend/tests/test_operational_continuity_vs4.py backend/tests/test_browser_intake_vs5.py \
             backend/tests/test_planning_entities_m2.py \
             backend/tests/test_planning_pipeline_m2.py \
-            backend/tests/test_substantive_screen_m3.py
+            backend/tests/test_substantive_screen_m3.py \
+            backend/tests/test_declared_relations_m3.py \
+            backend/tests/test_substantive_graph_g2.py \
+            backend/tests/test_evidence_screen_g4.py \
+            backend/tests/test_direction_modality_g5.py
       - name: M2 cold-process deterministic digest
         working-directory: backend
         env:
@@ -49,6 +57,28 @@ jobs:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
           python -c "import subprocess, sys; code = 'from app.planning_entities.synthetic_demo import cached_synthetic_result; from app.planning_entities.substantive_m3 import screen_substantive_candidates; print(screen_substantive_candidates(cached_synthetic_result())[\"report_sha256\"])'; hashes = [subprocess.check_output([sys.executable, '-c', code], text=True).strip().splitlines()[-1] for _ in range(2)]; assert hashes[0] == hashes[1] and len(hashes[0]) == 64, f'M3_CROSS_PROCESS_DIGEST_MISMATCH:{hashes}'; print('PI_M3_CROSS_PROCESS_DETERMINISM=PASS')"
+      - name: M3.2 cold-process declared relation digest
+        working-directory: backend
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python - <<'PY'
+          import subprocess
+          import sys
+          probe = '''
+          from app.planning_entities.synthetic_demo import cached_synthetic_result
+          from app.planning_entities.relation_m3 import screen_declared_relations
+          p = cached_synthetic_result()
+          a = next(e for e in p["documents"]["RKPD"]["entities"] if e["title"] == "Transformasi layanan publik")
+          b = next(e for e in p["documents"]["RPJMD"]["entities"] if e["title"] == "Pelayanan publik membaik")
+          s = next(e for e in p["source_unit_index"]["RKPD"] if "mendukung" in e["excerpt"])
+          claim = dict(from_role="RKPD", from_entity_id=a["id"], to_role="RPJMD", to_entity_id=b["id"], relation="SUPPORTS", source_role="RKPD", source_unit_fingerprint=s["unit_fingerprint"], quote=s["excerpt"])
+          print(screen_declared_relations(p, [claim])["report_sha256"])
+          '''
+          hashes = [subprocess.check_output([sys.executable, '-c', probe], text=True).strip().splitlines()[-1] for _ in range(2)]
+          assert hashes[0] == hashes[1] and len(hashes[0]) == 64, hashes
+          print('PI_M32_CROSS_PROCESS_DETERMINISM=PASS')
+          PY
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -56,3 +86,4 @@ jobs:
         run: |
           npm --prefix frontend install --no-audit --no-fund
           npm --prefix frontend run build
+
