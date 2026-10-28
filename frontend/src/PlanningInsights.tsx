@@ -144,6 +144,8 @@ export default function PlanningInsights({
   }, [units, query])
   const firstYear = analysis.years[0]
   const lastYear = analysis.years[analysis.years.length - 1]
+  const periodEndYear = documentTitle.match(/20\d{2}\s*[-–]\s*(20\d{2})/)?.[1]
+  const focusYear = periodEndYear && analysis.years.includes(periodEndYear) ? periodEndYear : lastYear
 
   function downloadFindings() {
     const payload = {
@@ -185,9 +187,10 @@ export default function PlanningInsights({
     <div className="panel">
       <h4>Indikator dan target tahunan yang dikenali</h4>
       {analysis.indicators.length > 0 ? <div className="tablewrap"><table>
-        <thead><tr><th>Indikator</th><th>Unit</th><th>{firstYear}</th><th>{lastYear}</th><th>Bukti</th></tr></thead>
+        <thead><tr><th>Indikator</th><th>Unit</th><th>{firstYear}</th><th>{focusYear}</th>{focusYear !== lastYear && <th>{lastYear} (lanjutan)</th>}<th>Bukti</th></tr></thead>
         <tbody>{analysis.indicators.map(item => <tr key={item.source_unit_id}>
-          <td>{item.name}</td><td>{item.unit}</td><td>{item.targets[firstYear]}</td><td>{item.targets[lastYear]}</td>
+          <td>{item.name}</td><td>{item.unit}</td><td>{item.targets[firstYear]}</td><td>{item.targets[focusYear]}</td>
+          {focusYear !== lastYear && <td>{item.targets[lastYear]}</td>}
           <td><SourceBadge page={item.page} sourceUnitId={item.source_unit_id}/></td>
         </tr>)}</tbody>
       </table></div> : <p>Baris target belum bisa dibaca utuh; tabel mungkin perlu rekonstruksi berdasarkan koordinat PDF.</p>}
