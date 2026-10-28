@@ -30,7 +30,7 @@ type SourceUnit = {
   page_start: number | null
   page_end: number | null
   section_path: string | null
-  normalized_text: string
+  normalized_text: string | null
   locator: Record<string, unknown>
   unit_fingerprint: string
 }
@@ -153,7 +153,7 @@ export default function DocumentExtraction({ documents }: { documents: DocumentR
           <td>{unit.sequence_index}</td>
           <td>{unit.page_start ?? '—'}</td>
           <td>{unit.unit_type}</td>
-          <td>{unit.normalized_text.slice(0, 300) || '—'}</td>
+          <td>{(unit.normalized_text ?? '').slice(0, 300) || '—'}</td>
         </tr>)}</tbody>
       </table></div>
       {extraction.units.length > 30 && <p><small>30 unit pertama ditampilkan; seluruh {extraction.units.length} unit tersedia pada berkas JSON.</small></p>}
