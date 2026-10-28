@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PlanningInsights from './PlanningInsights'
 
 type DocumentRow = {
   id: string
@@ -146,6 +147,7 @@ export default function DocumentExtraction({ documents }: { documents: DocumentR
         <p><small>SHA-256 sumber: {extraction.run.input_sha256}. Hasil: {extraction.run.result_sha256 || '—'}.</small></p>
         <button type="button" onClick={download}>Unduh seluruh hasil ekstraksi (JSON)</button>
       </div>
+      {extraction.document.doc_type === 'RPJMD' && <PlanningInsights units={extraction.units} documentTitle={extraction.document.title} documentHash={extraction.document.sha256} />}
       <h4>Cuplikan isi dokumen</h4>
       <div className="tablewrap"><table>
         <thead><tr><th>Urutan</th><th>Halaman</th><th>Jenis</th><th>Teks terekstraksi</th></tr></thead>
