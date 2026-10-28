@@ -13,7 +13,7 @@ export type PlanningSourceUnit = {
 type Evidence = { source_unit_id: string; page: number | null; fingerprint: string }
 type EvidenceText = Evidence & { text: string }
 type Indicator = Evidence & { name: string; unit: string; targets: Record<string, string> }
-type Insights = {
+export type Insights = {
   vision: EvidenceText | null
   missions: EvidenceText[]
   indicators: Indicator[]
@@ -28,7 +28,7 @@ const evidence = (unit: PlanningSourceUnit): Evidence => ({
   fingerprint: unit.unit_fingerprint,
 })
 
-function extractInsights(source: PlanningSourceUnit[]): Insights {
+export function extractInsights(source: PlanningSourceUnit[]): Insights {
   const blocks = source.filter(unit => unit.unit_type === 'TEXT_BLOCK' && !!unit.normalized_text)
     .sort((a, b) => a.sequence_index - b.sequence_index)
   const getText = (unit: PlanningSourceUnit) => tidy(unit.normalized_text || '')
