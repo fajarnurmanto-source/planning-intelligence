@@ -71,7 +71,7 @@ function extractInsights(source: PlanningSourceUnit[]): Insights {
     }
   }
 
-  const tableStart = blocks.findIndex(unit => /Tabel\s+\d+\.\s+Rumusan Visi.*Indikator/i.test(getText(unit)))
+  const tableStart = blocks.findIndex(unit => /^Tabel\s+\d+\.\s+Rumusan Visi.*Indikator/i.test(getText(unit)))
   const tableEnd = tableStart < 0 ? -1 : blocks.findIndex((unit, index) =>
     index > tableStart && /^\d+\.\d+\.\s+(Strategi|Arah Kebijakan)/i.test(getText(unit)))
   const table = tableStart < 0 ? [] : blocks.slice(tableStart, tableEnd > tableStart ? tableEnd : tableStart + 300)
