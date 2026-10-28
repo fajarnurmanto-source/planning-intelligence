@@ -92,7 +92,13 @@ function extractInsights(source: PlanningSourceUnit[]): Insights {
     let name = tidy(match[1])
     const values = match[3].match(numeric) || []
     if (values.length !== years.length) continue
-    if (/^Meningkatnya\b/i.test(name)) continue // May contain a sasaran from the adjacent PDF column.
+    if (/^Meningkatnya\b/i.test(name)) {
+      // Some PDF rows concatenate a sasaran ending in "Masyarakat" with
+      // the title-cased indicator from the next column in one text block.
+      const separateIndicator = name.match(/\bMasyarakat\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){2,6})$/)
+      if (!separateIndicator) continue
+      name = separateIndicator[1]
+    }
     const looksFragmented = !name || /^(Manusia|Masyarakat|Terbuka\s*\(TPT\)|\([A-Z]{2,8}\))$/i.test(name)
     if (looksFragmented) {
       const currentBox = unit.locator?.bbox
@@ -100,7 +106,7 @@ function extractInsights(source: PlanningSourceUnit[]): Insights {
         const prevBox = previous.locator?.bbox
         if (!currentBox || !prevBox || unit.page_start !== previous.page_start) return false
         const prior = getText(previous)
-        return prevBox[0] >= 430 && prevBox[1] >= currentBox[1] - 42 &&
+        return prevBox[0] >= 430 && prevBox[1] >= currentBox[1] - 18 &&
           prevBox[1] <= currentBox[1] + 1 &&
           prior.length >= 4 && prior.length <= 80 && !/\d/.test(prior)
       }).sort((a, b) => (a.locator?.bbox?.[1] ?? 0) - (b.locator?.bbox?.[1] ?? 0))
