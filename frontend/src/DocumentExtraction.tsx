@@ -9,6 +9,8 @@ type DocumentRow = {
   latest_version_id: string | null
 }
 
+type DocumentVersion = { id: string; sha256: string }
+
 type ParseRun = {
   id: string
   status: string
@@ -60,11 +62,16 @@ export default function DocumentExtraction({ documents }: { documents: DocumentR
 
     try {
       const version = encodeURIComponent(document.latest_version_id)
+      const versions = await jsonResponse<DocumentVersion[]>(
+        '/api/documents/' + encodeURIComponent(document.id) + '/versions',
+      )
+      const selected = versions.find(item => item.id === document.latest_version_id)
+      if (!selected) throw new Error('Versi dokumen terakhir tidak ditemukan.')
       const run = await jsonResponse<ParseRun>('/api/document-versions/' + version + '/parse', { method: 'POST' })
       if (run.status !== 'SUCCEEDED') {
         throw new Error('Parser belum menghasilkan status SUCCEEDED: ' + run.status)
       }
-      if (run.input_sha256.toLowerCase() !== document.sha256.toLowerCase()) {
+      if (run.input_sha256.toLowerCase() !== selected.sha256.toLowerCase()) {
         throw new Error('Checksum dokumen tidak cocok dengan hasil parser.')
       }
 
