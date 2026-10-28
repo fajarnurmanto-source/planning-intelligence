@@ -6,6 +6,7 @@ export type PlanningSourceUnit = {
   sequence_index: number
   page_start: number | null
   normalized_text: string | null
+  locator?: { bbox?: number[] }
   unit_fingerprint: string
 }
 
@@ -86,15 +87,27 @@ function extractInsights(source: PlanningSourceUnit[]): Insights {
   for (let i = 0; i < table.length; i++) {
     const unit = table[i]
     const line = getText(unit)
-    const match = line.match(/^(.{6,110}?)\s+(Juta Rupiah\/Jiwa|Persen|Nilai|Tahun|Kasus)\s+(.+)$/i)
+    const match = line.match(/^(.*?)\s*(Juta Rupiah\/Jiwa|Persen|Nilai|Tahun|Kasus)\s+(.+)$/i)
     if (!match || years.length < 3) continue
     let name = tidy(match[1])
     const values = match[3].match(numeric) || []
     if (values.length !== years.length) continue
-    if (/^Terbuka\s*\(TPT\)/i.test(name)) {
-      const prev = table.slice(Math.max(0, i - 4), i).find(item => /^Tingkat Pengangguran/i.test(getText(item)))
-      if (prev) name = tidy(getText(prev) + ' ' + name)
+    if (/^Meningkatnya\b/i.test(name)) continue // May contain a sasaran from the adjacent PDF column.
+    const looksFragmented = !name || /^(Manusia|Masyarakat|Terbuka\s*\(TPT\)|\([A-Z]{2,8}\))$/i.test(name)
+    if (looksFragmented) {
+      const currentBox = unit.locator?.bbox
+      const candidateParts = table.slice(Math.max(0, i - 6), i).filter(previous => {
+        const prevBox = previous.locator?.bbox
+        if (!currentBox || !prevBox || unit.page_start !== previous.page_start) return false
+        const prior = getText(previous)
+        return prevBox[0] >= 500 && prevBox[1] >= currentBox[1] - 42 &&
+          prevBox[1] <= currentBox[1] + 1 &&
+          prior.length >= 4 && prior.length <= 80 && !/\d/.test(prior)
+      }).sort((a, b) => (a.locator?.bbox?.[1] ?? 0) - (b.locator?.bbox?.[1] ?? 0))
+      const prefix = candidateParts.map(getText).join(' ')
+      if (prefix) name = tidy(prefix + ' ' + name)
     }
+    if (name.length < 7 || name.length > 110) continue
     if (names.has(name.toLowerCase())) continue
     names.add(name.toLowerCase())
     indicators.push({
