@@ -1,11 +1,11 @@
 """
-Deterministic document parsing for Planning Intelligence V0.1A.3.
+Deterministic document parsing for Planning Intelligence V0.1A.4.
 
 This module deliberately does not use any generative AI provider.
 It converts immutable document versions into reproducible, addressable source
 units with format-specific locators and stable hashes.
 
-Supported in V0.1A.3:
+Supported in V0.1A.4:
 - PDF  -> PAGE + TEXT_BLOCK
 - DOCX -> PARAGRAPH + TABLE + TABLE_ROW + TABLE_CELL
 - XLSX -> SHEET + TABLE_ROW + TABLE_CELL
@@ -34,7 +34,7 @@ from openpyxl import load_workbook
 
 
 PARSER_NAME = "planning-intelligence-deterministic"
-PARSER_VERSION = "0.1A.3"
+PARSER_VERSION = "0.1A.4"
 
 DEFAULT_CONFIG: dict[str, Any] = {
     "normalize_whitespace": True,
@@ -75,6 +75,25 @@ def build_run_fingerprint(input_sha256: str, config: dict[str, Any]) -> str:
             }
         )
     )
+
+
+def _database_safe_text(value: Any) -> Any:
+    """Replace PostgreSQL-prohibited NUL characters without altering source files.
+
+    This also covers structured locator values that may be persisted as JSONB.
+    U+FFFD is intentionally visible to reviewers; removing NUL silently could
+    concatenate labels or numbers and create false evidence matches.
+    """
+    if isinstance(value, str):
+        return value.replace("\x00", "\uFFFD")
+    if isinstance(value, list):
+        return [_database_safe_text(item) for item in value]
+    if isinstance(value, dict):
+        return {
+            _database_safe_text(key): _database_safe_text(item)
+            for key, item in value.items()
+        }
+    return value
 
 
 def normalize_text(value: str | None, collapse_whitespace: bool = True) -> str:
@@ -128,8 +147,13 @@ def _unit(
     structural_path: str | None = None,
     raw_text: str | None = None,
 ) -> ParsedUnit:
-    section_path = section_path or []
-    locator = locator or {}
+    section_path = _database_safe_text(section_path or [])
+    locator = _database_safe_text(locator or {})
+    structural_path = _database_safe_text(structural_path)
+    nul_count = raw_text.count("\x00") if raw_text else 0
+    raw_text = _database_safe_text(raw_text)
+    if nul_count:
+        locator = {**locator, "nul_text_replacements": nul_count}
     normalized = normalize_text(raw_text, config.get("normalize_whitespace", True))
     content_basis = normalized or canonical_json(
         {
