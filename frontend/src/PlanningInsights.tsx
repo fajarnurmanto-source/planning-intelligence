@@ -100,12 +100,13 @@ function extractInsights(source: PlanningSourceUnit[]): Insights {
         const prevBox = previous.locator?.bbox
         if (!currentBox || !prevBox || unit.page_start !== previous.page_start) return false
         const prior = getText(previous)
-        return prevBox[0] >= 500 && prevBox[1] >= currentBox[1] - 42 &&
+        return prevBox[0] >= 430 && prevBox[1] >= currentBox[1] - 42 &&
           prevBox[1] <= currentBox[1] + 1 &&
           prior.length >= 4 && prior.length <= 80 && !/\d/.test(prior)
       }).sort((a, b) => (a.locator?.bbox?.[1] ?? 0) - (b.locator?.bbox?.[1] ?? 0))
       const prefix = candidateParts.map(getText).join(' ')
-      if (prefix) name = tidy(prefix + ' ' + name)
+      if (!prefix) continue
+      name = tidy(prefix + ' ' + name)
     }
     if (name.length < 7 || name.length > 110) continue
     if (names.has(name.toLowerCase())) continue
