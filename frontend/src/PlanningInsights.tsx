@@ -92,7 +92,13 @@ function extractInsights(source: PlanningSourceUnit[]): Insights {
     let name = tidy(match[1])
     const values = match[3].match(numeric) || []
     if (values.length !== years.length) continue
-    if (/^Meningkatnya\b/i.test(name)) continue // May contain a sasaran from the adjacent PDF column.
+    if (/^Meningkatnya\b/i.test(name)) {
+      // Some PDF rows concatenate a sasaran ending in "Masyarakat" with
+      // the title-cased indicator from the next column in one text block.
+      const separateIndicator = name.match(/\bMasyarakat\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){2,6})$/)
+      if (!separateIndicator) continue
+      name = separateIndicator[1]
+    }
     const looksFragmented = !name || /^(Manusia|Masyarakat|Terbuka\s*\(TPT\)|\([A-Z]{2,8}\))$/i.test(name)
     if (looksFragmented) {
       const currentBox = unit.locator?.bbox
@@ -100,7 +106,7 @@ function extractInsights(source: PlanningSourceUnit[]): Insights {
         const prevBox = previous.locator?.bbox
         if (!currentBox || !prevBox || unit.page_start !== previous.page_start) return false
         const prior = getText(previous)
-        return prevBox[0] >= 430 && prevBox[1] >= currentBox[1] - 42 &&
+        return prevBox[0] >= 430 && prevBox[1] >= currentBox[1] - 18 &&
           prevBox[1] <= currentBox[1] + 1 &&
           prior.length >= 4 && prior.length <= 80 && !/\d/.test(prior)
       }).sort((a, b) => (a.locator?.bbox?.[1] ?? 0) - (b.locator?.bbox?.[1] ?? 0))
@@ -138,6 +144,8 @@ export default function PlanningInsights({
   }, [units, query])
   const firstYear = analysis.years[0]
   const lastYear = analysis.years[analysis.years.length - 1]
+  const periodEndYear = documentTitle.match(/20\d{2}\s*[-–]\s*(20\d{2})/)?.[1]
+  const focusYear = periodEndYear && analysis.years.includes(periodEndYear) ? periodEndYear : lastYear
 
   function downloadFindings() {
     const payload = {
@@ -179,9 +187,10 @@ export default function PlanningInsights({
     <div className="panel">
       <h4>Indikator dan target tahunan yang dikenali</h4>
       {analysis.indicators.length > 0 ? <div className="tablewrap"><table>
-        <thead><tr><th>Indikator</th><th>Unit</th><th>{firstYear}</th><th>{lastYear}</th><th>Bukti</th></tr></thead>
+        <thead><tr><th>Indikator</th><th>Unit</th><th>{firstYear}</th><th>{focusYear}</th>{focusYear !== lastYear && <th>{lastYear} (lanjutan)</th>}<th>Bukti</th></tr></thead>
         <tbody>{analysis.indicators.map(item => <tr key={item.source_unit_id}>
-          <td>{item.name}</td><td>{item.unit}</td><td>{item.targets[firstYear]}</td><td>{item.targets[lastYear]}</td>
+          <td>{item.name}</td><td>{item.unit}</td><td>{item.targets[firstYear]}</td><td>{item.targets[focusYear]}</td>
+          {focusYear !== lastYear && <td>{item.targets[lastYear]}</td>}
           <td><SourceBadge page={item.page} sourceUnitId={item.source_unit_id}/></td>
         </tr>)}</tbody>
       </table></div> : <p>Baris target belum bisa dibaca utuh; tabel mungkin perlu rekonstruksi berdasarkan koordinat PDF.</p>}
