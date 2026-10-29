@@ -1,11 +1,13 @@
 """PI-PERF-TAX-01 deterministic classification guards."""
 
 import pytest
+from types import SimpleNamespace
 
 from app.planning_entities.performance_taxonomy import (
     taxonomy_registry, indicator_identity, resolve_indicator_label,
     classify_measurement_candidate, parse_measure_value,
 )
+from app.planning_entities.performance_api import _verified_header_link
 
 
 def definition(name="Indeks Keterpaduan Pembangunan Infrastruktur", aliases=None):
@@ -72,3 +74,15 @@ def test_no_invalid_alias_or_unknown_level():
         indicator_identity({**definition(), "level": "ILLEGAL"})
     with pytest.raises(ValueError):
         indicator_identity({**definition(), "declared_aliases": ["a", "a"]})
+
+
+def test_structured_cell_header_link_requires_same_column_and_earlier_row():
+    def cell(row, column, unit_type="TABLE_CELL"):
+        return SimpleNamespace(unit_type=unit_type, locator={
+            "format": "xlsx", "sheet_name": "Kinerja", "sheet_index": 0,
+            "row": row, "column": column,
+        })
+    assert _verified_header_link(cell(10, 4), [cell(2, 4)])
+    assert not _verified_header_link(cell(10, 4), [cell(2, 5)])
+    assert not _verified_header_link(cell(10, 4), [cell(12, 4)])
+    assert not _verified_header_link(cell(10, 4, "TEXT_BLOCK"), [cell(2, 4)])
