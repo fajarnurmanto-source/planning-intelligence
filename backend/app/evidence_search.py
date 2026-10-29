@@ -20,7 +20,11 @@ def target_text(value: str) -> str:
 def anchor_token(indicator: str) -> str:
     """Choose a distinctive label token, never an arbitrary numeric target."""
     tokens = [token for token in plain(indicator).split() if len(token) > 2]
-    return max(tokens, key=len) if tokens else ""
+    # Planning-document boilerplate is extremely frequent (especially
+    # 'pembangunan'); choosing it would defeat scoped retrieval.
+    boilerplate = {"indeks", "tingkat", "pembangunan", "masyarakat", "per", "kapita", "rata", "lama", "usia", "nilai"}
+    distinctive = [token for token in tokens if token not in boilerplate]
+    return max(distinctive or tokens, key=len) if tokens else ""
 
 
 def evaluate_excerpt(indicator: str, target: str, excerpt: str) -> tuple[float, bool] | None:
