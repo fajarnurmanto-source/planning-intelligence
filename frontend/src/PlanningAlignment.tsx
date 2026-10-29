@@ -18,7 +18,7 @@ type Finding = {
   target_year: string
   rpjmd_page: number | null
   rpjmd_source_unit_id: string
-  comparison_status: 'TARGET_TEXT_NEAR_LABEL' | 'INDICATOR_TEXT_FOUND' | 'NO_TEXT_MATCH'
+  comparison_status: 'TARGET_TEXT_NEAR_LABEL' | 'INDICATOR_TEXT_FOUND' | 'NO_TEXT_MATCH' | 'SEARCH_LIMIT_REACHED'
   comparison_page: number | null
   comparison_source_unit_id: string | null
   comparison_source_fingerprint: string | null
@@ -62,59 +62,32 @@ async function loadSourceUnits(document: DocumentRow): Promise<{ run: Run; units
   return { run, units }
 }
 
-const plain = (text: string) => text.normalize('NFKD').toLowerCase()
-  .replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ')
+type CandidateResponse = {
+  status: 'EVIDENCE_CANDIDATE_UNREVIEWED'
+  parsing_run_id: string
+  findings: Pick<Finding, 'comparison_status' | 'comparison_page' | 'comparison_source_unit_id' |
+    'comparison_source_fingerprint' | 'comparison_excerpt'>[]
+}
 
-const targetText = (text: string) => text.toLowerCase().replace(/[–—]/g, '-')
-  .replace(/\./g, ',').replace(/\s+/g, '')
-
-function findEvidence(
-  indicator: string, target: string, units: PlanningSourceUnit[],
-): Pick<Finding, 'comparison_status' | 'comparison_page' | 'comparison_source_unit_id' |
-  'comparison_source_fingerprint' | 'comparison_excerpt'> {
-  const blocks = units.filter(unit => unit.unit_type === 'TEXT_BLOCK' && !!unit.normalized_text)
-    .sort((a, b) => a.sequence_index - b.sequence_index)
-  const label = plain(indicator)
-  const labelTokens = Array.from(new Set(label.split(' ').filter(token => token.length > 2)))
-  const desired = targetText(target)
-  let best: { score: number; sameTarget: boolean; source: PlanningSourceUnit; text: string } | null = null
-
-  for (let index = 0; index < blocks.length; index++) {
-    const source = blocks[index]
-    const nearby = blocks.slice(index, index + 3).filter(unit => unit.page_start === source.page_start)
-    const excerpt = nearby.map(unit => unit.normalized_text || '').join(' ').replace(/\s+/g, ' ').trim()
-    const words = plain(excerpt)
-    const wordSet = new Set(words.split(' '))
-    const coverage = labelTokens.length >= 2
-      ? labelTokens.filter(token => wordSet.has(token)).length / labelTokens.length : 0
-    const exactLabel = !!label && words.includes(label)
-    if (!exactLabel && coverage < 0.75) continue
-    const sameTarget = desired.length >= 4 && targetText(excerpt).includes(desired)
-    const score = (sameTarget ? 10 : 0) + (exactLabel ? 2 : coverage)
-    if (!best || score > best.score) best = { score, sameTarget, source, text: excerpt }
-    if (score >= 12) break
-  }
-
-  if (!best) return {
-    comparison_status: 'NO_TEXT_MATCH',
-    comparison_page: null,
-    comparison_source_unit_id: null,
-    comparison_source_fingerprint: null,
-    comparison_excerpt: null,
-  }
-  return {
-    comparison_status: best.sameTarget ? 'TARGET_TEXT_NEAR_LABEL' : 'INDICATOR_TEXT_FOUND',
-    comparison_page: best.source.page_start,
-    comparison_source_unit_id: best.source.id,
-    comparison_source_fingerprint: best.source.unit_fingerprint,
-    comparison_excerpt: best.text.slice(0, 500),
-  }
+async function loadExistingRun(document: DocumentRow): Promise<Run> {
+  if (!document.latest_version_id) throw new Error('Dokumen tanpa versi aktif: ' + document.title)
+  const versions = await jsonResponse<Version[]>('/api/documents/' + encodeURIComponent(document.id) + '/versions')
+  const version = versions.find(item => item.id === document.latest_version_id)
+  if (!version) throw new Error('Versi dokumen tidak ditemukan: ' + document.title)
+  const runs = await jsonResponse<Run[]>(
+    '/api/document-versions/' + encodeURIComponent(version.id) + '/parsing-runs',
+  )
+  const run = runs.find(item => item.status === 'SUCCEEDED' &&
+    item.input_sha256.toLowerCase() === version.sha256.toLowerCase())
+  if (!run) throw new Error('Hasil parsing persisten belum siap: ' + document.title)
+  return run
 }
 
 const statusLabel: Record<Finding['comparison_status'], string> = {
   TARGET_TEXT_NEAR_LABEL: 'Kandidat angka sama',
   INDICATOR_TEXT_FOUND: 'Indikator ditemukan; angka belum pasti',
   NO_TEXT_MATCH: 'Belum ditemukan pada teks',
+  SEARCH_LIMIT_REACHED: 'Hasil pencarian terlalu luas; perlu penyempitan',
 }
 
 export default function PlanningAlignment({ documents }: { documents: DocumentRow[] }) {
@@ -147,21 +120,34 @@ export default function PlanningAlignment({ documents }: { documents: DocumentRo
     setResult(null)
     try {
       const original = await loadSourceUnits(source)
-      const target = await loadSourceUnits(comparison)
+      const target = await loadExistingRun(comparison)
       const insights = extractInsights(original.units)
       if (!insights.indicators.length) throw new Error('Indikator RPJMD belum berhasil dikenali. Buka Telaah Awal pada menu Documents.')
       if (!insights.years.includes(selectedYear)) throw new Error('Tahun ' + selectedYear + ' tidak tercantum pada tabel target RPJMD.')
-      const findings: Finding[] = insights.indicators.map(indicator => ({
+      const scoped = await jsonResponse<CandidateResponse>(
+        '/api/parsing-runs/' + encodeURIComponent(target.id) + '/evidence-candidates',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: insights.indicators.map(indicator => ({
+            indicator: indicator.name, target: indicator.targets[selectedYear] || '',
+          })) }),
+        },
+      )
+      if (scoped.findings.length !== insights.indicators.length) {
+        throw new Error('Jumlah kandidat bukti tidak sesuai indikator sumber.')
+      }
+      const findings: Finding[] = insights.indicators.map((indicator, index) => ({
         indicator: indicator.name,
         unit: indicator.unit,
         rpjmd_target: indicator.targets[selectedYear],
         target_year: selectedYear,
         rpjmd_page: indicator.page,
         rpjmd_source_unit_id: indicator.source_unit_id,
-        ...findEvidence(indicator.name, indicator.targets[selectedYear], target.units),
+        ...scoped.findings[index],
       }))
       setResult({ source, comparison, source_run_id: original.run.id,
-        comparison_run_id: target.run.id, year: selectedYear, findings })
+        comparison_run_id: target.id, year: selectedYear, findings })
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
     } finally {
@@ -192,6 +178,7 @@ export default function PlanningAlignment({ documents }: { documents: DocumentRo
   const matched = result?.findings.filter(row => row.comparison_status === 'TARGET_TEXT_NEAR_LABEL').length || 0
   const mentioned = result?.findings.filter(row => row.comparison_status === 'INDICATOR_TEXT_FOUND').length || 0
   const missing = result?.findings.filter(row => row.comparison_status === 'NO_TEXT_MATCH').length || 0
+  const broad = result?.findings.filter(row => row.comparison_status === 'SEARCH_LIMIT_REACHED').length || 0
 
   return <section>
     <h2>Perbandingan dokumen perencanaan</h2>
@@ -223,6 +210,7 @@ export default function PlanningAlignment({ documents }: { documents: DocumentRo
         <div className="card"><small>Nama indikator ditemukan</small><strong>{mentioned}</strong><span>Angka belum terkonfirmasi</span></div>
         <div className="card"><small>Belum ditemukan</small><strong>{missing}</strong><span>Jangan disimpulkan sebagai ketidaksesuaian</span></div>
       </div>
+      {broad > 0 && <p role="status">{broad} indikator perlu pencarian lebih spesifik; belum dinilai sebagai tidak ditemukan.</p>}
       <div className="panel" style={{ marginTop: 16 }}>
         <h3>{result.source.title} ↔ {result.comparison.title}</h3>
         <p><button type="button" onClick={download}>Unduh perbandingan beserta sumber (JSON)</button></p>
