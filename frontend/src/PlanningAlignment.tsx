@@ -40,16 +40,8 @@ async function jsonResponse<T>(path: string, options?: RequestInit): Promise<T> 
 }
 
 async function loadSourceUnits(document: DocumentRow): Promise<{ run: Run; units: PlanningSourceUnit[] }> {
-  if (!document.latest_version_id) throw new Error('Dokumen tanpa versi aktif: ' + document.title)
-  const versions = await jsonResponse<Version[]>('/api/documents/' + encodeURIComponent(document.id) + '/versions')
-  const version = versions.find(item => item.id === document.latest_version_id)
-  if (!version) throw new Error('Versi dokumen tidak ditemukan: ' + document.title)
-  const run = await jsonResponse<Run>(
-    '/api/document-versions/' + encodeURIComponent(version.id) + '/parse', { method: 'POST' },
-  )
-  if (run.status !== 'SUCCEEDED' || run.input_sha256.toLowerCase() !== version.sha256.toLowerCase()) {
-    throw new Error('Hasil parsing belum siap atau checksum tidak cocok: ' + document.title)
-  }
+  // Reuse persisted evidence: Perbandingan must never trigger a new parser run.
+  const run = await loadExistingRun(document)
   const units: PlanningSourceUnit[] = []
   for (let offset = 0; offset < run.source_unit_count; offset += 1000) {
     const batch = await jsonResponse<PlanningSourceUnit[]>(
