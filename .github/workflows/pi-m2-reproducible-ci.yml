@@ -4,9 +4,12 @@ on:
   pull_request:
     paths:
       - "backend/app/planning_entities/**"
+      - "backend/app/evidence_search.py"
+      - "backend/app/main.py"
+      - "backend/tests/test_evidence_search_candidates.py"
       - "backend/tests/test_planning_entities_m2.py"
       - "backend/tests/test_planning_pipeline_m2.py"
-      - "backend/tests/test_m2_vs4_bridge_rs2.py"
+      - "backend/tests/test_m2_vs4_bridge_rs2.py tests/test_evidence_search_candidates.py"
       - "frontend/**"
       - ".github/workflows/pi-m2-reproducible-ci.yml"
   workflow_dispatch:

@@ -6,8 +6,9 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from uuid import UUID
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form
-from sqlalchemy import select, func
-from sqlalchemy.orm import Session
+from sqlalchemy import select, func, and_
+from sqlalchemy.orm import Session, aliased
+from pydantic import BaseModel, Field
 from .db import get_db
 from .models import (
     Jurisdiction,
@@ -23,6 +24,7 @@ from .models import (
 )
 from .schemas import ProjectCreate, AuditCreate, SettingUpdate
 from .audit import record_event
+from .evidence_search import anchor_token, best_candidate
 from .parser import (
     DEFAULT_CONFIG,
     PARSER_NAME,
@@ -560,6 +562,121 @@ def list_source_units(
         "content_sha256": u.content_sha256,
         "unit_fingerprint": u.unit_fingerprint,
     } for u in rows]
+
+
+
+# Bounded, server-side candidate search. It never determines year columns or
+# substantive policy coherence; original evidence remains reviewer-controlled.
+class EvidenceNeed(BaseModel):
+    indicator: str = Field(min_length=3, max_length=180)
+    target: str = Field(default="", max_length=100)
+
+
+class EvidenceBatch(BaseModel):
+    items: list[EvidenceNeed] = Field(min_length=1, max_length=30)
+
+
+@app.post("/api/parsing-runs/{run_id}/evidence-candidates")
+def find_evidence_candidates(
+    run_id: UUID, payload: EvidenceBatch, db: Session = Depends(get_db),
+):
+    run = db.get(ParsingRun, run_id)
+    if not run:
+        raise HTTPException(404, "Parsing run not found")
+    if run.status != "SUCCEEDED":
+        raise HTTPException(409, "Parsing run has not succeeded")
+
+    results = []
+    # Each indicator searches a single distinctive token within one parsing run.
+    # A small same-page window around each matching block is scored; this
+    # tolerates PDF label splits. The hard cap prevents unbounded responses.
+    for need in payload.items:
+        anchor = anchor_token(need.indicator)
+        if not anchor:
+            results.append({
+                **best_candidate(need.indicator, need.target, []),
+                "candidate_anchor_count": 0,
+                "search_truncated": False,
+            })
+            continue
+
+        candidate_blocks = (
+            select(
+                SourceUnit.id.label("id"),
+                SourceUnit.page_start.label("page_start"),
+                SourceUnit.sequence_index.label("sequence_index"),
+                SourceUnit.unit_fingerprint.label("unit_fingerprint"),
+            )
+            .where(
+                SourceUnit.parsing_run_id == run_id,
+                SourceUnit.unit_type == "TEXT_BLOCK",
+                SourceUnit.normalized_text.ilike("%" + anchor + "%"),
+            )
+            .order_by(SourceUnit.sequence_index)
+            .limit(801)
+            .subquery()
+        )
+        nearby = aliased(SourceUnit)
+        rows = db.execute(
+            select(
+                candidate_blocks.c.id,
+                candidate_blocks.c.page_start,
+                candidate_blocks.c.sequence_index,
+                candidate_blocks.c.unit_fingerprint,
+                nearby.sequence_index,
+                nearby.normalized_text,
+            )
+            .outerjoin(
+                nearby,
+                and_(
+                    nearby.parsing_run_id == run_id,
+                    nearby.unit_type == "TEXT_BLOCK",
+                    nearby.page_start == candidate_blocks.c.page_start,
+                    nearby.sequence_index >= candidate_blocks.c.sequence_index - 2,
+                    nearby.sequence_index <= candidate_blocks.c.sequence_index + 2,
+                ),
+            )
+            .order_by(candidate_blocks.c.sequence_index, nearby.sequence_index)
+        ).all()
+
+        candidates = []
+        for row in rows:
+            key = str(row[0])
+            if not candidates or candidates[-1]["id"] != key:
+                candidates.append({
+                    "id": key,
+                    "page_start": row[1],
+                    "unit_fingerprint": row[3],
+                    "excerpt": "",
+                })
+            if row[5]:
+                candidates[-1]["excerpt"] += " " + row[5]
+
+        if len(candidates) > 800:
+            results.append({
+                "comparison_status": "SEARCH_LIMIT_REACHED",
+                "comparison_page": None,
+                "comparison_source_unit_id": None,
+                "comparison_source_fingerprint": None,
+                "comparison_excerpt": None,
+                "candidate_anchor_count": len(candidates),
+                "search_truncated": True,
+            })
+            continue
+        for item in candidates:
+            item["excerpt"] = " ".join(item["excerpt"].split())
+        results.append({
+            **best_candidate(need.indicator, need.target, candidates),
+            "candidate_anchor_count": len(candidates),
+            "search_truncated": False,
+        })
+
+    return {
+        "status": "EVIDENCE_CANDIDATE_UNREVIEWED",
+        "parsing_run_id": str(run_id),
+        "strategy": "TEXT_BLOCK_DISTINCTIVE_TOKEN_SAME_PAGE_WINDOW",
+        "findings": results,
+    }
 
 
 @app.get("/api/regulations")
