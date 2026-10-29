@@ -588,8 +588,8 @@ def find_evidence_candidates(
 
     results = []
     # Each indicator searches a single distinctive token within one parsing run.
-    # The matching block plus two next blocks on the same page are scored, as
-    # in the original UI. The hard cap prevents an unbounded DB/browser response.
+    # A small same-page window around each matching block is scored; this
+    # tolerates PDF label splits. The hard cap prevents unbounded responses.
     for need in payload.items:
         anchor = anchor_token(need.indicator)
         if not anchor:
@@ -632,7 +632,7 @@ def find_evidence_candidates(
                     nearby.parsing_run_id == run_id,
                     nearby.unit_type == "TEXT_BLOCK",
                     nearby.page_start == candidate_blocks.c.page_start,
-                    nearby.sequence_index >= candidate_blocks.c.sequence_index,
+                    nearby.sequence_index >= candidate_blocks.c.sequence_index - 2,
                     nearby.sequence_index <= candidate_blocks.c.sequence_index + 2,
                 ),
             )
@@ -674,7 +674,7 @@ def find_evidence_candidates(
     return {
         "status": "EVIDENCE_CANDIDATE_UNREVIEWED",
         "parsing_run_id": str(run_id),
-        "strategy": "TEXT_BLOCK_DISTINCTIVE_TOKEN_AND_SAME_PAGE_NEIGHBORS",
+        "strategy": "TEXT_BLOCK_DISTINCTIVE_TOKEN_SAME_PAGE_WINDOW",
         "findings": results,
     }
 
