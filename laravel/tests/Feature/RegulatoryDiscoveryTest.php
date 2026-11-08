@@ -26,7 +26,7 @@ final class RegulatoryDiscoveryTest extends TestCase
     {
         Http::preventStrayRequests();
         Http::fake(['peraturan.bpk.go.id/*' => Http::response(<<<'HTML'
-<html><body>
+<html><body><h2>PENCARIAN PERATURAN</h2>
 <article><a href="/Details/311927/permendagri-no-86-tahun-2017">Permendagri No. 86 Tahun 2017</a></article>
 <article><a href="https://peraturan.bpk.go.id/Details/321470/permendagri-no-10-tahun-2025">Permendagri No. 10 Tahun 2025</a></article>
 <a href="https://evil.example/Details/12345/fake">Permendagri No. 86 Tahun 2017</a>
@@ -58,6 +58,11 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8'])]);
         $this->getJson(self::URL.'?q=ab&source=jdih_bpk')->assertUnprocessable();
         $this->getJson(self::URL.'?q=RKPD&source=https%3A%2F%2Fevil.example')->assertUnprocessable();
         Http::assertNothingSent();
+
+        Http::fake(['peraturan.bpk.go.id/*' => Http::response('<h2>PERATURAN TERBARU</h2>', 200, ['Content-Type' => 'text/html'])]);
+        $this->getJson(self::URL.'?q=Permendagri')
+            ->assertStatus(503)
+            ->assertJsonPath('code', 'OFFICIAL_SOURCE_UNAVAILABLE');
 
         Http::fake(['peraturan.bpk.go.id/*' => Http::response('Blocked', 429, ['Content-Type' => 'text/html'])]);
         $this->getJson(self::URL.'?q=Permendagri')
