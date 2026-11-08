@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\Pi\Regulatory\NormativeVersionTimeline;
 use Illuminate\Http\JsonResponse;
 use RuntimeException;
 use Throwable;
@@ -27,6 +28,12 @@ final class NormativeRootController extends Controller
                 throw new RuntimeException('Normative source registry invalid.');
             }
             $this->assertRegistry($data);
+            $timeline = app(NormativeVersionTimeline::class)->resolve(
+                $data['instruments'], $data['version_events'], $data['observed_on']
+            );
+            if ($timeline['status'] !== $data['gates']['regulatory_version']) {
+                throw new RuntimeException('Computed version status contradicts admission gate.');
+            }
 
             return response()->json([
                 'schema' => 'PI_R70L_NORMATIVE_ROOT_READ_MODEL_V1',
@@ -41,6 +48,7 @@ final class NormativeRootController extends Controller
                 'delegation' => $data['delegation'],
                 'case' => $data['case'],
                 'gates' => $data['gates'],
+                'version_timeline' => $timeline,
             ])->header('Cache-Control', 'private, no-store');
         } catch (Throwable $error) {
             report($error);
@@ -63,6 +71,7 @@ final class NormativeRootController extends Controller
             || ($data['source_integrity'] ?? null) !== 'OFFICIAL_LIVE_PDF_LINKS_NOT_HASH_PINNED'
             || !is_array($data['instruments'] ?? null) || count($data['instruments']) !== 2
             || !is_array($data['provisions'] ?? null) || count($data['provisions']) !== 6
+            || !is_array($data['version_events'] ?? null) || $data['version_events'] !== []
             || !is_array($data['delegation'] ?? null)
             || !is_array($data['case'] ?? null)
             || !is_array($data['gates'] ?? null)) {
