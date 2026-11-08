@@ -162,16 +162,39 @@ final class OfficialRegulationDiscovery
 
     private function matchesQuery(string $title, string $query): bool
     {
-        $tokens = preg_split('/[^\pL\pN]+/u', mb_strtolower($query), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        // Broad provider searches may return APBDes documents for RKPD queries.
+        // Require every meaningful query token to match an exact title word or
+        // an explicit regulatory acronym expansion. Prefer zero candidates
+        // over off-topic legal sources.
+        $normalize = static fn (string $value): string => trim((string) preg_replace(
+            '/[^\pL\pN]+/u', ' ', mb_strtolower($value)
+        ));
+        $tokens = preg_split('/\s+/u', $normalize($query), -1, PREG_SPLIT_NO_EMPTY) ?: [];
         $tokens = array_values(array_unique(array_filter($tokens, static fn (string $token): bool =>
             mb_strlen($token) > 2 || ctype_digit($token)
         )));
         if ($tokens === []) {
             return false;
         }
-        $candidate = mb_strtolower($title);
-        $hits = count(array_filter($tokens, static fn (string $token): bool => str_contains($candidate, $token)));
 
-        return $hits >= min(2, count($tokens));
+        $candidate = $normalize($title);
+        $words = array_fill_keys(preg_split('/\s+/u', $candidate, -1, PREG_SPLIT_NO_EMPTY) ?: [], true);
+        $expansions = [
+            'rkpd' => 'rencana kerja pemerintah daerah',
+            'rpjmd' => 'rencana pembangunan jangka menengah daerah',
+            'apbd' => 'anggaran pendapatan dan belanja daerah',
+            'apbdes' => 'anggaran pendapatan dan belanja desa',
+        ];
+        foreach ($tokens as $token) {
+            if (isset($words[$token])) {
+                continue;
+            }
+            if (isset($expansions[$token]) && str_contains($candidate, $expansions[$token])) {
+                continue;
+            }
+            return false;
+        }
+
+        return true;
     }
 }
