@@ -116,10 +116,11 @@ HTML into the pilot branch. It also looks for exactly one local master-roadmap
 candidate outside the artifact/archive tree; if multiple files match, it prints
 their paths and does **not** guess which one governs.
 
-**Run the following two commands once from Windows PowerShell** (not inside
+**Run the following three commands once from Windows PowerShell** (not inside
 Git Bash). Do not paste any tokens, `.env` contents or database records:
 
 ```powershell
+wsl.exe -d Ubuntu-24.04 -- bash /mnt/d/Research/PlanningIntelligence/PI_GITHUB_BRIDGE_20261108/tools/pi-bridge/apply-laravel-updates.sh
 wsl.exe -d Ubuntu-24.04 -- git -C /mnt/d/Research/PlanningIntelligence/PI_GITHUB_BRIDGE_20261108 pull --ff-only origin pilot/pi-laravel-github-bridge-20261108
 wsl.exe -d Ubuntu-24.04 -- bash /mnt/d/Research/PlanningIntelligence/PI_GITHUB_BRIDGE_20261108/tools/pi-bridge/publish-local-ui-and-roadmap.sh
 ```
