@@ -110,5 +110,6 @@
     "review_status": "REVIEW_REQUIRED",
     "production_admission": "DENIED",
     "result": "ABSTAIN"
-  }
+  },
+  "version_events": []
 }
