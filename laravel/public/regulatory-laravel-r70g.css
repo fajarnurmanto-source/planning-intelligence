@@ -29,3 +29,11 @@
 .r70h-digests{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 10px;font-size:10px}.r70h-digests dt{color:#a8d8ca;font-weight:750}.r70h-digests dd{margin:0;color:#effcf7;overflow-wrap:anywhere;font-family:ui-monospace,monospace}
 .r70h-error{color:#ffd0a4;border-left:3px solid #d99d54;padding-left:9px}.r70h-loading{color:#b3dcd3}
 @media(max-width:600px){.r70h-digests{grid-template-columns:1fr}.r70h-evidence-button{width:100%;text-align:left}}
+
+/* R70I candidate crosswalk handoff uses the existing verified R70F/R70H source. */
+.r70i-panel{margin:14px 0;border:1px solid #32686c}
+.r70i-panel .panel-heading p{max-width:72ch}
+.r70i-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:10px}
+.r70i-badge{font-size:10px;font-weight:800;letter-spacing:.04em;color:#f6d9a0;border:1px solid #765f38;border-radius:5px;padding:6px 10px;margin:0}
+.r70i-panel .r70g-status[data-error="true"]{color:#ffd3a1}
+@media(max-width:600px){.r70i-controls{align-items:stretch;flex-direction:column}.r70i-badge{align-self:flex-start}}
