@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\EntitlementController;
+use App\Http\Controllers\Api\PlanningLineageController;
 use App\Http\Controllers\Api\RegulatoryEvidenceController;
 use App\Http\Controllers\Api\RegulatoryReadModelController;
 use App\Http\Controllers\Auth\SessionController;
@@ -21,6 +22,8 @@ Route::prefix('api')->group(function (): void {
         Route::post('/auth/logout', [SessionController::class, 'destroy'])->name('auth.logout');
         Route::get('/qa-subscription-r69e/entitlements', EntitlementController::class)
             ->name('pi.entitlements');
+        Route::get('/qa-planning-r70j/lineage-candidates', PlanningLineageController::class)
+            ->name('pi.planning.lineage-candidates');
         Route::get('/qa-regulatory-r70g/laravel-read-model', RegulatoryReadModelController::class)
             ->name('pi.regulatory.read-model');
         Route::get('/qa-regulatory-r70h/evidence/{sourceId}/{excerptSha256}', RegulatoryEvidenceController::class)
