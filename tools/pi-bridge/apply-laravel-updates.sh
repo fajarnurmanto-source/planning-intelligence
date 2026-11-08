@@ -47,8 +47,14 @@ while IFS= read -r -d '' status && IFS= read -r -d '' path; do
     laravel/package.json|laravel/package-lock.json|laravel/phpunit.xml|\
     laravel/vite.config.js|laravel/vite.config.ts|\
     laravel/bootstrap/app.php|laravel/bootstrap/providers.php|\
-    laravel/public/index.php|laravel/public/index.html|laravel/public/.htaccess) ;;
+    laravel/public/index.php|laravel/public/*.html|laravel/public/*.css|laravel/public/*.js|laravel/public/.htaccess) ;;
     *) stop "Outside approved Laravel source paths: $path" ;;
+  esac
+  case "$path" in
+    laravel/public/*)
+      public_basename="${path#laravel/public/}"
+      [[ "$public_basename" != */* ]] || stop "Nested public path is not auto-deployable: $path"
+      ;;
   esac
   case "$path" in */.env|*/.env.*|*.sqlite*|*.db|*.pem|*.key|*.p12|*.pfx) stop "Sensitive path: $path";; esac
   case "$path" in
