@@ -62,3 +62,9 @@
 .r70l-stop p{color:#f4e4cb;font-size:12px;line-height:1.7}
 .r70l-stop small{font-size:10px;color:#ffd9a0}
 @media(max-width:800px){.r70l-grid{grid-template-columns:1fr}}
+
+/* R70M calculated as-of-date version states, never a legal determination. */
+.r70l-version{margin:13px 0;padding:15px;background:#293b4c;border:1px solid #648fb3;border-radius:9px}
+.r70l-version strong{color:#d2edff;font-size:12px}
+.r70l-version p{font-size:11px;color:#cde3f7;line-height:1.6;overflow-wrap:anywhere}
+.r70l-version small{font-size:10px;color:#f5d5a4;line-height:1.6;display:block}
