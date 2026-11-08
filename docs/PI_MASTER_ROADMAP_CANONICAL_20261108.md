@@ -1,6 +1,6 @@
 # PLANNING INTELLIGENCE — MASTER PRODUCT ROADMAP TERPADU
 
-**ID:** PI-MR-20261108-V2 · **Keputusan pemilik:** 8 November 2026 (WIB)  
+**ID:** PI-MR-20261108-V3 · **Keputusan pemilik:** 8 November 2026 (WIB); penegasan normative-root/amendment-first: 8 November 2026  
 **Kedudukan:** **RUJUKAN KANONIS PENGEMBANGAN CABANG PILOT GITHUB** `pilot/pi-laravel-github-bridge-20261108`.  
 **Perlindungan:** dokumen asli Library dan berkas Windows yang belum ditemukan **tidak diubah**; cabang default, sistem produksi, database pengguna, data QA historis dan lingkungan lokal terlindungi tetap memiliki gerbangnya sendiri.  
 **North star:** satu PI Superior App yang mengorkestrasi lima Specialized Apps—Evidence, Performance, Regulatory, Fiscal, Evaluation—untuk menghasilkan rekomendasi perencanaan/penganggaran terikat sumber, dapat ditelusuri lintas jenjang, diuji pada data nyata lintas Pemda, ditelaah manusia, dan layak dikomersialisasi setelah bukti serta gerbang operasional memadai.
@@ -17,6 +17,7 @@
 | `PI_MASTER_ROADMAP_HIERARCHICAL_TAXONOMY_MANDATE_20261102.md` | `DELIVERY-004`, R62, R63, `HIERARCHY-TAXONOMY-005`, R64 | Wajib untuk kemampuan baru, bukan klaim R62–R64 sudah tuntas di Laravel |
 | Mandat pemilik 4–8 November dan kerja GitHub–WSL | Laravel-first, reuse OSS, data nyata, UI/UX yang siap pengguna, zero-spend AI, otomatisasi milestone berbatas, bridge source-only, R70H dan penanganan PDF 404 | Keputusan implementasi terbaru dan pembatas operasional |
 | `docs/PI_ROADMAP_LIBRARY_RECONCILIATION_20261108.md` | Daftar sumber Library, riwayat kesenjangan roadmap lokal, status bridge | **Arsip rekonsiliasi sementara**, digantikan dokumen ini untuk arah cabang pilot |
+| Penegasan pemilik 8 November tentang peraturan induk | UU, PP, Perpres, Permendagri, PMK, Peraturan Menteri PPN/Bappenas dan norma sektoral relevan, revisi/pencabutan/peralihan harus diikuti sebelum menilai RPJPD/RPJMD/RKPD/Renja/APBD | Gerbang wajib `NORMATIVE_ROOT_TRACE`; RPJPD/RPJMD bukan norma induk tertinggi; lihat §4.1A |
 
 **Aturan konflik:** instruksi eksplisit pemilik yang lebih baru dan bukti source/runtime yang terverifikasi mengalahkan estimasi/prasyarat teknis lama; tidak menghapus sejarah. Perubahan mandat yang membawa risiko produksi, hak data, lisensi atau data pengguna tidak disamakan dengan izin menjalankan tindakan tersebut.
 
@@ -24,7 +25,7 @@
 
 1. Analis memilih institusi/daerah, tahun dan versi dokumen dengan hak penggunaan jelas; sistem menerima PDF/DOCX/XLSX atau adapter data resmi *read-only*.
 2. Evidence memperoleh sumber primer, checksum snapshot, lisensi/hak, lokasi halaman/pasal/tabel/sel, identitas ekstraksi dan tingkat kelengkapan. Ketika hilang atau keliru, `ABSTAIN`.
-3. Regulatory menghubungkan ketentuan, norma induk, pembentuk, kewenangan/delegasi, tanggal efektif, pengecualian, wilayah dan perubahan; konflik/ketidaksesuaian tetap **kandidat penelaahan**, bukan vonis.
+3. Regulatory **wajib terlebih dahulu** menemukan norma induk nasional/daerah yang relevan dengan urusan dan jenis dokumen—UU/PP/Perpres, Permendagri, PMK, Kementerian PPN/Bappenas dan sektoral sesuai kewenangan—beserta delegasi, perubahan/pencabutan/peralihan dan versi yang berlaku pada tanggal kasus. Baru kemudian menghubungkan ketentuan dengan RPJPD/RPJMD/RKPD dan turunannya. Konflik/ketidaksesuaian tetap **kandidat penelaahan**, bukan vonis.
 4. Planning/Performance menormalisasi dokumen RPJPD/RPJMD/RKPD/Renstra/Renja dan pohon tujuan–sasaran–indikator–program–kegiatan–subkegiatan, dengan hubungan N dokumen/N tahun/lintas perangkat daerah. Indikator dan target hanya dibandingkan bila definisi operasional sepadan.
 5. Fiscal mengaitkan kode/nomenklatur, pendanaan, pembatasan, KUA–PPAS/RKA/DPA/APBD/realisasi dan dasar hukum tahun berlaku. **Tidak** menghitung keselarasan angka ketika numeric gate tertutup.
 6. Evaluation menilai realisasi, keluaran dan hasil secara terpisah; tidak mengarang atribusi dampak dari korelasi atau kemiripan teks.
@@ -54,6 +55,32 @@
 - **Harmonisasi vertikal dan horizontal**: keluarkan `POTENTIAL_CONFLICT_REVIEW` hanya dengan pasal/provisi, relasi yang diuji, alasan, kontra-bukti, skor ketidakpastian dan status reviewer. `NO_FINDING` maupun `ABSTAIN` sah.
 - **Change impact**: jika naskah dasar berubah, tandai ketentuan/aturan turunan dan artefak perencanaan/anggaran **yang memang memiliki hubungan terverifikasi**; perubahan yang belum terkait tidak diklaim terdampak.
 - Keputusan legal, pembatalan/pencabutan, dan penetapan sah/tidak sah **bukan fungsi otomatis aplikasi**.
+
+### 4.1A Norma induk lebih tinggi adalah prasyarat (NORMATIVE-ROOT-006; penegasan 8 Nov)
+
+**Aturan kanonis:** **RPJPD dan RPJMD bukan puncak hierarki norma.** PI wajib memisahkan (A) **Regulatory Hierarchy & Authority Graph**: sumber hukum, kedudukan, pembentuk, delegasi, norma, perubahan, waktu, wilayah; dari (B) **Planning & Budget Artifact Graph**: RPJPN/RPJMN/RKP, RPJPD/RPJMD/RKPD/Renstra/Renja dan KUA–PPAS/RKA/APBD/DPA. Instrumen penetapan dokumen (Perda/Perkada) bisa berstatus peraturan, tetapi hubungan antardokumen rencana tidak dengan sendirinya membuktikan kepatuhan kepada aturan induknya.
+
+**Alur wajib untuk setiap pertanyaan substantif:**
+
+1. Identifikasi urusan, jenis pemeriksaan (tata cara perencanaan, indikator, program/subkegiatan, kewenangan, klasifikasi, fiskal/transfer, sektoral), daerah, OPD, periode/tahun fiskal, dan **tanggal evaluasi historis atau terkini**.
+2. Temukan **semua norma induk yang benar-benar relevan**, dari konstitusi/UU ke PP/Perpres serta aturan menteri/lembaga sesuai mandat/delegasi (khususnya Kemendagri, Kemenkeu, Kementerian PPN/Bappenas, dan kementerian sektoral), Perda/Perkada serta pengecualian setempat. Pisahkan **Pasal 7 vs Pasal 8 UU 12/2011 beserta perubahannya**; jangan mengurutkan semua Permen/Perkada sebagai tangga linear, dan jangan menganggap setiap PMK/Permen berlaku untuk semua Pemda dan kasus.
+3. Tarik **rantai versi** norma sampai pasal/ayat/huruf: aturan awal, perubahan parsial, perubahan kedua dan seterusnya, pencabutan/penggantian, aturan turunan, ketentuan peralihan, tanggal efektif, pembentuk, dasar kewenangan/delegasi, ruang lingkup materi dan yurisdiksi. Bedakan naskah konsolidasi tak resmi dari naskah/metadata resmi; *current rule* tidak otomatis berlaku untuk kasus masa lalu.
+4. Buat relasi bertipe yang **dibuktikan**: `DELEGATES_TO`, `AMENDS`, `REVOKES`, `TRANSITIONAL_RULE`, `IMPLEMENTS`, `CONSTRAINS`, `REFERENCES_NORM`, `APPLIES_TO` pada artefak/OPD/kode/indikator/tahun yang tepat. Tidak cukup menemukan kemiripan kata atau rujukan judul saja.
+5. Baru lakukan *crosswalk* nasional–provinsi–daerah dan antar-RPJPD/RPJMD/RKPD/Renstra/Renja/anggaran dengan norma induk sebagai **kendala normatif**. Perubahan hukum memicu **impact recalculation** hanya pada norma/aturan turunan/artefak yang memiliki bukti relasi, waktu dan lingkup relevan. Jangan menyimpulkan otomatis semua Pemda terdampak.
+
+**Keluarga sumber awal untuk discovery, bukan daftar final, bukan jaminan semua ketentuan masih berlaku:** UU 25/2004 Sistem Perencanaan Pembangunan Nasional; UU 12/2011 sebagaimana diubah UU 15/2019 dan UU 13/2022; UU 59/2024 tentang RPJPN 2025–2045; Permendagri 86/2017 tentang tata cara perencanaan daerah; PP 12/2019 dan Permendagri 77/2020 tentang pengelolaan keuangan daerah; regulasi nomenklatur dan SIPD; **PMK tahun fiskal tertentu bila memang mengatur sumber dana/transfer yang dianalisis**; Peraturan Menteri PPN/Bappenas, aturan SPM dan peraturan sektoral hanya menurut materi yang relevan. Verifikasi perubahan/status/ketentuan peralihan **pada tanggal kasus** melalui JDIH dan naskah resmi, jangan hardcode daftar ini sebagai `ACTIVE_CONFIRMED`. Rujukan pembuka: https://peraturan.go.id/files/uu25-2004.pdf ; https://peraturan.go.id/files/uu13-2022.pdf ; https://peraturan.go.id/files/Salinan%2BUU%2BNomor%2B59%2BTahun%2B2024.pdf ; https://peraturan.go.id/files/bn1312-2017bt.pdf ; https://peraturan.go.id/files/bn1781-2020.pdf .
+
+**Model data minimum:** `regulation_id/version_id`, `instrument_type`, `issuer/authority_id`, `delegation_basis_provision`, `amendment_chain`, `transitional_rule`, `effective_from/to`, `as_of_date`, `jurisdiction`, `material_scope`, `provision_locator`, `source_url/sha256`, `planning_requirement`, `planning_artifact/version`, `fiscal_year`, `evidence_status`, `review_status`. Tiap edge memiliki jenis, arah, pasal bukti dan waktu.
+
+| Gerbang | Wajib dibuktikan | Saat gagal |
+| --- | --- | --- |
+| `NORMATIVE_ROOT_TRACE` | norma induk *materially applicable*, pasal, kewenangan dan delegasi | `ROOT_UNVERIFIED` / `ABSTAIN` |
+| `REGULATORY_VERSION` | perubahan, pencabutan, transisi dan keberlakuan pada tanggal/daerah kasus | `AMENDMENT_CHAIN_INCOMPLETE` / `ABSTAIN` |
+| `PLANNING_CONSTRAINT_CROSSWALK` | aturan berlaku terkait persyaratan rencana/indikator/program dengan bukti locus | `MAPPING_CANDIDATE` / `ABSTAIN` |
+| `FISCAL_LEGAL_BASIS` | norma sumber dana, kewenangan anggaran dan PMK/aturan tahun terkait | `FISCAL_RULE_UNVERIFIED`; angka ditahan |
+| `CHANGE_IMPACT` | perubahan provisi, turunan dan artefak yang sungguh terkait, periode dampak | `IMPACT_REVIEW_REQUIRED`, jangan vonis |
+
+**Batas otomatisasi:** PI boleh menunjukkan fakta sumber, kandidat hubungan dan risiko; **tidak memutus sah/tidak sah, konflik hukum final atau rekomendasi keuangan definitif**. Bila norma induk atau rantai amandemen belum terbukti, antarmuka harus memperlihatkan `ABSTAIN`/blokir penilaian keselarasan, sementara fakta sumber tetap dapat dilihat untuk pengumpulan bukti dan reviewer berwenang.
 
 ### 4.2 Multi-Pemda dan waktu adalah parameter inti (MULTIREGION-002)
 
@@ -116,7 +143,7 @@ Nama `M0–M8` dan `W0–W5` dipertahankan sebagai **peta dependensi**, sementar
 | --- | --- | --- | --- |
 | **F0 / M0 / W0** | satu sumber roadmap, source GitHub ↔ Windows guarded bridge, identitas, source rights dan UI baseline | roadmap tunggal aktif untuk pilot, pull/apply tanpa drift dan sumber asli utuh | bridge source terbukti; roadmap dipadukan dalam dokumen ini; Windows canonical path belum diketahui |
 | **F1 / W1** | Evidence: ingestion nyata, hash/locator, searchable provision, PDF page clickthrough, excerpt reviewer | satu naskah resmi → kutipan aslinya di layar, hash cocok, sumber dibuka tanpa 404, failure ditahan | R70H code ada; local acceptance/tautan live pending |
-| **F2 / R57A–C/R57A2** | Regulatory: hierarchy/authority/delegation, temporal/jurisdiction, konflik kandidat dan change impact | satu amendment + dasar kewenangan → revisi berdampak dan antrean review dengan bukti pasal | foundation/shadow historis; Laravel substantive belum diterima |
+| **F2 / R57A–C/R57A2** | **Normative root first** UU/PP/Perpres/Permen relevan, Pasal 7/8, delegasi, versi/transisi, yurisdiksi, konflik kandidat dan perubahan | satu ketentuan induk nasional + dasar kewenangan + perubahan efektif + hubungan terbukti ke kewajiban dokumen/periode dan antrean review | foundation/shadow historis; gerbang `NORMATIVE_ROOT_TRACE` belum diakui lulus pada Laravel |
 | **F3 / R64 / W2 / M2** | Planning taxonomy + Performance N dokumen + MLCE: versi, OPD, indikator, kode | satu program/subkegiatan dari dokumen resmi → pohon dan crosswalk bertipe; kandidat/abstain saat tak yakin | perlu real crosswalk user-visible terintegrasi |
 | **F4 / W3** | Fiscal planning-budget bridge: KUA-PPAS/RKA/APBD/DPA, sumber dana, mandatory rulepack | satu hubungan regulasi→program→anggaran berprovenance; hitungan hanya pada kelas terverifikasi | evidence Semarang R63 historis, numeric BLOCKED |
 | **F5 / W4 / M3** | Multi-dimensional coherence & Evaluation: target–aktual, keluaran/hasil, risiko, longitudinal | satu finding terpaut bukti, kontra-bukti, tidak memaksa hubungan kausal | belum ada acceptance produk penuh |
@@ -129,6 +156,7 @@ Nama `M0–M8` dan `W0–W5` dipertahankan sebagai **peta dependensi**, sementar
 
 ### Pekerjaan setelah penetapan dokumen ini
 
+- **NEXT-00 — Norma induk sebelum crosswalk R70L:** kumpulkan minimal satu provision resmi nasional yang mengikat proses rencana/anggaran berikut versi/delegasi/amendemen pada tahun kasus, baru tautkan ke program 2026 bila bukti cukup. R70L boleh menampilkan kode program faktual tanpa root, tetapi **tidak** menilai keselarasan; tampilkan `ROOT_UNVERIFIED` / `ABSTAIN`.
 - **NEXT-01 — R70H browser acceptance/PDF correction:** pastikan commit `4cb81779` telah diaplikasikan oleh bridge, uji sesi sebenarnya pada port 8891, klik kutipan, verifikasi halaman PDF dan peringatan live-vs-hash; bila gagal, satu perbaikan terfokus. Jangan laporkan PASS live tanpa browser/sesi.
 - **NEXT-02 — Evidence handoff yang siap reviewer:** tambah satu aksi nyata yang mempermudah telaah dan transfer bukti dari R70H (contoh sitasi lengkap yang bisa disalin dengan ID/halaman/hash/sumber, sambil mempertahankan ketidakpastian). Integrasikan pada kartu sumber yang benar-benar bekerja; tidak memerlukan DB/migration.
 - **NEXT-03 — Regulatory → Planning crosswalk:** satu relasi berprovenance dari provision ke kategori dokumen/perangkat/program dari sumber resmi R63 atau sumber multi-Pemda lain dengan status `MAPPING_CANDIDATE` hingga diverifikasi; lanjutkan fiscal hanya setelah crosswalk benar.
@@ -158,7 +186,7 @@ Nama `M0–M8` dan `W0–W5` dipertahankan sebagai **peta dependensi**, sementar
 | Gate | Bukti lulus | Bila tidak lulus |
 | --- | --- | --- |
 | Data rights/admission | sumber diizinkan, versi/tenant/hash/locator lengkap | tahan ingestion atau keluaran |
-| Hierarchy/delegation | rantai provisi, pembentuk, dasar kewenangan/tanggal/wilayah dapat ditelusuri | `AUTHORITY_UNVERIFIED` / `ABSTAIN` |
+| Hierarchy/delegation/normative root | UU/PP/Perpres/Permen relevan, pasal, kewenangan/delegasi, perubahan/transisi, tanggal/daerah dan relasi ke artefak terbukti | `ROOT_UNVERIFIED` / `AMENDMENT_CHAIN_INCOMPLETE` / `ABSTAIN` |
 | Harmonization | bukti hukum memadai, reviewer berwenang mengesahkan label | hanya `POTENTIAL_CONFLICT_REVIEW`, bukan putusan |
 | Crosswalk taxonomy | kode/versi/OPD/periode/satuan terikat bukti resmi | `MAPPING_CANDIDATE` / `ABSTAIN` |
 | Numeric | ground truth dan pemeriksaan denominator/versi/periode/formula | `NUMERIC_COMPARISON=BLOCKED` |
