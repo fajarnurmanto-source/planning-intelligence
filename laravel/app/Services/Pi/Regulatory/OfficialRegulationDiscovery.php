@@ -31,6 +31,12 @@ final class OfficialRegulationDiscovery
             throw new RuntimeException('Official search provider did not return a valid HTML search page.');
         }
         $html = $response->body();
+        // The provider returns a generic recent-documents page when a search parameter is ignored.
+        // Never treat that page as a completed keyword search.
+        if (!str_contains(strtoupper($html), 'PENCARIAN PERATURAN')
+            || str_contains(strtoupper($html), 'PERATURAN TERBARU')) {
+            throw new RuntimeException('Official provider did not acknowledge the search mode.');
+        }
         if ($html === '' || strlen($html) > 5 * 1024 * 1024 || !class_exists(DOMDocument::class)) {
             throw new RuntimeException('Official search page cannot be parsed within limits.');
         }
