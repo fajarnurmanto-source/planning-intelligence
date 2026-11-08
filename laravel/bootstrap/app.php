@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias(['pi.tenant' => EnsurePiTenantAccess::class]);
+        // This app uses a static sign-in page, not a named Laravel "login" route.
+        // Keep unauthenticated API requests as JSON 401 via shouldRenderJsonWhen.
+        $middleware->redirectGuestsTo('/login.html');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
