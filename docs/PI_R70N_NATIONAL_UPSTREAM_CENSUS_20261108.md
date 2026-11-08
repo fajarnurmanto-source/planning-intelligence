@@ -2,7 +2,7 @@
 
 **Tanggal observasi:** 8 November 2026 (WIB). **Mandat:** PI-MR-20261108-V3 / `NORMATIVE-ROOT-006`. **Ruang kerja:** penelusuran perencanaan dan penganggaran daerah 2026. **Status:** `OFFICIAL_METADATA_CENSUS_PARTIAL` / `AMENDMENT_CHAIN_INCOMPLETE`.
 
-Dataset terstruktur: [`laravel/resources/pi/normative-upstream-census-r70n.json`](../laravel/resources/pi/normative-upstream-census-r70n.json). **18 catatan instrumen, 35 relasi katalog, 5 kandidat delegasi.** Katalog ini **tidak** otomatis dimuat sebagai rule engine yang menyatakan status hukum lengkap, dan tidak menggantikan R70L yang aktif. Relasi `AMENDED_BY_CATALOGUE` perlu dibaca sebagai observasi katalog—khususnya jalur Omnibus 2020–2023—**bukan** sebagai versi yang dianggap berlaku bersamaan.
+Dataset terstruktur: [`laravel/resources/pi/normative-upstream-census-r70n.json`](../laravel/resources/pi/normative-upstream-census-r70n.json). **27 catatan instrumen, 41 relasi katalog, 5 kandidat delegasi.** Katalog ini **tidak** otomatis dimuat sebagai rule engine yang menyatakan status hukum lengkap, dan tidak menggantikan R70L yang aktif. Relasi `AMENDED_BY_CATALOGUE` perlu dibaca sebagai observasi katalog—khususnya jalur Omnibus 2020–2023—**bukan** sebagai versi yang dianggap berlaku bersamaan.
 
 ## Temuan utama
 
@@ -16,6 +16,13 @@ Dataset terstruktur: [`laravel/resources/pi/normative-upstream-census-r70n.json`
 | Kerangka APBD TA 2026 | PP 12/2019 mencabut PP 58/2005; Permendagri 77/2020 mencabut sepuluh instrumen dalam metadata (termasuk rantai Permendagri 13/2006 dan 32/2011); Permendagri 14/2025 efektif 30 September 2025 adalah pedoman APBD 2026, berdasarkan UU 23/2014 Pasal 308 dan PP 12/2019 Pasal 89(2). | [PP 12/2019](https://peraturan.bpk.go.id/Details/103888/pp-no-12-tahun-2019), [Permendagri 77/2020](https://peraturan.bpk.go.id/details/162792/permendagri-no-77-tahun-2020), [Permendagri 14/2025](https://peraturan.bpk.go.id/Details/331189/permendagri-no-14-tahun-2025) |
 | Kodefikasi dan nomenklatur | Permendagri 90/2019, berlaku 1 Januari 2020, mencabut sebagian Permendagri 64/2013; pembaruan lewat keputusan teknis harus dibedakan dari amendemen peraturan. | [Permendagri 90/2019](https://peraturan.bpk.go.id/Details/139075/permendagri-no-90-tahun-2019) |
 | Pedoman RKPD | Permendagri 86/2017 mencabut 54/2010; Permendagri 10/2025 untuk RKPD 2026 masih memiliki kolom relasi katalog “Belum Tersedia”. Rincian pasal/delegasi ada pada dataset R70L. | [Permendagri 86/2017](https://peraturan.bpk.go.id/Details/311927/permendagri-no-86-tahun-2017), [Permendagri 10/2025](https://peraturan.bpk.go.id/Details/321470/permendagri-no-10-tahun-2025) |
+
+## Temuan sumber pasangan aturan (tahap 2b)
+
+- [UU 1/2022 HKPD](https://peraturan.bpk.go.id/Details/195696/uu-no-1-tahun-2022) efektif **5 Januari 2022**, mencabut UU 28/2009 dan UU 33/2004, serta mencabut sebagian ketentuan UU 23/2014 dan UU 11/2020. Katalog juga merekam putusan MK 19/PUU-XXII/2024 pada Pasal 55 (jasa mandi uap/spa)—ini **tidak otomatis** mempengaruhi semua perencanaan atau transfer daerah.
+- [UU 17/2019](https://peraturan.bpk.go.id/Details/122742/uu-no-17-tahun-2019), [UU 6/2023](https://peraturan.bpk.go.id/Details/246523/uu-no-6-tahun-2023), [UU 9/2015](https://peraturan.bpk.go.id/Details/38209/uu-no-9-tahun-2015), dan [UU 2/2015](https://peraturan.bpk.go.id/Details/37678/uu-no-2-tahun-2015) kini memiliki metadata instrumen, tanggal efektif dan URL sendiri dalam dataset. Hubungan pergantian Cipta Kerja tetap butuh penyelarasan naskah.
+- [Perpu 1/2020](https://peraturan.bpk.go.id/Details/135060/perpu-no-1-tahun-2020) efektif 31 Maret 2020: metadata menunjukkan penetapan sebagai UU 2/2020 dan hubungan perubahan oleh UU 7/2021. Ini jejak historis dengan batas materi/tahun, **bukan** dasar fiskal generik 2026.
+- Tiga aturan terdahulu yang dicabut oleh Permendagri 3/2026 memiliki catatan JDIH **Tidak Berlaku**: [Permendagri 9/2018](https://peraturan.bpk.go.id/Details/139084/permendagri-no-9-tahun-2018), [4/2018](https://peraturan.bpk.go.id/Details/121973/permendagri-no-4-tahun-2018), dan [10/2018](https://peraturan.bpk.go.id/Details/139085/permendagri-no-10-tahun-2018). Tetap relevan untuk pemeriksaan perencanaan historis **sebelum** pencabutan dengan ketentuan peralihan yang sah.
 
 ## Prosedur sensus sampai admissible
 
