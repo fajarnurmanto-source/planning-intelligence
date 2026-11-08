@@ -37,3 +37,28 @@
 .r70k-abstain p{color:#f4e4cb;font-size:12px;line-height:1.6}
 .r70k-abstain small{display:block;color:#f9d49c;font-size:10px;margin:10px 0}
 .r70k-abstain .r70j-link{color:#ffe1a0}
+
+/* R70L: national normative ancestry is separate from planning lineage. */
+.r70l-panel{margin:14px 0;border:1px solid #7c9e5b}
+.r70l-panel .panel-heading p{max-width:82ch}
+.r70l-trace{padding:15px;background:#163e37;border:1px solid #4c8b71;border-radius:9px}
+.r70l-trace strong,.r70l-applicability strong{color:#bbf6cc;font-size:12px}
+.r70l-trace p,.r70l-applicability p{font-size:12px;line-height:1.7;color:#d5eee0}
+.r70l-trace small{color:#a2d6be;font-size:10px}
+.r70l-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:13px 0}
+.r70l-source{padding:15px;background:#103d44;border:1px solid #377d78;border-radius:9px;min-width:0}
+.r70l-source h3{font-size:14px;color:#ecfff3;line-height:1.5;margin:8px 0}
+.r70l-source p{color:#d5e7e1;font-size:11px;line-height:1.6}
+.r70l-source .r70j-actions{gap:10px}
+.r70l-norms{margin:14px 0}
+.r70l-norms h3{font-size:14px;color:#ecfff3}
+.r70l-norm{padding:11px 13px;margin:8px 0;background:#10363d;border-left:3px solid #a2c890;border-radius:6px}
+.r70l-norm strong{display:block;color:#d8f7df;font-size:12px}
+.r70l-norm .r70l-role{font-size:9px;color:#a4c5b4;display:block;margin-top:4px;overflow-wrap:anywhere}
+.r70l-norm p{color:#cee5d9;font-size:11px;line-height:1.6}
+.r70l-applicability{padding:14px;background:#263f38;border:1px solid #6b9376;border-radius:9px}
+.r70l-stop{margin-top:13px;border:1px solid #d4a454;background:#443826;border-radius:9px;padding:15px}
+.r70l-stop strong{color:#ffe2a3;font-size:12px}
+.r70l-stop p{color:#f4e4cb;font-size:12px;line-height:1.7}
+.r70l-stop small{font-size:10px;color:#ffd9a0}
+@media(max-width:800px){.r70l-grid{grid-template-columns:1fr}}
