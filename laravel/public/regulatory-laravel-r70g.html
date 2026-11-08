@@ -10,9 +10,11 @@
   <link rel="stylesheet" href="./regulatory-trace-r70a.css">
   <link rel="stylesheet" href="./regulatory-scope-r70d.css">
   <link rel="stylesheet" href="./regulatory-laravel-r70g.css">
+  <link rel="stylesheet" href="./planning-lineage-r70j.css">
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./regulatory-laravel-r70g.js"></script>
+  <script defer src="./planning-lineage-r70j.js"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -61,9 +63,20 @@
         <p id="r70i-status" class="r70g-status" role="status" aria-live="polite">Menunggu read model sumber terverifikasi…</p>
         <p class="r70h-caveat">Kandidat ini belum memiliki ID dokumen perencanaan, kode program/kegiatan/subkegiatan yang divalidasi, atau kesimpulan angka. Tidak ada perubahan basis data.</p>
       </section>
+      <section class="panel r70j-panel" aria-labelledby="r70j-title">
+        <div class="panel-heading"><div>
+          <span class="section-number">03 · OFFICIAL PLANNING DOCUMENT LINEAGE · R70J</span>
+          <h2 id="r70j-title">RPJMD 2025–2029 ↔ RKPD 2026</h2>
+          <p>Hubungan antar dokumen dengan metadata dari JDIH/BPK dan urutan waktu penerbitan. Tampilkan anchor rujukan yang dapat diperiksa reviewer sebelum memetakan program/kegiatan atau menilai keselarasan. Status tetap MAPPING_CANDIDATE, tanpa keputusan hukum atau perbandingan angka.</p>
+        </div></div>
+        <p id="r70j-status" class="r70g-status" role="status" aria-live="polite">Memuat pasangan dokumen perencanaan resmi melalui Laravel…</p>
+        <div id="r70j-results" aria-label="Rujukan resmi dan hubungan dokumen untuk telaah"></div>
+        <p class="r70h-caveat">Metadata dan anchor resmi ditelusuri pada 8 November 2026. SHA-256 registri bukan hash PDF; versi PDF daring belum diikat snapshot QA. Penilaian perubahan versi dan substansi tetap memerlukan reviewer.</p>
+      </section>
+
       <div class="reg-columns">
-        <section class="panel"><div class="panel-heading"><div><span class="section-number">03 · SOURCE INTEGRITY</span><h2>Sidik jari sumber</h2></div></div><dl class="r70g-digests"><dt>Ledger R70C</dt><dd id="r70g-ledger-sha">—</dd><dt>Scope R70D</dt><dd id="r70g-scope-sha">—</dd></dl><p class="r70g-explain">R70F mengecek tautan hash ledger-scope sebelum proyeksi. Perubahan sumber di tengah proses akan menolak hasil.</p></section>
-        <section class="panel"><div class="panel-heading"><div><span class="section-number">04 · REVIEW GATE</span><h2>Yang masih diblokir</h2></div></div><ul class="reg-guard"><li>Keberlakuan final, status pencabutan, dan harmonisasi vertikal/horizontal belum dinyatakan.</li><li>Perbandingan nominal lampiran serta konsolidasi anggaran belum dilakukan.</li><li>Anomali metadata JDIH memerlukan telaah manusia.</li><li>R70G tidak memberikan hak produksi, pengesahan, atau penagihan.</li></ul><div class="reg-warning">STATUS: SOURCE TRACE ONLY · REVIEWER REQUIRED · NUMERIC BLOCKED · PRODUCTION DENIED</div></section>
+        <section class="panel"><div class="panel-heading"><div><span class="section-number">04 · SOURCE INTEGRITY</span><h2>Sidik jari sumber</h2></div></div><dl class="r70g-digests"><dt>Ledger R70C</dt><dd id="r70g-ledger-sha">—</dd><dt>Scope R70D</dt><dd id="r70g-scope-sha">—</dd></dl><p class="r70g-explain">R70F mengecek tautan hash ledger-scope sebelum proyeksi. Perubahan sumber di tengah proses akan menolak hasil.</p></section>
+        <section class="panel"><div class="panel-heading"><div><span class="section-number">05 · REVIEW GATE</span><h2>Yang masih diblokir</h2></div></div><ul class="reg-guard"><li>Keberlakuan final, status pencabutan, dan harmonisasi vertikal/horizontal belum dinyatakan.</li><li>Perbandingan nominal lampiran serta konsolidasi anggaran belum dilakukan.</li><li>Anomali metadata JDIH memerlukan telaah manusia.</li><li>R70G tidak memberikan hak produksi, pengesahan, atau penagihan.</li></ul><div class="reg-warning">STATUS: SOURCE TRACE ONLY · REVIEWER REQUIRED · NUMERIC BLOCKED · PRODUCTION DENIED</div></section>
       </div>
       <footer class="page-footer">Planning Intelligence · Laravel Regulatory R70G QA<span>R69E session + FREE retained · Laravel R70F domain · No production admission</span></footer>
     </div>
