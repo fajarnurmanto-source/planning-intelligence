@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use DateTimeImmutable;
 use Illuminate\Http\JsonResponse;
 use RuntimeException;
 use Throwable;
@@ -94,7 +93,7 @@ final class PlanningLineageController extends Controller
             [$id, $issued, $from, $to] = $expected[$doc['kind']];
             if (($doc['id'] ?? null) !== $id || ($doc['issued_on'] ?? null) !== $issued
                 || ($doc['period_from'] ?? null) !== $from || ($doc['period_to'] ?? null) !== $to
-                || ($doc['pdf_sha256'] ?? 'NOT_NULL') !== 'NOT_NULL'
+                || !array_key_exists('pdf_sha256', $doc) || $doc['pdf_sha256'] !== null
                 || ($doc['pdf_snapshot_state'] ?? null) !== 'NOT_CAPTURED_NO_HASH'
                 || !is_string($doc['verified_locator'] ?? null) || trim($doc['verified_locator']) === ''
                 || !is_string($doc['source_observation'] ?? null) || trim($doc['source_observation']) === ''
