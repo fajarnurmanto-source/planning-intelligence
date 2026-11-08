@@ -119,9 +119,24 @@ final class PlanningLineageController extends Controller
             }
         }
         $ids = array_column($registry['documents'], 'id');
-        $requiredTypes = ['PLANNING_DOCUMENT_NORMATIVE_REFERENCE', 'DRAFT_VERSION_REFERENCE_REQUIRES_RECONCILIATION'];
+        $requiredTypes = [
+            'PLANNING_DOCUMENT_NORMATIVE_REFERENCE' => [
+                'ID-DIY-YOG-RPJMD-2025-2029-PERDA-2-2025',
+                'ID-DIY-YOG-RKPD-2026-PERWALI-34-2025',
+                'ID-DIY-YOG-RPJMD-2025-2029-PERDA-2-2025',
+                'Pasal 2 ayat (4) huruf a',
+                'Perda RPJMD menetapkan RPJMD sebagai pedoman penyusunan RKPD.',
+            ],
+            'DRAFT_VERSION_REFERENCE_REQUIRES_RECONCILIATION' => [
+                'ID-DIY-YOG-RKPD-2026-PERWALI-34-2025',
+                'ID-DIY-YOG-RPJMD-2025-2029-PERDA-2-2025',
+                'ID-DIY-YOG-RKPD-2026-PERWALI-34-2025',
+                'Lampiran, BAB I, subbab 1.3, halaman cetak I-3',
+                'RKPD 2026 dalam teksnya merujuk rancangan Perda RPJMD, sebelum Perda RPJMD final terbit.',
+            ],
+        ];
         foreach ($registry['relations'] as $relation) {
-            if (!is_array($relation) || !in_array($relation['type'] ?? null, $requiredTypes, true)
+            if (!is_array($relation) || !array_key_exists($relation['type'] ?? '', $requiredTypes)
                 || !in_array($relation['from'] ?? null, $ids, true)
                 || !in_array($relation['to'] ?? null, $ids, true)
                 || ($relation['from'] ?? null) === ($relation['to'] ?? null)
@@ -129,7 +144,12 @@ final class PlanningLineageController extends Controller
                 || ($relation['mapping_status'] ?? null) !== 'MAPPING_CANDIDATE'
                 || ($relation['substantive_alignment'] ?? null) !== 'NOT_ASSESSED'
                 || !is_string($relation['source_locator'] ?? null)
-                || trim($relation['source_locator']) === '') {
+                || trim($relation['source_locator']) === ''
+                || [
+                    $relation['from'] ?? null, $relation['to'] ?? null,
+                    $relation['source_document_id'] ?? null, $relation['source_locator'] ?? null,
+                    $relation['evidence_summary'] ?? null,
+                ] !== $requiredTypes[$relation['type']]) {
                 throw new RuntimeException('Planning relation contract mismatch.');
             }
         }
