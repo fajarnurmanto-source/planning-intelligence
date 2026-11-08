@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\EntitlementController;
+use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\PlanningLineageController;
 use App\Http\Controllers\Api\PlanningProgramCandidateController;
 use App\Http\Controllers\Api\RegulatoryEvidenceController;
@@ -25,6 +26,8 @@ Route::prefix('api')->group(function (): void {
             ->name('pi.entitlements');
         Route::get('/qa-planning-r70k/program-candidate', PlanningProgramCandidateController::class)
             ->name('pi.planning.program-candidate');
+        Route::get('/qa-regulatory-r70l/normative-root', NormativeRootController::class)
+            ->name('pi.regulatory.normative-root');
         Route::get('/qa-planning-r70j/lineage-candidates', PlanningLineageController::class)
             ->name('pi.planning.lineage-candidates');
         Route::get('/qa-regulatory-r70g/laravel-read-model', RegulatoryReadModelController::class)
