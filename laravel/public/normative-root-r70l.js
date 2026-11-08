@@ -48,7 +48,7 @@
           doc.pdf_sha256 !== null || doc.pdf_snapshot_status !== 'NOT_CAPTURED_NO_HASH' ||
           doc.amendment_census !== 'NOT_EXHAUSTIVELY_VERIFIED' ||
           (doc.id === 'IDN-PERMENDAGRI-10-2025' && doc.effective_date !== '2025-06-23') ||
-          (doc.id === 'IDN-PERMENDAGRI-86-2017' && doc.effective_date !== null)) {
+          (doc.id === 'IDN-PERMENDAGRI-86-2017' && doc.effective_date !== '2017-09-25')) {
         throw Error('Sumber/versi peraturan tidak terverifikasi.')
       }
       seenDocs.add(doc.id)
@@ -62,6 +62,29 @@
         throw Error('Rujukan ketentuan hukum tidak cocok.')
       }
       seenNorms.add(norm.id)
+    }
+    const census = data.census_snapshot || {}
+    if (census.schema !== 'PI_R70N_OFFICIAL_RELATION_METADATA_CENSUS_V1' ||
+        census.as_of_date !== '2026-11-08' ||
+        census.scope !== 'TWO_SCOPED_PARENT_PERMENDAGRI_ONLY' ||
+        census.exhaustiveness !== 'NOT_EXHAUSTIVELY_VERIFIED' ||
+        census.result !== 'AMENDMENT_CHAIN_INCOMPLETE' ||
+        census.official_pdf_bytes_sha256 !== 'NOT_CAPTURED' ||
+        census.empty_event_list_is_not_no_amendment_claim !== true ||
+        !Array.isArray(census.admitted_direct_amendment_events) || census.admitted_direct_amendment_events.length !== 0 ||
+        !Array.isArray(census.observations) || census.observations.length !== 2 ||
+        census.observations[0].instrument_id !== 'IDN-PERMENDAGRI-86-2017' ||
+        census.observations[0].official_effective_date !== '2017-09-25' ||
+        census.observations[0].official_current_status !== 'BERLAKU' ||
+        census.observations[0].relation_catalogue !== 'MENCABUT_PERMENDAGRI_54_2010' ||
+        census.observations[0].direct_amendment_record !== 'NONE_LISTED_NOT_PROOF_OF_NONE' ||
+        census.observations[0].related_source_url !== 'https://peraturan.go.id/files/bn517-2010.pdf' ||
+        census.observations[1].instrument_id !== 'IDN-PERMENDAGRI-10-2025' ||
+        census.observations[1].official_effective_date !== '2025-06-23' ||
+        census.observations[1].official_current_status !== 'BERLAKU' ||
+        census.observations[1].relation_catalogue !== 'BELUM_TERSEDIA' ||
+        census.observations[1].direct_amendment_record !== 'UNDETERMINED') {
+      throw Error('Sensus status peraturan resmi belum dapat dipercaya.')
     }
     const d = data.delegation || {}
     const c = data.case || {}
@@ -132,6 +155,14 @@
     }
     add(version, 'small', '', 'Peristiwa amendemen terverifikasi dalam registry: ' +
       timeline.verified_change_event_count + '. Angka nol hanya berarti belum ada event yang diadmit, BUKAN bukti bahwa tak pernah ada perubahan.')
+
+    const census = data.census_snapshot
+    const censusPanel = add(root, 'section', 'r70l-version')
+    add(censusPanel, 'strong', '', 'SENSUS REVISI RESMI · PARSIAL · ' + census.as_of_date)
+    add(censusPanel, 'p', '', '86/2017 berlaku sejak 25 September 2017 dan MENCABUT 54/2010. Ini relasi pencabutan aturan pendahulu, bukan perubahan atas 86/2017.')
+    add(censusPanel, 'p', '', '10/2025 berlaku sejak 23 Juni 2025. Riwayat hubungan dalam metadata JDIH BPK masih BELUM TERSEDIA; tidak boleh disimpulkan tidak pernah diubah.')
+    add(censusPanel, 'small', '', 'Cakupan: dua Permendagri. Sensus perubahan belum terbukti menyeluruh; PDF resmi belum di-hash. Hasil tetap AMENDMENT_CHAIN_INCOMPLETE / ABSTAIN.')
+    link(censusPanel, 'Lihat Permendagri 54/2010 historis ↗', census.observations[0].related_source_url)
 
     const grid = add(root, 'div', 'r70l-grid')
     for (const doc of data.instruments) {
