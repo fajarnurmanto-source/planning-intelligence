@@ -14,7 +14,7 @@
       "title": "Tata Cara Perencanaan, Pengendalian dan Evaluasi Pembangunan Daerah",
       "official_metadata_url": "https://peraturan.bpk.go.id/Details/311927/permendagri-no-86-tahun-2017",
       "official_pdf_url": "https://peraturan.go.id/files/bn1312-2017bt.pdf",
-      "effective_date": null,
+      "effective_date": "2017-09-25",
       "pdf_sha256": null,
       "pdf_snapshot_status": "NOT_CAPTURED_NO_HASH",
       "amendment_census": "NOT_EXHAUSTIVELY_VERIFIED"
@@ -111,5 +111,40 @@
     "production_admission": "DENIED",
     "result": "ABSTAIN"
   },
-  "version_events": []
+  "version_events": [],
+  "census_snapshot": {
+    "schema": "PI_R70N_OFFICIAL_RELATION_METADATA_CENSUS_V1",
+    "as_of_date": "2026-11-08",
+    "scope": "TWO_SCOPED_PARENT_PERMENDAGRI_ONLY",
+    "method": "OFFICIAL_JDIH_BPK_METADATA_AND_NATIONAL_REGULATION_TEXT",
+    "exhaustiveness": "NOT_EXHAUSTIVELY_VERIFIED",
+    "observations": [
+      {
+        "instrument_id": "IDN-PERMENDAGRI-86-2017",
+        "official_current_status": "BERLAKU",
+        "official_effective_date": "2017-09-25",
+        "official_metadata_url": "https://peraturan.bpk.go.id/Details/311927/permendagri-no-86-tahun-2017",
+        "relation_catalogue": "MENCABUT_PERMENDAGRI_54_2010",
+        "relation_provision": "Ketentuan penutup; periksa naskah sumber",
+        "related_instrument_id": "IDN-PERMENDAGRI-54-2010",
+        "related_source_url": "https://peraturan.go.id/files/bn517-2010.pdf",
+        "direct_amendment_record": "NONE_LISTED_NOT_PROOF_OF_NONE"
+      },
+      {
+        "instrument_id": "IDN-PERMENDAGRI-10-2025",
+        "official_current_status": "BERLAKU",
+        "official_effective_date": "2025-06-23",
+        "official_metadata_url": "https://peraturan.bpk.go.id/Details/321470/permendagri-no-10-tahun-2025",
+        "relation_catalogue": "BELUM_TERSEDIA",
+        "relation_provision": null,
+        "related_instrument_id": null,
+        "related_source_url": null,
+        "direct_amendment_record": "UNDETERMINED"
+      }
+    ],
+    "admitted_direct_amendment_events": [],
+    "empty_event_list_is_not_no_amendment_claim": true,
+    "official_pdf_bytes_sha256": "NOT_CAPTURED",
+    "result": "AMENDMENT_CHAIN_INCOMPLETE"
+  }
 }
