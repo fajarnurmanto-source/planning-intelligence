@@ -260,6 +260,132 @@
       "amendment_census": "INCOMPLETE",
       "official_pdf_sha256": null,
       "official_pdf_bytes_verified": false
+    },
+    {
+      "id": "UU-1-2022",
+      "type": "UU",
+      "number": "1",
+      "year": 2022,
+      "title": "Hubungan Keuangan antara Pemerintah Pusat dan Pemerintahan Daerah",
+      "effective_date": "2022-01-05",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/195696/uu-no-1-tahun-2022",
+      "role": "FISCAL_NORMATIVE_ROOT",
+      "metadata_status": "BERLAKU_RECORDED",
+      "amendment_census": "INCOMPLETE",
+      "official_pdf_sha256": null,
+      "official_pdf_bytes_verified": false
+    },
+    {
+      "id": "UU-17-2019",
+      "type": "UU",
+      "number": "17",
+      "year": 2019,
+      "title": "Sumber Daya Air",
+      "effective_date": "2019-10-16",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/122742/uu-no-17-tahun-2019",
+      "role": "SECTORAL_PARTIAL_REPEAL",
+      "metadata_status": "BERLAKU_RECORDED",
+      "amendment_census": "INCOMPLETE",
+      "official_pdf_sha256": null,
+      "official_pdf_bytes_verified": false
+    },
+    {
+      "id": "UU-6-2023",
+      "type": "UU",
+      "number": "6",
+      "year": 2023,
+      "title": "Penetapan Perpu 2/2022 tentang Cipta Kerja",
+      "effective_date": "2023-03-31",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/246523/uu-no-6-tahun-2023",
+      "role": "CROSS_CUTTING_AMENDMENT",
+      "metadata_status": "BERLAKU_RECORDED",
+      "amendment_census": "INCOMPLETE",
+      "official_pdf_sha256": null,
+      "official_pdf_bytes_verified": false
+    },
+    {
+      "id": "PERPU-1-2020",
+      "type": "PERPU",
+      "number": "1",
+      "year": 2020,
+      "title": "Kebijakan Keuangan Negara untuk Penanganan Pandemi",
+      "effective_date": "2020-03-31",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/135060/perpu-no-1-tahun-2020",
+      "role": "HISTORIC_CROSS_CUTTING_FISCAL",
+      "metadata_status": "BERLAKU_RECORDED",
+      "amendment_census": "INCOMPLETE",
+      "official_pdf_sha256": null,
+      "official_pdf_bytes_verified": false
+    },
+    {
+      "id": "UU-9-2015",
+      "type": "UU",
+      "number": "9",
+      "year": 2015,
+      "title": "Perubahan Kedua UU 23/2014",
+      "effective_date": "2015-03-18",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/38209/uu-no-9-tahun-2015",
+      "role": "AMENDING_INSTRUMENT",
+      "metadata_status": "BERLAKU_RECORDED",
+      "amendment_census": "INCOMPLETE",
+      "official_pdf_sha256": null,
+      "official_pdf_bytes_verified": false
+    },
+    {
+      "id": "UU-2-2015",
+      "type": "UU",
+      "number": "2",
+      "year": 2015,
+      "title": "Penetapan Perpu 2/2014 menjadi UU; Perubahan UU 23/2014",
+      "effective_date": "2015-02-02",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/37678/uu-no-2-tahun-2015",
+      "role": "AMENDING_INSTRUMENT",
+      "metadata_status": "BERLAKU_RECORDED",
+      "amendment_census": "INCOMPLETE",
+      "official_pdf_sha256": null,
+      "official_pdf_bytes_verified": false
+    },
+    {
+      "id": "PERMENDAGRI-9-2018",
+      "type": "PERMENDAGRI",
+      "number": "9",
+      "year": 2018,
+      "title": "Reviu RPJMD dan Renstra Perangkat Daerah",
+      "effective_date": "2018-04-04",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/139084/permendagri-no-9-tahun-2018",
+      "role": "HISTORICAL_REVIEW_RULE",
+      "metadata_status": "TIDAK_BERLAKU_RECORDED",
+      "amendment_census": "INCOMPLETE",
+      "official_pdf_sha256": null,
+      "official_pdf_bytes_verified": false
+    },
+    {
+      "id": "PERMENDAGRI-4-2018",
+      "type": "PERMENDAGRI",
+      "number": "4",
+      "year": 2018,
+      "title": "Reviu Laporan Keuangan Pemda Berbasis Akrual",
+      "effective_date": "2018-01-25",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/121973/permendagri-no-4-tahun-2018",
+      "role": "HISTORICAL_REVIEW_RULE",
+      "metadata_status": "TIDAK_BERLAKU_RECORDED",
+      "amendment_census": "INCOMPLETE",
+      "official_pdf_sha256": null,
+      "official_pdf_bytes_verified": false
+    },
+    {
+      "id": "PERMENDAGRI-10-2018",
+      "type": "PERMENDAGRI",
+      "number": "10",
+      "year": 2018,
+      "title": "Reviu Dokumen Perencanaan dan Anggaran Tahunan",
+      "effective_date": "2018-04-04",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/139085/permendagri-no-10-tahun-2018",
+      "role": "HISTORICAL_REVIEW_RULE",
+      "metadata_status": "TIDAK_BERLAKU_RECORDED",
+      "amendment_census": "INCOMPLETE",
+      "official_pdf_sha256": null,
+      "official_pdf_bytes_verified": false
     }
   ],
   "relations": [
@@ -612,6 +738,66 @@
       "source_locator": "JDIH BPK > STATUS PERATURAN",
       "target_snapshot_verified": false,
       "provision_effect_review": "REVIEW_REQUIRED"
+    },
+    {
+      "actor_instrument_id": "UU-1-2022",
+      "relation": "REVOKES",
+      "target_instrument_id": "UU-28-2009",
+      "scope": "Pajak Daerah dan Retribusi Daerah",
+      "official_relation_source_url": "https://peraturan.bpk.go.id/Details/195696/uu-no-1-tahun-2022",
+      "source_locator": "JDIH BPK > STATUS PERATURAN",
+      "target_snapshot_verified": false,
+      "provision_effect_review": "REVIEW_REQUIRED"
+    },
+    {
+      "actor_instrument_id": "UU-1-2022",
+      "relation": "REVOKES",
+      "target_instrument_id": "UU-33-2004",
+      "scope": "Perimbangan Keuangan Pusat dan Daerah",
+      "official_relation_source_url": "https://peraturan.bpk.go.id/Details/195696/uu-no-1-tahun-2022",
+      "source_locator": "JDIH BPK > STATUS PERATURAN",
+      "target_snapshot_verified": false,
+      "provision_effect_review": "REVIEW_REQUIRED"
+    },
+    {
+      "actor_instrument_id": "UU-1-2022",
+      "relation": "PARTIALLY_REVOKES",
+      "target_instrument_id": "UU-11-2020",
+      "scope": "Pasal 114 dan bagian Pasal 176, sesuai detail katalog",
+      "official_relation_source_url": "https://peraturan.bpk.go.id/Details/195696/uu-no-1-tahun-2022",
+      "source_locator": "JDIH BPK > STATUS PERATURAN",
+      "target_snapshot_verified": false,
+      "provision_effect_review": "REVIEW_REQUIRED"
+    },
+    {
+      "actor_instrument_id": "UU-1-2022",
+      "relation": "CONSTITUTIONAL_REVIEW",
+      "target_instrument_id": "19-PUU-XXII-2024",
+      "scope": "Pasal 55 ayat (1) huruf l; jasa mandi uap/spa",
+      "official_relation_source_url": "https://peraturan.bpk.go.id/Details/195696/uu-no-1-tahun-2022",
+      "source_locator": "JDIH BPK > STATUS PERATURAN",
+      "target_snapshot_verified": false,
+      "provision_effect_review": "REVIEW_REQUIRED"
+    },
+    {
+      "actor_instrument_id": "PERPU-1-2020",
+      "relation": "ENACTED_BY",
+      "target_instrument_id": "UU-2-2020",
+      "scope": "Penetapan Perpu 1/2020 menjadi UU",
+      "official_relation_source_url": "https://peraturan.bpk.go.id/Details/135060/perpu-no-1-tahun-2020",
+      "source_locator": "JDIH BPK > STATUS PERATURAN",
+      "target_snapshot_verified": false,
+      "provision_effect_review": "REVIEW_REQUIRED"
+    },
+    {
+      "actor_instrument_id": "PERPU-1-2020",
+      "relation": "AMENDED_BY_CATALOGUE",
+      "target_instrument_id": "UU-7-2021",
+      "scope": "Harmonisasi Peraturan Perpajakan; pasal dan efek perlu ditinjau",
+      "official_relation_source_url": "https://peraturan.bpk.go.id/Details/135060/perpu-no-1-tahun-2020",
+      "source_locator": "JDIH BPK > STATUS PERATURAN",
+      "target_snapshot_verified": false,
+      "provision_effect_review": "REVIEW_REQUIRED"
     }
   ],
   "referenced_delegations": [
@@ -663,7 +849,8 @@
     "Resolve UU 11/2020 vs Perpu 2/2022 vs UU 6/2023 supersession",
     "Verify annual RKP, province/regional exception and precise instrument versions",
     "Identify any PMK and sectoral rules only after funding/program scope is selected",
-    "Competent legal reviewer admission and effective-on-date judgement"
+    "Competent legal reviewer admission and effective-on-date judgement",
+    "Resolve secondary edges for new UU 1/2022 and Perpu 1/2020 chain as of specific budget year"
   ],
   "gates": {
     "amendment_chain": "INCOMPLETE",
