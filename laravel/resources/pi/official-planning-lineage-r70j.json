@@ -1,0 +1,69 @@
+{
+  "schema": "PI_R70J_PLANNING_LINEAGE_SOURCE_REGISTRY_V1",
+  "jurisdiction_id": "ID-DIY-YOG",
+  "planning_year": 2026,
+  "observed_on": "2026-11-08",
+  "access_policy": "PUBLIC_OFFICIAL_METADATA_READ_ONLY_NO_PDF_REPUBLICATION",
+  "documents": [
+    {
+      "id": "ID-DIY-YOG-RPJMD-2025-2029-PERDA-2-2025",
+      "kind": "RPJMD",
+      "title": "Peraturan Daerah Kota Yogyakarta Nomor 2 Tahun 2025 tentang RPJMD Tahun 2025–2029",
+      "issuer": "Pemerintah Kota Yogyakarta",
+      "regulation_number": "2/2025",
+      "issued_on": "2025-08-15",
+      "period_from": 2025,
+      "period_to": 2029,
+      "metadata_url": "https://jdih.jogjakota.go.id/home/produk_hukum/detail/3774",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/400721/Perda%20Kota%20Jogja%20Nomor%202%20Tahun%202025.pdf",
+      "pdf_sha256": null,
+      "pdf_snapshot_state": "NOT_CAPTURED_NO_HASH",
+      "verified_locator": "Pasal 2 ayat (4) huruf a",
+      "source_observation": "RPJMD dijadikan pedoman dalam penyusunan RKPD."
+    },
+    {
+      "id": "ID-DIY-YOG-RKPD-2026-PERWALI-34-2025",
+      "kind": "RKPD",
+      "title": "Peraturan Wali Kota Yogyakarta Nomor 34 Tahun 2025 tentang RKPD Tahun 2026",
+      "issuer": "Pemerintah Kota Yogyakarta",
+      "regulation_number": "34/2025",
+      "issued_on": "2025-07-07",
+      "period_from": 2026,
+      "period_to": 2026,
+      "metadata_url": "https://jdih.jogjakota.go.id/home/produk_hukum/detail/3758",
+      "pdf_url": "https://jdih.jogjakota.go.id/asset/naskah/2025pw3405034.pdf",
+      "pdf_sha256": null,
+      "pdf_snapshot_state": "NOT_CAPTURED_NO_HASH",
+      "verified_locator": "Lampiran, BAB I, subbab 1.3 Hubungan Antar Dokumen, halaman cetak I-3",
+      "source_observation": "Naskah RKPD menyebut rancangan Perda RPJMD 2025–2029 sebagai salah satu acuannya."
+    }
+  ],
+  "relations": [
+    {
+      "id": "R70J-DOCUMENT-LINEAGE-01",
+      "from": "ID-DIY-YOG-RPJMD-2025-2029-PERDA-2-2025",
+      "to": "ID-DIY-YOG-RKPD-2026-PERWALI-34-2025",
+      "type": "PLANNING_DOCUMENT_NORMATIVE_REFERENCE",
+      "source_document_id": "ID-DIY-YOG-RPJMD-2025-2029-PERDA-2-2025",
+      "source_locator": "Pasal 2 ayat (4) huruf a",
+      "evidence_summary": "Perda RPJMD menetapkan RPJMD sebagai pedoman penyusunan RKPD.",
+      "mapping_status": "MAPPING_CANDIDATE",
+      "substantive_alignment": "NOT_ASSESSED"
+    },
+    {
+      "id": "R70J-DOCUMENT-LINEAGE-02",
+      "from": "ID-DIY-YOG-RKPD-2026-PERWALI-34-2025",
+      "to": "ID-DIY-YOG-RPJMD-2025-2029-PERDA-2-2025",
+      "type": "DRAFT_VERSION_REFERENCE_REQUIRES_RECONCILIATION",
+      "source_document_id": "ID-DIY-YOG-RKPD-2026-PERWALI-34-2025",
+      "source_locator": "Lampiran, BAB I, subbab 1.3, halaman cetak I-3",
+      "evidence_summary": "RKPD 2026 dalam teksnya merujuk rancangan Perda RPJMD, sebelum Perda RPJMD final terbit.",
+      "mapping_status": "MAPPING_CANDIDATE",
+      "substantive_alignment": "NOT_ASSESSED"
+    }
+  ],
+  "review_required": true,
+  "legal_harmonization": "NOT_ASSESSED",
+  "numeric_comparison": "BLOCKED",
+  "production_admission": "DENIED"
+}
