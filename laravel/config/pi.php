@@ -3,6 +3,9 @@
 return [
     'tenant_id' => env('PI_TENANT_ID', 'ID-DIY-YOG'),
     'legacy_users_path' => env('PI_LEGACY_USERS_PATH'),
+    'planning_node' => [
+        'registry_path' => resource_path('pi/official-planning-node-r70k.json'),
+    ],
     'planning_lineage' => [
         'registry_path' => resource_path('pi/official-planning-lineage-r70j.json'),
     ],
