@@ -56,7 +56,10 @@
       link.target = '_blank'
       link.rel = 'noopener noreferrer'
     }
-    status.textContent = `${data.items.length} kandidat dari ${data.source_name}. Semua memerlukan sensus amendemen, verifikasi naskah resmi, dan reviewer. ABSTAIN tetap berlaku.`
+    const precision = data.search_mode === 'STRUCTURED_IDENTITY'
+      ? 'Filter resmi jenis–nomor–tahun digunakan; identitas katalog bukan bukti keberlakuan.'
+      : 'Pencarian kata kunci luas; beberapa hasil dapat berbeda jenis atau nomor.'
+    status.textContent = `${data.items.length} kandidat dari ${data.source_name}. ${precision} Semua memerlukan sensus amendemen, verifikasi naskah resmi, dan reviewer. ABSTAIN tetap berlaku.`
   }
   form.addEventListener('submit', async event => {
     event.preventDefault()
