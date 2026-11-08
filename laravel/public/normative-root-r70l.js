@@ -66,6 +66,16 @@
     const d = data.delegation || {}
     const c = data.case || {}
     const g = data.gates || {}
+    const timeline = data.version_timeline || {}
+    if (timeline.as_of_date !== '2026-11-08' || timeline.status !== 'AMENDMENT_CHAIN_INCOMPLETE' ||
+        timeline.verified_change_event_count !== 0 || timeline.no_events_means_no_changes !== false ||
+        timeline.legal_conclusion !== 'NOT_ASSESSED' || timeline.review_status !== 'REVIEW_REQUIRED' ||
+        !Array.isArray(timeline.instrument_states) || timeline.instrument_states.length !== 2 ||
+        !Array.isArray(timeline.change_events) || timeline.change_events.length !== 0 ||
+        timeline.instrument_states.some(x => x.amendment_census !== 'NOT_EXHAUSTIVELY_VERIFIED' ||
+          x.provision_events_effective !== 0 || x.provision_events_future !== 0)) {
+      throw Error('Hasil kalkulasi versi peraturan belum dapat dipercaya.')
+    }
     if (d.from_provision_id !== 'ROOT-86-2017-ART76' ||
         d.to_instrument_id !== 'IDN-PERMENDAGRI-10-2025' ||
         d.support_provision_id !== 'ROOT-10-2025-PREAMBLE-B' ||
@@ -113,6 +123,16 @@
     add(trace, 'p', '', 'Permendagri 86/2017 Pasal 76 memberi dasar penetapan pedoman RKPD melalui peraturan menteri. Konsiderans Permendagri 10/2025 merujuk pasal tersebut. Rantai rujukan ini ditemukan dalam naskah resmi; kesimpulan pemenuhan RKPD belum dinilai.')
     add(trace, 'small', '', 'DELEGATION SOURCE REFERENCE CONFIRMED · LEGAL REVIEW REQUIRED')
 
+    const timeline = data.version_timeline
+    const version = add(root, 'section', 'r70l-version')
+    add(version, 'strong', '', 'KALKULASI TANGGAL KASUS: ' + timeline.as_of_date + ' · ' + timeline.status)
+    for (const record of timeline.instrument_states) {
+      add(version, 'p', '', record.instrument_id + ': ' + record.date_state +
+        ' · Sensus amendemen: ' + record.amendment_census)
+    }
+    add(version, 'small', '', 'Peristiwa amendemen terverifikasi dalam registry: ' +
+      timeline.verified_change_event_count + '. Angka nol hanya berarti belum ada event yang diadmit, BUKAN bukti bahwa tak pernah ada perubahan.')
+
     const grid = add(root, 'div', 'r70l-grid')
     for (const doc of data.instruments) {
       const card = add(grid, 'article', 'r70l-source')
@@ -145,7 +165,8 @@
     add(guard, 'p', '', 'Rantai amendemen/pencabutan belum diperiksa secara menyeluruh; hash PDF belum ditangkap; keselarasan nyata RKPD dengan ketentuan induk dan dokumen nasional/provinsi belum diuji. Tampilkan rujukan sebagai bukti awal saja.')
     add(guard, 'small', '', 'AMENDMENT_CHAIN_INCOMPLETE · MAPPING_CANDIDATE · NUMERIC BLOCKED · PRODUCTION DENIED')
     add(root, 'p', 'r70j-digest', 'SHA-256 registri metadata R70L (BUKAN HASH PDF): ' + data.source_registry_sha256)
-    $('r70l-status').textContent = '2 peraturan resmi · 6 ketentuan · 1 rujukan delegasi eksplisit · keselarasan ABSTAIN.'
+    $('r70l-status').textContent = '2 peraturan resmi · 6 ketentuan · kalkulasi versi ' +
+      timeline.status + ' · keselarasan ABSTAIN.'
   }
 
   async function get(url) {
