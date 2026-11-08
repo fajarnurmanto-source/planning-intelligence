@@ -106,3 +106,37 @@ configured event-triggered automation.
   applied silently by the background task.
 - No production admission, automatic legal judgment, or numeric consolidation
   is implied by R70G UI success.
+
+## One-time UI + canonical roadmap import (8 Nov 2026)
+
+The source-only Laravel baseline deliberately excluded the existing static
+`public/index.html`. Without its exact contents, GitHub edits to the PI UI
+cannot be made safely. A new guarded bootstrap copies the **already-installed**
+HTML into the pilot branch. It also looks for exactly one local master-roadmap
+candidate outside the artifact/archive tree; if multiple files match, it prints
+their paths and does **not** guess which one governs.
+
+**Run the following two commands once from Windows PowerShell** (not inside
+Git Bash). Do not paste any tokens, `.env` contents or database records:
+
+```powershell
+wsl.exe -d Ubuntu-24.04 -- git -C /mnt/d/Research/PlanningIntelligence/PI_GITHUB_BRIDGE_20261108 pull --ff-only origin pilot/pi-laravel-github-bridge-20261108
+wsl.exe -d Ubuntu-24.04 -- bash /mnt/d/Research/PlanningIntelligence/PI_GITHUB_BRIDGE_20261108/tools/pi-bridge/publish-local-ui-and-roadmap.sh
+```
+
+Expected: `PI_UI_ROADMAP_BOOTSTRAP=PASS`,
+`LOCAL_UI_UNCHANGED=YES` and a new `COMMIT=`. If the script reports
+`ROADMAP=NEEDS_EXPLICIT_PATH_..._CANDIDATES`, share only the candidate
+**paths** so the authoritative file can be selected; the UI may still have
+been published safely.
+
+This import updates the bridge's local applied-SHA marker *only* after a
+successful GitHub push, because the HTML already exists byte-for-byte on the
+laptop. The updated scheduled applier subsequently accepts drift-checked
+modifications to `public/index.html` and creates backups. It does not
+delete or overwrite `.env`, SQLite, login records or other runtime data.
+
+Daily ChatGPT milestone development is a **separate automation**. It authors
+source-only GitHub changes and reports real capability outcomes; it does not
+imply that GitHub commits have run locally until a local apply result exists.
+See `docs/PI_MILESTONE_EXECUTION_CONTROL_20261108.md`.
