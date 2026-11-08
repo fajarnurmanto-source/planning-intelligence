@@ -15,7 +15,23 @@ It does not merge or deploy back into the current application.
 
 ## One-time local publication (Ubuntu WSL)
 
-Use WSL Ubuntu-24.04 with an already signed-in `gh` account. Run:
+IMPORTANT: The paths `/mnt/d/...` belong to Ubuntu WSL, **not** Windows
+PowerShell or Git Bash. When the prompt begins with `PS`, prefix every Linux
+command with `wsl.exe -d Ubuntu-24.04 --` as shown below. Running plain
+`gh repo clone ... /mnt/d/...` inside PowerShell can clone to an unexpected
+Windows location.
+
+Preferred commands **from Windows PowerShell** (the task is disabled until
+baseline and first pull succeed):
+
+```powershell
+schtasks.exe /Change /TN "PI_LARAVEL_GITHUB_BRIDGE" /Disable
+wsl.exe -d Ubuntu-24.04 -- gh auth status
+wsl.exe -d Ubuntu-24.04 -- gh repo clone fajarnurmanto-source/planning-intelligence /mnt/d/Research/PlanningIntelligence/PI_BRIDGE_BOOTSTRAP_WSL_20261108 -- --branch pilot/pi-laravel-github-bridge-20261108 --single-branch
+wsl.exe -d Ubuntu-24.04 -- bash /mnt/d/Research/PlanningIntelligence/PI_BRIDGE_BOOTSTRAP_WSL_20261108/tools/pi-bridge/publish-laravel-baseline.sh
+```
+
+Alternatively, when already **inside the Ubuntu WSL prompt**, run:
 
 ```bash
 gh auth status
@@ -46,11 +62,24 @@ First run once interactively in WSL:
 bash /mnt/d/Research/PlanningIntelligence/PI_GITHUB_BRIDGE_20261108/tools/pi-bridge/apply-laravel-updates.sh
 ```
 
+When using Windows PowerShell instead, call:
+
+```powershell
+wsl.exe -d Ubuntu-24.04 -- bash /mnt/d/Research/PlanningIntelligence/PI_GITHUB_BRIDGE_20261108/tools/pi-bridge/apply-laravel-updates.sh
+```
+
 If that reports `UP_TO_DATE` or `PASS`, register a Windows Task Scheduler
 job from regular PowerShell (every 15 minutes while Windows is running):
 
 ```powershell
 schtasks.exe /Create /F /SC MINUTE /MO 15 /TN "PI_LARAVEL_GITHUB_BRIDGE" /TR 'wsl.exe -d Ubuntu-24.04 -- bash /mnt/d/Research/PlanningIntelligence/PI_GITHUB_BRIDGE_20261108/tools/pi-bridge/apply-laravel-updates.sh'
+```
+
+If the task already exists from the earlier setup, enable it after a successful
+first pull rather than creating it again:
+
+```powershell
+schtasks.exe /Change /TN "PI_LARAVEL_GITHUB_BRIDGE" /Enable
 ```
 
 To suspend automatic pulls without deleting anything:
