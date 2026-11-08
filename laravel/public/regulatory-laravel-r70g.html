@@ -47,9 +47,23 @@
         <p class="r70h-instruction">Buka kelompok kutipan pada kartu untuk meninjau bukti satu per satu. Teks hanya tampil bila endpoint Laravel memverifikasi sumber; tidak ada penilaian legal atau angka otomatis.</p>
         <div id="r70g-documents" class="r70g-stack"></div>
       </section>
+
+      <section class="panel r70i-panel" aria-labelledby="r70i-title">
+        <div class="panel-heading"><div>
+          <span class="section-number">02 · REGULATORY → PLANNING HANDOFF</span>
+          <h2 id="r70i-title">Bahan awal pemetaan lintas dokumen</h2>
+          <p>Susun satu paket JSON berisi 10 kandidat sasaran Lampiran I/II dari lima peraturan pengubah. Teks bukti diambil saat tombol ditekan melalui endpoint R70H dan diperiksa kembali terhadap sumber terikat SHA-256. Paket digunakan untuk penelaahan crosswalk RPJMD/RKPD/program berikutnya; bukan hasil pemetaan yang sudah disahkan.</p>
+        </div></div>
+        <div class="r70i-controls">
+          <button type="button" id="r70i-export" class="r70h-evidence-button" disabled>Unduh 10 kandidat pemetaan</button>
+          <p class="r70i-badge">MAPPING_CANDIDATE · REVIEW_REQUIRED</p>
+        </div>
+        <p id="r70i-status" class="r70g-status" role="status" aria-live="polite">Menunggu read model sumber terverifikasi…</p>
+        <p class="r70h-caveat">Kandidat ini belum memiliki ID dokumen perencanaan, kode program/kegiatan/subkegiatan yang divalidasi, atau kesimpulan angka. Tidak ada perubahan basis data.</p>
+      </section>
       <div class="reg-columns">
-        <section class="panel"><div class="panel-heading"><div><span class="section-number">02 · SOURCE INTEGRITY</span><h2>Sidik jari sumber</h2></div></div><dl class="r70g-digests"><dt>Ledger R70C</dt><dd id="r70g-ledger-sha">—</dd><dt>Scope R70D</dt><dd id="r70g-scope-sha">—</dd></dl><p class="r70g-explain">R70F mengecek tautan hash ledger-scope sebelum proyeksi. Perubahan sumber di tengah proses akan menolak hasil.</p></section>
-        <section class="panel"><div class="panel-heading"><div><span class="section-number">03 · REVIEW GATE</span><h2>Yang masih diblokir</h2></div></div><ul class="reg-guard"><li>Keberlakuan final, status pencabutan, dan harmonisasi vertikal/horizontal belum dinyatakan.</li><li>Perbandingan nominal lampiran serta konsolidasi anggaran belum dilakukan.</li><li>Anomali metadata JDIH memerlukan telaah manusia.</li><li>R70G tidak memberikan hak produksi, pengesahan, atau penagihan.</li></ul><div class="reg-warning">STATUS: SOURCE TRACE ONLY · REVIEWER REQUIRED · NUMERIC BLOCKED · PRODUCTION DENIED</div></section>
+        <section class="panel"><div class="panel-heading"><div><span class="section-number">03 · SOURCE INTEGRITY</span><h2>Sidik jari sumber</h2></div></div><dl class="r70g-digests"><dt>Ledger R70C</dt><dd id="r70g-ledger-sha">—</dd><dt>Scope R70D</dt><dd id="r70g-scope-sha">—</dd></dl><p class="r70g-explain">R70F mengecek tautan hash ledger-scope sebelum proyeksi. Perubahan sumber di tengah proses akan menolak hasil.</p></section>
+        <section class="panel"><div class="panel-heading"><div><span class="section-number">04 · REVIEW GATE</span><h2>Yang masih diblokir</h2></div></div><ul class="reg-guard"><li>Keberlakuan final, status pencabutan, dan harmonisasi vertikal/horizontal belum dinyatakan.</li><li>Perbandingan nominal lampiran serta konsolidasi anggaran belum dilakukan.</li><li>Anomali metadata JDIH memerlukan telaah manusia.</li><li>R70G tidak memberikan hak produksi, pengesahan, atau penagihan.</li></ul><div class="reg-warning">STATUS: SOURCE TRACE ONLY · REVIEWER REQUIRED · NUMERIC BLOCKED · PRODUCTION DENIED</div></section>
       </div>
       <footer class="page-footer">Planning Intelligence · Laravel Regulatory R70G QA<span>R69E session + FREE retained · Laravel R70F domain · No production admission</span></footer>
     </div>
