@@ -17,6 +17,7 @@
   <script defer src="./planning-lineage-r70j.js"></script>
   <script defer src="./planning-program-r70k.js"></script>
   <script defer src="./normative-root-r70l.js"></script>
+  <script defer src="./regulatory-discovery-r70o.js"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -95,6 +96,23 @@
         <p id="r70l-status" class="r70g-status" role="status" aria-live="polite">Meminta rantai norma induk resmi melalui Laravel…</p>
         <div id="r70l-results" aria-label="Dua peraturan induk, enam ketentuan, jejak delegasi dan gerbang abstain"></div>
         <p class="r70h-caveat">Ini adalah metadata dan ringkasan ketentuan dari PDF resmi, bukan teks PDF yang sudah di-hash. Hasil hanya untuk telaah; amendemen dan pemenuhan substansi belum disahkan. Tidak ada perhitungan anggaran.</p>
+      </section>
+      <section class="panel r70o-panel" aria-labelledby="r70o-title">
+        <div class="panel-heading"><div>
+          <span class="section-number">04B · LIVE OFFICIAL SOURCE DISCOVERY · R70O</span>
+          <h2 id="r70o-title">Cari peraturan resmi dari internet</h2>
+          <p>Pencarian ini menghubungi JDIH BPK atas permintaan pengguna. Temuan awal dapat berupa UU, PP, Perpres, Permendagri, PMK, dan regulasi daerah. Tautan hanya menuju domain sumber resmi yang diizinkan.</p>
+        </div></div>
+        <form id="r70o-form" class="r70i-controls" aria-label="Penelusuran peraturan sumber resmi">
+          <label for="r70o-source">Sumber resmi</label>
+          <select id="r70o-source" name="source"><option value="jdih_bpk">JDIH BPK RI · Database Peraturan</option></select>
+          <label for="r70o-query">Kata kunci, nomor, atau judul regulasi</label>
+          <input id="r70o-query" name="q" type="search" required minlength="3" maxlength="100" placeholder="Contoh: Permendagri 86 Tahun 2017" autocomplete="off">
+          <button id="r70o-submit" type="submit" class="r70h-evidence-button">Cari pada sumber resmi</button>
+        </form>
+        <p id="r70o-status" class="r70g-status" role="status" aria-live="polite">Belum melakukan permintaan daring. Masukkan kata kunci untuk memulai.</p>
+        <div id="r70o-results" class="r70g-stack" aria-label="Kandidat dokumen hukum hasil penelusuran"></div>
+        <p class="r70h-caveat">PENTING: Hasil pencarian bukan sensus lengkap revisi, pembuktian keberlakuan, konfirmasi naskah PDF, atau penilaian harmonisasi. Kegagalan menemukan hasil tidak membuktikan dokumen tidak ada. REVIEW_REQUIRED · AMENDMENT_CHAIN_INCOMPLETE · ABSTAIN; penghitungan anggaran dan produksi tetap ditutup.</p>
       </section>
       <div class="reg-columns">
         <section class="panel"><div class="panel-heading"><div><span class="section-number">05 · SOURCE INTEGRITY</span><h2>Sidik jari sumber</h2></div></div><dl class="r70g-digests"><dt>Ledger R70C</dt><dd id="r70g-ledger-sha">—</dd><dt>Scope R70D</dt><dd id="r70g-scope-sha">—</dd></dl><p class="r70g-explain">R70F mengecek tautan hash ledger-scope sebelum proyeksi. Perubahan sumber di tengah proses akan menolak hasil.</p></section>

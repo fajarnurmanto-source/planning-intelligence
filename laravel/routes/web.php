@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\PlanningLineageController;
 use App\Http\Controllers\Api\PlanningProgramCandidateController;
 use App\Http\Controllers\Api\RegulatoryEvidenceController;
+use App\Http\Controllers\Api\RegulatoryDiscoveryController;
 use App\Http\Controllers\Api\RegulatoryReadModelController;
 use App\Http\Controllers\Auth\SessionController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,8 @@ Route::prefix('api')->group(function (): void {
             ->name('pi.planning.program-candidate');
         Route::get('/qa-regulatory-r70l/normative-root', NormativeRootController::class)
             ->name('pi.regulatory.normative-root');
+        Route::get('/qa-regulatory-r70o/discover', RegulatoryDiscoveryController::class)
+            ->middleware('throttle:10,1')->name('pi.regulatory.discover');
         Route::get('/qa-planning-r70j/lineage-candidates', PlanningLineageController::class)
             ->name('pi.planning.lineage-candidates');
         Route::get('/qa-regulatory-r70g/laravel-read-model', RegulatoryReadModelController::class)
