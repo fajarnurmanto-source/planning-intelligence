@@ -66,6 +66,9 @@
         !sha(data.source_integrity?.scope_sha256)) {
       throw Error('Rantai sumber regulasi R70F tidak valid; perbandingan ditahan.')
     }
+    const evidenceTargetCount = data.documents.reduce((n, doc) =>
+      n + (Array.isArray(doc.scope_targets) ? doc.scope_targets.length : 0), 0)
+    if (evidenceTargetCount !== 10) throw Error('Jumlah sasaran bukti R70F tidak cocok.')
     return data
   }
   function render(planning, regulatory) {
@@ -100,7 +103,7 @@
     next.href = '#r70i-title'
     add(area, 'p', 'r70j-digest', 'SHA-256 registri metadata R70K (BUKAN PDF): ' + data.source_registry_sha256)
     $('r70k-status').textContent = '1 node program/indikator terlokalisasi · ' +
-      sourceModel.summary.scope_targets_first_95_pages + ' sasaran regulasi diperiksa konteksnya · pemetaan ABSTAIN.'
+      sourceModel.summary.scope_targets_first_95_pages + ' sasaran regulasi tersedia sebagai pembanding · pemetaan ABSTAIN.'
   }
   async function get(url) {
     const response = await fetch(url, {credentials:'same-origin', cache:'no-store'})
