@@ -82,6 +82,14 @@
 
 **Batas otomatisasi:** PI boleh menunjukkan fakta sumber, kandidat hubungan dan risiko; **tidak memutus sah/tidak sah, konflik hukum final atau rekomendasi keuangan definitif**. Bila norma induk atau rantai amandemen belum terbukti, antarmuka harus memperlihatkan `ABSTAIN`/blokir penilaian keselarasan, sementara fakta sumber tetap dapat dilihat untuk pengumpulan bukti dan reviewer berwenang.
 
+### 4.1B Penelusuran regulasi dari sumber hukum resmi (OFFICIAL-DISCOVERY-007; mandat 8 Nov)
+
+- Regulatory Specialized **wajib** memiliki pencarian web *on-demand* berbasis kata kunci, nomor, tahun dan jenis norma dari sumber hukum yang *allowlisted*, serta sumber JDIH instansi yang ditentukan pengguna **setelah** adapter dan legalitas akses divalidasi. Jenis sumber nasional awal: JDIH BPK, peraturan.go.id, JDIH Kemendagri, Kemenkeu, Bappenas dan JDIH sektoral sesuai kasus. Menyebut sumber dalam roadmap tidak berarti konektor itu telah tersedia.
+- **Tahap R70O**: adapter HTTP Laravel JDIH BPK beralamat tetap, form dalam Regulatory UI, login/tenant/throttle, pencarian dari situs resmi dan kandidat tautan /Details/. Status `SOURCE_IMPLEMENTED` (pilot GitHub `0126d98`), `LOCAL_APPLIED=UNCONFIRMED`, `PHP_TEST=NOT_RUN`, `LIVE_PROVIDER_ACCEPTANCE=NOT_RUN`. Tidak mengaktifkan sumber lainnya atau mengklaim telah melaksanakan *full census*.
+- **Tahap wajib berikutnya**: adapter resmi tambahan dengan pemeriksaan URL, HTML/API contract, batas permintaan, legalitas akses, sumber gagal/anti-bot, provenance snapshot PDF, *deduplication* nomor/jenis/tahun/pembentuk, serta pemetaan relasi `AMENDS`/`REVOKES`/`IMPLEMENTS`/`DELEGATES_TO` berikut pasal, transisi dan tanggal efektif. Jika parser/provider berubah, hasil harus `SOURCE_UNAVAILABLE` atau `ABSTAIN`—bukan diam-diam mengganti dengan sumber tidak resmi.
+- **Jalur kelulusan**: (1) sensus revisi resmi untuk *case scope* dan tanggal evaluasi selesai, (2) bukti parser memperoleh temuan nyata dari provider di Laravel lokal, (3) reviewer dapat menavigasi metadata/PDF asli dan membedakan *search hit* dari norma efektif, (4) kasus dinilai hanya setelah NORMATIVE-ROOT-006 gates terpenuhi. Aktivasi bridge lokal menunggu (1), lalu tes terfokus (2) dan UI acceptance (3); scheduled bridge yang dinonaktifkan pemilik tetap tidak disentuh.
+- `DISCOVERY_ONLY` ≠ `SOURCE_PDF_VERIFIED` ≠ `AMENDMENT_CHAIN_COMPLETE` ≠ `LEGAL_ALIGNMENT_APPROVED`. Pencarian tanpa temuan tidak membuktikan peraturan tidak ada. Seluruh keputusan hukum/angka dan produksi tetap di-*deny*.
+
 ### 4.2 Multi-Pemda dan waktu adalah parameter inti (MULTIREGION-002)
 
 - `jurisdiction_id` berbasis kode resmi tervalidasi, bukan nama kota; relasi nasional→provinsi→kabupaten/kota terpisah dari graf delegasi hukum. Sumber, perangkat daerah, versi nomenklatur, tahun, status regulasi dan `region_rulepack` dapat diganti.
