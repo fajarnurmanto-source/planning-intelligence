@@ -21,7 +21,7 @@ final class OfficialRegulationDiscovery
         }
 
         $endpoint = 'https://peraturan.bpk.go.id/Search';
-        $parameters = ['search' => $query, 'filter' => 0, 'page' => 1];
+        $parameters = ['keywords' => $query, 'tentang' => '', 'nomor' => ''];
         $response = Http::withHeaders([
             'Accept' => 'text/html',
             'User-Agent' => 'PlanningIntelligence-RegulatoryDiscovery/0.1',
