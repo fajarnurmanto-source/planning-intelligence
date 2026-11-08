@@ -110,9 +110,12 @@ configured event-triggered automation.
 ## One-time UI + canonical roadmap import (8 Nov 2026)
 
 The source-only Laravel baseline deliberately excluded the existing static
-`public/index.html`. Without its exact contents, GitHub edits to the PI UI
-cannot be made safely. A new guarded bootstrap copies the **already-installed**
-HTML into the pilot branch. It also looks for exactly one local master-roadmap
+`public/` interface. The first bootstrap captured `public/index.html`, which
+is only the institutional home; Regulatory Intelligence is a separate static
+HTML page with JavaScript and CSS. The updated guarded bootstrap registers all
+existing **top-level** `public/*.html`, `public/*.js` and `public/*.css` source
+files without touching the installed copies, so subsequent GitHub UI edits can
+be made safely. It also looks for exactly one local master-roadmap
 candidate outside the artifact/archive tree; if multiple files match, it prints
 their paths and does **not** guess which one governs.
 
@@ -126,7 +129,7 @@ wsl.exe -d Ubuntu-24.04 -- bash /mnt/d/Research/PlanningIntelligence/PI_GITHUB_B
 ```
 
 Expected: `PI_UI_ROADMAP_BOOTSTRAP=PASS`,
-`LOCAL_UI_UNCHANGED=YES` and a new `COMMIT=`. If the script reports
+`LOCAL_UI_UNCHANGED=YES`, `STATIC_UI_FILES_INSPECTED=...` and a new `COMMIT=`. If the script reports
 `ROADMAP=NEEDS_EXPLICIT_PATH_..._CANDIDATES`, share only the candidate
 **paths** so the authoritative file can be selected; the UI may still have
 been published safely.
