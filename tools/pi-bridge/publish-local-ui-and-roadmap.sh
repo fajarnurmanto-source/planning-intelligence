@@ -91,8 +91,8 @@ if [[ -n ${PI_MASTER_ROADMAP_PATH:-} ]]; then
   roadmap="$PI_MASTER_ROADMAP_PATH"
 else
   mapfile -d '' candidates < <(find "$pi_root" -maxdepth 5 \
-    \( -name PI_DEVELOPMENT_ARTIFACTS -o -name .git -o -name node_modules -o -name vendor \) -prune -o \
-    -type f \( -iname '*master*roadmap*.md' -o -iname '*master*roadmap*.txt' \) -print0)
+    \( -name PI_DEVELOPMENT_ARTIFACTS -o -name .git -o -name node_modules -o -name vendor -o -name postgres -o -name .venv \) -prune -o \
+    -type f \( -iname '*roadmap*.md' -o -iname '*roadmap*.txt' \) -print0)
   if (( ${#candidates[@]} == 1 )); then
     roadmap="${candidates[0]}"
   else
