@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\EntitlementController;
+use App\Http\Controllers\Api\RegulatoryEvidenceController;
 use App\Http\Controllers\Api\RegulatoryReadModelController;
 use App\Http\Controllers\Auth\SessionController;
 use Illuminate\Support\Facades\Route;
@@ -22,5 +23,8 @@ Route::prefix('api')->group(function (): void {
             ->name('pi.entitlements');
         Route::get('/qa-regulatory-r70g/laravel-read-model', RegulatoryReadModelController::class)
             ->name('pi.regulatory.read-model');
+        Route::get('/qa-regulatory-r70h/evidence/{sourceId}/{excerptSha256}', RegulatoryEvidenceController::class)
+            ->where(['sourceId' => '[A-Z0-9_]+', 'excerptSha256' => '[A-Fa-f0-9]{64}'])
+            ->name('pi.regulatory.evidence');
     });
 });
