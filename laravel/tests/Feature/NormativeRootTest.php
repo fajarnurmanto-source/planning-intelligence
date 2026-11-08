@@ -51,6 +51,10 @@ final class NormativeRootTest extends TestCase
             ->assertJsonPath('case.admitted_alignment', null)
             ->assertJsonPath('gates.normative_root_trace', 'PARTIAL_PRIMARY_PROVISIONS_FOUND')
             ->assertJsonPath('gates.regulatory_version', 'AMENDMENT_CHAIN_INCOMPLETE')
+            ->assertJsonPath('version_timeline.status', 'AMENDMENT_CHAIN_INCOMPLETE')
+            ->assertJsonPath('version_timeline.verified_change_event_count', 0)
+            ->assertJsonPath('version_timeline.no_events_means_no_changes', false)
+            ->assertJsonPath('version_timeline.instrument_states.0.date_state', 'START_DATE_UNVERIFIED')
             ->assertJsonPath('gates.result', 'ABSTAIN')
             ->assertJsonPath('gates.numeric_comparison', 'BLOCKED')
             ->assertJsonPath('gates.production_admission', 'DENIED')
@@ -75,6 +79,11 @@ final class NormativeRootTest extends TestCase
 
         $forged = $registry;
         $forged['case']['regional_exception_applicability'] = 'CITY_YOGYAKARTA';
+        $this->useRegistry($forged);
+        $this->assertUnavailable();
+
+        $forged = $registry;
+        $forged['version_events'][] = ['id' => 'UNVERIFIED-EVENT'];
         $this->useRegistry($forged);
         $this->assertUnavailable();
 
