@@ -168,6 +168,147 @@
       })
     }
   }
+
+  // R70I: create a reviewer-only planning crosswalk handoff from actual R70F
+  // targets and authenticated R70H excerpts. This is NOT an aligned mapping.
+  async function buildCandidateHandoff(data, progress = () => {}) {
+    const interpretation = data.interpretation || {}
+    if (interpretation.production_admission !== 'DENIED' ||
+        interpretation.numeric_comparison !== 'BLOCKED' ||
+        interpretation.legal_harmonization !== 'NOT_ASSESSED' ||
+        interpretation.annex_content_diff !== 'NOT_PERFORMED' ||
+        interpretation.version_reconciliation !== 'NOT_PERFORMED' ||
+        data.source_integrity?.scope_links_to_ledger !== true ||
+        !validSha(data.source_integrity.ledger_sha256) ||
+        !validSha(data.source_integrity.scope_sha256)) {
+      throw Error('Gerbang sumber R70F belum memadai untuk ekspor kandidat.')
+    }
+    const amendments = data.documents.filter(item => item.document_role === 'AMENDING_REGULATION')
+    if (amendments.length !== 5) throw Error('Rantai pengubah tidak lengkap; paket ditahan.')
+    const candidates = []
+    for (const item of amendments) {
+      const officialUrl = jdihPdfUrls.get(item.id)
+      if (!validId(item.id) || !validSha(item.pdf_sha256) ||
+          !Number.isInteger(item.sequence) || !officialUrl ||
+          typeof item.title !== 'string' || !item.title ||
+          !Array.isArray(item.scope_targets) || item.scope_targets.length !== 2) {
+        throw Error('Identitas sumber resmi tidak valid; paket ditahan.')
+      }
+      for (const target of item.scope_targets) {
+        if (!['LAMPIRAN I', 'LAMPIRAN II'].includes(target.target) ||
+            !validPage(target.start_pdf_page) || !validPage(target.verb_pdf_page) ||
+            !Number.isInteger(target.organizational_code_count) ||
+            target.organizational_code_count < 0 ||
+            !Array.isArray(target.evidence) || target.evidence.length === 0) {
+          throw Error('Target atau bukti sumber tidak lengkap; paket ditahan.')
+        }
+        const evidence = []
+        const seen = new Set()
+        for (const ref of target.evidence) {
+          if (ref.source_id !== item.id || ref.pdf_sha256 !== item.pdf_sha256 ||
+              !validPage(ref.pdf_page) || !validSha(ref.excerpt_sha256)) {
+            throw Error('Rujukan bukti tidak cocok dengan dokumen sumber; paket ditahan.')
+          }
+          const key = ref.excerpt_sha256 + ':' + ref.pdf_page
+          if (seen.has(key)) continue
+          seen.add(key)
+          const endpoint = '/api/qa-regulatory-r70h/evidence/' +
+            encodeURIComponent(item.id) + '/' + encodeURIComponent(ref.excerpt_sha256)
+          const response = await fetch(endpoint, {credentials: 'same-origin', cache: 'no-store'})
+          if (response.status === 401) {
+            location.replace('./login.html')
+            throw Error('Sesi berakhir; tidak ada paket yang dibuat.')
+          }
+          if (!response.ok) throw Error(evidenceFailure(response.status))
+          const verified = checkedEvidence(await response.json(), item.id,
+            item.pdf_sha256, ref, data.source_integrity)
+          const match = verified.find(row => row.pdf_page === ref.pdf_page &&
+            row.context === 'operative_target' && row.context_detail === target.target)
+          if (!match) throw Error('Kutipan tidak cocok dengan target; paket ditahan.')
+          evidence.push({
+            pdf_page: match.pdf_page,
+            excerpt: match.excerpt,
+            excerpt_sha256: match.excerpt_sha256,
+            evidence_type: match.evidence_type,
+            context: match.context,
+            context_detail: match.context_detail,
+            review_status: 'REVIEW_REQUIRED'
+          })
+        }
+        if (!evidence.length) throw Error('Target tanpa kutipan; paket ditahan.')
+        candidates.push({
+          source_id: item.id,
+          regulation_title: item.title,
+          amendment_sequence: item.sequence,
+          source_pdf_sha256: item.pdf_sha256,
+          official_pdf_url: officialUrl,
+          annex_target: target.target,
+          target_item: target.item,
+          change_verb_as_extracted: target.change_verb || null,
+          first_pdf_page: target.start_pdf_page,
+          operative_verb_pdf_page: target.verb_pdf_page,
+          observed_organizational_code_count: target.organizational_code_count,
+          evidence,
+          planning_document_id: null,
+          responsible_unit_id: null,
+          program_code: null,
+          activity_code: null,
+          subactivity_code: null,
+          mapping_status: 'MAPPING_CANDIDATE',
+          reviewer_action: 'VERIFY_CROSS_DOCUMENT_TAXONOMY',
+          legal_status: 'NOT_ASSESSED',
+          numeric_status: 'BLOCKED'
+        })
+        progress(candidates.length)
+      }
+    }
+    if (candidates.length !== 10) throw Error('Sepuluh target perubahan tidak lengkap; paket ditahan.')
+    return {
+      schema: 'PI_R70I_REGULATORY_TO_PLANNING_HANDOFF_V1',
+      generated_at_utc: new Date().toISOString(),
+      tenant_id: data.tenant_id,
+      source_integrity: data.source_integrity,
+      candidate_count: candidates.length,
+      mapping_status: 'MAPPING_CANDIDATE',
+      legal_harmonization: 'NOT_ASSESSED',
+      substantive_alignment: 'NOT_ASSESSED',
+      numeric_comparison: 'BLOCKED',
+      production_admission: 'DENIED',
+      purpose: 'REVIEWER_CROSSWALK_INPUT_ONLY_NOT_AN_APPROVED_PLANNING_MAPPING',
+      limitation: 'No verified RPJMD/RKPD/program/activity/subactivity crosswalk; no annex-value comparison.',
+      candidates
+    }
+  }
+  async function exportCandidateHandoff(data, button, status) {
+    button.disabled = true
+    status.dataset.error = 'false'
+    status.textContent = 'Mengumpulkan kutipan sumber melalui Laravel…'
+    try {
+      const packet = await buildCandidateHandoff(data, count => {
+        status.textContent = 'Kandidat tervalidasi: ' + count + '/10'
+      })
+      const objectUrl = URL.createObjectURL(new Blob(
+        [JSON.stringify(packet, null, 2)], {type: 'application/json;charset=utf-8'}
+      ))
+      try {
+        const anchor = document.createElement('a')
+        anchor.href = objectUrl
+        anchor.download = 'PI_R70I_REVIEW_CROSSWALK_CANDIDATES.json'
+        document.body.appendChild(anchor)
+        anchor.click()
+        anchor.remove()
+      } finally {
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 1000)
+      }
+      status.textContent = 'Paket 10 kandidat tersimpan. Hubungan ke dokumen perencanaan belum diverifikasi.'
+    } catch (error) {
+      status.dataset.error = 'true'
+      status.textContent = 'Paket tidak dibuat: ' + (error?.message || 'kesalahan tidak diketahui')
+    } finally {
+      button.disabled = false
+    }
+  }
+
   function sourceCard(area, item, integrity) {
     const card = node(area, 'article', 'r70g-card')
     const top = node(card, 'div', 'r70g-top')
@@ -228,6 +369,12 @@
     area.replaceChildren()
     data.documents.forEach(item => sourceCard(area, item, data.source_integrity))
     $('r70g-status').textContent = 'R70F Laravel read model berhasil diverifikasi. Buka kutipan R70H sesuai kebutuhan; reviewer tetap diperlukan.'
+    const packetButton = $('r70i-export')
+    packetButton.disabled = false
+    packetButton.addEventListener('click', () =>
+      exportCandidateHandoff(data, packetButton, $('r70i-status')))
+    $('r70i-status').textContent = 'Siap menyusun 10 kandidat berbukti; tidak ada mapping program yang disahkan.'
+
   }
   async function load() {
     const response = await fetch('/api/qa-regulatory-r70g/laravel-read-model', {credentials:'same-origin', cache:'no-store'})
