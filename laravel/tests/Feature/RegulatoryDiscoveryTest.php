@@ -29,6 +29,7 @@ final class RegulatoryDiscoveryTest extends TestCase
 <html><body><h2>PENCARIAN PERATURAN</h2>
 <article><a href="/Details/311927/permendagri-no-86-tahun-2017">Permendagri No. 86 Tahun 2017</a></article>
 <article><a href="https://peraturan.bpk.go.id/Details/321470/permendagri-no-10-tahun-2025">Permendagri No. 10 Tahun 2025</a></article>
+<article><a href="/Details/210451/perbup-kab-purworejo-no-86-tahun-2017">Peraturan Bupati Purworejo Nomor 86 Tahun 2017</a></article>
 <a href="https://evil.example/Details/12345/fake">Permendagri No. 86 Tahun 2017</a>
 <a href="https://peraturan.bpk.go.id.evil.example/Details/456/hijack">Permendagri No. 86 Tahun 2017</a>
 <a href="/Details/100/irrelevant">Peraturan Daerah tentang Lainnya</a>
@@ -40,6 +41,7 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8'])]);
             ->assertOk()
             ->assertJsonPath('schema', 'PI_R70O_OFFICIAL_DISCOVERY_V1')
             ->assertJsonPath('result_status', 'DISCOVERY_ONLY')
+            ->assertJsonPath('search_mode', 'STRUCTURED_IDENTITY')
             ->assertJsonPath('amendment_census', 'NOT_EXHAUSTIVELY_VERIFIED')
             ->assertJsonPath('normative_alignment', 'ABSTAIN')
             ->assertJsonPath('items.0.official_metadata_url', 'https://peraturan.bpk.go.id/Details/311927/permendagri-no-86-tahun-2017')
@@ -48,7 +50,23 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8'])]);
             ->assertHeader('Cache-Control', 'private, no-store');
         Http::assertSentCount(1);
         Http::assertSent(fn ($request) => str_starts_with($request->url(), 'https://peraturan.bpk.go.id/Search?')
-            && str_contains($request->url(), 'keywords=Permendagri'));
+            && str_contains($request->url(), 'keywords=')
+            && str_contains($request->url(), 'nomor=86')
+            && str_contains($request->url(), 'tahun=2017')
+            && str_contains($request->url(), 'jenis=40'));
+    }
+
+    public function test_non_identity_query_keeps_keyword_search_without_structured_filters(): void
+    {
+        Http::preventStrayRequests();
+        Http::fake(['peraturan.bpk.go.id/*' => Http::response('<h2>PENCARIAN PERATURAN</h2><a href="/Details/311927/permendagri-no-86-tahun-2017">Pedoman Perencanaan Pembangunan Daerah</a>', 200, ['Content-Type' => 'text/html'])]);
+        $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
+            ->getJson(self::URL.'?q=Perencanaan%20Pembangunan&source=jdih_bpk')
+            ->assertOk()
+            ->assertJsonPath('search_mode', 'KEYWORD_BROAD')
+            ->assertJsonCount(1, 'items');
+        Http::assertSent(fn ($request) => str_contains($request->url(), 'keywords=Perencanaan')
+            && !str_contains($request->url(), 'jenis=40'));
     }
 
     public function test_rejected_query_and_provider_failure_never_invent_results(): void
