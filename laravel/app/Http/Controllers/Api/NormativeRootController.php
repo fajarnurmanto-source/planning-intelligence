@@ -49,6 +49,7 @@ final class NormativeRootController extends Controller
                 'case' => $data['case'],
                 'gates' => $data['gates'],
                 'version_timeline' => $timeline,
+                'census_snapshot' => $data['census_snapshot'],
             ])->header('Cache-Control', 'private, no-store');
         } catch (Throwable $error) {
             report($error);
@@ -72,6 +73,7 @@ final class NormativeRootController extends Controller
             || !is_array($data['instruments'] ?? null) || count($data['instruments']) !== 2
             || !is_array($data['provisions'] ?? null) || count($data['provisions']) !== 6
             || !is_array($data['version_events'] ?? null) || $data['version_events'] !== []
+            || !is_array($data['census_snapshot'] ?? null)
             || !is_array($data['delegation'] ?? null)
             || !is_array($data['case'] ?? null)
             || !is_array($data['gates'] ?? null)) {
@@ -82,7 +84,7 @@ final class NormativeRootController extends Controller
             'IDN-PERMENDAGRI-86-2017' => [
                 '86', 2017,
                 'https://peraturan.bpk.go.id/Details/311927/permendagri-no-86-tahun-2017',
-                'https://peraturan.go.id/files/bn1312-2017bt.pdf', null,
+                'https://peraturan.go.id/files/bn1312-2017bt.pdf', '2017-09-25',
             ],
             'IDN-PERMENDAGRI-10-2025' => [
                 '10', 2025,
@@ -135,6 +137,22 @@ final class NormativeRootController extends Controller
                 throw new RuntimeException('Normative provision evidence mismatch.');
             }
             $seen[$provision['id']] = true;
+        }
+
+        $census = $data['census_snapshot'];
+        if (($census['schema'] ?? null) !== 'PI_R70N_OFFICIAL_RELATION_METADATA_CENSUS_V1'
+            || ($census['as_of_date'] ?? null) !== '2026-11-08'
+            || ($census['scope'] ?? null) !== 'TWO_SCOPED_PARENT_PERMENDAGRI_ONLY'
+            || ($census['method'] ?? null) !== 'OFFICIAL_JDIH_BPK_METADATA_AND_NATIONAL_REGULATION_TEXT'
+            || ($census['exhaustiveness'] ?? null) !== 'NOT_EXHAUSTIVELY_VERIFIED'
+            || ($census['official_pdf_bytes_sha256'] ?? null) !== 'NOT_CAPTURED'
+            || ($census['result'] ?? null) !== 'AMENDMENT_CHAIN_INCOMPLETE'
+            || ($census['empty_event_list_is_not_no_amendment_claim'] ?? null) !== true
+            || ($census['admitted_direct_amendment_events'] ?? null) !== []
+            || !is_array($census['observations'] ?? null)
+            || count($census['observations']) !== 2
+            || $census['observations'] !== [['instrument_id' => 'IDN-PERMENDAGRI-86-2017', 'official_current_status' => 'BERLAKU', 'official_effective_date' => '2017-09-25', 'official_metadata_url' => 'https://peraturan.bpk.go.id/Details/311927/permendagri-no-86-tahun-2017', 'relation_catalogue' => 'MENCABUT_PERMENDAGRI_54_2010', 'relation_provision' => 'Ketentuan penutup; periksa naskah sumber', 'related_instrument_id' => 'IDN-PERMENDAGRI-54-2010', 'related_source_url' => 'https://peraturan.go.id/files/bn517-2010.pdf', 'direct_amendment_record' => 'NONE_LISTED_NOT_PROOF_OF_NONE'], ['instrument_id' => 'IDN-PERMENDAGRI-10-2025', 'official_current_status' => 'BERLAKU', 'official_effective_date' => '2025-06-23', 'official_metadata_url' => 'https://peraturan.bpk.go.id/Details/321470/permendagri-no-10-tahun-2025', 'relation_catalogue' => 'BELUM_TERSEDIA', 'relation_provision' => null, 'related_instrument_id' => null, 'related_source_url' => null, 'direct_amendment_record' => 'UNDETERMINED']]) {
+            throw new RuntimeException('Official amendment census observation mismatch.');
         }
 
         $delegation = [
