@@ -83,16 +83,25 @@ final class PlanningLineageController extends Controller
         }
 
         $expected = [
-            'RPJMD' => ['ID-DIY-YOG-RPJMD-2025-2029-PERDA-2-2025', '2025-08-15', 2025, 2029],
-            'RKPD' => ['ID-DIY-YOG-RKPD-2026-PERWALI-34-2025', '2025-07-07', 2026, 2026],
+            'RPJMD' => ['ID-DIY-YOG-RPJMD-2025-2029-PERDA-2-2025', '2025-08-15', 2025, 2029,
+                'https://jdih.jogjakota.go.id/home/produk_hukum/detail/3774',
+                'https://peraturan.bpk.go.id/Download/400721/Perda%20Kota%20Jogja%20Nomor%202%20Tahun%202025.pdf',
+                'Pasal 2 ayat (4) huruf a', 'RPJMD dijadikan pedoman dalam penyusunan RKPD.'],
+            'RKPD' => ['ID-DIY-YOG-RKPD-2026-PERWALI-34-2025', '2025-07-07', 2026, 2026,
+                'https://jdih.jogjakota.go.id/home/produk_hukum/detail/3758',
+                'https://jdih.jogjakota.go.id/asset/naskah/2025pw3405034.pdf',
+                'Lampiran, BAB I, subbab 1.3 Hubungan Antar Dokumen, halaman cetak I-3',
+                'Naskah RKPD menyebut rancangan Perda RPJMD 2025–2029 sebagai salah satu acuannya.'],
         ];
         foreach ($registry['documents'] as $doc) {
             if (!is_array($doc) || !isset($expected[$doc['kind'] ?? ''])) {
                 throw new RuntimeException('Unknown planning document.');
             }
-            [$id, $issued, $from, $to] = $expected[$doc['kind']];
+            [$id, $issued, $from, $to, $metadataUrl, $pdfUrl, $locator, $observation] = $expected[$doc['kind']];
             if (($doc['id'] ?? null) !== $id || ($doc['issued_on'] ?? null) !== $issued
                 || ($doc['period_from'] ?? null) !== $from || ($doc['period_to'] ?? null) !== $to
+                || ($doc['metadata_url'] ?? null) !== $metadataUrl || ($doc['pdf_url'] ?? null) !== $pdfUrl
+                || ($doc['verified_locator'] ?? null) !== $locator || ($doc['source_observation'] ?? null) !== $observation
                 || !array_key_exists('pdf_sha256', $doc) || $doc['pdf_sha256'] !== null
                 || ($doc['pdf_snapshot_state'] ?? null) !== 'NOT_CAPTURED_NO_HASH'
                 || !is_string($doc['verified_locator'] ?? null) || trim($doc['verified_locator']) === ''
