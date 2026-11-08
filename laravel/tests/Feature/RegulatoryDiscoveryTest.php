@@ -73,6 +73,31 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8'])]);
             && !str_contains($request->url(), 'jenis=40'));
     }
 
+    public function test_broad_query_requires_topic_identity_and_acronym_expansion(): void
+    {
+        Http::preventStrayRequests();
+        Http::fake(['peraturan.bpk.go.id/*' => Http::response(<<<'HTML'
+<html><body><h2>PENCARIAN PERATURAN</h2>
+<a href="/Details/5100/pedoman-apbdes-2026">Pedoman Penyusunan Anggaran Pendapatan dan Belanja Desa Tahun Anggaran 2026</a>
+<a href="/Details/321470/permendagri-no-10-tahun-2025">Pedoman Penyusunan Rencana Kerja Pemerintah Daerah Tahun 2026</a>
+<a href="/Details/4100/pedoman-rkpd-2025">Pedoman Penyusunan Rencana Kerja Pemerintah Daerah Tahun 2025</a>
+</body></html>
+HTML, 200, ['Content-Type' => 'text/html'])]);
+
+        $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']));
+        $this->getJson(self::URL.'?q=Pedoman%20Penyusunan%20RKPD%202026&source=jdih_bpk')
+            ->assertOk()
+            ->assertJsonPath('search_mode', 'KEYWORD_BROAD')
+            ->assertJsonCount(1, 'items')
+            ->assertJsonPath('items.0.official_metadata_url', 'https://peraturan.bpk.go.id/Details/321470/permendagri-no-10-tahun-2025');
+
+        // The APBD acronym must not match an APBDes title by substring.
+        $this->getJson(self::URL.'?q=APBD%202026&source=jdih_bpk')
+            ->assertOk()
+            ->assertJsonPath('items', []);
+        Http::assertSentCount(2);
+    }
+
     public function test_rejected_query_and_provider_failure_never_invent_results(): void
     {
         Http::preventStrayRequests();
