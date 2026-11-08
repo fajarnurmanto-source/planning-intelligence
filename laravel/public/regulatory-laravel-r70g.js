@@ -64,7 +64,25 @@
     }
     return data.matches
   }
-  function evidenceGroup(parent, sourceId, pdfHash, refs, integrity, label) {
+  function verifiedCitation(documentTitle, sourceId, pdfHash, match, integrity) {
+    const sourceUrl = jdihPdfUrls.get(sourceId)
+    return [
+      'PLANNING INTELLIGENCE · SITASI BUKTI QA — REVIEW MANUSIA DIPERLUKAN',
+      'Dokumen: ' + documentTitle,
+      'ID sumber: ' + sourceId,
+      'Konteks: ' + (match.context || 'sumber') + (match.context_detail ? ' · ' + match.context_detail : ''),
+      'Halaman PDF snapshot QA: ' + match.pdf_page,
+      'Kutipan: ' + match.excerpt,
+      'SHA-256 kutipan: ' + match.excerpt_sha256,
+      'SHA-256 PDF snapshot QA: ' + pdfHash,
+      'SHA-256 ledger: ' + integrity.ledger_sha256,
+      'SHA-256 scope: ' + integrity.scope_sha256,
+      'PDF daring JDIH (BELUM diverifikasi ulang terhadap snapshot QA): ' +
+        (sourceUrl ? sourceUrl + '#page=' + match.pdf_page : 'TIDAK TERSEDIA'),
+      'Batas: kutipan terikat snapshot QA; keberlakuan, harmonisasi, angka, dan keputusan hukum BELUM DINILAI.'
+    ].join('\n')
+  }
+  function evidenceGroup(parent, sourceId, pdfHash, refs, integrity, label, documentTitle) {
     if (!Array.isArray(refs) || refs.length === 0) return
     const seen = new Set()
     const unique = refs.filter(ref => {
@@ -108,6 +126,29 @@
               (match.context_detail ? ' · ' + match.context_detail : ''))
             node(proof, 'blockquote', '', match.excerpt)
             pdf(proof, sourceId, match.pdf_page, 'Buka PDF halaman sumber ↗')
+            const copyButton = node(proof, 'button', 'r70h-evidence-button', 'Salin sitasi bukti')
+            copyButton.type = 'button'
+            const copyStatus = node(proof, 'span', 'r70h-copy-status', '')
+            copyStatus.setAttribute('role', 'status')
+            copyStatus.setAttribute('aria-live', 'polite')
+            copyButton.addEventListener('click', async () => {
+              copyButton.disabled = true
+              copyStatus.textContent = ''
+              try {
+                if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+                  throw Error('Clipboard tidak tersedia di browser ini')
+                }
+                await navigator.clipboard.writeText(
+                  verifiedCitation(documentTitle, sourceId, pdfHash, match, integrity)
+                )
+                copyStatus.textContent = 'Sitasi tersalin; status hukum tetap memerlukan review.'
+              } catch (copyError) {
+                copyStatus.textContent = 'Gagal menyalin: ' +
+                  (copyError?.message || 'izin clipboard tidak tersedia')
+              } finally {
+                copyButton.disabled = false
+              }
+            })
           }
           const digests = node(output, 'dl', 'r70h-digests')
           node(digests, 'dt', '', 'SHA-256 kutipan')
@@ -136,7 +177,7 @@
     node(title, 'h3', '', item.title)
     node(top, 'span', 'r70g-pill', item.review_status === 'TWO_CLAUSES_TRACED_REVIEW_REQUIRED' ? 'DUA KLAUSUL TERLACAK' : 'REVIEW SUMBER')
     node(card, 'p', 'r70g-note', 'Bukti terikat SHA-256: ' + evidenceCount(item) + ' kutipan · Status hukum: ' + item.legal_status + ' · Tidak ada angka konsolidasi.')
-    evidenceGroup(card, item.id, item.pdf_sha256, item.source_evidence, integrity, 'Buka kutipan naskah')
+    evidenceGroup(card, item.id, item.pdf_sha256, item.source_evidence, integrity, 'Buka kutipan naskah', item.title)
     if (Array.isArray(item.scope_targets) && item.scope_targets.length) {
       const grid = node(card, 'div', 'r70g-targets')
       for (const target of item.scope_targets) {
@@ -147,12 +188,12 @@
         if (target.target === 'LAMPIRAN II') node(box, 'p', '', 'Kandidat kode organisasi: ' + target.organizational_code_count)
         pdf(box, item.id, target.start_pdf_page, 'Buka PDF halaman pembuka ↗')
         if (target.verb_pdf_page !== target.start_pdf_page) pdf(box, item.id, target.verb_pdf_page, 'Buka PDF kata kerja ↗')
-        evidenceGroup(box, item.id, item.pdf_sha256, target.evidence, integrity, 'Lihat kutipan klausul')
+        evidenceGroup(box, item.id, item.pdf_sha256, target.evidence, integrity, 'Lihat kutipan klausul', item.title)
       }
     }
     if (Array.isArray(item.date_candidates)) {
       const refs = item.date_candidates.flatMap(candidate => Array.isArray(candidate.evidence) ? candidate.evidence : [])
-      evidenceGroup(card, item.id, item.pdf_sha256, refs, integrity, 'Periksa kutipan tanggal')
+      evidenceGroup(card, item.id, item.pdf_sha256, refs, integrity, 'Periksa kutipan tanggal', item.title)
     }
     const actions = node(card, 'div', 'r70g-actions')
     pdf(actions, item.id, 1, 'PDF daring JDIH ↗')
