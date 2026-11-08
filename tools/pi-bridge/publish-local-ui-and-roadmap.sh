@@ -8,6 +8,7 @@ branch='pilot/pi-laravel-github-bridge-20261108'
 bridge="$pi_root/PI_GITHUB_BRIDGE_20261108"
 source="$pi_root/planning-intelligence-v0.0-starter/planning-intelligence-v0.0/laravel/public/index.html"
 state="$bridge/.pi_bridge_last_applied.sha"
+lock_dir="$bridge/.pi_bridge_apply.lock"
 target='laravel/public/index.html'
 roadmap_status='NOT_PUBLISHED'
 
@@ -17,6 +18,8 @@ command -v gh >/dev/null || stop 'gh missing'
 [[ -f "$source" && ! -L "$source" ]] || stop 'Canonical local public/index.html is missing or symlinked'
 [[ -d "$bridge/.git" && -f "$state" ]] || stop 'Bridge checkout or apply marker missing'
 [[ $(wc -c < "$source") -gt 0 && $(wc -c < "$source") -le 2097152 ]] || stop 'UI size outside reviewed limit'
+mkdir "$lock_dir" 2>/dev/null || stop 'Local auto-updater is already running; retry after it finishes'
+trap 'rmdir "$lock_dir" 2>/dev/null || true' EXIT
 
 cd "$bridge"
 [[ $(git branch --show-current) == "$branch" ]] || stop 'Unexpected local branch'
@@ -25,6 +28,7 @@ git fetch --quiet origin "$branch" || stop 'GitHub fetch failed'
 remote_sha=$(git rev-parse "refs/remotes/origin/$branch")
 applied_sha=$(< "$state")
 [[ "$remote_sha" == "$applied_sha" ]] || stop "Local apply marker $applied_sha differs from remote $remote_sha; run the guarded updater and retry"
+git merge-base --is-ancestor HEAD "$remote_sha" || stop 'Local bridge branch is ahead or divergent; no overwrite'
 git merge --ff-only "$remote_sha" >/dev/null || stop 'Fast-forward failed'
 
 # Avoid accidentally publishing credentials embedded in an HTML file.
@@ -63,6 +67,9 @@ if [[ -n "$roadmap" ]]; then
   grep -qi 'roadmap' "$roadmap" || stop 'Selected file does not appear to be a roadmap'
   if grep -Eiq -- 'APP_KEY=base64:[A-Za-z0-9+/=]{20,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|github_pat_[A-Za-z0-9_]{20,}|gh[pousr]_[A-Za-z0-9]{20,}' "$roadmap"; then
     stop 'Potential credential in roadmap; nothing committed'
+  fi
+  if git cat-file -e 'HEAD:docs/bridge-inputs/PI_LOCAL_MASTER_ROADMAP.md' 2>/dev/null; then
+    git show 'HEAD:docs/bridge-inputs/PI_LOCAL_MASTER_ROADMAP.md' | cmp -s - "$roadmap" || stop 'Existing published roadmap differs; reconcile versions manually'
   fi
   install -D -m 644 -- "$roadmap" 'docs/bridge-inputs/PI_LOCAL_MASTER_ROADMAP.md'
   git add -- 'docs/bridge-inputs/PI_LOCAL_MASTER_ROADMAP.md'
