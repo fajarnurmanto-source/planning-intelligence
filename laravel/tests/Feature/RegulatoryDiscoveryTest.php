@@ -48,7 +48,7 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8'])]);
             ->assertHeader('Cache-Control', 'private, no-store');
         Http::assertSentCount(1);
         Http::assertSent(fn ($request) => str_starts_with($request->url(), 'https://peraturan.bpk.go.id/Search?')
-            && str_contains($request->url(), 'search=Permendagri'));
+            && str_contains($request->url(), 'keywords=Permendagri'));
     }
 
     public function test_rejected_query_and_provider_failure_never_invent_results(): void
