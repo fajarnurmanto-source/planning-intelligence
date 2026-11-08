@@ -21,7 +21,10 @@ final class OfficialRegulationDiscovery
         }
 
         $endpoint = 'https://peraturan.bpk.go.id/Search';
-        $parameters = ['keywords' => $query, 'tentang' => '', 'nomor' => ''];
+        $identity = $this->structuredPermendagriIdentity($query);
+        $parameters = $identity === null
+            ? ['keywords' => $query, 'tentang' => '', 'nomor' => '']
+            : ['keywords' => '', 'tentang' => '', 'nomor' => $identity['number'], 'tahun' => $identity['year'], 'jenis' => '40'];
         $response = Http::withHeaders([
             'Accept' => 'text/html',
             'User-Agent' => 'PlanningIntelligence-RegulatoryDiscovery/0.1',
@@ -48,7 +51,8 @@ final class OfficialRegulationDiscovery
             'query' => $query,
             'retrieved_at' => now()->toIso8601String(),
             'official_search_url' => $endpoint.'?'.http_build_query($parameters, '', '&', PHP_QUERY_RFC3986),
-            'items' => $this->extract($html, $query),
+            'search_mode' => $identity === null ? 'KEYWORD_BROAD' : 'STRUCTURED_IDENTITY',
+            'items' => $this->extract($html, $query, $identity),
             'result_status' => 'DISCOVERY_ONLY',
             'amendment_census' => 'NOT_EXHAUSTIVELY_VERIFIED',
             'legal_status' => 'NOT_VERIFIED',
@@ -58,7 +62,24 @@ final class OfficialRegulationDiscovery
         ];
     }
 
-    private function extract(string $html, string $query): array
+    /**
+     * Verified BPK advanced-search contract (8 Nov 2026): type 40 is
+     * "Peraturan Menteri Dalam Negeri"; number and year are separate fields.
+     * Do not infer legal validity from an exact catalogue identity.
+     */
+    private function structuredPermendagriIdentity(string $query): ?array
+    {
+        if (!preg_match('/^\\s*(?:Permendagri|Peraturan\\s+Menteri\\s+Dalam\\s+Negeri)\\s+(?:(?:Nomor|No\\.?)\\s+)?([0-9]{1,4})\\s+(?:Tahun\\s+)?([0-9]{4})\\s*$/ui', $query, $matches)) {
+            return null;
+        }
+        $year = (int) $matches[2];
+        if ($year < 1945 || $year > (int) date('Y') + 1) {
+            return null;
+        }
+        return ['number' => (string) (int) $matches[1], 'year' => (string) $year];
+    }
+
+    private function extract(string $html, string $query, ?array $identity): array
     {
         $document = new DOMDocument();
         $previous = libxml_use_internal_errors(true);
@@ -105,7 +126,15 @@ final class OfficialRegulationDiscovery
 
         $items = [];
         foreach ($candidates as $item) {
-            if (!$this->matchesQuery($item['title'], $query)) {
+            if ($identity !== null) {
+                // The official catalogue slug carries type, number and year even when
+                // the linked title contains only the regulation's long subject.
+                $slug = basename((string) parse_url($item['official_metadata_url'], PHP_URL_PATH));
+                $expectedSlug = 'permendagri-no-'.$identity['number'].'-tahun-'.$identity['year'];
+                if (strtolower($slug) !== $expectedSlug) {
+                    continue;
+                }
+            } elseif (!$this->matchesQuery($item['title'], $query)) {
                 continue;
             }
             $items[] = $item;
