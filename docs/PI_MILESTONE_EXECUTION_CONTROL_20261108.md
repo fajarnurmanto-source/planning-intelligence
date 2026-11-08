@@ -7,18 +7,20 @@
 
 ## Sources of authority
 
-1. The latest **local canonical master roadmap and state capsule**, when their exact source and revision can be inspected, govern milestone ordering and definition of done.
-2. Until that source is copied here, `02_PI_MASTER_ROADMAP_20261025.md` (`PI-MR-20261025-V1`) is a *historical baseline* only; the November 2 regulatory hierarchy, multi-Pemda, outcome-first/reuse-first, installation and taxonomy mandates are mandatory **addenda**, not proof that the canonical Windows file was amended.
-3. The user's November 8 authorization permits continuing development through this private GitHub pilot and guarded local Laravel bridge. It does not itself prove specific QA, data rights or production gates passed.
+1. **Canonical pilot roadmap:** `docs/PI_MASTER_ROADMAP_CANONICAL_20261108.md` (`PI-MR-20261108-V2`) is the owner's integrated development reference on this GitHub pilot branch. It consolidates the October 25 master, October 29 1+5 execution map, November 2 mandates and November 8 Laravel/GitHub bridge decisions.
+2. `docs/PI_ROADMAP_LIBRARY_RECONCILIATION_20261108.md` is retained as **historical reconciliation** rather than an independent or competing master. Its `WORKING_EXECUTION_MAP_NOT_CANONICAL` status remains true for that old file, but does **not** demote the new, explicitly owner-authorized pilot master.
+3. The protected *Windows-local* former canonical roadmap is not located: `ROADMAP=NEEDS_EXPLICIT_PATH_0_CANDIDATES`. The pilot master is authoritative **for pilot development only**. Never claim Windows files were replaced, legal/numeric/production gates opened, or pre-Laravel historical tests prove currently integrated functionality.
+4. PR #31 and the latest branch source/runtime acceptance evidence determine implementation state; a document's milestone designation is not a substitute for acceptance.
 
-**Current known local result (user-reported):** baseline `ffc044679461f8221d965bcb5e208ad70eccbb95`; R70H excerpt lookup `6bddb09a68772ddb634ed1f12db213eae66658ac` applied with a four-file backup; PHP syntax checks on three files and registration of the R70H route passed. `PI_LARAVEL_GITHUB_BRIDGE` was enabled on Windows every 15 minutes. A full authenticated functional R70H acceptance and UI integration are **not yet evidenced**.
+**Last owner-confirmed local result:** R70H UI `c765595b70793bf732d07752149b3c957b12b4bc` applied with backup. The PDF 404 remedy `4cb81779f471f7b4e253bc99b088a9668c4635df` was committed on the pilot but local application and authenticated reviewer/PDF click-through acceptance are still unconfirmed. The 15-minute guarded Windows bridge was previously enabled.
 
 ## Immediate work queue — execute capability slices, not repetitive paperwork
 
-1. `PI-BRIDGE-UI-01`: Publish the **existing** local `laravel/public/index.html` to this branch as a verified baseline without overwriting the local copy. If uniquely identifiable, publish the canonical master roadmap as read-only documentation. The on-laptop publication must never stage `.env`, databases, credentials, vendor, caches or business documents. Do not guess among multiple roadmap candidates.
-2. `PI-R70H-E2E-01`: Connect the existing Regulatory Intelligence UI to the hash-pinned excerpt lookup. The reviewer must see original excerpt, PDF page, source IDs/hashes and explicit limitations, with meaningful 401/403/404/503 handling. Use the verified on-laptop UI baseline before proposing changes.
-3. `PI-ROADMAP-ALIGN-01`: Reconcile the November 2 addenda and the most recent local roadmap into an auditable execution map (1 Superior + 5 Specialized; Regulatory Intelligence first). Milestone IDs used in unrelated streams must not be silently reused or called complete.
-4. `PI-REGULATORY-CORE-01+`: Continue the first **end-to-end** Regulation → Planning → Budget flow with verified primary sources, hierarchy/authority/delegation, temporal scope, vertical/horizontal conflict **candidates**, change-impact dependencies, reviewer decisions, provenance and multi-Pemda tenant isolation. Reuse mature Laravel/open-source modules where they materially help. Move to other specialized apps only per the reconciled roadmap.
+1. **NEXT-01 R70H PDF acceptance:** verify the bridge has applied `4cb8177`; reviewer clicks a hash-pinned excerpt then the official JDIH PDF. Treat the live JDIH PDF as distinct from the locally hash-pinned snapshot. No false live PASS without a session.
+2. **NEXT-02 reviewer evidence handoff:** implement one source-backed, copyable citation from R70H verified excerpt (source/document, exact quote, page, hashes and allowed JDIH URL); handle clipboard failure; preserve review gates.
+3. **NEXT-03 real crosswalk:** move from a verified regulatory provision to one typed Planning→Program/Kegiatan/Subkegiatan mapping on official real source, with `MAPPING_CANDIDATE` or `ABSTAIN` until reviewer confirms; no numeric inference.
+4. **NEXT-04 case ledger:** human review decisions, revisions, audit and export inside authorized tenant scope; anything requiring database change is gated separately.
+5. Continue the other specialized apps and Superior according to `PI-MR-20261108-V2` once their real prerequisites are met. One meaningful user-visible capability per automatic run.
 
 ## Execution contract for each automatic iteration
 
