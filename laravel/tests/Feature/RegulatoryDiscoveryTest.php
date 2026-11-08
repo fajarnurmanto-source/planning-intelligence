@@ -17,6 +17,10 @@ final class RegulatoryDiscoveryTest extends TestCase
     {
         Http::preventStrayRequests();
         $this->getJson(self::URL.'?q=Permendagri')->assertUnauthorized();
+        // Browser navigation omits Accept: application/json but is still an API request.
+        $this->get(self::URL.'?q=Permendagri')
+            ->assertUnauthorized()
+            ->assertJsonPath('message', 'Unauthenticated.');
         $this->actingAs(User::factory()->create(['tenant_id' => 'OTHER-LOCAL-QA']))
             ->getJson(self::URL.'?q=Permendagri')->assertForbidden();
         Http::assertNothingSent();
