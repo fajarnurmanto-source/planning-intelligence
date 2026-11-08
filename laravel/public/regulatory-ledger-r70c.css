@@ -1,0 +1,20 @@
+.r70c-stack{display:grid;gap:15px;margin-top:18px}
+.r70c-card{border:1px solid #23515b;background:rgba(37,84,92,.34);border-radius:11px;padding:18px 19px}
+.r70c-card[aria-label="Peraturan pengubah"]{border-left:3px solid #77e6b8}
+.r70c-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.r70c-kicker{display:block;font-size:10px;color:#90e4ca;text-transform:uppercase;font-weight:800;letter-spacing:1.2px;margin-bottom:8px}
+.r70c-card h3{font-size:16px;color:#f3fcfd;margin:0 0 7px;line-height:1.4}
+.r70c-meta{color:#a5c4c9;font-size:12px;line-height:1.55}
+.r70c-pill{padding:6px 10px;border-radius:999px;border:1px solid #44726b;color:#abedcc;font-weight:700;font-size:10px;white-space:nowrap}
+.r70c-target-list{display:flex;gap:7px;flex-wrap:wrap;margin:13px 0 8px}
+.r70c-target{background:#153e45;border:1px solid #37666b;color:#c3fae3;border-radius:5px;padding:6px 9px;font-size:11px;font-weight:700}
+.r70c-anomaly{color:#ffcb94;background:#4b3930;padding:9px 11px;border-radius:7px;font-size:11px;line-height:1.6;margin:11px 0}
+.r70c-card details{border-top:1px solid #285862;margin-top:14px;padding-top:11px}
+.r70c-card summary{cursor:pointer;color:#9af1c5;font-size:12px;font-weight:750}
+.r70c-evidence{display:grid;gap:8px;margin-top:11px}
+.r70c-proof{border:1px solid #2a6570;border-radius:7px;padding:11px;background:rgba(7,30,37,.28)}
+.r70c-proof small{display:block;color:#8bdfce;font-weight:800;letter-spacing:.4px;font-size:10px}
+.r70c-proof p{font-size:11px;line-height:1.55;color:#c4e0e0;margin:7px 0}
+.r70c-proof a,.r70c-actions a{color:#a3f1c7;font-size:11px;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.r70c-actions{display:flex;gap:15px;flex-wrap:wrap;margin-top:13px}
+.r70c-card .r70c-blocker{color:#d4bd8e;font-size:11px;margin:10px 0 0}

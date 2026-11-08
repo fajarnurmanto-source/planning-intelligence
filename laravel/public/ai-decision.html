@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PI · AI Decision Studio R69A</title>
+  <link rel="stylesheet" href="./ai-decision.css" />
+  <script src="./ai-decision.js" defer></script>
+  <script src="./pi-auth-shell.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand"><span class="brand-symbol">PI</span><div><strong>Planning Intelligence</strong><small>KOTA YOGYAKARTA · INSTITUTIONAL QA</small></div></div>
+    <a href="./" class="back-link">← Kembali ke workspace institusi</a>
+  </header>
+  <main class="container">
+    <div class="kicker">PI / SHARED INTELLIGENCE / R69A <span>PROVIDER-AGNOSTIC · QA</span></div>
+    <section class="hero">
+      <div><small class="hero-eyebrow">PLANNING INTELLIGENCE · DECISION SUPPORT</small><h1>AI yang memberi arah keputusan.<br><em>Pengguna memilih mesinnya.</em></h1><p>Gunakan Gemini atau DeepSeek via API, atau jalankan Ollama secara lokal. Semua analisis harus merujuk bukti resmi, mengungkap ketidakpastian, dan disahkan manusia.</p><div class="tags"><span>4 jalur penyedia</span><span>1 gateway bersama</span><span>Human review wajib</span></div></div>
+      <aside><small>STATUS OTORITAS</small><strong>AI MEMBANTU.<br>MANUSIA MEMUTUSKAN.</strong><p>Tidak ada putusan keselarasan, audit angka, atau perubahan database secara otomatis.</p><b>PRODUCTION ADMISSION DENIED</b></aside>
+    </section>
+    <div class="metric-row"><div><small>Sumber analisis</small><strong>06</strong><span>Dokumen resmi Yogyakarta</span></div><div><small>Temuan tersedia</small><strong>03</strong><span>Kasus persampahan R68</span></div><div><small>Mode AI</small><strong>02</strong><span>Cloud API / lokal</span></div><div><small>Keputusan otomatis</small><strong>0</strong><span>Selalu reviewer berwenang</span></div></div>
+
+    <div class="columns">
+      <section class="panel config"><div class="panel-heading"><div><small>01 · AI ENGINE SETTINGS</small><h2>Pilih mesin kecerdasan</h2><p>Konfigurasi model dan API key disimpan di lingkungan backend, bukan di halaman ini.</p></div><span class="pill" id="currentMode">LOCAL</span></div>
+        <label for="provider">Penyedia model AI</label><select id="provider">
+          <option value="ollama">Ollama · model lokal (offline inference)</option>
+          <option value="gemini">Google Gemini · API cloud</option>
+          <option value="deepseek">DeepSeek · API cloud</option>
+          <option value="compatible">OpenAI-compatible · Groq / OpenRouter / lainnya</option>
+        </select>
+        <div class="info-box"><span>MODEL TERKONFIGURASI</span><strong id="providerModel">Memuat…</strong><span id="providerState">Memeriksa konfigurasi backend...</span></div>
+        <p class="warn" id="apiHelp">Mode lokal memerlukan Ollama berjalan dan model telah diunduh. Perangkat tidak mengunduh model otomatis.</p>
+        <div id="cloudArea" hidden><label class="consent"><input type="checkbox" id="cloudConsent" /><span>Saya mengizinkan pengiriman <strong>data bukti publik terpilih yang ditampilkan di panel pratinjau</strong> ke penyedia API ini untuk satu permintaan. Tidak mengirim PDF lengkap, nama reviewer, atau kunci API.</span></label></div>
+        <div class="section-divider"></div><label for="finding">Temuan yang akan dianalisis</label><select id="finding">
+          <option value="YOG-R68-F01">F01 · Kecocokan kode lintas dokumen</option>
+          <option value="YOG-R68-F02">F02 · Konteks dua nilai Renja 27 &amp; 45</option>
+          <option value="YOG-R68-F03">F03 · Versi perubahan Penjabaran APBD</option>
+        </select>
+        <label for="focus">Pertanyaan yang ingin diputuskan reviewer (opsional)</label><textarea id="focus" maxlength="300" rows="3" placeholder="Contoh: Verifikasi apa yang harus didahulukan sebelum rapat Bappeda dan BPKAD?"></textarea>
+        <div class="buttons"><button class="secondary" id="previewButton">Lihat data yang akan dikirim</button><button class="primary" id="generateButton">✦ Susun opsi keputusan</button></div>
+        <div id="feedback" class="feedback" role="status" aria-live="polite">Tidak ada permintaan AI yang dijalankan otomatis.</div>
+      </section>
+
+      <section class="panel evidence"><div class="panel-heading"><div><small>02 · SOURCE-GROUNDED INPUT</small><h2>Bukti yang menjadi konteks</h2><p>Pratinjau tepat dari data publik terpilih yang boleh dikirim ke AI.</p></div><span class="pill outline">REDACTED</span></div>
+        <div id="findingName" class="finding-title">Memuat temuan…</div><p id="findingObs">-</p><div id="evidenceRefs" class="proofs"></div>
+        <details><summary>Periksa payload resmi yang dipakai model</summary><pre id="evidenceJson">{}</pre></details>
+        <div class="warn bottom">Keterlacakan halaman bukan verifikasi semantik. Hasil AI hanya draf yang wajib diperiksa terhadap PDF sumber asli.</div>
+      </section>
+    </div>
+
+    <section class="panel result" id="resultPanel"><div class="panel-heading"><div><small>03 · AI-ASSISTED EXECUTIVE BRIEF</small><h2>Rekomendasi dan alternatif keputusan</h2><p id="resultSub">Siap menganalisis setelah pengguna memilih penyedia dan memberi izin bila cloud.</p></div><span class="pill amber" id="resultStatus">BELUM DIJALANKAN</span></div>
+      <div class="empty" id="emptyResult">Model AI belum diminta bekerja. Ringkasan offline R68 tetap tersedia melalui halaman rantai bukti.</div>
+      <div id="briefView" hidden><div class="summary-card"><small>RINGKASAN &amp; TINDAKAN UTAMA</small><h3 id="briefSummary"></h3><p id="briefRecommendation"></p></div>
+        <div class="brief-grid"><div><h3>Opsi tindakan</h3><ol id="briefAlternatives"></ol></div><div><h3>Ketidakpastian</h3><ul id="briefUncertainties"></ul></div><div><h3>Pertanyaan untuk reviewer</h3><ol id="briefQuestions"></ol></div><div><h3>Sumber halaman yang dikutip</h3><ul id="briefProofs"></ul></div></div><p id="briefMeta" class="meta"></p><button class="secondary" id="downloadResult">↓ Ekspor draf AI JSON</button></div>
+      <div class="gate">NUMERIC COMPARISON BLOCKED · SUBSTANTIVE ALIGNMENT NOT_ASSESSED · HUMAN SIGNOFF NONE · PRODUCTION ADMISSION DENIED</div>
+    </section>
+    <footer>R69A · Gateway bersama untuk PI Superior dan specialized apps, versi QA terisolasi. Cloud API hanya dipanggil bila diminta secara eksplisit. Hasil model bukan fakta tervalidasi atau keputusan pejabat.</footer>
+  </main>
+</body>
+</html>
