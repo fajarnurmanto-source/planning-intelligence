@@ -1,29 +1,29 @@
 # PLANNING INTELLIGENCE — MASTER PRODUCT ROADMAP TERPADU
 
 **ID:** PI-MR-20261108-V2 · **Keputusan pemilik:** 8 November 2026 (WIB)  
-**Kedudukan:** **RUJUKAN KANONIS PENGEMBANGAN CABANG PILOT GITHUB** \`pilot/pi-laravel-github-bridge-20261108\`.  
+**Kedudukan:** **RUJUKAN KANONIS PENGEMBANGAN CABANG PILOT GITHUB** `pilot/pi-laravel-github-bridge-20261108`.  
 **Perlindungan:** dokumen asli Library dan berkas Windows yang belum ditemukan **tidak diubah**; cabang default, sistem produksi, database pengguna, data QA historis dan lingkungan lokal terlindungi tetap memiliki gerbangnya sendiri.  
 **North star:** satu PI Superior App yang mengorkestrasi lima Specialized Apps—Evidence, Performance, Regulatory, Fiscal, Evaluation—untuk menghasilkan rekomendasi perencanaan/penganggaran terikat sumber, dapat ditelusuri lintas jenjang, diuji pada data nyata lintas Pemda, ditelaah manusia, dan layak dikomersialisasi setelah bukti serta gerbang operasional memadai.
 
-> **Aturan pembacaan:** ini roadmap *apa yang wajib dicapai*, bukan pernyataan semua fiturnya telah ada. Status \`IMPLEMENTED\`, \`LOCAL_APPLIED\`, \`LIVE_ACCEPTED\`, \`PRODUCTION_ADMITTED\` hanya boleh diberi berdasarkan bukti masing-masing. Label \`PASS\` QA historis bukan bukti otomatis kesiapan produk.
+> **Aturan pembacaan:** ini roadmap *apa yang wajib dicapai*, bukan pernyataan semua fiturnya telah ada. Status `IMPLEMENTED`, `LOCAL_APPLIED`, `LIVE_ACCEPTED`, `PRODUCTION_ADMITTED` hanya boleh diberi berdasarkan bukti masing-masing. Label `PASS` QA historis bukan bukti otomatis kesiapan produk.
 
 ## 1. Konsolidasi otoritas dan perubahan mandat
 
 | Sumber keputusan | Yang dipertahankan/diintegrasikan | Kedudukan setelah 8 Nov |
 | --- | --- | --- |
-| \`02_PI_MASTER_ROADMAP_20261025.md\` (\`PI-MR-20261025-V1\`) | North star, M0–M8, evidence → graph → coherence → reviewer → report, kualitas terukur dan jalur komersial | Baseline historis; urutan G6/Python-first tidak lagi mengikat ketika bertentangan dengan mandat terbaru |
-| \`PI_SUPERIOR_SPECIALIZED_EXECUTION_MAP_20261029.md\` | Arsitektur 1+5, sembilan kontrak, MLCE lintas engine, gelombang W0–W5, lapisan C1–C3 | Peta produk dan ketergantungan aktif |
-| \`PI_MASTER_ROADMAP_REGULATORY_MANDATE_20261102.md\` | \`PI-MRM-REG-001\`, \`MULTIREGION-002\`, \`DELIVERY-003\` | Wajib lintas aplikasi dan sebagai gerbang kesimpulan |
-| \`PI_MASTER_ROADMAP_HIERARCHICAL_TAXONOMY_MANDATE_20261102.md\` | \`DELIVERY-004\`, R62, R63, \`HIERARCHY-TAXONOMY-005\`, R64 | Wajib untuk kemampuan baru, bukan klaim R62–R64 sudah tuntas di Laravel |
+| `02_PI_MASTER_ROADMAP_20261025.md` (`PI-MR-20261025-V1`) | North star, M0–M8, evidence → graph → coherence → reviewer → report, kualitas terukur dan jalur komersial | Baseline historis; urutan G6/Python-first tidak lagi mengikat ketika bertentangan dengan mandat terbaru |
+| `PI_SUPERIOR_SPECIALIZED_EXECUTION_MAP_20261029.md` | Arsitektur 1+5, sembilan kontrak, MLCE lintas engine, gelombang W0–W5, lapisan C1–C3 | Peta produk dan ketergantungan aktif |
+| `PI_MASTER_ROADMAP_REGULATORY_MANDATE_20261102.md` | `PI-MRM-REG-001`, `MULTIREGION-002`, `DELIVERY-003` | Wajib lintas aplikasi dan sebagai gerbang kesimpulan |
+| `PI_MASTER_ROADMAP_HIERARCHICAL_TAXONOMY_MANDATE_20261102.md` | `DELIVERY-004`, R62, R63, `HIERARCHY-TAXONOMY-005`, R64 | Wajib untuk kemampuan baru, bukan klaim R62–R64 sudah tuntas di Laravel |
 | Mandat pemilik 4–8 November dan kerja GitHub–WSL | Laravel-first, reuse OSS, data nyata, UI/UX yang siap pengguna, zero-spend AI, otomatisasi milestone berbatas, bridge source-only, R70H dan penanganan PDF 404 | Keputusan implementasi terbaru dan pembatas operasional |
-| \`docs/PI_ROADMAP_LIBRARY_RECONCILIATION_20261108.md\` | Daftar sumber Library, riwayat kesenjangan roadmap lokal, status bridge | **Arsip rekonsiliasi sementara**, digantikan dokumen ini untuk arah cabang pilot |
+| `docs/PI_ROADMAP_LIBRARY_RECONCILIATION_20261108.md` | Daftar sumber Library, riwayat kesenjangan roadmap lokal, status bridge | **Arsip rekonsiliasi sementara**, digantikan dokumen ini untuk arah cabang pilot |
 
 **Aturan konflik:** instruksi eksplisit pemilik yang lebih baru dan bukti source/runtime yang terverifikasi mengalahkan estimasi/prasyarat teknis lama; tidak menghapus sejarah. Perubahan mandat yang membawa risiko produksi, hak data, lisensi atau data pengguna tidak disamakan dengan izin menjalankan tindakan tersebut.
 
 ## 2. Sasaran hasil: satu alur kerja yang nyata
 
 1. Analis memilih institusi/daerah, tahun dan versi dokumen dengan hak penggunaan jelas; sistem menerima PDF/DOCX/XLSX atau adapter data resmi *read-only*.
-2. Evidence memperoleh sumber primer, checksum snapshot, lisensi/hak, lokasi halaman/pasal/tabel/sel, identitas ekstraksi dan tingkat kelengkapan. Ketika hilang atau keliru, \`ABSTAIN\`.
+2. Evidence memperoleh sumber primer, checksum snapshot, lisensi/hak, lokasi halaman/pasal/tabel/sel, identitas ekstraksi dan tingkat kelengkapan. Ketika hilang atau keliru, `ABSTAIN`.
 3. Regulatory menghubungkan ketentuan, norma induk, pembentuk, kewenangan/delegasi, tanggal efektif, pengecualian, wilayah dan perubahan; konflik/ketidaksesuaian tetap **kandidat penelaahan**, bukan vonis.
 4. Planning/Performance menormalisasi dokumen RPJPD/RPJMD/RKPD/Renstra/Renja dan pohon tujuan–sasaran–indikator–program–kegiatan–subkegiatan, dengan hubungan N dokumen/N tahun/lintas perangkat daerah. Indikator dan target hanya dibandingkan bila definisi operasional sepadan.
 5. Fiscal mengaitkan kode/nomenklatur, pendanaan, pembatasan, KUA–PPAS/RKA/DPA/APBD/realisasi dan dasar hukum tahun berlaku. **Tidak** menghitung keselarasan angka ketika numeric gate tertutup.
@@ -36,31 +36,31 @@
 
 | Produk | Alur/hasil pengguna yang wajib tersedia | Pemilik kontrak utama |
 | --- | --- | --- |
-| **Evidence Specialized** | akuisisi sah, versi dan snapshot, pencarian sumber, kutipan/locator tepat, provenance, admission | \`SDEA-01\`, \`SCF-00\` |
-| **Regulatory Specialized** | norma, hierarki/otoritas/delegasi, tanggal/wilayah, perubahan, indikasi harmonisasi, antrean review | \`SCR-01\`, \`SCC-01\`, \`SCF-00\` |
-| **Performance Specialized** | pohon kinerja, indikator/definisi, baseline–target–realisasi terverifikasi, MLCE review | \`SPC-01\`, \`SCP-01\`, \`SCC-01\` |
-| **Fiscal Specialized** | urusan–program–kegiatan–subkegiatan–akun–dana dan batas hukumnya; skenario terbatas | \`SRA-01\`, \`SOT-01\`, \`SCR-01\` |
-| **Evaluation Specialized** | evaluasi keluaran, outcome, risiko/dampak tanpa klaim kausal otomatis | \`SCP-01\`, \`SOT-01\`, \`SCC-01\` |
-| **PI Superior** | satu identitas kasus, penelusuran dan keputusan lintas kelima aplikasi, alternatif, review, audit dan laporan | \`SCDG-01\`, semua kontrak di atas |
+| **Evidence Specialized** | akuisisi sah, versi dan snapshot, pencarian sumber, kutipan/locator tepat, provenance, admission | `SDEA-01`, `SCF-00` |
+| **Regulatory Specialized** | norma, hierarki/otoritas/delegasi, tanggal/wilayah, perubahan, indikasi harmonisasi, antrean review | `SCR-01`, `SCC-01`, `SCF-00` |
+| **Performance Specialized** | pohon kinerja, indikator/definisi, baseline–target–realisasi terverifikasi, MLCE review | `SPC-01`, `SCP-01`, `SCC-01` |
+| **Fiscal Specialized** | urusan–program–kegiatan–subkegiatan–akun–dana dan batas hukumnya; skenario terbatas | `SRA-01`, `SOT-01`, `SCR-01` |
+| **Evaluation Specialized** | evaluasi keluaran, outcome, risiko/dampak tanpa klaim kausal otomatis | `SCP-01`, `SOT-01`, `SCC-01` |
+| **PI Superior** | satu identitas kasus, penelusuran dan keputusan lintas kelima aplikasi, alternatif, review, audit dan laporan | `SCDG-01`, semua kontrak di atas |
 
-**Sembilan kontrak bersama:** \`SDEA-01\` Data Rights & Evidence Admission; \`SCF-00\` Shared Foundation; \`SPC-01\` Planning Core; \`SCP-01\` Performance; \`SCR-01\` Regulatory; \`SRA-01\` Resource Allocation; \`SOT-01\` Operational Traceability; \`SCC-01\` Coherence Auditor; \`SCDG-01\` Decision Case & Ledger. Kontrak \`COMMITTED_SUCCESSOR_AUTHORITY\` tidak berarti modul siap pakai atau implementasi telah diberi *production admission*. **MLCE** adalah orkestrasi lintas kontrak, bukan mesin kesepuluh atau aplikasi specialized keenam.
+**Sembilan kontrak bersama:** `SDEA-01` Data Rights & Evidence Admission; `SCF-00` Shared Foundation; `SPC-01` Planning Core; `SCP-01` Performance; `SCR-01` Regulatory; `SRA-01` Resource Allocation; `SOT-01` Operational Traceability; `SCC-01` Coherence Auditor; `SCDG-01` Decision Case & Ledger. Kontrak `COMMITTED_SUCCESSOR_AUTHORITY` tidak berarti modul siap pakai atau implementasi telah diberi *production admission*. **MLCE** adalah orkestrasi lintas kontrak, bukan mesin kesepuluh atau aplikasi specialized keenam.
 
 ## 4. Prinsip arsitektur dan mandat wajib lintas aplikasi
 
 ### 4.1 Regulatory Intelligence adalah fondasi normatif (REG-001)
 
-- **Hierarchy + Authority Graph:** \`Regulation\`, \`RegulationVersion\`, \`Provision\`, \`Authority\`, \`Jurisdiction\`, \`PlanningRequirement\`, \`PlanningArtifact\`, \`EvidenceSpan\`, \`ReviewDecision\`; kedudukan peraturan, pembentuk, dasar kewenangan/delegasi, materi, pengecualian dan status waktu.
+- **Hierarchy + Authority Graph:** `Regulation`, `RegulationVersion`, `Provision`, `Authority`, `Jurisdiction`, `PlanningRequirement`, `PlanningArtifact`, `EvidenceSpan`, `ReviewDecision`; kedudukan peraturan, pembentuk, dasar kewenangan/delegasi, materi, pengecualian dan status waktu.
 - Pasal 7 vs Pasal 8 UU 12/2011 serta perubahan harus diperiksa dari sumber resmi yang berlaku pada tanggal kasus; **jangan buat tangga linear palsu** untuk semua Peraturan Menteri/Perkada atau menyimpulkan kewenangan semata dari kedekatan teks.
-- **Harmonisasi vertikal dan horizontal**: keluarkan \`POTENTIAL_CONFLICT_REVIEW\` hanya dengan pasal/provisi, relasi yang diuji, alasan, kontra-bukti, skor ketidakpastian dan status reviewer. \`NO_FINDING\` maupun \`ABSTAIN\` sah.
+- **Harmonisasi vertikal dan horizontal**: keluarkan `POTENTIAL_CONFLICT_REVIEW` hanya dengan pasal/provisi, relasi yang diuji, alasan, kontra-bukti, skor ketidakpastian dan status reviewer. `NO_FINDING` maupun `ABSTAIN` sah.
 - **Change impact**: jika naskah dasar berubah, tandai ketentuan/aturan turunan dan artefak perencanaan/anggaran **yang memang memiliki hubungan terverifikasi**; perubahan yang belum terkait tidak diklaim terdampak.
 - Keputusan legal, pembatalan/pencabutan, dan penetapan sah/tidak sah **bukan fungsi otomatis aplikasi**.
 
 ### 4.2 Multi-Pemda dan waktu adalah parameter inti (MULTIREGION-002)
 
-- \`jurisdiction_id\` berbasis kode resmi tervalidasi, bukan nama kota; relasi nasional→provinsi→kabupaten/kota terpisah dari graf delegasi hukum. Sumber, perangkat daerah, versi nomenklatur, tahun, status regulasi dan \`region_rulepack\` dapat diganti.
+- `jurisdiction_id` berbasis kode resmi tervalidasi, bukan nama kota; relasi nasional→provinsi→kabupaten/kota terpisah dari graf delegasi hukum. Sumber, perangkat daerah, versi nomenklatur, tahun, status regulasi dan `region_rulepack` dapat diganti.
 - Hak akses dan identitas tenant ditolak secara *fail-closed* ketika tidak dapat diverifikasi. *Shadow* multi-Pemda bukan bukti isolasi tenant produksi.
-- Perbandingan antardaerah/antartahun memerlukan definisi, satuan, metode, cakupan, periode, versi dan hak penggunaan yang sebanding; \`NUMERIC_COMPARISON=BLOCKED\` sampai gerbangnya lulus.
-- Kekhususan DIY/Danais ditangani lewat \`special_fund_policy_profile\` yang diberi sumber, waktu dan wilayah; **bukan sinonim Dana Otsus** dan bukan default seluruh Pemda.
+- Perbandingan antardaerah/antartahun memerlukan definisi, satuan, metode, cakupan, periode, versi dan hak penggunaan yang sebanding; `NUMERIC_COMPARISON=BLOCKED` sampai gerbangnya lulus.
+- Kekhususan DIY/Danais ditangani lewat `special_fund_policy_profile` yang diberi sumber, waktu dan wilayah; **bukan sinonim Dana Otsus** dan bukan default seluruh Pemda.
 
 ### 4.3 Satu taksonomi perjenjangan bertipe (HIERARCHY-TAXONOMY-005)
 
@@ -73,14 +73,14 @@
 5. Program–kegiatan–subkegiatan, sumber dana PAD/DAU/DAK/DBH/Danais/BKK, akun belanja, KUA–PPAS/APBD/DPA/realisasi, mandat pendanaan terversi;
 6. Wilayah, periode rencana/tahun fiskal, identitas dokumen, versi awal/perubahan, tanggal penetapan/pengundangan/berlaku.
 
-**Minimum objek:** \`jurisdiction_id\`, \`fiscal_year/planning_period\`, \`document_id/version\`, \`taxonomy_type\`, \`official_code\` bila nyata, \`official_name\`, \`responsible_unit\`, \`effective_from/to\`, \`source_url\`, \`pdf_sha256\`, \`page_or_clause\`, \`review_status\`. Relasi seperti \`DERIVES_FROM\`, \`IMPLEMENTS\`, \`MEASURES\`, \`OWNED_BY\`, \`FUNDED_BY\`, \`REFERENCES_NORM\`, \`AMENDS\`, \`REVOKES\` harus memiliki arah, bukti, versi/waktu dan status. Model tidak boleh mengarang kode atau relasi untuk mengisi kekosongan. \`SOURCE_CONFIRMED\` berbeda dari \`MAPPING_CANDIDATE\`, \`REVIEW_REQUIRED\`, \`ABSTAIN\`, \`HUMAN_CONFIRMED\`.
+**Minimum objek:** `jurisdiction_id`, `fiscal_year/planning_period`, `document_id/version`, `taxonomy_type`, `official_code` bila nyata, `official_name`, `responsible_unit`, `effective_from/to`, `source_url`, `pdf_sha256`, `page_or_clause`, `review_status`. Relasi seperti `DERIVES_FROM`, `IMPLEMENTS`, `MEASURES`, `OWNED_BY`, `FUNDED_BY`, `REFERENCES_NORM`, `AMENDS`, `REVOKES` harus memiliki arah, bukti, versi/waktu dan status. Model tidak boleh mengarang kode atau relasi untuk mengisi kekosongan. `SOURCE_CONFIRMED` berbeda dari `MAPPING_CANDIDATE`, `REVIEW_REQUIRED`, `ABSTAIN`, `HUMAN_CONFIRMED`.
 
 ### 4.4 Hak data, ketertelusuran dan keputusan manusia
 
 - Semua sumber resmi, hasil ekstraksi, laporan dan ringkasan AI memuat hak penggunaan, identitas versi/snapshot, SHA-256, waktu akses dan *evidence spans*. Tautan web **live** bukan otomatis berkas QA yang di-hash; UI harus membedakannya.
-- Pisahkan \`observed\`, \`documented intention\`, \`verified calculation\`, \`assumed relation\`, \`AI_DRAFT\`, \`NOT_ESTABLISHED\`, \`HUMAN_REVIEWED\`.
+- Pisahkan `observed`, `documented intention`, `verified calculation`, `assumed relation`, `AI_DRAFT`, `NOT_ESTABLISHED`, `HUMAN_REVIEWED`.
 - AI boleh menyortir, meringkas, memprioritaskan kandidat dan menyarankan opsi; **tidak** membuat putusan hukum/anggaran atau memperbarui hasil review tanpa keputusan berwenang.
-- Temuan tanpa bukti harus \`ABSTAIN\`; arsitektur mencatat versi rule/model, tenant, run, reviewer dan riwayat ekspor/reopen.
+- Temuan tanpa bukti harus `ABSTAIN`; arsitektur mencatat versi rule/model, tenant, run, reviewer dan riwayat ekspor/reopen.
 
 ## 5. Mandat teknik dan efisiensi penyampaian (DELIVERY-003/004, revisi 8 Nov)
 
@@ -89,28 +89,28 @@
 3. **OSS-first:** time-box discovery dari GitHub/Laravel dan ekosistem sah, cek fit, lisensi distribusi komersial (terutama AGPL/GPL), maintenance, kompatibilitas, dependency, ukuran, data rights, risiko; instal/adaptasi pada kandidat terisolasi. Komponen open source yang matang lebih diutamakan dibanding tulis ulang.
 4. **Real-data-first:** alur nyata *read-only* dari sumber pemerintah/riset/open data yang sah; catat source registry, Terms, checksum, halaman, freshness, versi dan batas scope; synthetic dipakai untuk edge case, bukan menggantikan penerimaan nyata.
 5. **Zero-spend AI:** prefer opsi gratis dengan persyaratan penggunaan yang diperiksa (Gemini/Groq/OpenRouter free, jika tersedia) atau Ollama lokal opt-in; jangan mengaktifkan tagihan, mengunggah dokumen privat ke provider, mengunduh model multi-GB, atau menyatakan inference live berjalan tanpa runtime. Untuk data sensitif, jangan pakai cloud AI tanpa hak/otorisasi. Draf offline berprovenance diberi label jelas.
-6. **Installable cumulative & bridge:** satu paket/komit konsisten dan integrasi aman dari source baseline, hash/allowlist/drift-check, backup dan rollback recoverable; jangan memaksa pemasangan berantai puluhan ZIP. Pada mekanisme **GitHub→WSL→Windows**, komit pilot menghasilkan kandidat source; Windows Task Scheduler 15 menit menyalin hanya source yang diizinkan; **tidak** otomatis menjalankan migration, Composer/npm, build/restart, \`.env\`, koneksi data, atau promosi produksi.
+6. **Installable cumulative & bridge:** satu paket/komit konsisten dan integrasi aman dari source baseline, hash/allowlist/drift-check, backup dan rollback recoverable; jangan memaksa pemasangan berantai puluhan ZIP. Pada mekanisme **GitHub→WSL→Windows**, komit pilot menghasilkan kandidat source; Windows Task Scheduler 15 menit menyalin hanya source yang diizinkan; **tidak** otomatis menjalankan migration, Composer/npm, build/restart, `.env`, koneksi data, atau promosi produksi.
 7. **UI/UX dan benchmarking kompetitor** menjadi kegiatan setiap domain, bukan kosmetik di akhir: telaah fitur/workflow produk sejenis, adaptasi pattern yang layak secara lisensi, navigasi 1+5, keterbacaan tabel dan sumber, desain responsif, aksesibilitas, respons error, sign-in, pekerjaan reviewer, executive brief dan ekspor. Jangan menyalin aset proprietary.
-8. **AI executive decision brief:** untuk setiap \`REVIEW_REQUIRED\` yang mempunyai bukti, tampilkan *apa ditemukan → mengapa penting → bukti dan kontra-bukti → dampak potensial → prioritas/verifikasi → batas keyakinan dan keputusan manusia*. Provenance wajib pada setiap klaim.
-9. **Fungsional bukan QA theater:** laporkan \`FITUR\`, \`DATA_ASLI\`, \`FLOW=PASS|FAIL|BLOCKED|NOT_TESTED\`, \`BUKTI\`, \`LIMITASI\`. Kegagalan jalur utama menahan klaim milestone selesai.
+8. **AI executive decision brief:** untuk setiap `REVIEW_REQUIRED` yang mempunyai bukti, tampilkan *apa ditemukan → mengapa penting → bukti dan kontra-bukti → dampak potensial → prioritas/verifikasi → batas keyakinan dan keputusan manusia*. Provenance wajib pada setiap klaim.
+9. **Fungsional bukan QA theater:** laporkan `FITUR`, `DATA_ASLI`, `FLOW=PASS|FAIL|BLOCKED|NOT_TESTED`, `BUKTI`, `LIMITASI`. Kegagalan jalur utama menahan klaim milestone selesai.
 
 ## 6. Bukti historis dan posisi aktual, **per 8 November 2026**
 
 | Bukti/versi | Apa yang sah dikatakan | Apa yang belum sah |
 | --- | --- | --- |
-| G1–G5, G6, VS dan kontrak successor (Okt) | fondasi parsing/evidence/reviewer/graph memiliki bukti historis terpisah; kontrak domain terpetakan | jangan memindahkan status \`PASS\` lama ke Laravel atau menyebut semua kontrak \`IMPLEMENTED\` |
+| G1–G5, G6, VS dan kontrak successor (Okt) | fondasi parsing/evidence/reviewer/graph memiliki bukti historis terpisah; kontrak domain terpetakan | jangan memindahkan status `PASS` lama ke Laravel atau menyebut semua kontrak `IMPLEMENTED` |
 | R55 (1 Nov), dokumen PDF 184 halaman | 156 kandidat; visual internal 27/27; QA PASS | 129 kandidat tanpa referensi, 3 UNKNOWN; numeric BLOCKED dan produksi DENIED |
 | R56 (2 Nov) shadow | 127 halaman, 69 tabel terdeteksi, 9.769 sel; eksekusi shadow selesai | hasil ekstraksi bukan kebenaran substansi/perbandingan angka |
 | R57–R64 (2 Nov) | addenda mencatat percobaan hierarchy/regulation, sumber hukum resmi, R63 Semarang 4 PDF dan 9 fragmen, rancangan R64 taxonomy | bukan bukti seluruh paket telah masuk source Laravel atau lolos user E2E; perlu periksa masing-masing versi |
-| R69E/R70C–R70H (8 Nov) | local Laravel auth \`/api/auth/setup-status\` HTTP 200 (dilaporkan pemilik); R70G model 7 dokumen/5 perubahan/47 SHA kutipan; R70H endpoint evidence, lint/route PASS; \`c765595\` UI di-*apply* Windows per log pemilik | acceptance browser login→kutipan→PDF dan penalaran hukum/angka **belum terkonfirmasi** |
-| Perbaikan tautan PDF 404 | commit \`4cb81779\`: mengganti rute PDF lokal yang tidak terdaftar dengan URL JDIH dalam ledger yang di-*allowlist*; membedakan live web dengan snapshot QA | \`LOCAL_APPLY=UNCONFIRMED\` untuk commit perbaikan, PDF live tidak di-hash ulang |
-| Bootstrap roadmap dan branch | commit \`f371aba\` mencatat empat sumber Library dan status Windows \`ROADMAP=NEEDS_EXPLICIT_PATH_0_CANDIDATES\`; branch pilot + draft PR #31 | dokumen Windows canonical belum ditemukan/diubah; commit GitHub bukan deployment |
+| R69E/R70C–R70H (8 Nov) | local Laravel auth `/api/auth/setup-status` HTTP 200 (dilaporkan pemilik); R70G model 7 dokumen/5 perubahan/47 SHA kutipan; R70H endpoint evidence, lint/route PASS; `c765595` UI di-*apply* Windows per log pemilik | acceptance browser login→kutipan→PDF dan penalaran hukum/angka **belum terkonfirmasi** |
+| Perbaikan tautan PDF 404 | commit `4cb81779`: mengganti rute PDF lokal yang tidak terdaftar dengan URL JDIH dalam ledger yang di-*allowlist*; membedakan live web dengan snapshot QA | `LOCAL_APPLY=UNCONFIRMED` untuk commit perbaikan, PDF live tidak di-hash ulang |
+| Bootstrap roadmap dan branch | commit `f371aba` mencatat empat sumber Library dan status Windows `ROADMAP=NEEDS_EXPLICIT_PATH_0_CANDIDATES`; branch pilot + draft PR #31 | dokumen Windows canonical belum ditemukan/diubah; commit GitHub bukan deployment |
 
-**Gerbang saat roadmap ditetapkan:** \`REVIEW_REQUIRED\`, \`LEGAL_HARMONIZATION=NOT_ASSESSED\`, \`SUBSTANTIVE_ALIGNMENT=NOT_ASSESSED\`, \`NUMERIC_COMPARISON=BLOCKED\`, \`PRODUCTION_ADMISSION=DENIED\`. Pembukaan gerbang hanya melalui evidence, review dan izin yang sesuai.
+**Gerbang saat roadmap ditetapkan:** `REVIEW_REQUIRED`, `LEGAL_HARMONIZATION=NOT_ASSESSED`, `SUBSTANTIVE_ALIGNMENT=NOT_ASSESSED`, `NUMERIC_COMPARISON=BLOCKED`, `PRODUCTION_ADMISSION=DENIED`. Pembukaan gerbang hanya melalui evidence, review dan izin yang sesuai.
 
 ## 7. Urutan master milestone terkini (outcome dan dependency)
 
-Nama \`M0–M8\` dan \`W0–W5\` dipertahankan sebagai **peta dependensi**, sementara Rxx adalah sejarah incremental/QA yang tidak boleh dianggap otomatis setara milestone produk.
+Nama `M0–M8` dan `W0–W5` dipertahankan sebagai **peta dependensi**, sementara Rxx adalah sejarah incremental/QA yang tidak boleh dianggap otomatis setara milestone produk.
 
 | Urutan | Milestone terintegrasi | Acceptance hasil manusia/produk | Status 8 Nov |
 | --- | --- | --- | --- |
@@ -129,9 +129,9 @@ Nama \`M0–M8\` dan \`W0–W5\` dipertahankan sebagai **peta dependensi**, seme
 
 ### Pekerjaan setelah penetapan dokumen ini
 
-- **NEXT-01 — R70H browser acceptance/PDF correction:** pastikan commit \`4cb81779\` telah diaplikasikan oleh bridge, uji sesi sebenarnya pada port 8891, klik kutipan, verifikasi halaman PDF dan peringatan live-vs-hash; bila gagal, satu perbaikan terfokus. Jangan laporkan PASS live tanpa browser/sesi.
+- **NEXT-01 — R70H browser acceptance/PDF correction:** pastikan commit `4cb81779` telah diaplikasikan oleh bridge, uji sesi sebenarnya pada port 8891, klik kutipan, verifikasi halaman PDF dan peringatan live-vs-hash; bila gagal, satu perbaikan terfokus. Jangan laporkan PASS live tanpa browser/sesi.
 - **NEXT-02 — Evidence handoff yang siap reviewer:** tambah satu aksi nyata yang mempermudah telaah dan transfer bukti dari R70H (contoh sitasi lengkap yang bisa disalin dengan ID/halaman/hash/sumber, sambil mempertahankan ketidakpastian). Integrasikan pada kartu sumber yang benar-benar bekerja; tidak memerlukan DB/migration.
-- **NEXT-03 — Regulatory → Planning crosswalk:** satu relasi berprovenance dari provision ke kategori dokumen/perangkat/program dari sumber resmi R63 atau sumber multi-Pemda lain dengan status \`MAPPING_CANDIDATE\` hingga diverifikasi; lanjutkan fiscal hanya setelah crosswalk benar.
+- **NEXT-03 — Regulatory → Planning crosswalk:** satu relasi berprovenance dari provision ke kategori dokumen/perangkat/program dari sumber resmi R63 atau sumber multi-Pemda lain dengan status `MAPPING_CANDIDATE` hingga diverifikasi; lanjutkan fiscal hanya setelah crosswalk benar.
 - **NEXT-04 — Reviewer decision case:** satu antrean review persisten di domain Laravel dengan auth/tenant, decision history, export; perubahan DB **memerlukan rencana backup/migration dan otorisasi terpisah**.
 - Sesudah itu lanjutkan Performance, Fiscal, Evaluation, Superior, UI acceptance dan komersialisasi berdasarkan evidensi, tidak dengan angka kemajuan spekulatif.
 
@@ -139,10 +139,10 @@ Nama \`M0–M8\` dan \`W0–W5\` dipertahankan sebagai **peta dependensi**, seme
 
 1. **Autopilot ChatGPT** memeriksa HEAD dan PR #31, dokumen ini, hasil capability terakhir, memilih *satu* fitur source-only yang aman dan bernilai, melakukan implementasi + tes fokus, commit ke cabang pilot, memperbarui draft PR dan laporan. Tidak membuat milestone ganda bila fungsi sudah ada.
 2. **GitHub pilot** menampung source dan roadmap; commit menggunakan hash agar audit mudah. Draft PR tetap draft sampai ada acceptance dan keputusan merge terpisah.
-3. **Bridge Windows** \`PI_LARAVEL_GITHUB_BRIDGE\` (dilaporkan ENABLED tiap 15 menit) hanya menerapkan allowlist code dengan drift check dan backup. \`UP_TO_DATE\`/ \`NO_LARAVEL_CHANGES\` bukan bukti workflow hidup; \`PI_BRIDGE_APPLY=PASS\` hanya bukti source diterapkan.
-4. **Tidak otomatis:** force push, merge default, reset/hapus data, menimpa original QA, migrasi database, Composer/npm, build, restart, ubah \`.env\`/SQLite/Postgres, akun, secrets, billing API, promosi produksi, ekspor data privat atau tes eksternal.
+3. **Bridge Windows** `PI_LARAVEL_GITHUB_BRIDGE` (dilaporkan ENABLED tiap 15 menit) hanya menerapkan allowlist code dengan drift check dan backup. `UP_TO_DATE`/ `NO_LARAVEL_CHANGES` bukan bukti workflow hidup; `PI_BRIDGE_APPLY=PASS` hanya bukti source diterapkan.
+4. **Tidak otomatis:** force push, merge default, reset/hapus data, menimpa original QA, migrasi database, Composer/npm, build, restart, ubah `.env`/SQLite/Postgres, akun, secrets, billing API, promosi produksi, ekspor data privat atau tes eksternal.
 5. **Stop condition:** source/hash tidak sama, tenant berbeda, hak sumber meragukan, endpoint auth gagal, data korup, acceptance utama gagal, atau membutuhkan otorisasi di luar source pilot. Simpan backup, berhenti pada bagian berisiko dan laporkan satu blocker presisi.
-6. Status per slice: \`CODE_COMMITTED\`, \`LOCAL_APPLY\`, \`FUNCTIONAL_FLOW\`, \`REAL_DATA\`, \`SECURITY\`, \`LEGAL\`, \`NUMERIC\`, \`PRODUCTION\`. Jangan mengisi unknown dengan PASS.
+6. Status per slice: `CODE_COMMITTED`, `LOCAL_APPLY`, `FUNCTIONAL_FLOW`, `REAL_DATA`, `SECURITY`, `LEGAL`, `NUMERIC`, `PRODUCTION`. Jangan mengisi unknown dengan PASS.
 
 ## 9. Kesiapan komersialisasi dan UX sebagai gerbang nyata
 
@@ -151,26 +151,26 @@ Nama \`M0–M8\` dan \`W0–W5\` dipertahankan sebagai **peta dependensi**, seme
 **C3 — Specialist/Bundle/Superior/Institutional:** entitlements server-side, metering transparan, subscription/billing hanya setelah persetujuan, masing-masing domain menjaga mutu kebenaran yang sama; Superior membeli orkestrasi/decision support, bukan memonopoli aturan wajib.  
 **Kelaikan produk:** UI responsive/aksesibel, navigasi 1+5 terpadu, walkthrough analis–reviewer, kinerja laptop wajar, source links berguna, tabel/graph terbaca, ekspor/reopen, dokumentasi, deploy/recover, privasi, legal/licensing, bukti pelanggan/kontrak/biaya support. Mockup tanpa workflow sumber tidak dihitung selesai.
 
-**Pengukuran kemajuan:** jangan menjumlah jumlah commit atau tes menjadi persen siap jual. Skor berbobot F1–F8 dibedakan per *implementasi*, *keandalan evidence*, *penerimaan pengguna*, *operasi/keamanan*, *validasi pasar*. Angka 34% core dan ~25% full pada 24 Oktober adalah **estimasi historis yang tidak boleh dipublikasikan sebagai persentase terkini**. Taksir ulang sesudah checkpoint outcome dengan rubric dan bukti tertulis; jangan menyamakan \`HTTP 200\` dengan komersialisasi.
+**Pengukuran kemajuan:** jangan menjumlah jumlah commit atau tes menjadi persen siap jual. Skor berbobot F1–F8 dibedakan per *implementasi*, *keandalan evidence*, *penerimaan pengguna*, *operasi/keamanan*, *validasi pasar*. Angka 34% core dan ~25% full pada 24 Oktober adalah **estimasi historis yang tidak boleh dipublikasikan sebagai persentase terkini**. Taksir ulang sesudah checkpoint outcome dengan rubric dan bukti tertulis; jangan menyamakan `HTTP 200` dengan komersialisasi.
 
 ## 10. Quality gates substantif sebelum penggunaan resmi
 
 | Gate | Bukti lulus | Bila tidak lulus |
 | --- | --- | --- |
 | Data rights/admission | sumber diizinkan, versi/tenant/hash/locator lengkap | tahan ingestion atau keluaran |
-| Hierarchy/delegation | rantai provisi, pembentuk, dasar kewenangan/tanggal/wilayah dapat ditelusuri | \`AUTHORITY_UNVERIFIED\` / \`ABSTAIN\` |
-| Harmonization | bukti hukum memadai, reviewer berwenang mengesahkan label | hanya \`POTENTIAL_CONFLICT_REVIEW\`, bukan putusan |
-| Crosswalk taxonomy | kode/versi/OPD/periode/satuan terikat bukti resmi | \`MAPPING_CANDIDATE\` / \`ABSTAIN\` |
-| Numeric | ground truth dan pemeriksaan denominator/versi/periode/formula | \`NUMERIC_COMPARISON=BLOCKED\` |
-| Real end-to-end | source→reviewer→brief→decision→report/reopen lulus | \`FUNCTIONAL_FLOW=BLOCKED\` |
+| Hierarchy/delegation | rantai provisi, pembentuk, dasar kewenangan/tanggal/wilayah dapat ditelusuri | `AUTHORITY_UNVERIFIED` / `ABSTAIN` |
+| Harmonization | bukti hukum memadai, reviewer berwenang mengesahkan label | hanya `POTENTIAL_CONFLICT_REVIEW`, bukan putusan |
+| Crosswalk taxonomy | kode/versi/OPD/periode/satuan terikat bukti resmi | `MAPPING_CANDIDATE` / `ABSTAIN` |
+| Numeric | ground truth dan pemeriksaan denominator/versi/periode/formula | `NUMERIC_COMPARISON=BLOCKED` |
+| Real end-to-end | source→reviewer→brief→decision→report/reopen lulus | `FUNCTIONAL_FLOW=BLOCKED` |
 | UI/ops/security | desktop/mobile, role, tenancy, restore, observability, licensing | kandidat/staging saja |
-| Commercial/production | izin tertulis, kondisi SLA/privacy/procurement dan bukti nilai nyata | \`PRODUCTION_ADMISSION=DENIED\` |
+| Commercial/production | izin tertulis, kondisi SLA/privacy/procurement dan bukti nilai nyata | `PRODUCTION_ADMISSION=DENIED` |
 
 ## 11. Artefak bukti dan template penyelesaian
 
 Setiap penyelesaian sebaiknya memuat satu catatan singkat:
 
-\`\`\`text
+```text
 PI_CAPABILITY=<ID + hasil pengguna>
 GITHUB_COMMIT=<full SHA>; PR=<nomor>
 LOCAL_APPLY=PASS|UNCONFIRMED|BLOCKED
@@ -183,16 +183,16 @@ LEGAL_HARMONIZATION=NOT_ASSESSED
 NUMERIC_COMPARISON=BLOCKED
 PRODUCTION_ADMISSION=DENIED
 NEXT=<satu capability slice yang siap berikutnya>
-\`\`\`
+```
 
-Simpan riwayat keputusan \`CD-YYYYMMDD-NN\` bila ada perubahan prioritas bermakna, dengan alasan, mandat terdahulu yang diganti, kode/PR dan dampak. Perbarui roadmap hanya ketika target/otoritas berubah, bukan setiap smoke test.
+Simpan riwayat keputusan `CD-YYYYMMDD-NN` bila ada perubahan prioritas bermakna, dengan alasan, mandat terdahulu yang diganti, kode/PR dan dampak. Perbarui roadmap hanya ketika target/otoritas berubah, bukan setiap smoke test.
 
 ## 12. Registri bukti sumber dokumen roadmap
 
-- **S1:** Library \`02_PI_MASTER_ROADMAP_20261025.md\` — \`libfile_71f3b0b25a988191a753e00f42c33ce6\`.
-- **S2:** Library \`PI_SUPERIOR_SPECIALIZED_EXECUTION_MAP_20261029.md\` — \`libfile_746615dfb660819186fecff602cddbf7\`.
-- **S3:** Library \`PI_MASTER_ROADMAP_REGULATORY_MANDATE_20261102.md\` (versi 2) — \`libfile_ec7a78a56a5c819199b1c19a92546d37\`.
-- **S4:** Library \`PI_MASTER_ROADMAP_HIERARCHICAL_TAXONOMY_MANDATE_20261102.md\` — \`libfile_b0e9bc14e2588191907fe608bc3be017\`.
-- **S5:** \`docs/PI_MILESTONE_EXECUTION_CONTROL_20261108.md\`, \`docs/PI_ROADMAP_LIBRARY_RECONCILIATION_20261108.md\`, \`docs/PI_R70H_VERIFIED_EVIDENCE_LOOKUP.md\` pada cabang pilot, PR #31, dan log bridge/HTTP/PHP yang dikirim pemilik.
+- **S1:** Library `02_PI_MASTER_ROADMAP_20261025.md` — `libfile_71f3b0b25a988191a753e00f42c33ce6`.
+- **S2:** Library `PI_SUPERIOR_SPECIALIZED_EXECUTION_MAP_20261029.md` — `libfile_746615dfb660819186fecff602cddbf7`.
+- **S3:** Library `PI_MASTER_ROADMAP_REGULATORY_MANDATE_20261102.md` (versi 2) — `libfile_ec7a78a56a5c819199b1c19a92546d37`.
+- **S4:** Library `PI_MASTER_ROADMAP_HIERARCHICAL_TAXONOMY_MANDATE_20261102.md` — `libfile_b0e9bc14e2588191907fe608bc3be017`.
+- **S5:** `docs/PI_MILESTONE_EXECUTION_CONTROL_20261108.md`, `docs/PI_ROADMAP_LIBRARY_RECONCILIATION_20261108.md`, `docs/PI_R70H_VERIFIED_EVIDENCE_LOOKUP.md` pada cabang pilot, PR #31, dan log bridge/HTTP/PHP yang dikirim pemilik.
 
-**Change decision \`CD-20261108-01\`:** Pemilik menginstruksikan penyatuan seluruh master roadmap dan mandat terbaru menjadi pegangan. Dokumen ini **menggantikan roadmap sementara untuk pengembangan pilot**; sumber historis tetap utuh. Ia **tidak menyatakan** path master asli Windows telah ditemukan, tidak menimpa dokumen Windows dan tidak menaikkan status legal/numeric/production. Setelah roadmap ini, eksekusi berlanjut ke NEXT-01/02 menurut bukti kesiapan.
+**Change decision `CD-20261108-01`:** Pemilik menginstruksikan penyatuan seluruh master roadmap dan mandat terbaru menjadi pegangan. Dokumen ini **menggantikan roadmap sementara untuk pengembangan pilot**; sumber historis tetap utuh. Ia **tidak menyatakan** path master asli Windows telah ditemukan, tidak menimpa dokumen Windows dan tidak menaikkan status legal/numeric/production. Setelah roadmap ini, eksekusi berlanjut ke NEXT-01/02 menurut bukti kesiapan.
