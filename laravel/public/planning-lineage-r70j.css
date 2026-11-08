@@ -23,3 +23,17 @@
 .r70j-relation small{font-size:10px;color:#f1d6a2}
 .r70j-digest{font-size:10px;color:#abcfc5;overflow-wrap:anywhere;font-family:ui-monospace,monospace}
 @media(max-width:800px){.r70j-grid{grid-template-columns:1fr}}
+
+/* R70K: a documentary program/performance node and explicit regulatory abstention. */
+.r70k-panel{margin:14px 0;border:1px solid #416d6e}
+.r70k-panel .panel-heading p{max-width:76ch}
+.r70k-node{border:1px solid #32656d;background:#103844;border-radius:9px;padding:15px}
+.r70k-node h3{font-size:17px;color:#e8fff6;margin:9px 0}
+.r70k-node p{font-size:11px;color:#c8dfd9;line-height:1.6}
+.r70k-node .r70k-raw{background:#164d50;color:#edfff4;padding:10px;border-left:3px solid #8ddbaf;border-radius:5px}
+.r70k-node .r70j-unpinned{margin-top:14px}
+.r70k-abstain{margin-top:12px;border:1px solid #d4a454;background:#443826;border-radius:9px;padding:15px}
+.r70k-abstain strong{color:#ffe2a3;font-size:11px;letter-spacing:.05em}
+.r70k-abstain p{color:#f4e4cb;font-size:12px;line-height:1.6}
+.r70k-abstain small{display:block;color:#f9d49c;font-size:10px;margin:10px 0}
+.r70k-abstain .r70j-link{color:#ffe1a0}
