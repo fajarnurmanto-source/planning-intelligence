@@ -40,6 +40,7 @@ final class NormativeRootTest extends TestCase
             ->assertJsonPath('as_of_date', '2026-11-08')
             ->assertJsonCount(2, 'instruments')
             ->assertJsonCount(6, 'provisions')
+            ->assertJsonPath('instruments.0.effective_date', '2017-09-25')
             ->assertJsonPath('instruments.1.effective_date', '2025-06-23')
             ->assertJsonPath('instruments.1.pdf_sha256', null)
             ->assertJsonPath('provisions.0.locator', 'Pasal 76; halaman cetak -40-')
@@ -54,7 +55,10 @@ final class NormativeRootTest extends TestCase
             ->assertJsonPath('version_timeline.status', 'AMENDMENT_CHAIN_INCOMPLETE')
             ->assertJsonPath('version_timeline.verified_change_event_count', 0)
             ->assertJsonPath('version_timeline.no_events_means_no_changes', false)
-            ->assertJsonPath('version_timeline.instrument_states.0.date_state', 'START_DATE_UNVERIFIED')
+            ->assertJsonPath('version_timeline.instrument_states.0.date_state', 'EFFECTIVE_DATE_NOT_AFTER_CASE')
+            ->assertJsonPath('census_snapshot.exhaustiveness', 'NOT_EXHAUSTIVELY_VERIFIED')
+            ->assertJsonPath('census_snapshot.observations.0.relation_catalogue', 'MENCABUT_PERMENDAGRI_54_2010')
+            ->assertJsonPath('census_snapshot.observations.1.relation_catalogue', 'BELUM_TERSEDIA')
             ->assertJsonPath('gates.result', 'ABSTAIN')
             ->assertJsonPath('gates.numeric_comparison', 'BLOCKED')
             ->assertJsonPath('gates.production_admission', 'DENIED')
@@ -79,6 +83,16 @@ final class NormativeRootTest extends TestCase
 
         $forged = $registry;
         $forged['case']['regional_exception_applicability'] = 'CITY_YOGYAKARTA';
+        $this->useRegistry($forged);
+        $this->assertUnavailable();
+
+        $forged = $registry;
+        $forged['census_snapshot']['exhaustiveness'] = 'OFFICIAL_CENSUS_VERIFIED_COMPLETE';
+        $this->useRegistry($forged);
+        $this->assertUnavailable();
+
+        $forged = $registry;
+        $forged['census_snapshot']['observations'][1]['relation_catalogue'] = 'NO_AMENDMENTS_EXIST';
         $this->useRegistry($forged);
         $this->assertUnavailable();
 
