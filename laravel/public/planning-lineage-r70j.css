@@ -1,0 +1,25 @@
+/* R70J document-lineage reviewer panel: intentionally distinct from verified R70H PDF snapshots. */
+.r70j-panel{margin:14px 0;border:1px solid #3f7270}
+.r70j-panel .panel-heading p{max-width:79ch}
+.r70j-version{margin:12px 0 16px;padding:15px;background:#42392b;border:1px solid #977a43;border-left:4px solid #e6ba63;border-radius:8px}
+.r70j-version strong{display:block;font-size:11px;letter-spacing:.05em;color:#ffe6a4}
+.r70j-version p{font-size:12px;line-height:1.6;color:#ffe9c3}
+.r70j-version small{font-size:10px;color:#f5d49a}
+.r70j-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.r70j-card{padding:15px;background:#103944;border:1px solid #2d666a;border-radius:9px;min-width:0}
+.r70j-kind{color:#a3eccb;font-size:10px;font-weight:850;letter-spacing:.06em}
+.r70j-card h3{font-size:14px;color:#eafff6;line-height:1.5;margin:9px 0}
+.r70j-card p{font-size:11px;color:#c3e1d9;line-height:1.6}
+.r70j-locator{color:#b0e7cd!important}
+.r70j-unpinned{border-left:3px solid #d4ac68;padding-left:9px;color:#efdaab!important}
+.r70j-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px}
+.r70j-link{font-size:11px;color:#aff1cd;text-decoration:underline;text-underline-offset:3px}
+.r70j-link:focus-visible{outline:2px solid #f3d18e;outline-offset:3px}
+.r70j-relations{margin:16px 0 12px}
+.r70j-relations h3{font-size:13px;color:#effff8}
+.r70j-relation{padding:10px 13px;margin-top:8px;border-left:3px solid #6aa890;background:#10323c;border-radius:5px}
+.r70j-relation strong{color:#b8edd3;font-size:11px}
+.r70j-relation p{color:#d2e8e1;font-size:11px}
+.r70j-relation small{font-size:10px;color:#f1d6a2}
+.r70j-digest{font-size:10px;color:#abcfc5;overflow-wrap:anywhere;font-family:ui-monospace,monospace}
+@media(max-width:800px){.r70j-grid{grid-template-columns:1fr}}
