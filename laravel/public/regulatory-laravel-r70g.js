@@ -12,6 +12,7 @@
   const validId = value => typeof value === 'string' && /^(PERDA|PERWALI)[0-9]+_[0-9]{4}$/.test(value)
   const validSha = value => typeof value === 'string' && /^[A-Fa-f0-9]{64}$/.test(value)
   const validPage = value => Number.isInteger(value) && value > 0 && value <= 100000
+  const jdihPdfUrls = new Map()
   function href(parent, label, value, external = false) {
     if (!value) return
     const link = node(parent, 'a', '', label)
@@ -20,7 +21,9 @@
   }
   function pdf(parent, id, page, label) {
     if (!validId(id) || !validPage(page)) return
-    href(parent, label, '/api/qa-regulatory-r70b/pdf?source_id=' + encodeURIComponent(id) + '#page=' + page, true)
+    const sourceUrl = jdihPdfUrls.get(id)
+    if (!sourceUrl) return
+    href(parent, label, sourceUrl + '#page=' + page, true)
   }
   function official(parent, url, label) {
     if (typeof url !== 'string' || !/^https:\/\/jdih\.jogjakota\.go\.id\//.test(url)) return
@@ -152,8 +155,9 @@
       evidenceGroup(card, item.id, item.pdf_sha256, refs, integrity, 'Periksa kutipan tanggal')
     }
     const actions = node(card, 'div', 'r70g-actions')
-    pdf(actions, item.id, 1, 'PDF snapshot lokal ↗')
+    pdf(actions, item.id, 1, 'PDF daring JDIH ↗')
     official(actions, item.metadata_url, 'Metadata JDIH ↗')
+    node(card, 'p', 'r70g-caveat', 'PDF daring berasal dari JDIH. SHA-256 di atas mengikat snapshot QA; berkas daring saat dibuka belum diverifikasi ulang.')
     if (item.metadata_warning) node(card, 'p', 'r70g-warning', 'ANOMALI METADATA — ' + item.metadata_warning)
   }
   function render(data) {
@@ -166,6 +170,13 @@
         !Array.isArray(data.documents) || data.documents.length !== 7 ||
         data.summary?.source_count !== 7 || data.summary?.amendment_count !== 5 ||
         data.summary?.evidence_excerpt_sha256_verified !== 47) throw Error('Kontrak keamanan dan sumber Laravel tidak cocok')
+    jdihPdfUrls.clear()
+    for (const item of data.documents) {
+      if (validId(item.id) && typeof item.source_url === 'string' &&
+          /^https:\/\/jdih\.jogjakota\.go\.id\/asset\/naskah\/[a-z0-9_-]+\.pdf$/i.test(item.source_url)) {
+        jdihPdfUrls.set(item.id, item.source_url)
+      }
+    }
     $('r70g-sources').textContent = '07/07'
     $('r70g-amendments').textContent = '05/05'
     $('r70g-targets').textContent = data.summary.scope_targets_first_95_pages + '/10'
