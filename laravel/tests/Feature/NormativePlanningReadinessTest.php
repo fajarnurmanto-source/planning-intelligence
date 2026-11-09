@@ -38,6 +38,14 @@ final class NormativePlanningReadinessTest extends TestCase
                 ['id' => 'UUD-1945', 'official_resolution' => 'CITED_IDENTITY_NOT_YET_RESOLVED'],
             ],
             'edges' => [['from' => 'UU-39-2008', 'to' => 'UUD-1945']],
+            'version_candidates' => [[
+                'instrument_id' => 'UU-39-2008',
+                'amending_candidate_id' => 'UU-61-2024',
+                'relation' => 'OFFICIAL_STATUS_LISTED_AS_AMENDING_CANDIDATE',
+                'legal_effect' => 'NOT_ASSESSED',
+                'source_html_sha256' => str_repeat('A', 64),
+                'evidence_url' => 'https://peraturan.bpk.go.id/Details/39719/uu-no-39-tahun-2008',
+            ]],
         ];
         Cache::store('array')->put(OfficialNormativeAncestry::CACHE_KEY, $graph, now()->addHour());
 
@@ -53,6 +61,9 @@ final class NormativePlanningReadinessTest extends TestCase
             ->assertJsonPath('legal_harmonization', 'NOT_ASSESSED')
             ->assertJsonPath('numeric_comparison', 'BLOCKED')
             ->assertJsonPath('production_admission', 'DENIED')
+            ->assertJsonPath('upstream_amendment_watch_count', 1)
+            ->assertJsonPath('upstream_amendment_watch.0.amending_candidate_id', 'UU-61-2024')
+            ->assertJsonPath('upstream_amendment_watch.0.planning_impact', 'NOT_ASSESSED_NO_VERIFIED_PROVISION_EDGE')
             ->assertJsonPath('candidate_edge_count', 1)
             ->assertJsonPath('candidate_provision_to_planning_edges.0.provision_locator', 'Pasal 2 ayat (4) huruf a')
             ->assertJsonPath('candidate_provision_to_planning_edges.0.evidence_status', 'METADATA_LOCATOR_ONLY_PDF_NOT_PINNED')
