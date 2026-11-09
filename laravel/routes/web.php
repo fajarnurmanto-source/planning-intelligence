@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AiProviderStatusController;
 use App\Http\Controllers\Api\AiEvidenceContextController;
 use App\Http\Controllers\Api\AiReviewBriefController;
 use App\Http\Controllers\Api\AiLocalInferenceController;
+use App\Http\Controllers\Api\AiCloudInferenceController;
 use App\Http\Controllers\Api\EntitlementController;
 use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\NormativePlanningReadinessController;
@@ -36,6 +37,8 @@ Route::prefix('api')->group(function (): void {
             ->name('pi.ai.review-brief');
         Route::post('/ai-r69a/local-inference', AiLocalInferenceController::class)
             ->middleware('throttle:3,1')->name('pi.ai.local-inference');
+        Route::post('/ai-r69a/cloud-inference', AiCloudInferenceController::class)
+            ->middleware('throttle:2,1')->name('pi.ai.cloud-inference');
         Route::post('/auth/logout', [SessionController::class, 'destroy'])->name('auth.logout');
         Route::get('/qa-subscription-r69e/entitlements', EntitlementController::class)
             ->name('pi.entitlements');
