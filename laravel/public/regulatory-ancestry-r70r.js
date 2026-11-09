@@ -66,9 +66,31 @@
     }
     for (const edge of data.edges) {
       if (!ids.has(edge.from) || !ids.has(edge.to) ||
-          edge.evidence_kind !== 'OFFICIAL_ABSTRACT_LEGAL_BASIS_CITATION' ||
+          !['OFFICIAL_ABSTRACT_LEGAL_BASIS_CITATION', 'OFFICIAL_ABSTRACT_CONSTITUTIONAL_REFERENCE'].includes(edge.evidence_kind) ||
           edge.relation_status !== 'CANDIDATE_NOT_LEGAL_FINDING' ||
           !permitted(edge.evidence_url, 'details')) throw Error('Hubungan norma tidak sah.')
+    }
+    if (data.parent_evidence_expansion) {
+      const expanded = data.parent_evidence_expansion
+      if (expanded.schema !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V1' ||
+          expanded.status !== 'PARTIAL_OFFICIAL_METADATA_READING' ||
+          expanded.legal_status !== 'ABSTAIN' ||
+          expanded.amendment_census !== 'NOT_EXHAUSTIVELY_VERIFIED' ||
+          !Array.isArray(data.version_candidates) || data.version_candidates.length > 25 ||
+          expanded.total_version_candidates !== data.version_candidates.length) {
+        throw Error('Kontrak bukti resmi induk tidak sesuai.')
+      }
+      for (const change of data.version_candidates) {
+        if (!/^UU-[0-9]{1,4}-[0-9]{4}::UU-[0-9]{1,4}-[0-9]{4}$/.test(change.id) ||
+            !ids.has(change.instrument_id) ||
+            !/^UU-[0-9]{1,4}-[0-9]{4}$/.test(change.amending_candidate_id) ||
+            change.relation !== 'OFFICIAL_STATUS_LISTED_AS_AMENDING_CANDIDATE' ||
+            change.legal_effect !== 'NOT_ASSESSED' ||
+            !/^[A-F0-9]{64}$/.test(change.source_html_sha256) ||
+            !permitted(change.evidence_url, 'details')) {
+          throw Error('Kandidat revisi tidak memiliki bukti katalog resmi.')
+        }
+      }
     }
     return data
   }
@@ -115,6 +137,25 @@
               : 'identitas tercantum, tetapi halaman induknya belum terverifikasi'))
         if (parent.metadata_url) link(line, ' Buka aturan ↗', parent.metadata_url, 'details')
         else if (parent.search_url) link(line, ' Pencarian sumber resmi ↗', parent.search_url, 'search')
+      }
+    }
+    if (data.parent_evidence_expansion) {
+      const evidence = data.parent_evidence_expansion
+      const detail = put(root, 'section', undefined, 'r70l-version')
+      put(detail, 'strong', 'R70T · BUKTI ABSTRAK ATURAN INDUK · MASIH KANDIDAT')
+      put(detail, 'p', 'Metadata induk yang berhasil dibaca pada putaran ini: ' +
+        evidence.read_this_run + '. Kandidat perubahan yang tercatat: ' +
+        evidence.total_version_candidates + '.')
+      for (const edge of data.edges.filter(item => item.evidence_kind ===
+          'OFFICIAL_ABSTRACT_CONSTITUTIONAL_REFERENCE')) {
+        const line = put(detail, 'p', edge.from +
+          ' → UUD-1945 · kutipan konstitusi ditemukan dalam abstrak resmi; bukan pembuktian seluruh hubungan hukum.')
+        link(line, ' Buka bukti resmi ↗', edge.evidence_url, 'details')
+      }
+      for (const change of data.version_candidates) {
+        const line = put(detail, 'p', change.instrument_id + ' · perubahan yang tercantum di katalog: ' +
+          change.amending_candidate_id + ' · tanggal efektif dan materi perubahan belum diverifikasi.')
+        link(line, ' Buka sumber status ↗', change.evidence_url, 'details')
       }
     }
     const foot = put(root, 'p', undefined, 'r70h-caveat')
