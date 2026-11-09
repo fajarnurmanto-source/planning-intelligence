@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AutomatedAncestryController;
 use App\Http\Controllers\Api\EntitlementController;
 use App\Http\Controllers\Api\NormativeRootController;
+use App\Http\Controllers\Api\NormativePlanningReadinessController;
 use App\Http\Controllers\Api\PlanningLineageController;
 use App\Http\Controllers\Api\PlanningProgramCandidateController;
 use App\Http\Controllers\Api\RegulatoryEvidenceController;
@@ -34,6 +35,8 @@ Route::prefix('api')->group(function (): void {
             ->middleware('throttle:10,1')->name('pi.regulatory.auto-ancestry');
         Route::get('/qa-regulatory-r70o/discover', RegulatoryDiscoveryController::class)
             ->middleware('throttle:10,1')->name('pi.regulatory.discover');
+        Route::get('/qa-planning-r71/normative-readiness', NormativePlanningReadinessController::class)
+            ->name('pi.planning.normative-readiness');
         Route::get('/qa-planning-r70j/lineage-candidates', PlanningLineageController::class)
             ->name('pi.planning.lineage-candidates');
         Route::get('/qa-regulatory-r70g/laravel-read-model', RegulatoryReadModelController::class)
