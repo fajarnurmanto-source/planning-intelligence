@@ -41,7 +41,7 @@ final class OfficialParentEvidenceExpansionTest extends TestCase
 <html><body>
 <h1>Undang-undang (UU) No. 39 Tahun 2008 tentang Kementerian Negara</h1>
 <h3>METADATA PERATURAN</h3>
-<h3>STATUS PERATURAN</h3><p>Diubah dengan:</p><ol>
+<h3><span>STATUS</span> <span>PERATURAN</span></h3><p><span>Diubah</span> <span>dengan:</span></p><ol>
 <li><a href="/Details/123456">UU No. 61 Tahun 2024</a> tentang Perubahan atas UU No. 39 Tahun 2008.</li>
 <li><a href="https://peraturan.bpk.go.id.evil.example/Details/9999/uu-no-66-tahun-2024">UU No. 66 Tahun 2024</a> tentang tautan palsu</li>
 </ol>
@@ -83,7 +83,7 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8']),
             ['parser_diagnostics']['amendment_heading_seen']);
         $this->assertSame('BLOCKED', $result['numeric_comparison']);
         $this->assertSame('DENIED', $result['production_admission']);
-        $this->assertSame('PI_R70T_PARENT_OFFICIAL_EVIDENCE_V3',
+        $this->assertSame('PI_R70T_PARENT_OFFICIAL_EVIDENCE_V4',
             $result['parent_evidence_expansion']['schema']);
         $this->assertSame('EXACT_LINKED_STATUS_ENTRIES_ONLY',
             $result['parent_evidence_expansion']['candidate_extraction']);
@@ -108,9 +108,9 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8']),
         $this->assertSame(3, $second['parent_evidence_expansion']['total_version_candidates']);
         $this->assertCount(2, $second['edges']);
 
-        // Already-cached V2 candidates might be spurious; discard/re-read them.
+        // Already-cached V3 candidates might be spurious; discard/re-read them.
         $legacy = $second;
-        $legacy['parent_evidence_expansion']['schema'] = 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V2';
+        $legacy['parent_evidence_expansion']['schema'] = 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V3';
         $legacy['version_candidates'][] = [
             'id' => 'UU-23-2014::UU-2-2014', 'instrument_id' => 'UU-23-2014',
             'amending_candidate_id' => 'UU-2-2014', 'legal_effect' => 'NOT_ASSESSED',
