@@ -90,6 +90,22 @@
 - **Jalur kelulusan**: (1) sensus revisi resmi untuk *case scope* dan tanggal evaluasi selesai, (2) bukti parser memperoleh temuan nyata dari provider di Laravel lokal, (3) reviewer dapat menavigasi metadata/PDF asli dan membedakan *search hit* dari norma efektif, (4) kasus dinilai hanya setelah NORMATIVE-ROOT-006 gates terpenuhi. Aktivasi bridge lokal menunggu (1), lalu tes terfokus (2) dan UI acceptance (3); scheduled bridge yang dinonaktifkan pemilik tetap tidak disentuh.
 - `DISCOVERY_ONLY` ≠ `SOURCE_PDF_VERIFIED` ≠ `AMENDMENT_CHAIN_COMPLETE` ≠ `LEGAL_ALIGNMENT_APPROVED`. Pencarian tanpa temuan tidak membuktikan peraturan tidak ada. Seluruh keputusan hukum/angka dan produksi tetap di-*deny*.
 
+### 4.1C Penelusuran otomatis sampai norma induk (AUTO-ANCESTRY-008; mandat pemilik 9 Nov 2026)
+
+**Keputusan produk yang mengikat:** Regulatory Intelligence **tidak boleh bergantung pada pengguna mengetik daftar regulasi atau pemeriksa manusia menelusuri satu per satu**. Input pengguna maksimal konteks pemeriksaan (urusan, wilayah, tahun/tanggal kasus, dokumen). Sistem sendirilah yang menemukan regulasi relevan, menelusuri sumber resmi ke dasar kewenangan dan norma induk paling atas yang terbukti terkait, menyensus perubahan/pencabutan/transisi, mendeteksi duplikasi, memelihara graph, dan memperbarui hasil berkala. Form manual R70O adalah fallback, bukan jalur utama.
+
+**Urutan kemampuan wajib yang berjalan otomatis:**
+
+1. **Klasifikasi konteks:** ekstrak urusan, topik hukum, produk hukum, yurisdiksi dan tanggal kasus dari dokumen perencanaan/anggaran; temukan identitas awal tanpa user menyuplai nama aturan.
+2. **Discovery multi-adapter:** query JDIH BPK, peraturan.go.id, JDIH kementerian/lembaga dan daerah yang dibolehkan; dedup jenis–nomor–tahun–pembentuk; bedakan SEARCH_HIT, OFFICIAL_METADATA, OFFICIAL_PDF_HASHED, SOURCE_UNAVAILABLE.
+3. **Traversal induk rekursif berbatas:** baca konsiderans Mengingat/Dasar Hukum, pasal delegasi dan rujukan eksplisit; telusuri node baru sampai semua induk relevan memiliki sumber, konstitusi tercapai pada jalur relevan, atau batas keamanan memerlukan ROOT_UNRESOLVED. Gunakan queue, visited, max-depth/max-nodes/max-requests, frontier persist/retry, dan identitas serta SHA bukti. Kutipan dasar hukum saja **bukan bukti delegasi** atau kelengkapan semua norma.
+4. **Sensus waktu dan versi:** cari AMENDS, REVOKES, REPLACES, TRANSITIONAL; verifikasi perubahan parsial/berantai dan masa berlaku per tanggal kasus. Belum Tersedia atau nol temuan **bukan** bukti tidak pernah diubah.
+5. **Pemeliharaan tanpa operator:** scheduler + cache-miss/event dokumen baru, backoff/rate cap, deteksi perubahan hash/parser, monitoring dan antrean hanya untuk **pengecualian material**. Manusia tidak memverifikasi setiap regulasi, tetapi keputusan hukum final/keuangan tetap membutuhkan otorisasi berwenang.
+
+**Increment R70R (GitHub pilot 9 Nov):** adapter otomatis membaca metadata resmi **dua seed** Permendagri 10/2025 dan 86/2017, mengekstrak dasar hukum menjadi graph *calon* induk, memakai endpoint Laravel berotentikasi, cache 12 jam, command dan deklarasi jadwal 03:30 jika scheduler aktif; UI memuat tanpa user mencari. **Belum selesai sampai induk:** URL induk selain dua seed belum di-resolve, belum ada BFS lintas semua jalur, belum ada sensus amendemen menyeluruh atau bukti scheduler hidup. CODE_COMMITTED; LOCAL_APPLY=UNCONFIRMED; FUNCTIONAL_TEST=NOT_RUN; LIVE_PROVIDER_ACCEPTANCE=NOT_RUN; PRODUCTION=DENIED. Berikutnya: resolver identitas UU/PP/Perpres/Permen dari sumber resmi, traversal berbatas dan sensus versi.
+
+**Penerimaan produk:** dari dokumen RKPD/APBD + tanggal kasus tanpa nama induk, sistem membentuk graph rujukan resmi sampai akar relevan, menampilkan revisi dan pencabutan per tanggal, refresh otomatis, serta *exception review queue*. Jika bukti satu jalur belum lengkap, tetap ROOT_UNRESOLVED / AMENDMENT_CHAIN_INCOMPLETE / ABSTAIN; tidak mengeluarkan keputusan hukum atau angka.
+
 ### 4.2 Multi-Pemda dan waktu adalah parameter inti (MULTIREGION-002)
 
 - `jurisdiction_id` berbasis kode resmi tervalidasi, bukan nama kota; relasi nasional→provinsi→kabupaten/kota terpisah dari graf delegasi hukum. Sumber, perangkat daerah, versi nomenklatur, tahun, status regulasi dan `region_rulepack` dapat diganti.
@@ -232,3 +248,5 @@ Simpan riwayat keputusan `CD-YYYYMMDD-NN` bila ada perubahan prioritas bermakna,
 - **S5:** `docs/PI_MILESTONE_EXECUTION_CONTROL_20261108.md`, `docs/PI_ROADMAP_LIBRARY_RECONCILIATION_20261108.md`, `docs/PI_R70H_VERIFIED_EVIDENCE_LOOKUP.md` pada cabang pilot, PR #31, dan log bridge/HTTP/PHP yang dikirim pemilik.
 
 **Change decision `CD-20261108-01`:** Pemilik menginstruksikan penyatuan seluruh master roadmap dan mandat terbaru menjadi pegangan. Dokumen ini **menggantikan roadmap sementara untuk pengembangan pilot**; sumber historis tetap utuh. Ia **tidak menyatakan** path master asli Windows telah ditemukan, tidak menimpa dokumen Windows dan tidak menaikkan status legal/numeric/production. Setelah roadmap ini, eksekusi berlanjut ke NEXT-01/02 menurut bukti kesiapan.
+
+**Change decision CD-20261109-02:** Pemilik mewajibkan traversal induk hukum otomatis tanpa pencarian manual; AUTO-ANCESTRY-008 adalah gerbang produk, bukan izin mengabaikan verifikasi sumber atau mempromosikan produksi.
