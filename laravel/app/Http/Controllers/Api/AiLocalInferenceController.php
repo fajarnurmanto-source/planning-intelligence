@@ -30,7 +30,7 @@ final class AiLocalInferenceController extends Controller
             || ! in_array(strtolower((string) ($parts['host'] ?? '')), ['127.0.0.1', 'localhost'], true)
             || ! isset($parts['port']) || $parts['port'] < 1 || $parts['port'] > 65535
             || ($parts['path'] ?? '') !== '/v1'
-            || isset($parts['user'], $parts['pass']) || isset($parts['query']) || isset($parts['fragment'])) {
+            || (isset($parts['user']) || isset($parts['pass'])) || isset($parts['query']) || isset($parts['fragment'])) {
             return $this->failure('LOCAL_AI_ENDPOINT_NOT_ALLOWED', 422);
         }
 
