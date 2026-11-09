@@ -133,7 +133,7 @@
           (parent.official_resolution === 'PINNED_METADATA_FETCHED'
             ? 'metadata sumber awal berhasil diambil'
             : parent.official_resolution === 'OFFICIAL_CATALOG_IDENTITY_CANDIDATE'
-              ? 'kandidat identitas ditemukan di katalog resmi; isi dan status hukum belum diperiksa'
+              ? 'identitas katalog ditemukan; bukti abstrak tambahan (jika ada) ditampilkan di panel R70T'
               : 'identitas tercantum, tetapi halaman induknya belum terverifikasi'))
         if (parent.metadata_url) link(line, ' Buka aturan ↗', parent.metadata_url, 'details')
         else if (parent.search_url) link(line, ' Pencarian sumber resmi ↗', parent.search_url, 'search')
