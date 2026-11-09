@@ -23,7 +23,7 @@ final class AiCloudInferenceController extends Controller
         $provider = $input['provider'];
         [$keyName, $modelName, $fallback] = match ($provider) {
             'gemini' => ['GEMINI_API_KEY', 'PI_AI_GEMINI_MODEL', 'gemini-2.5-flash'],
-            'deepseek' => ['DEEPSEEK_API_KEY', 'PI_AI_DEEPSEEK_MODEL', 'deepseek-chat'],
+            'deepseek' => ['DEEPSEEK_API_KEY', 'PI_AI_DEEPSEEK_MODEL', 'deepseek-flash'],
             'groq' => ['GROQ_API_KEY', 'PI_AI_GROQ_MODEL', ''],
             'openrouter' => ['OPENROUTER_API_KEY', 'PI_AI_OPENROUTER_MODEL', ''],
             'openai' => ['OPENAI_API_KEY', 'PI_AI_OPENAI_MODEL', ''],
