@@ -4,6 +4,8 @@ namespace App\Services\Pi\Regulatory;
 
 use DOMDocument;
 use DOMElement;
+use DOMNode;
+use DOMText;
 use DOMXPath;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
@@ -33,7 +35,7 @@ final class OfficialParentEvidenceExpansion
         // for an actual listed amending instrument. Never retain that legacy list.
         if (isset($graph['parent_evidence_expansion'])
             && ($graph['parent_evidence_expansion']['schema'] ?? null)
-                !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V3') {
+                !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V4') {
             $previous = [];
             $priorVersionList = [];
         }
@@ -152,7 +154,7 @@ final class OfficialParentEvidenceExpansion
 
         $graph['version_candidates'] = array_values($versionCandidates);
         $graph['parent_evidence_expansion'] = [
-            'schema' => 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V3',
+            'schema' => 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V4',
             'last_run_at' => now()->toIso8601String(),
             'attempted_this_run' => $attempted,
             'read_this_run' => $read,
@@ -229,72 +231,77 @@ final class OfficialParentEvidenceExpansion
         // Only the actual linked list entries under "Diubah dengan" count.
         // Parsing all raw status text also captures incidental numbers in titles,
         // notes, repeal summaries, or citations to the law itself.
-        $amendments = [];
-        $inStatus = false;
-        $inAmendingList = false;
+        [$amendments, $diagnostics] = $this->linkedStatusAmendments($xpath, $node['id']);
+
+        return [
+            'sha256' => strtoupper(hash('sha256', $html)),
+            'constitutional_reference' => $constitutionalReference,
+            'amendment_mentions' => array_values($amendments),
+            'parser_diagnostics' => $diagnostics,
+        ];
+    }
+
+    /**
+     * Source-backed V4 parser: locate links by byte offset in DOM text content,
+     * not by matching individual text nodes. JDIH headings can be split across
+     * nested elements; an exact DOMText marker falsely reports zero candidates.
+     *
+     * @return array{0: array, 1: array}
+     */
+    private function linkedStatusAmendments(DOMXPath $xpath, string $instrumentId): array
+    {
         $diagnostics = ['status_seen' => false, 'amendment_heading_seen' => false,
             'linked_uu_labels_seen' => 0, 'rejected_link_urls' => 0];
-        foreach ($xpath->query('//body//text()') ?: [] as $textNode) {
-            $fragment = $this->clean((string) $textNode->nodeValue);
-            if ($fragment === '') {
-                continue;
-            }
-            // Official headings may include punctuation or child nodes. Do not
-            // depend on exact equality with a particular HTML template.
-            if (mb_strlen($fragment) <= 160
-                && preg_match('/\bSTATUS\s+PERATURAN\b/ui', $fragment)) {
-                $inStatus = true;
-                $inAmendingList = false;
-                $diagnostics['status_seen'] = true;
-                continue;
-            }
-            if ($inStatus && mb_strlen($fragment) <= 160
-                && preg_match('/\bABSTRAK\s+PERATURAN\b/ui', $fragment)) {
-                break;
-            }
-            if (!$inStatus) {
-                continue;
-            }
-            if (mb_strlen($fragment) <= 160
-                && preg_match('/\bDiubah\s+dengan\b/ui', $fragment)) {
-                $inAmendingList = true;
-                $diagnostics['amendment_heading_seen'] = true;
-                continue;
-            }
-            if (mb_strlen($fragment) <= 160
-                && preg_match('/^(?:Dicabut(?:\s+sebagian)?\s+(?:dengan|oleh)|Mencabut(?:\s+sebagian)?|Mengubah|Dilaksanakan\s+dengan|Ditetapkan\s+dengan)\b/ui', $fragment)) {
-                $inAmendingList = false;
-                continue;
-            }
-            if (!$inAmendingList) {
-                continue;
-            }
+        $bodyNode = $xpath->query('//body')?->item(0);
+        if (!$bodyNode instanceof DOMNode) {
+            return [[], $diagnostics];
+        }
 
-            $anchor = $textNode->parentNode;
-            for ($depth = 0; $depth < 4 && $anchor instanceof DOMElement
-                && strtolower($anchor->tagName) !== 'a'; $depth++) {
-                $anchor = $anchor->parentNode;
-            }
-            if (!($anchor instanceof DOMElement) || strtolower($anchor->tagName) !== 'a') {
+        $rawText = '';
+        $links = [];
+        $this->collectTextAndLinks($bodyNode, $rawText, $links);
+        if (!preg_match('/STATUS\s+PERATURAN/iu', $rawText, $status, PREG_OFFSET_CAPTURE)) {
+            return [[], $diagnostics];
+        }
+        $statusStart = $status[0][1];
+        $diagnostics['status_seen'] = true;
+        if (!preg_match('/ABSTRAK\s+PERATURAN/iu', $rawText, $abstract,
+            PREG_OFFSET_CAPTURE, $statusStart + strlen($status[0][0]))) {
+            return [[], $diagnostics];
+        }
+        $abstractStart = $abstract[0][1];
+        $statusText = substr($rawText, $statusStart, $abstractStart - $statusStart);
+        if (!preg_match('/Diubah\s+dengan\s*:?/iu', $statusText, $heading, PREG_OFFSET_CAPTURE)) {
+            return [[], $diagnostics];
+        }
+        $changeStart = $statusStart + $heading[0][1] + strlen($heading[0][0]);
+        $diagnostics['amendment_heading_seen'] = true;
+        $changeEnd = $abstractStart;
+        $tail = substr($rawText, $changeStart, $abstractStart - $changeStart);
+        if (preg_match('/(?:Dicabut(?:\s+sebagian)?\s+(?:dengan|oleh)|Mencabut(?:\s+sebagian)?|Mengubah|Dilaksanakan\s+dengan|Ditetapkan\s+dengan)\s*:/iu',
+            $tail, $nextCategory, PREG_OFFSET_CAPTURE)) {
+            $changeEnd = $changeStart + $nextCategory[0][1];
+        }
+
+        $amendments = [];
+        foreach ($links as $link) {
+            if ($link['start'] < $changeStart || $link['end'] > $changeEnd) {
                 continue;
             }
-            $label = $this->clean((string) $anchor->textContent);
-            if (!preg_match('/^(?:UU|Undang[\s-]+undang)\s*(?:(?:No\.?|Nomor)\s*)?([0-9]{1,4})\s*(?:Tahun\s*)?([0-9]{4})$/ui',
-                $label, $candidate)) {
+            $label = $this->clean($link['label']);
+            if (mb_strlen($label) > 250
+                || !preg_match('/^(?:UU|Undang[\s-]+undang)\s*(?:(?:No\.?|Nomor)\s*)?([0-9]{1,4})\s*(?:Tahun\s*)?([0-9]{4})\b/ui',
+                    $label, $candidate)) {
                 continue;
             }
             $diagnostics['linked_uu_labels_seen']++;
-
-            $href = trim($anchor->getAttribute('href'));
+            $href = trim($link['href']);
             if (str_starts_with($href, '/Details/')) {
                 $href = 'https://peraturan.bpk.go.id'.$href;
             }
             $parts = parse_url($href);
             $expectedSlug = '(?:uu-no-|uuno-)'.(int) $candidate[1]
                 .'-tahun-'.(int) $candidate[2];
-            // JDIH may use an ID-only Details link. Keep the candidate
-            // tied to its exact linked UU label, but DO NOT claim that an
-            // ID-only URL verifies the legal instrument's identity.
             $path = (string) ($parts['path'] ?? '');
             $validPath = preg_match('~^/Details/[0-9]+(?:/'.$expectedSlug.')?/?$~', $path);
             if (!is_array($parts) || ($parts['scheme'] ?? null) !== 'https'
@@ -306,10 +313,9 @@ final class OfficialParentEvidenceExpansion
                 continue;
             }
             $changeId = 'UU-'.(int) $candidate[1].'-'.(int) $candidate[2];
-            if ($changeId !== $node['id']) {
+            if ($changeId !== $instrumentId) {
                 $amendments[$changeId] = [
-                    'id' => $changeId,
-                    'metadata_url' => $href,
+                    'id' => $changeId, 'metadata_url' => $href,
                     'link_identity' => preg_match('~^/Details/[0-9]+/'.$expectedSlug.'/?$~', $path)
                         ? 'EXACT_SLUG_MATCH' : 'LINK_LABEL_ONLY_DETAILS_ID',
                 ];
@@ -319,12 +325,28 @@ final class OfficialParentEvidenceExpansion
             }
         }
 
-        return [
-            'sha256' => strtoupper(hash('sha256', $html)),
-            'constitutional_reference' => $constitutionalReference,
-            'amendment_mentions' => array_values($amendments),
-            'parser_diagnostics' => $diagnostics,
-        ];
+        return [array_values($amendments), $diagnostics];
+    }
+
+    /** Preserve exact byte offsets while flattening DOM text across nested nodes. */
+    private function collectTextAndLinks(DOMNode $node, string &$rawText, array &$links): void
+    {
+        if ($node instanceof DOMText) {
+            $rawText .= $node->nodeValue;
+            return;
+        }
+        $isLink = $node instanceof DOMElement && strtolower($node->tagName) === 'a';
+        $start = strlen($rawText);
+        foreach ($node->childNodes as $child) {
+            $this->collectTextAndLinks($child, $rawText, $links);
+        }
+        if ($isLink) {
+            $links[] = [
+                'start' => $start, 'end' => strlen($rawText),
+                'label' => (string) $node->textContent,
+                'href' => $node->getAttribute('href'),
+            ];
+        }
     }
 
     private function clean(string $text): string
