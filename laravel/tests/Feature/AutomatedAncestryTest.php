@@ -53,7 +53,7 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8']),
         $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
             ->getJson(self::URL)
             ->assertOk()
-            ->assertHeader('Cache-Control', 'private, no-store')
+            ->assertHeader('Cache-Control')
             ->assertJsonPath('schema', 'PI_R70R_AUTOMATED_ANCESTRY_V1')
             ->assertJsonPath('tenant_id', 'ID-DIY-YOG')
             ->assertJsonPath('resolved_seed_count', 2)
@@ -68,7 +68,10 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8']),
         Http::assertSentCount(2);
         Http::assertSent(fn ($request) => str_starts_with($request->url(), 'https://peraturan.bpk.go.id/Details/'));
 
-        $payload = $this->getJson(self::URL)->assertOk()->json();
+        $cachedResponse = $this->getJson(self::URL)->assertOk();
+        $directives = array_map('trim', explode(',', (string) $cachedResponse->headers->get('Cache-Control')));
+        $this->assertEqualsCanonicalizing(['private', 'no-store'], $directives);
+        $payload = $cachedResponse->json();
         Http::assertSentCount(2); // Second request is served from the no-migration array cache.
         $nodes = collect($payload['nodes'])->keyBy('id');
         $this->assertSame('PINNED_METADATA_FETCHED', $nodes['PERMENDAGRI-86-2017']['official_resolution']);
