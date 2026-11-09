@@ -27,9 +27,16 @@ final class OfficialParentEvidenceExpansion
             throw new RuntimeException('Untrusted parent-evidence graph or expansion limit.');
         }
         $previous = $graph['parent_evidence_expansion']['attempts'] ?? [];
-        $versionCandidates = $graph['version_candidates'] ?? [];
-        if (!is_array($previous) || !is_array($versionCandidates)) {
+        $priorVersionList = $graph['version_candidates'] ?? [];
+        if (!is_array($previous) || !is_array($priorVersionList)) {
             throw new RuntimeException('Prior parent-evidence state is invalid.');
+        }
+        $versionCandidates = [];
+        foreach ($priorVersionList as $candidate) {
+            if (!is_array($candidate) || !is_string($candidate['id'] ?? null)) {
+                throw new RuntimeException('Prior amendment candidate is malformed.');
+            }
+            $versionCandidates[$candidate['id']] = $candidate;
         }
 
         $eligible = [];
@@ -75,6 +82,22 @@ final class OfficialParentEvidenceExpansion
                         }
                     }
                     if (!$exists) {
+                        $rootPresent = false;
+                        foreach ($graph['nodes'] as $existingNode) {
+                            if (($existingNode['id'] ?? null) === 'UUD-1945') {
+                                $rootPresent = true;
+                                break;
+                            }
+                        }
+                        if (!$rootPresent) {
+                            $graph['nodes'][] = [
+                                'id' => 'UUD-1945', 'kind' => 'UUD', 'number' => null,
+                                'year' => 1945, 'metadata_url' => null,
+                                'official_resolution' => 'CITED_IDENTITY_NOT_YET_RESOLVED',
+                                'search_url' => 'https://peraturan.bpk.go.id/Search?keywords=Undang-Undang%20Dasar%201945',
+                            ];
+                            $graph['unresolved_parent_count'] = ($graph['unresolved_parent_count'] ?? 0) + 1;
+                        }
                         $graph['edges'][] = [
                             'from' => $node['id'], 'to' => 'UUD-1945',
                             'citation_text' => $details['constitutional_reference'],
