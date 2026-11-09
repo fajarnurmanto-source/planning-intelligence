@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./regulatory-scope-r70d.css">
   <link rel="stylesheet" href="./regulatory-laravel-r70g.css">
   <link rel="stylesheet" href="./planning-lineage-r70j.css">
+  <link rel="stylesheet" href="./regulatory-review-r75.css">
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./regulatory-laravel-r70g.js"></script>
@@ -19,6 +20,7 @@
   <script defer src="./normative-root-r70l.js"></script>
   <script defer src="./regulatory-discovery-r70o.js"></script>
   <script defer src="./regulatory-ancestry-r70r.js"></script>
+  <script defer src="./regulatory-review-r75.js"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -124,6 +126,23 @@
         <p id="r70r-status" class="r70g-status" role="status" aria-live="polite">Memulai penelusuran otomatis sumber hukum resmi…</p>
         <div id="r70r-results" class="r70g-stack" aria-label="Kandidat aturan induk dari sumber resmi yang ditelusuri tanpa input pengguna"></div>
         <p class="r70h-caveat">Cakupan implementasi saat ini: dua dokumen awal dan kutipan dasar hukumnya. Resolusi semua induk hingga akar, seluruh perubahan/pencabutan, pembuktian berlaku pada tanggal kasus, dan keputusan harmonisasi masih perlu diproses otomatis pada tahap berikutnya. Temuan ini bukan kesimpulan hukum; REVIEW EXCEPTION ONLY · ABSTAIN · NUMERIC BLOCKED · PRODUCTION DENIED.</p>
+      </section>
+      <section class="panel r75-panel" aria-labelledby="r75-title">
+        <div class="panel-heading"><div>
+          <span class="section-number">04D · INTEGRATED REGULATORY REVIEW · R71–R75</span>
+          <h2 id="r75-title">Meja review perencanaan dan regulasi</h2>
+          <p>Gabungan kandidat rujukan pasal, kronologi RPJMD–RKPD, dan calon perubahan aturan induk dari cache metadata resmi. Periksa bukti dan unduh satu paket reviewer; tidak ada pengesahan atau penyimpanan keputusan hukum otomatis.</p>
+        </div></div>
+        <div class="r75-toolbar">
+          <label for="r75-filter">Tampilan</label>
+          <select id="r75-filter"><option value="all">Semua kandidat</option><option value="chronology">Kronologi dan crosswalk</option><option value="amendments">Pemantauan perubahan</option></select>
+          <button type="button" class="r70h-evidence-button" id="r75-refresh">Muat ulang bukti</button>
+          <button type="button" class="r70h-evidence-button" id="r75-export" disabled>Unduh paket review JSON</button>
+        </div>
+        <p id="r75-status" class="r70g-status" role="status" aria-live="polite">Menunggu data crosswalk…</p>
+        <p id="r75-counts" class="r75-counts"></p>
+        <div id="r75-workspace" class="r75-grid" aria-label="Kandidat lintas modul untuk penelaahan"></div>
+        <p class="r70h-caveat">Semua keluaran tetap REVIEW_REQUIRED, ABSTAIN, NUMERIC BLOCKED, PRODUCTION DENIED. Hash metadata resmi bukan hash PDF; kesesuaian substansi dan keberlakuan aturan wajib ditelaah dengan bukti primer.</p>
       </section>
       <div class="reg-columns">
         <section class="panel"><div class="panel-heading"><div><span class="section-number">05 · SOURCE INTEGRITY</span><h2>Sidik jari sumber</h2></div></div><dl class="r70g-digests"><dt>Ledger R70C</dt><dd id="r70g-ledger-sha">—</dd><dt>Scope R70D</dt><dd id="r70g-scope-sha">—</dd></dl><p class="r70g-explain">R70F mengecek tautan hash ledger-scope sebelum proyeksi. Perubahan sumber di tengah proses akan menolak hasil.</p></section>
