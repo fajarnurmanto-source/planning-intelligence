@@ -86,14 +86,57 @@ Artisan::command('pi:regulatory-ancestry:expand-parent-evidence', function () {
     }
 })->purpose('Autonomously examine official matched parent-law metadata with source hashes');
 
+// R70U: one unattended, bounded progression step for both parent identity and
+// official evidence. Saves a checkpoint between stages; never decides legal effect.
+Artisan::command('pi:regulatory-ancestry:advance', function () {
+    if (!config('pi.regulatory_auto_ancestry.enabled', true)) {
+        $this->warn('PI_R70U=DISABLED');
+        return;
+    }
+
+    $cache = Cache::store((string) config('pi.regulatory_auto_ancestry.cache_store', 'file'));
+    $graph = $cache->remember(OfficialNormativeAncestry::CACHE_KEY,
+        now()->addHours(12),
+        fn (): array => app(OfficialNormativeAncestry::class)->trace()
+    );
+    $lookups = 0;
+    $matches = 0;
+    $parentReads = 0;
+    $rounds = 0;
+    for ($round = 0; $round < 2; $round++) {
+        $graph = app(OfficialParentResolver::class)->resolveBatch($graph);
+        $resolution = $graph['parent_resolution_batch'];
+        $lookups += $resolution['attempted_this_run'];
+        $matches += $resolution['matched_this_run'];
+        $cache->put(OfficialNormativeAncestry::CACHE_KEY, $graph, now()->addHours(12));
+
+        $graph = app(OfficialParentEvidenceExpansion::class)->expandBatch($graph);
+        $evidence = $graph['parent_evidence_expansion'];
+        $parentReads += $evidence['read_this_run'];
+        $cache->put(OfficialNormativeAncestry::CACHE_KEY, $graph, now()->addHours(12));
+        $rounds++;
+
+        if ($resolution['attempted_this_run'] === 0
+            && $evidence['attempted_this_run'] === 0) {
+            break;
+        }
+    }
+
+    $this->info('PI_R70U=BOUNDED_ANCESTRY_PROGRESSION_COMPLETED');
+    $this->line('ROUNDS='.$rounds.' LOOKUPS='.$lookups.' MATCHED='.$matches
+        .' PARENT_PAGES_READ='.$parentReads
+        .' CATALOG_TOTAL='.$graph['parent_resolution_batch']['catalog_matched_count']
+        .' UNRESOLVED='.$graph['unresolved_parent_count']
+        .' AMENDMENT_CANDIDATES='.count($graph['version_candidates'] ?? [])
+        .' LEGAL=ABSTAIN');
+})->purpose('Progress official parent lookup and evidence automatically without per-law user input');
+
 // Runs automatically when an authorized Laravel scheduler worker is active.
 // The authenticated read model also refreshes on a cache miss as a fallback.
 Schedule::command('pi:regulatory-ancestry:refresh')->dailyAt('03:30')->timezone('Asia/Jakarta');
 
-// Bounded 3-lookups-per-run parent resolution; scheduler activation is separately required.
-Schedule::command('pi:regulatory-ancestry:resolve-parents')
-    ->everySixHours()->timezone('Asia/Jakarta')->withoutOverlapping();
-
-// R70T follows R70S every six hours at minute 30, if scheduler is enabled.
-Schedule::command('pi:regulatory-ancestry:expand-parent-evidence')
-    ->everySixHours(30)->timezone('Asia/Jakarta')->withoutOverlapping();
+// R70U advances both queues unattended, maximum two bounded rounds each run.
+// Scheduler activation is separately required; the disabled Windows bridge
+// scheduled task is not restarted or modified.
+Schedule::command('pi:regulatory-ancestry:advance')
+    ->everySixHours()->timezone('Asia/Jakarta')->withoutOverlapping(60);
