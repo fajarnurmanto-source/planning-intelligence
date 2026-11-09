@@ -18,6 +18,9 @@ final class AiProviderStatusController extends Controller
             'ollama' => ['model_key' => 'PI_AI_OLLAMA_MODEL', 'default' => 'gemma3:1b', 'key' => null],
             'gemini' => ['model_key' => 'PI_AI_GEMINI_MODEL', 'default' => 'gemini-2.5-flash', 'key' => 'GEMINI_API_KEY'],
             'deepseek' => ['model_key' => 'PI_AI_DEEPSEEK_MODEL', 'default' => 'deepseek-flash', 'key' => 'DEEPSEEK_API_KEY'],
+            'groq' => ['model_key' => 'PI_AI_GROQ_MODEL', 'default' => '', 'key' => 'GROQ_API_KEY'],
+            'openrouter' => ['model_key' => 'PI_AI_OPENROUTER_MODEL', 'default' => '', 'key' => 'OPENROUTER_API_KEY'],
+            'openai' => ['model_key' => 'PI_AI_OPENAI_MODEL', 'default' => '', 'key' => 'OPENAI_API_KEY'],
             'compatible' => ['model_key' => 'PI_AI_COMPAT_MODEL', 'default' => '', 'key' => 'PI_AI_COMPAT_API_KEY'],
         ] as $name => $settings) {
             $model = trim((string) (getenv($settings['model_key']) ?: $settings['default']));
@@ -58,6 +61,7 @@ final class AiProviderStatusController extends Controller
             'schema' => 'PI_R69A_AI_PROVIDER_STATUS_V1',
             'providers' => $providers,
             'default_provider' => 'ollama',
+            'cloud_providers' => ['gemini', 'deepseek', 'groq', 'openrouter', 'openai'],
             'mode' => 'USER_SELECTS_PER_REQUEST',
             'cloud_permission' => 'EXPLICIT_PER_REQUEST',
             'api_keys_returned' => false,
