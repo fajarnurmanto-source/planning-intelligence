@@ -72,7 +72,8 @@
     }
     if (data.parent_evidence_expansion) {
       const expanded = data.parent_evidence_expansion
-      if (expanded.schema !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V1' ||
+      if (expanded.schema !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V2' ||
+          expanded.candidate_extraction !== 'EXACT_LINKED_STATUS_ENTRIES_ONLY' ||
           expanded.status !== 'PARTIAL_OFFICIAL_METADATA_READING' ||
           expanded.legal_status !== 'ABSTAIN' ||
           expanded.amendment_census !== 'NOT_EXHAUSTIVELY_VERIFIED' ||
@@ -87,7 +88,8 @@
             change.relation !== 'OFFICIAL_STATUS_LISTED_AS_AMENDING_CANDIDATE' ||
             change.legal_effect !== 'NOT_ASSESSED' ||
             !/^[A-F0-9]{64}$/.test(change.source_html_sha256) ||
-            !permitted(change.evidence_url, 'details')) {
+            !permitted(change.evidence_url, 'details') ||
+            !permitted(change.amending_metadata_url, 'details')) {
           throw Error('Kandidat revisi tidak memiliki bukti katalog resmi.')
         }
       }
@@ -144,7 +146,7 @@
       const detail = put(root, 'section', undefined, 'r70l-version')
       put(detail, 'strong', 'R70T · BUKTI ABSTRAK ATURAN INDUK · MASIH KANDIDAT')
       put(detail, 'p', 'Metadata induk yang berhasil dibaca pada putaran ini: ' +
-        evidence.read_this_run + '. Kandidat perubahan yang tercatat: ' +
+        evidence.read_this_run + '. Kandidat perubahan bertaut langsung (bukan putusan hukum): ' +
         evidence.total_version_candidates + '.')
       for (const edge of data.edges.filter(item => item.evidence_kind ===
           'OFFICIAL_ABSTRACT_CONSTITUTIONAL_REFERENCE')) {
@@ -155,7 +157,8 @@
       for (const change of data.version_candidates) {
         const line = put(detail, 'p', change.instrument_id + ' · perubahan yang tercantum di katalog: ' +
           change.amending_candidate_id + ' · tanggal efektif dan materi perubahan belum diverifikasi.')
-        link(line, ' Buka sumber status ↗', change.evidence_url, 'details')
+        link(line, ' Buka instrumen pengubah ↗', change.amending_metadata_url, 'details')
+        link(line, ' · Status induk ↗', change.evidence_url, 'details')
       }
     }
     const foot = put(root, 'p', undefined, 'r70h-caveat')
