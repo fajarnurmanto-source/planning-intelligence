@@ -53,6 +53,11 @@ final class NormativePlanningReadinessTest extends TestCase
             ->assertJsonPath('legal_harmonization', 'NOT_ASSESSED')
             ->assertJsonPath('numeric_comparison', 'BLOCKED')
             ->assertJsonPath('production_admission', 'DENIED')
+            ->assertJsonPath('candidate_edge_count', 1)
+            ->assertJsonPath('candidate_provision_to_planning_edges.0.provision_locator', 'Pasal 2 ayat (4) huruf a')
+            ->assertJsonPath('candidate_provision_to_planning_edges.0.evidence_status', 'METADATA_LOCATOR_ONLY_PDF_NOT_PINNED')
+            ->assertJsonPath('candidate_provision_to_planning_edges.0.review_status', 'REVIEW_REQUIRED')
+            ->assertJsonPath('candidate_provision_to_planning_edges.0.legal_effect', 'NOT_ASSESSED')
             ->assertJsonCount(2, 'documents')
             ->assertJsonCount(0, 'verified_provision_to_planning_edges');
     }
