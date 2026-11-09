@@ -69,6 +69,21 @@ Artisan::command('pi:regulatory-ancestry:expand-parent-evidence', function () {
         .' READ='.$batch['read_this_run']
         .' NEW_UUD_EDGES='.$batch['new_constitutional_edges']
         .' AMENDMENT_CANDIDATES='.$batch['total_version_candidates'].' LEGAL=ABSTAIN');
+    if ($batch['read_this_run'] > 0 && $batch['total_version_candidates'] === 0) {
+        $observations = array_values(array_filter(array_map(
+            static fn (array $attempt): ?array => $attempt['parser_diagnostics'] ?? null,
+            array_values($batch['attempts'] ?? [])
+        )));
+        $statusSeen = count(array_filter($observations,
+            static fn (array $item): bool => ($item['status_seen'] ?? false) === true));
+        $headingsSeen = count(array_filter($observations,
+            static fn (array $item): bool => ($item['amendment_heading_seen'] ?? false) === true));
+        $linkedLabels = array_sum(array_column($observations, 'linked_uu_labels_seen'));
+        $rejectedUrls = array_sum(array_column($observations, 'rejected_link_urls'));
+        $this->warn('R70T_PARSER_DIAGNOSTICS STATUS_SEEN='.$statusSeen
+            .' CHANGE_HEADING_SEEN='.$headingsSeen
+            .' LINKED_UU_LABELS='.$linkedLabels.' REJECTED_URLS='.$rejectedUrls);
+    }
 })->purpose('Autonomously examine official matched parent-law metadata with source hashes');
 
 // Runs automatically when an authorized Laravel scheduler worker is active.
