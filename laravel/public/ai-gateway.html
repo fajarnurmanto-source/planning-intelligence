@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PI · Unified AI Gateway</title>
+  <link rel="stylesheet" href="./ai-decision.css">
+  <script defer src="./ai-gateway.js"></script>
+  <script defer src="./pi-auth-shell.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand"><span class="brand-symbol">PI</span><div><strong>Planning Intelligence</strong><small>UNIFIED AI GATEWAY · LARAVEL QA</small></div></div>
+    <a href="./index.html" class="back-link">← Kembali ke PI Superior</a>
+  </header>
+  <main class="container">
+    <div class="kicker">PI / EVIDENCE-GROUNDED REVIEW <span>HUMAN REVIEW REQUIRED</span></div>
+    <section class="hero">
+      <div><small class="hero-eyebrow">REGULATORY INTELLIGENCE · R69A LARAVEL</small>
+        <h1>Satu meja telaah.<br><em>Enam penyedia AI.</em></h1>
+        <p>Periksa sumber regulasi dan pertanyaan Anda sebelum memilih model. Model memberi draf telaah, bukan putusan legal, keselarasan atau perbandingan angka.</p>
+        <div class="tags"><span>Ollama lokal</span><span>5 penyedia cloud</span><span>Bukti berjejak hash</span><span>Persetujuan per permintaan</span></div>
+      </div>
+      <aside><small>STATUS PENGAMAN</small><strong>AI MENGUSULKAN.<br>REVIEWER MEMUTUSKAN.</strong><p>Tidak ada permintaan inferensi otomatis. Produksi dan analisis numerik tetap diblokir.</p><b>PRODUCTION ADMISSION DENIED</b></aside>
+    </section>
+    <div class="columns" style="margin-top:20px">
+      <section class="panel config" aria-labelledby="provider-title">
+        <div class="panel-heading"><div><small>01 · KONTROL INFERENSI</small><h2 id="provider-title">Pilih penyedia AI</h2><p>Kunci API hanya berada di backend. Halaman ini tidak meminta atau menampilkannya.</p></div><span id="currentMode" class="pill">MEMUAT</span></div>
+        <label for="provider">Penyedia</label>
+        <select id="provider">
+          <option value="ollama">Ollama · lokal</option>
+          <option value="gemini">Gemini · cloud</option>
+          <option value="deepseek">DeepSeek · cloud</option>
+          <option value="groq">Groq · cloud</option>
+          <option value="openrouter">OpenRouter · cloud</option>
+          <option value="openai">OpenAI API · cloud</option>
+        </select>
+        <div class="info-box"><span>STATUS KONFIGURASI</span><strong id="providerModel">Memuat…</strong><span id="providerState">Menunggu respons Laravel.</span></div>
+        <label for="focus">Fokus telaah / pertanyaan pengguna</label>
+        <textarea id="focus" maxlength="300" rows="3" placeholder="Contoh: Apa yang harus ditelaah reviewer mengenai perubahan lampiran regulasi ini?"></textarea>
+        <div class="section-divider"></div>
+        <div id="cloudArea" hidden>
+          <label class="consent"><input type="checkbox" id="approvedFocus"><span>Saya telah memeriksa pertanyaan di atas dan menyetujui pengirimannya ke penyedia cloud yang saya pilih, hanya untuk permintaan ini.</span></label>
+          <label class="consent"><input type="checkbox" id="approvedEvidence"><span>Saya telah memeriksa daftar sumber di samping dan menyetujui pengiriman metadata regulasi publik dan referensi bukti yang disaring server; bukan PDF utuh, identitas tenant atau catatan internal.</span></label>
+        </div>
+        <div id="localArea"><label class="consent"><input type="checkbox" id="approvedLocal"><span>Jalankan inferensi Ollama di komputer lokal untuk telaah ini. Tidak ada panggilan provider cloud.</span></label></div>
+        <div class="buttons"><button id="reviewButton" class="secondary" type="button">Lihat paket telaah</button><button id="generateButton" class="primary" type="button">Susun draf telaah AI</button></div>
+        <div id="feedback" class="feedback" role="status" aria-live="polite">Tidak ada inferensi yang dijalankan otomatis.</div>
+      </section>
+      <section class="panel evidence" aria-labelledby="evidence-title">
+        <div class="panel-heading"><div><small>02 · KONTEN TERKENDALI</small><h2 id="evidence-title">Sumber yang akan ditelaah</h2><p>Pratinjau sumber publik. Server menyaring referensi sumber, maksimal lima jangkar per dokumen saat panggilan cloud.</p></div><span class="pill outline">METADATA PUBLIK</span></div>
+        <p id="sourceSummary">Memuat sumber berjejak dari Laravel…</p>
+        <ul id="sourceList"></ul>
+        <details><summary>Pratinjau metadata sumber dan fokus pengguna</summary><pre id="publicPreview" style="white-space:pre-wrap;overflow-wrap:anywhere">{}</pre></details>
+        <p class="warn bottom">Paket di atas adalah pratinjau untuk penilaian pengguna; isi final dihitung ulang oleh server saat pemanggilan. Jika sumber atau pertanyaan berubah, periksa kembali dan berikan persetujuan baru. Kutipan, PDF lengkap, dan data internal tidak ditampilkan sebagai payload cloud.</p>
+      </section>
+    </div>
+    <section class="panel result" aria-labelledby="result-title">
+      <div class="panel-heading"><div><small>03 · HASIL & PERTANYAAN REVIEWER</small><h2 id="result-title">Draf telaah berbasis bukti</h2><p id="resultSub">Keluaran hanya ditampilkan setelah permintaan pengguna berhasil.</p></div><span class="pill amber" id="resultStatus">BELUM DIJALANKAN</span></div>
+      <div id="emptyResult" class="empty">Anda dapat melihat paket telaah deterministik tanpa menggunakan model AI.</div>
+      <div id="briefView" hidden>
+        <div class="summary-card"><small>RINGKASAN DRAF</small><h3 id="briefSummary"></h3></div>
+        <div class="brief-grid"><div><h3>Ketidakpastian</h3><ul id="briefUncertainties"></ul></div><div><h3>Pertanyaan untuk reviewer</h3><ol id="briefQuestions"></ol></div><div><h3>Referensi bukti</h3><ul id="briefProofs"></ul></div></div>
+        <p class="meta" id="briefMeta"></p><button id="downloadResult" type="button" class="secondary">Ekspor draf JSON</button>
+      </div>
+      <div class="gate">NUMERIC COMPARISON BLOCKED · LEGAL HARMONIZATION NOT ASSESSED · HUMAN REVIEW REQUIRED · PRODUCTION DENIED</div>
+    </section>
+  </main>
+</body>
+</html>
