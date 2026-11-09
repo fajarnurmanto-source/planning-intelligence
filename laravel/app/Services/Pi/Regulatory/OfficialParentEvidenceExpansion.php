@@ -3,6 +3,7 @@
 namespace App\Services\Pi\Regulatory;
 
 use DOMDocument;
+use DOMElement;
 use DOMXPath;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
@@ -28,6 +29,14 @@ final class OfficialParentEvidenceExpansion
         }
         $previous = $graph['parent_evidence_expansion']['attempts'] ?? [];
         $priorVersionList = $graph['version_candidates'] ?? [];
+        // R70T V1 could mistake legislation mentioned in an amendment's title
+        // for an actual listed amending instrument. Never retain that legacy list.
+        if (isset($graph['parent_evidence_expansion'])
+            && ($graph['parent_evidence_expansion']['schema'] ?? null)
+                !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V2') {
+            $previous = [];
+            $priorVersionList = [];
+        }
         if (!is_array($previous) || !is_array($priorVersionList)) {
             throw new RuntimeException('Prior parent-evidence state is invalid.');
         }
@@ -126,6 +135,7 @@ final class OfficialParentEvidenceExpansion
                         'amending_candidate_id' => $candidate['id'],
                         'relation' => 'OFFICIAL_STATUS_LISTED_AS_AMENDING_CANDIDATE',
                         'evidence_url' => $node['metadata_url'],
+                        'amending_metadata_url' => $candidate['metadata_url'],
                         'source_html_sha256' => $details['sha256'],
                         'legal_effect' => 'NOT_ASSESSED',
                     ];
@@ -140,7 +150,7 @@ final class OfficialParentEvidenceExpansion
 
         $graph['version_candidates'] = array_values($versionCandidates);
         $graph['parent_evidence_expansion'] = [
-            'schema' => 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V1',
+            'schema' => 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V2',
             'last_run_at' => now()->toIso8601String(),
             'attempted_this_run' => $attempted,
             'read_this_run' => $read,
@@ -151,6 +161,7 @@ final class OfficialParentEvidenceExpansion
             'status' => 'PARTIAL_OFFICIAL_METADATA_READING',
             'legal_status' => 'ABSTAIN',
             'amendment_census' => 'NOT_EXHAUSTIVELY_VERIFIED',
+            'candidate_extraction' => 'EXACT_LINKED_STATUS_ENTRIES_ONLY',
         ];
 
         return $graph;
@@ -213,24 +224,73 @@ final class OfficialParentEvidenceExpansion
             $constitutionalReference = trim($reference[0]);
         }
 
+        // Only the actual linked list entries under "Diubah dengan" count.
+        // Parsing all raw status text also captures incidental numbers in titles,
+        // notes, repeal summaries, or citations to the law itself.
         $amendments = [];
-        $statusStart = mb_stripos($body, 'STATUS PERATURAN');
-        if ($statusStart !== false && $statusStart < $abstractStart) {
-            $status = mb_substr($body, $statusStart, $abstractStart - $statusStart);
-            if (preg_match('/Diubah\\s+dengan\\s*:\\s*(.*?)(?=(?:Dicabut\\s+oleh|Dicabut\\s+dengan|Mencabut)\\s*:|$)/ui',
-                $status, $section)) {
-                preg_match_all('/\\b(?:UU|Undang[\\s-]+Undang)\\s*(?:No\\.?|Nomor)?\\s*'
-                    .'([0-9]{1,4})\\s*(?:Tahun\\s*)?([0-9]{4})\\b/ui',
-                    $section[1], $candidates, PREG_SET_ORDER);
-                foreach ($candidates as $candidate) {
-                    $changeId = 'UU-'.(int) $candidate[1].'-'.(int) $candidate[2];
-                    if ($changeId !== $node['id']) {
-                        $amendments[$changeId] = ['id' => $changeId];
-                    }
-                    if (count($amendments) >= 12) {
-                        break;
-                    }
-                }
+        $inStatus = false;
+        $inAmendingList = false;
+        foreach ($xpath->query('//body//text()') ?: [] as $textNode) {
+            $fragment = $this->clean((string) $textNode->nodeValue);
+            if ($fragment === '') {
+                continue;
+            }
+            if (preg_match('/^STATUS\s+PERATURAN$/ui', $fragment)) {
+                $inStatus = true;
+                $inAmendingList = false;
+                continue;
+            }
+            if ($inStatus && preg_match('/^ABSTRAK\s+PERATURAN$/ui', $fragment)) {
+                break;
+            }
+            if (!$inStatus) {
+                continue;
+            }
+            if (preg_match('/^Diubah\s+dengan\s*:?$/ui', $fragment)) {
+                $inAmendingList = true;
+                continue;
+            }
+            if (preg_match('/^(?:Dicabut(?:\s+sebagian)?\s+(?:dengan|oleh)|Mencabut(?:\s+sebagian)?|Mengubah|Dilaksanakan\s+dengan|Ditetapkan\s+dengan)\s*:?$/ui', $fragment)) {
+                $inAmendingList = false;
+                continue;
+            }
+            if (!$inAmendingList) {
+                continue;
+            }
+
+            $anchor = $textNode->parentNode;
+            for ($depth = 0; $depth < 3 && $anchor instanceof DOMElement
+                && strtolower($anchor->tagName) !== 'a'; $depth++) {
+                $anchor = $anchor->parentNode;
+            }
+            if (!($anchor instanceof DOMElement) || strtolower($anchor->tagName) !== 'a') {
+                continue;
+            }
+            $label = $this->clean((string) $anchor->textContent);
+            if (!preg_match('/^(?:UU|Undang[\s-]+undang)\s*(?:(?:No\.?|Nomor)\s*)?([0-9]{1,4})\s*(?:Tahun\s*)?([0-9]{4})$/ui',
+                $label, $candidate)) {
+                continue;
+            }
+
+            $href = trim($anchor->getAttribute('href'));
+            if (str_starts_with($href, '/Details/')) {
+                $href = 'https://peraturan.bpk.go.id'.$href;
+            }
+            $parts = parse_url($href);
+            if (!is_array($parts) || ($parts['scheme'] ?? null) !== 'https'
+                || ($parts['host'] ?? null) !== 'peraturan.bpk.go.id'
+                || isset($parts['user']) || isset($parts['pass']) || isset($parts['port'])
+                || isset($parts['query']) || isset($parts['fragment'])
+                || !preg_match('~^/Details/[0-9]+/(?:uu-no-|uuno-)'.(int) $candidate[1]
+                    .'-tahun-'.(int) $candidate[2].'/?$~', (string) ($parts['path'] ?? ''))) {
+                continue;
+            }
+            $changeId = 'UU-'.(int) $candidate[1].'-'.(int) $candidate[2];
+            if ($changeId !== $node['id']) {
+                $amendments[$changeId] = ['id' => $changeId, 'metadata_url' => $href];
+            }
+            if (count($amendments) >= 12) {
+                break;
             }
         }
 
