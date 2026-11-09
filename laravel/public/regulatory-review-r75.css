@@ -1,0 +1,17 @@
+/* R75 integrated reviewer workbench */
+.r75-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:14px 0}
+.r75-toolbar label{font-weight:700}
+.r75-toolbar select{padding:9px 12px;border:1px solid #b9c6d8;border-radius:8px;background:#fff;max-width:100%}
+.r75-toolbar button:disabled{opacity:.55;cursor:not-allowed}
+.r75-counts{font-size:.9rem;font-weight:700;color:#365470}
+.r75-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:12px}
+.r75-group-title{grid-column:1/-1;font-size:1rem;margin:16px 0 0}
+.r75-item{min-width:0;border:1px solid #cdd8e3;border-radius:12px;padding:16px;background:#f9fbfd;overflow-wrap:anywhere}
+.r75-flagged{background:#fff9ee;border-color:#e8bd78}
+.r75-item h3{margin:8px 0;font-size:1rem}
+.r75-item p{font-size:.91rem;line-height:1.55}
+.r75-item a{display:inline-block;margin-bottom:8px;text-decoration:underline}
+.r75-item small{display:block;color:#566273;line-height:1.5}
+.r75-hash{overflow-wrap:anywhere}
+.r75-tag{font-size:.73rem;letter-spacing:.035em;font-weight:800;color:#765018}
+.r75-caveat{grid-column:1/-1;padding:12px;border-left:4px solid #a65936;background:#fff7f1}
