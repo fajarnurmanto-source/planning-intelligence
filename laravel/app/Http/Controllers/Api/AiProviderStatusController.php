@@ -69,7 +69,7 @@ final class AiProviderStatusController extends Controller
     private function validBase(string $base, bool $local): bool
     {
         $parts = parse_url($base);
-        if (! is_array($parts) || isset($parts['user'], $parts['pass']) ||
+        if (! is_array($parts) || isset($parts['user']) || isset($parts['pass']) ||
             isset($parts['query']) || isset($parts['fragment'])) {
             return false;
         }
