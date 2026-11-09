@@ -237,6 +237,12 @@
         getJson('/api/ai-r69a/status'), getJson('/api/ai-r69a/evidence-context'),
       ])
       providers = Array.isArray(status.providers) ? status.providers : []
+      const readyCloud = providers.find(item => item.remote && item.configured &&
+        ['gemini', 'groq', 'openrouter', 'deepseek', 'openai'].includes(item.id))
+      const preferred = readyCloud?.id || status.default_provider || 'gemini'
+      if (Array.from(el('provider').options).some(option => option.value === preferred)) {
+        el('provider').value = preferred
+      }
       context = sources
       renderContext()
       refreshProvider()
