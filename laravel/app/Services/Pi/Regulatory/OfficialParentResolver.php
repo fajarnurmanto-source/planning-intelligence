@@ -22,7 +22,7 @@ final class OfficialParentResolver
     {
         if (($graph['schema'] ?? null) !== 'PI_R70R_AUTOMATED_ANCESTRY_V1'
             || ($graph['result_status'] ?? null) !== 'AUTOMATED_ANCESTRY_CANDIDATES_ONLY'
-            || !is_array($graph['nodes'] ?? null)
+            || !is_array($graph['nodes'] ?? null) || count($graph['nodes']) > 40
             || $limit < 1 || $limit > self::DEFAULT_BATCH_LIMIT) {
             throw new RuntimeException('Ancestry graph or lookup batch limit is invalid.');
         }
@@ -37,7 +37,12 @@ final class OfficialParentResolver
             if (($node['official_resolution'] ?? null) !== 'CITED_IDENTITY_NOT_YET_RESOLVED'
                 || !in_array($node['kind'] ?? '', ['UU', 'PERPRES', 'PERMENDAGRI'], true)
                 || !is_int($node['number'] ?? null) || !is_int($node['year'] ?? null)
-                || !is_string($node['id'] ?? null) || isset($previous[$node['id']])) {
+                || !is_string($node['id'] ?? null)
+                || $node['id'] !== $node['kind'].'-'.$node['number'].'-'.$node['year']) {
+                continue;
+            }
+            $priorStatus = $previous[$node['id']]['result'] ?? null;
+            if ($priorStatus !== null && $priorStatus !== 'OFFICIAL_SEARCH_UNAVAILABLE_RETRY') {
                 continue;
             }
             $candidates[] = ['index' => $index, 'node' => $node];
