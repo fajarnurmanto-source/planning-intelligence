@@ -57,10 +57,11 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8']),
         ]);
 
         $this->assertSame(0, Artisan::call('pi:regulatory-ancestry:advance'));
+        $output = Artisan::output();
         $this->assertStringContainsString('PI_R70U=BOUNDED_ANCESTRY_PROGRESSION_COMPLETED',
-            Artisan::output());
+            $output);
         $this->assertStringContainsString('LOOKUPS=1 MATCHED=1 PARENT_PAGES_READ=1',
-            Artisan::output());
+            $output);
         Http::assertSentCount(2);
 
         $saved = Cache::store('array')->get(OfficialNormativeAncestry::CACHE_KEY);
@@ -76,8 +77,9 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8']),
         $this->assertSame('DENIED', $saved['production_admission']);
 
         $this->assertSame(0, Artisan::call('pi:regulatory-ancestry:advance'));
+        $output = Artisan::output();
         $this->assertStringContainsString('LOOKUPS=0 MATCHED=0 PARENT_PAGES_READ=0',
-            Artisan::output());
+            $output);
         Http::assertSentCount(2);
     }
 
