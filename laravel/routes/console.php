@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\Pi\Regulatory\OfficialNormativeAncestry;
+use App\Services\Pi\Regulatory\OfficialParentEvidenceExpansion;
 use App\Services\Pi\Regulatory\OfficialParentResolver;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -48,6 +49,28 @@ Artisan::command('pi:regulatory-ancestry:resolve-parents', function () {
         .' UNRESOLVED='.$updated['unresolved_parent_count'].' LEGAL=ABSTAIN');
 })->purpose('Automatically resolve cited parent-law identities via official catalog search');
 
+Artisan::command('pi:regulatory-ancestry:expand-parent-evidence', function () {
+    if (!config('pi.regulatory_auto_ancestry.enabled', true)) {
+        $this->warn('PI_R70T=DISABLED');
+        return;
+    }
+
+    $cache = Cache::store((string) config('pi.regulatory_auto_ancestry.cache_store', 'file'));
+    $graph = $cache->remember(OfficialNormativeAncestry::CACHE_KEY,
+        now()->addHours(12),
+        fn (): array => app(OfficialNormativeAncestry::class)->trace()
+    );
+    $updated = app(OfficialParentEvidenceExpansion::class)->expandBatch($graph);
+    $cache->put(OfficialNormativeAncestry::CACHE_KEY, $updated, now()->addHours(12));
+    $batch = $updated['parent_evidence_expansion'];
+
+    $this->info('PI_R70T=OFFICIAL_PARENT_EVIDENCE_READ_COMPLETED');
+    $this->line('ATTEMPTED='.$batch['attempted_this_run']
+        .' READ='.$batch['read_this_run']
+        .' NEW_UUD_EDGES='.$batch['new_constitutional_edges']
+        .' AMENDMENT_CANDIDATES='.$batch['total_version_candidates'].' LEGAL=ABSTAIN');
+})->purpose('Autonomously examine official matched parent-law metadata with source hashes');
+
 // Runs automatically when an authorized Laravel scheduler worker is active.
 // The authenticated read model also refreshes on a cache miss as a fallback.
 Schedule::command('pi:regulatory-ancestry:refresh')->dailyAt('03:30')->timezone('Asia/Jakarta');
@@ -55,3 +78,7 @@ Schedule::command('pi:regulatory-ancestry:refresh')->dailyAt('03:30')->timezone(
 // Bounded 3-lookups-per-run parent resolution; scheduler activation is separately required.
 Schedule::command('pi:regulatory-ancestry:resolve-parents')
     ->everySixHours()->timezone('Asia/Jakarta')->withoutOverlapping();
+
+// R70T follows R70S every six hours at minute 30, if scheduler is enabled.
+Schedule::command('pi:regulatory-ancestry:expand-parent-evidence')
+    ->everySixHours(30)->timezone('Asia/Jakarta')->withoutOverlapping();
