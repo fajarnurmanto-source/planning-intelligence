@@ -42,7 +42,8 @@ final class OfficialParentEvidenceExpansionTest extends TestCase
 <h1>Undang-undang (UU) No. 39 Tahun 2008 tentang Kementerian Negara</h1>
 <h3>METADATA PERATURAN</h3>
 <h3>STATUS PERATURAN</h3><p>Diubah dengan:</p><ol>
-<li><a href="/Details/123456/uu-no-61-tahun-2024">UU No. 61 Tahun 2024</a> tentang Perubahan atas UU No. 39 Tahun 2008.</li>
+<li><a href="/Details/123456">UU No. 61 Tahun 2024</a> tentang Perubahan atas UU No. 39 Tahun 2008.</li>
+<li><a href="https://peraturan.bpk.go.id.evil.example/Details/9999/uu-no-66-tahun-2024">UU No. 66 Tahun 2024</a> tentang tautan palsu</li>
 </ol>
 <h3>ABSTRAK PERATURAN</h3><ul>
 <li>Pasal 4, Pasal 17, Pasal 20, dan Pasal 21 Undang-Undang Dasar Negara Republik Indonesia Tahun 1945.</li>
@@ -76,9 +77,13 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8']),
         $this->assertSame('ABSTAIN', $result['parent_evidence_expansion']['legal_status']);
         $this->assertSame('NOT_EXHAUSTIVELY_VERIFIED', $result['parent_evidence_expansion']['amendment_census']);
         $this->assertSame('NOT_ASSESSED', $result['legal_harmonization']);
+        $this->assertTrue($result['parent_evidence_expansion']['attempts']['UU-39-2008']
+            ['parser_diagnostics']['status_seen']);
+        $this->assertTrue($result['parent_evidence_expansion']['attempts']['UU-39-2008']
+            ['parser_diagnostics']['amendment_heading_seen']);
         $this->assertSame('BLOCKED', $result['numeric_comparison']);
         $this->assertSame('DENIED', $result['production_admission']);
-        $this->assertSame('PI_R70T_PARENT_OFFICIAL_EVIDENCE_V2',
+        $this->assertSame('PI_R70T_PARENT_OFFICIAL_EVIDENCE_V3',
             $result['parent_evidence_expansion']['schema']);
         $this->assertSame('EXACT_LINKED_STATUS_ENTRIES_ONLY',
             $result['parent_evidence_expansion']['candidate_extraction']);
@@ -93,6 +98,8 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8']),
             $this->assertSame('NOT_ASSESSED', $candidate['legal_effect']);
             $this->assertStringStartsWith('https://peraturan.bpk.go.id/Details/',
                 $candidate['amending_metadata_url']);
+            $this->assertContains($candidate['link_identity'],
+                ['EXACT_SLUG_MATCH', 'LINK_LABEL_ONLY_DETAILS_ID']);
         }
 
         $second = $service->expandBatch($result);
@@ -101,9 +108,9 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8']),
         $this->assertSame(3, $second['parent_evidence_expansion']['total_version_candidates']);
         $this->assertCount(2, $second['edges']);
 
-        // Already-cached V1 candidates might be spurious; discard/re-read them.
+        // Already-cached V2 candidates might be spurious; discard/re-read them.
         $legacy = $second;
-        $legacy['parent_evidence_expansion']['schema'] = 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V1';
+        $legacy['parent_evidence_expansion']['schema'] = 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V2';
         $legacy['version_candidates'][] = [
             'id' => 'UU-23-2014::UU-2-2014', 'instrument_id' => 'UU-23-2014',
             'amending_candidate_id' => 'UU-2-2014', 'legal_effect' => 'NOT_ASSESSED',
