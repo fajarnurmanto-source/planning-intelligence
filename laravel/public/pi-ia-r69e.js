@@ -19,7 +19,7 @@
     {id:'superior',label:'PI Superior',subtitle:'Pusat keputusan lintas aplikasi',items:[
       {label:'Beranda',href:'./index.html',key:'home'},
       {label:'Agenda review',href:'./index.html#actions-title'},
-      {label:'Analisis AI',href:'./ai-decision.html'},
+      {label:'Analisis AI',href:'./ai-gateway.html'},
     ]},
     {id:'evidence',label:'Evidence Intelligence',subtitle:'Dokumen, bukti, kode dan provenance',items:[
       {label:'Dokumen & bukti',href:'./index.html#sources-title'},
