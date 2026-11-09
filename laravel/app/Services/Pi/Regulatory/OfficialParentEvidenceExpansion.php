@@ -33,7 +33,7 @@ final class OfficialParentEvidenceExpansion
         // for an actual listed amending instrument. Never retain that legacy list.
         if (isset($graph['parent_evidence_expansion'])
             && ($graph['parent_evidence_expansion']['schema'] ?? null)
-                !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V2') {
+                !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V3') {
             $previous = [];
             $priorVersionList = [];
         }
@@ -73,7 +73,7 @@ final class OfficialParentEvidenceExpansion
             $attempted++;
             $record = ['id' => $node['id'], 'attempted_at' => now()->toIso8601String(),
                 'result' => 'OFFICIAL_METADATA_UNAVAILABLE_RETRY', 'source_html_sha256' => null,
-                'constitutional_reference_found' => false, 'amendment_mentions' => 0];
+                'constitutional_reference_found' => false, 'amendment_mentions' => 0, 'parser_diagnostics' => null];
             try {
                 $details = $this->readOfficialDetails($node);
                 $record['result'] = 'OFFICIAL_METADATA_ABSTRACT_READ';
@@ -136,12 +136,14 @@ final class OfficialParentEvidenceExpansion
                         'relation' => 'OFFICIAL_STATUS_LISTED_AS_AMENDING_CANDIDATE',
                         'evidence_url' => $node['metadata_url'],
                         'amending_metadata_url' => $candidate['metadata_url'],
+                        'link_identity' => $candidate['link_identity'],
                         'source_html_sha256' => $details['sha256'],
                         'legal_effect' => 'NOT_ASSESSED',
                     ];
                     $newChanges++;
                 }
                 $record['amendment_mentions'] = count($details['amendment_mentions']);
+                $record['parser_diagnostics'] = $details['parser_diagnostics'];
             } catch (Throwable $error) {
                 $record['error_type'] = 'OFFICIAL_PROVIDER_OR_IDENTITY_UNAVAILABLE';
             }
@@ -150,7 +152,7 @@ final class OfficialParentEvidenceExpansion
 
         $graph['version_candidates'] = array_values($versionCandidates);
         $graph['parent_evidence_expansion'] = [
-            'schema' => 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V2',
+            'schema' => 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V3',
             'last_run_at' => now()->toIso8601String(),
             'attempted_this_run' => $attempted,
             'read_this_run' => $read,
@@ -230,27 +232,37 @@ final class OfficialParentEvidenceExpansion
         $amendments = [];
         $inStatus = false;
         $inAmendingList = false;
+        $diagnostics = ['status_seen' => false, 'amendment_heading_seen' => false,
+            'linked_uu_labels_seen' => 0, 'rejected_link_urls' => 0];
         foreach ($xpath->query('//body//text()') ?: [] as $textNode) {
             $fragment = $this->clean((string) $textNode->nodeValue);
             if ($fragment === '') {
                 continue;
             }
-            if (preg_match('/^STATUS\s+PERATURAN$/ui', $fragment)) {
+            // Official headings may include punctuation or child nodes. Do not
+            // depend on exact equality with a particular HTML template.
+            if (mb_strlen($fragment) <= 160
+                && preg_match('/\bSTATUS\s+PERATURAN\b/ui', $fragment)) {
                 $inStatus = true;
                 $inAmendingList = false;
+                $diagnostics['status_seen'] = true;
                 continue;
             }
-            if ($inStatus && preg_match('/^ABSTRAK\s+PERATURAN$/ui', $fragment)) {
+            if ($inStatus && mb_strlen($fragment) <= 160
+                && preg_match('/\bABSTRAK\s+PERATURAN\b/ui', $fragment)) {
                 break;
             }
             if (!$inStatus) {
                 continue;
             }
-            if (preg_match('/^Diubah\s+dengan\s*:?$/ui', $fragment)) {
+            if (mb_strlen($fragment) <= 160
+                && preg_match('/\bDiubah\s+dengan\b/ui', $fragment)) {
                 $inAmendingList = true;
+                $diagnostics['amendment_heading_seen'] = true;
                 continue;
             }
-            if (preg_match('/^(?:Dicabut(?:\s+sebagian)?\s+(?:dengan|oleh)|Mencabut(?:\s+sebagian)?|Mengubah|Dilaksanakan\s+dengan|Ditetapkan\s+dengan)\s*:?$/ui', $fragment)) {
+            if (mb_strlen($fragment) <= 160
+                && preg_match('/^(?:Dicabut(?:\s+sebagian)?\s+(?:dengan|oleh)|Mencabut(?:\s+sebagian)?|Mengubah|Dilaksanakan\s+dengan|Ditetapkan\s+dengan)\b/ui', $fragment)) {
                 $inAmendingList = false;
                 continue;
             }
@@ -259,7 +271,7 @@ final class OfficialParentEvidenceExpansion
             }
 
             $anchor = $textNode->parentNode;
-            for ($depth = 0; $depth < 3 && $anchor instanceof DOMElement
+            for ($depth = 0; $depth < 4 && $anchor instanceof DOMElement
                 && strtolower($anchor->tagName) !== 'a'; $depth++) {
                 $anchor = $anchor->parentNode;
             }
@@ -271,23 +283,36 @@ final class OfficialParentEvidenceExpansion
                 $label, $candidate)) {
                 continue;
             }
+            $diagnostics['linked_uu_labels_seen']++;
 
             $href = trim($anchor->getAttribute('href'));
             if (str_starts_with($href, '/Details/')) {
                 $href = 'https://peraturan.bpk.go.id'.$href;
             }
             $parts = parse_url($href);
+            $expectedSlug = '(?:uu-no-|uuno-)'.(int) $candidate[1]
+                .'-tahun-'.(int) $candidate[2];
+            // JDIH may use an ID-only Details link. Keep the candidate
+            // tied to its exact linked UU label, but DO NOT claim that an
+            // ID-only URL verifies the legal instrument's identity.
+            $path = (string) ($parts['path'] ?? '');
+            $validPath = preg_match('~^/Details/[0-9]+(?:/'.$expectedSlug.')?/?$~', $path);
             if (!is_array($parts) || ($parts['scheme'] ?? null) !== 'https'
                 || ($parts['host'] ?? null) !== 'peraturan.bpk.go.id'
                 || isset($parts['user']) || isset($parts['pass']) || isset($parts['port'])
                 || isset($parts['query']) || isset($parts['fragment'])
-                || !preg_match('~^/Details/[0-9]+/(?:uu-no-|uuno-)'.(int) $candidate[1]
-                    .'-tahun-'.(int) $candidate[2].'/?$~', (string) ($parts['path'] ?? ''))) {
+                || !$validPath) {
+                $diagnostics['rejected_link_urls']++;
                 continue;
             }
             $changeId = 'UU-'.(int) $candidate[1].'-'.(int) $candidate[2];
             if ($changeId !== $node['id']) {
-                $amendments[$changeId] = ['id' => $changeId, 'metadata_url' => $href];
+                $amendments[$changeId] = [
+                    'id' => $changeId,
+                    'metadata_url' => $href,
+                    'link_identity' => preg_match('~^/Details/[0-9]+/'.$expectedSlug.'/?$~', $path)
+                        ? 'EXACT_SLUG_MATCH' : 'LINK_LABEL_ONLY_DETAILS_ID',
+                ];
             }
             if (count($amendments) >= 12) {
                 break;
@@ -298,6 +323,7 @@ final class OfficialParentEvidenceExpansion
             'sha256' => strtoupper(hash('sha256', $html)),
             'constitutional_reference' => $constitutionalReference,
             'amendment_mentions' => array_values($amendments),
+            'parser_diagnostics' => $diagnostics,
         ];
     }
 
