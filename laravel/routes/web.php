@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AutomatedAncestryController;
+use App\Http\Controllers\Api\AiProviderStatusController;
 use App\Http\Controllers\Api\EntitlementController;
 use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\NormativePlanningReadinessController;
@@ -24,6 +25,8 @@ Route::prefix('api')->group(function (): void {
 
     Route::middleware(['auth', 'pi.tenant'])->group(function (): void {
         Route::get('/auth/session', [SessionController::class, 'show'])->name('auth.session');
+        Route::get('/ai-r69a/status', AiProviderStatusController::class)
+            ->name('pi.ai.provider-status');
         Route::post('/auth/logout', [SessionController::class, 'destroy'])->name('auth.logout');
         Route::get('/qa-subscription-r69e/entitlements', EntitlementController::class)
             ->name('pi.entitlements');
