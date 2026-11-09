@@ -72,7 +72,7 @@
     }
     if (data.parent_evidence_expansion) {
       const expanded = data.parent_evidence_expansion
-      if (expanded.schema !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V3' ||
+      if (expanded.schema !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V4' ||
           expanded.candidate_extraction !== 'EXACT_LINKED_STATUS_ENTRIES_ONLY' ||
           expanded.status !== 'PARTIAL_OFFICIAL_METADATA_READING' ||
           expanded.legal_status !== 'ABSTAIN' ||
