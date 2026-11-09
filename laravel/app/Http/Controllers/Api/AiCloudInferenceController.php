@@ -22,7 +22,7 @@ final class AiCloudInferenceController extends Controller
         ]);
         $provider = $input['provider'];
         [$keyName, $modelName, $fallback] = match ($provider) {
-            'gemini' => ['GEMINI_API_KEY', 'PI_AI_GEMINI_MODEL', 'gemini-2.5-flash'],
+            'gemini' => ['GEMINI_API_KEY', 'PI_AI_GEMINI_MODEL', 'gemini-3.5-flash-lite'],
             'deepseek' => ['DEEPSEEK_API_KEY', 'PI_AI_DEEPSEEK_MODEL', 'deepseek-flash'],
             'groq' => ['GROQ_API_KEY', 'PI_AI_GROQ_MODEL', ''],
             'openrouter' => ['OPENROUTER_API_KEY', 'PI_AI_OPENROUTER_MODEL', ''],
@@ -100,9 +100,20 @@ final class AiCloudInferenceController extends Controller
                     ]);
                 $raw = $response->json('choices.0.message.content');
             }
-            if (! $response->successful() || strlen($response->body()) > 131072
+            if (! $response->successful()) {
+                $code = match ($response->status()) {
+                    400 => 'CLOUD_INVALID_REQUEST',
+                    401, 403 => 'CLOUD_ACCESS_DENIED',
+                    404 => 'CLOUD_MODEL_UNAVAILABLE',
+                    429 => 'CLOUD_RATE_LIMITED',
+                    500, 502, 503, 504 => 'CLOUD_PROVIDER_TEMPORARILY_UNAVAILABLE',
+                    default => 'CLOUD_RESPONSE_UNAVAILABLE',
+                };
+                return $this->reject($code, 502);
+            }
+            if (strlen($response->body()) > 131072
                 || ! is_string($raw) || strlen($raw) > 65536) {
-                return $this->reject('CLOUD_RESPONSE_UNAVAILABLE', 502);
+                return $this->reject('CLOUD_EMPTY_CONTENT_OR_OVERSIZE', 502);
             }
             $brief = json_decode($raw, true, 64, JSON_THROW_ON_ERROR);
             if (! is_array($brief)
