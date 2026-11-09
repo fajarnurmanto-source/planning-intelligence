@@ -58,6 +58,10 @@ final class NormativePlanningReadinessTest extends TestCase
             ->assertJsonPath('candidate_provision_to_planning_edges.0.evidence_status', 'METADATA_LOCATOR_ONLY_PDF_NOT_PINNED')
             ->assertJsonPath('candidate_provision_to_planning_edges.0.review_status', 'REVIEW_REQUIRED')
             ->assertJsonPath('candidate_provision_to_planning_edges.0.legal_effect', 'NOT_ASSESSED')
+            ->assertJsonPath('candidate_provision_to_planning_edges.0.source_issued_on', '2025-08-15')
+            ->assertJsonPath('candidate_provision_to_planning_edges.0.target_issued_on', '2025-07-07')
+            ->assertJsonPath('candidate_provision_to_planning_edges.0.source_postdates_target', true)
+            ->assertJsonPath('candidate_provision_to_planning_edges.0.temporal_review_status', 'FINAL_INSTRUMENT_POSTDATES_TARGET_REVIEW_DRAFT_REFERENCE')
             ->assertJsonCount(2, 'documents')
             ->assertJsonCount(0, 'verified_provision_to_planning_edges');
     }
