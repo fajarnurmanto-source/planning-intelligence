@@ -8,7 +8,13 @@
 
   const errors = {
     PROVIDER_NOT_CONFIGURED: 'API key atau model provider belum tersedia di backend.',
-    CLOUD_RESPONSE_UNAVAILABLE: 'Provider cloud belum merespons atau akses ditolak.',
+    CLOUD_RESPONSE_UNAVAILABLE: 'Respons dari provider cloud tidak dapat digunakan.',
+    CLOUD_INVALID_REQUEST: 'Provider menolak format permintaan. Perlu perbaikan payload aplikasi.',
+    CLOUD_ACCESS_DENIED: 'Provider menolak akses model (HTTP 401/403). Periksa izin proyek/API.',
+    CLOUD_MODEL_UNAVAILABLE: 'Model yang dipilih tidak tersedia untuk proyek/API key ini (HTTP 404).',
+    CLOUD_RATE_LIMITED: 'Batas kuota atau frekuensi permintaan provider tercapai (HTTP 429).',
+    CLOUD_PROVIDER_TEMPORARILY_UNAVAILABLE: 'Provider mengalami gangguan sementara (HTTP 5xx).',
+    CLOUD_EMPTY_CONTENT_OR_OVERSIZE: 'Provider merespons tetapi teks hasil kosong atau terlalu besar.',
     CLOUD_OUTPUT_CONTRACT_FAILED: 'Model tidak menghasilkan format telaah yang dipersyaratkan.',
     CLOUD_UNSUPPORTED_EVIDENCE: 'Jawaban mengandung referensi yang tidak ada dalam bukti resmi.',
     LOCAL_AI_PROVIDER_UNAVAILABLE: 'Ollama atau model lokal belum tersedia.',
