@@ -16,7 +16,7 @@ final class AiProviderStatusController extends Controller
         $providers = [];
         foreach ([
             'ollama' => ['model_key' => 'PI_AI_OLLAMA_MODEL', 'default' => 'gemma3:1b', 'key' => null],
-            'gemini' => ['model_key' => 'PI_AI_GEMINI_MODEL', 'default' => 'gemini-2.5-flash', 'key' => 'GEMINI_API_KEY'],
+            'gemini' => ['model_key' => 'PI_AI_GEMINI_MODEL', 'default' => 'gemini-3.5-flash-lite', 'key' => 'GEMINI_API_KEY'],
             'deepseek' => ['model_key' => 'PI_AI_DEEPSEEK_MODEL', 'default' => 'deepseek-flash', 'key' => 'DEEPSEEK_API_KEY'],
             'groq' => ['model_key' => 'PI_AI_GROQ_MODEL', 'default' => '', 'key' => 'GROQ_API_KEY'],
             'openrouter' => ['model_key' => 'PI_AI_OPENROUTER_MODEL', 'default' => '', 'key' => 'OPENROUTER_API_KEY'],
