@@ -18,6 +18,7 @@
   <script defer src="./planning-program-r70k.js"></script>
   <script defer src="./normative-root-r70l.js"></script>
   <script defer src="./regulatory-discovery-r70o.js"></script>
+  <script defer src="./regulatory-ancestry-r70r.js"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -113,6 +114,16 @@
         <p id="r70o-status" class="r70g-status" role="status" aria-live="polite">Belum melakukan permintaan daring. Masukkan kata kunci untuk memulai.</p>
         <div id="r70o-results" class="r70g-stack" aria-label="Kandidat dokumen hukum hasil penelusuran"></div>
         <p class="r70h-caveat">PENTING: Hasil pencarian bukan sensus lengkap revisi, pembuktian keberlakuan, konfirmasi naskah PDF, atau penilaian harmonisasi. Kegagalan menemukan hasil tidak membuktikan dokumen tidak ada. REVIEW_REQUIRED · AMENDMENT_CHAIN_INCOMPLETE · ABSTAIN; penghitungan anggaran dan produksi tetap ditutup.</p>
+      </section>
+      <section class="panel r70r-panel" aria-labelledby="r70r-title">
+        <div class="panel-heading"><div>
+          <span class="section-number">04C · AUTOMATED NORMATIVE ANCESTRY · R70R</span>
+          <h2 id="r70r-title">Sistem menelusuri dasar hukum dan calon aturan induk</h2>
+          <p>Tanpa perlu mengetik kata kunci, Laravel mengambil abstrak resmi Permendagri 10/2025 dan 86/2017 dari JDIH BPK, membaca bagian dasar hukum, lalu membangun jejak rujukan nasional ke UU, Perpres, Permendagri, serta UUD bila tercantum. Cache diperbarui otomatis ketika kedaluwarsa; pembaruan terjadwal berlaku jika scheduler Laravel aktif.</p>
+        </div></div>
+        <p id="r70r-status" class="r70g-status" role="status" aria-live="polite">Memulai penelusuran otomatis sumber hukum resmi…</p>
+        <div id="r70r-results" class="r70g-stack" aria-label="Kandidat aturan induk dari sumber resmi yang ditelusuri tanpa input pengguna"></div>
+        <p class="r70h-caveat">Cakupan implementasi saat ini: dua dokumen awal dan kutipan dasar hukumnya. Resolusi semua induk hingga akar, seluruh perubahan/pencabutan, pembuktian berlaku pada tanggal kasus, dan keputusan harmonisasi masih perlu diproses otomatis pada tahap berikutnya. Temuan ini bukan kesimpulan hukum; REVIEW EXCEPTION ONLY · ABSTAIN · NUMERIC BLOCKED · PRODUCTION DENIED.</p>
       </section>
       <div class="reg-columns">
         <section class="panel"><div class="panel-heading"><div><span class="section-number">05 · SOURCE INTEGRITY</span><h2>Sidik jari sumber</h2></div></div><dl class="r70g-digests"><dt>Ledger R70C</dt><dd id="r70g-ledger-sha">—</dd><dt>Scope R70D</dt><dd id="r70g-scope-sha">—</dd></dl><p class="r70g-explain">R70F mengecek tautan hash ledger-scope sebelum proyeksi. Perubahan sumber di tengah proses akan menolak hasil.</p></section>
