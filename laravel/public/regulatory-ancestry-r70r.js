@@ -49,11 +49,13 @@
     for (const item of data.nodes) {
       if (typeof item.id !== 'string' || !/^(?:UUD-1945|(?:UU|PERPRES|PERMENDAGRI)-[0-9]{1,4}-[0-9]{4})$/.test(item.id) ||
           ids.has(item.id) || !['UUD', 'UU', 'PERPRES', 'PERMENDAGRI'].includes(item.kind) ||
-          !['PINNED_METADATA_FETCHED', 'CITED_IDENTITY_NOT_YET_RESOLVED'].includes(item.official_resolution)) {
+          !['PINNED_METADATA_FETCHED', 'CITED_IDENTITY_NOT_YET_RESOLVED', 'OFFICIAL_CATALOG_IDENTITY_CANDIDATE'].includes(item.official_resolution)) {
         throw Error('Node hukum tidak sesuai kontrak.')
       }
       if (item.metadata_url !== null && !permitted(item.metadata_url, 'details')) throw Error('Sumber induk tidak sah.')
       if (item.search_url !== null && !permitted(item.search_url, 'search')) throw Error('Pencarian induk tidak sah.')
+      if (item.official_resolution === 'OFFICIAL_CATALOG_IDENTITY_CANDIDATE' &&
+          !permitted(item.metadata_url, 'details')) throw Error('Bukti identitas katalog tidak sah.')
       ids.set(item.id, item)
     }
     for (const item of data.seed_documents) {
@@ -80,6 +82,20 @@
       data.edges.length + ' kutipan dasar hukum ditemukan; ' + data.unresolved_parent_count +
       ' identitas induk masih memerlukan penautan otomatis ke naskah resmi.')
     put(intro, 'small', 'Ini bukan inventaris regulasi menyeluruh. Penyebutan di bagian dasar hukum bukan otomatis hubungan delegasi, tingkat hierarki, atau kepastian hukum.')
+    const batch = data.parent_resolution_batch
+    if (batch) {
+      if (batch.schema !== 'PI_R70S_OFFICIAL_PARENT_RESOLVER_V1' ||
+          batch.traversal_status !== 'PARTIAL_METADATA_IDENTITY_ONLY' ||
+          batch.legal_status !== 'ABSTAIN' ||
+          batch.amendment_census !== 'NOT_EXHAUSTIVELY_VERIFIED' ||
+          !Number.isInteger(batch.catalog_matched_count) ||
+          batch.remaining_unresolved_count !== data.unresolved_parent_count) {
+        throw Error('Kontrak pencocokan induk tidak sesuai.')
+      }
+      put(intro, 'p', 'R70S · Penautan katalog otomatis: ' + batch.catalog_matched_count +
+        ' identitas memiliki calon halaman metadata resmi, ' +
+        batch.remaining_unresolved_count + ' masih belum ditemukan secara tepat.')
+    }
 
     const nodeById = new Map(data.nodes.map(n => [n.id, n]))
     for (const doc of data.seed_documents) {
@@ -94,7 +110,9 @@
         const line = put(card, 'p', parent.id + ' · ' +
           (parent.official_resolution === 'PINNED_METADATA_FETCHED'
             ? 'metadata sumber awal berhasil diambil'
-            : 'identitas tercantum, tetapi halaman induknya belum terverifikasi'))
+            : parent.official_resolution === 'OFFICIAL_CATALOG_IDENTITY_CANDIDATE'
+              ? 'kandidat identitas ditemukan di katalog resmi; isi dan status hukum belum diperiksa'
+              : 'identitas tercantum, tetapi halaman induknya belum terverifikasi'))
         if (parent.metadata_url) link(line, ' Buka aturan ↗', parent.metadata_url, 'details')
         else if (parent.search_url) link(line, ' Pencarian sumber resmi ↗', parent.search_url, 'search')
       }
