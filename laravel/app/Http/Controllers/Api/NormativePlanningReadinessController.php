@@ -54,6 +54,33 @@ final class NormativePlanningReadinessController extends Controller
                 'pdf_snapshot_state' => $document['pdf_snapshot_state'],
             ], $lineage['documents']);
 
+            $sourceDocuments = array_column($lineage['documents'], null, 'id');
+            $candidateEdges = [];
+            foreach ($lineage['relations'] as $relation) {
+                if ($relation['type'] !== 'PLANNING_DOCUMENT_NORMATIVE_REFERENCE') {
+                    continue;
+                }
+                $source = $sourceDocuments[$relation['source_document_id']] ?? null;
+                if (!is_array($source)) {
+                    throw new RuntimeException('Normative candidate source is absent.');
+                }
+                $candidateEdges[] = [
+                    'id' => $relation['id'],
+                    'from_document_id' => $relation['from'],
+                    'to_planning_document_id' => $relation['to'],
+                    'source_document_id' => $source['id'],
+                    'source_metadata_url' => $source['metadata_url'],
+                    'provision_locator' => $relation['source_locator'],
+                    'evidence_summary' => $relation['evidence_summary'],
+                    'pdf_snapshot_state' => $source['pdf_snapshot_state'],
+                    'relation_type' => $relation['type'],
+                    'evidence_status' => 'METADATA_LOCATOR_ONLY_PDF_NOT_PINNED',
+                    'mapping_status' => 'MAPPING_CANDIDATE',
+                    'review_status' => 'REVIEW_REQUIRED',
+                    'legal_effect' => 'NOT_ASSESSED',
+                ];
+            }
+
             // Neither R70J nor R70U establishes a provision-level, time-scoped
             // APPLIES_TO edge between these documents and a normative provision.
             // No legal alignment can be calculated from the available evidence.
@@ -68,6 +95,8 @@ final class NormativePlanningReadinessController extends Controller
                 'normative_citation_count' => count($graph['edges']),
                 'unresolved_normative_identity_count' => $unresolved,
                 'verified_provision_to_planning_edges' => [],
+                'candidate_provision_to_planning_edges' => $candidateEdges,
+                'candidate_edge_count' => count($candidateEdges),
                 'crosswalk_status' => 'NO_VERIFIED_PROVISION_TO_PLANNING_EDGE',
                 'readiness' => 'ABSTAIN',
                 'blockers' => [
