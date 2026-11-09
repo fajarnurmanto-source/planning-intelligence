@@ -27,4 +27,4 @@ Artisan::command('pi:regulatory-ancestry:refresh', function () {
 
 // Runs automatically when an authorized Laravel scheduler worker is active.
 // The authenticated read model also refreshes on a cache miss as a fallback.
-Schedule::command('pi:regulatory-ancestry:refresh')->dailyAt('03:30');
+Schedule::command('pi:regulatory-ancestry:refresh')->dailyAt('03:30')->timezone('Asia/Jakarta');
