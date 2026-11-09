@@ -12,6 +12,11 @@ return [
     'planning_lineage' => [
         'registry_path' => resource_path('pi/official-planning-lineage-r70j.json'),
     ],
+    'regulatory_auto_ancestry' => [
+        // Local pilot: only pinned JDIH BPK sources; file cache needs no migration.
+        'enabled' => env('PI_REGULATORY_AUTO_ANCESTRY_ENABLED', true),
+        'cache_store' => env('PI_REGULATORY_ANCESTRY_CACHE_STORE', 'file'),
+    ],
     'regulatory_discovery' => [
         // Only this reviewed official host is supported. User input cannot control the URL.
         'jdih_bpk_enabled' => env('PI_JDIH_BPK_SEARCH_ENABLED', true),
