@@ -97,6 +97,10 @@ final class OfficialParentEvidenceExpansion
                                 'search_url' => 'https://peraturan.bpk.go.id/Search?keywords=Undang-Undang%20Dasar%201945',
                             ];
                             $graph['unresolved_parent_count'] = ($graph['unresolved_parent_count'] ?? 0) + 1;
+                            if (isset($graph['parent_resolution_batch']['remaining_unresolved_count'])) {
+                                $graph['parent_resolution_batch']['remaining_unresolved_count'] =
+                                    $graph['unresolved_parent_count'];
+                            }
                         }
                         $graph['edges'][] = [
                             'from' => $node['id'], 'to' => 'UUD-1945',
@@ -113,6 +117,9 @@ final class OfficialParentEvidenceExpansion
                     $id = $node['id'].'::'.$candidate['id'];
                     if (isset($versionCandidates[$id])) {
                         continue;
+                    }
+                    if (count($versionCandidates) >= 25) {
+                        break;
                     }
                     $versionCandidates[$id] = [
                         'id' => $id, 'instrument_id' => $node['id'],
