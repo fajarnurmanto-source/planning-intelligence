@@ -72,7 +72,7 @@
     }
     if (data.parent_evidence_expansion) {
       const expanded = data.parent_evidence_expansion
-      if (expanded.schema !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V2' ||
+      if (expanded.schema !== 'PI_R70T_PARENT_OFFICIAL_EVIDENCE_V3' ||
           expanded.candidate_extraction !== 'EXACT_LINKED_STATUS_ENTRIES_ONLY' ||
           expanded.status !== 'PARTIAL_OFFICIAL_METADATA_READING' ||
           expanded.legal_status !== 'ABSTAIN' ||
@@ -87,6 +87,7 @@
             !/^UU-[0-9]{1,4}-[0-9]{4}$/.test(change.amending_candidate_id) ||
             change.relation !== 'OFFICIAL_STATUS_LISTED_AS_AMENDING_CANDIDATE' ||
             change.legal_effect !== 'NOT_ASSESSED' ||
+            !['EXACT_SLUG_MATCH', 'LINK_LABEL_ONLY_DETAILS_ID'].includes(change.link_identity) ||
             !/^[A-F0-9]{64}$/.test(change.source_html_sha256) ||
             !permitted(change.evidence_url, 'details') ||
             !permitted(change.amending_metadata_url, 'details')) {
@@ -156,7 +157,10 @@
       }
       for (const change of data.version_candidates) {
         const line = put(detail, 'p', change.instrument_id + ' · perubahan yang tercantum di katalog: ' +
-          change.amending_candidate_id + ' · tanggal efektif dan materi perubahan belum diverifikasi.')
+          change.amending_candidate_id + ' · ' +
+          (change.link_identity === 'EXACT_SLUG_MATCH'
+            ? 'tautan katalog cocok; ' : 'tautan katalog hanya berbasis ID; ') +
+          'tanggal efektif dan materi perubahan belum diverifikasi.')
         link(line, ' Buka instrumen pengubah ↗', change.amending_metadata_url, 'details')
         link(line, ' · Status induk ↗', change.evidence_url, 'details')
       }
