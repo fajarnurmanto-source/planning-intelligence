@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AutomatedAncestryController;
 use App\Http\Controllers\Api\AiProviderStatusController;
 use App\Http\Controllers\Api\AiEvidenceContextController;
+use App\Http\Controllers\Api\AiReviewBriefController;
 use App\Http\Controllers\Api\EntitlementController;
 use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\NormativePlanningReadinessController;
@@ -30,6 +31,8 @@ Route::prefix('api')->group(function (): void {
             ->name('pi.ai.provider-status');
         Route::get('/ai-r69a/evidence-context', AiEvidenceContextController::class)
             ->name('pi.ai.evidence-context');
+        Route::get('/ai-r69a/review-brief', AiReviewBriefController::class)
+            ->name('pi.ai.review-brief');
         Route::post('/auth/logout', [SessionController::class, 'destroy'])->name('auth.logout');
         Route::get('/qa-subscription-r69e/entitlements', EntitlementController::class)
             ->name('pi.entitlements');
