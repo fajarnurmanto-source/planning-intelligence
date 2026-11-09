@@ -31,7 +31,7 @@
       {label:'Naskah lengkap & perubahan',href:'./regulatory-sources-r70b.html',key:'naskah'},
       {label:'Jejak perubahan regulasi',href:'./regulatory-ledger-r70c.html',key:'perubahan'},
       {label:'Cakupan perubahan Pasal I',href:'./regulatory-scope-r70d.html',key:'cakupan'},
-      {label:'Laravel Regulatory R70G (QA)',href:'./regulatory-laravel-r70g.html',key:'laravel'},
+      {label:'Meja Review Terpadu (R75)',href:'./regulatory-laravel-r70g.html#r75-title',key:'laravel'},
     ]},
     {id:'performance',label:'Performance Intelligence',subtitle:'Sasaran, indikator dan target',items:[
       {label:'Perencanaan',href:'./workspace.html?pi_section=perencanaan',key:'perencanaan'},
