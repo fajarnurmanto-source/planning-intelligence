@@ -23,6 +23,7 @@ class AiProviderStatusTest extends TestCase
         $response->assertOk()
             ->assertJsonPath('schema', 'PI_R69A_AI_PROVIDER_STATUS_V1')
             ->assertJsonPath('cloud_permission', 'EXPLICIT_PER_REQUEST')
+            ->assertJsonPath('default_provider', 'gemini')
             ->assertJsonPath('numeric_comparison', 'BLOCKED')
             ->assertJsonPath('production_admission', 'DENIED')
             ->assertJsonPath('api_keys_returned', false)
