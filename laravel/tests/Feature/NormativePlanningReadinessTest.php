@@ -43,7 +43,7 @@ final class NormativePlanningReadinessTest extends TestCase
 
         $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
             ->getJson(self::URL)->assertOk()
-            ->assertHeader('Cache-Control', 'private, no-store')
+            ->assertHeader('Cache-Control', 'no-store, private')
             ->assertJsonPath('schema', 'PI_R71_NORMATIVE_PLANNING_READINESS_V1')
             ->assertJsonPath('normative_node_count', 2)
             ->assertJsonPath('normative_citation_count', 1)
