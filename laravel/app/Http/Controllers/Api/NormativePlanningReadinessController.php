@@ -64,6 +64,11 @@ final class NormativePlanningReadinessController extends Controller
                 if (!is_array($source)) {
                     throw new RuntimeException('Normative candidate source is absent.');
                 }
+                $target = $sourceDocuments[$relation['to']] ?? null;
+                if (!is_array($target)) {
+                    throw new RuntimeException('Normative candidate planning target is absent.');
+                }
+                $sourcePostdatesTarget = $source['issued_on'] > $target['issued_on'];
                 $candidateEdges[] = [
                     'id' => $relation['id'],
                     'from_document_id' => $relation['from'],
@@ -74,6 +79,12 @@ final class NormativePlanningReadinessController extends Controller
                     'evidence_summary' => $relation['evidence_summary'],
                     'pdf_snapshot_state' => $source['pdf_snapshot_state'],
                     'relation_type' => $relation['type'],
+                    'source_issued_on' => $source['issued_on'],
+                    'target_issued_on' => $target['issued_on'],
+                    'source_postdates_target' => $sourcePostdatesTarget,
+                    'temporal_review_status' => $sourcePostdatesTarget
+                        ? 'FINAL_INSTRUMENT_POSTDATES_TARGET_REVIEW_DRAFT_REFERENCE'
+                        : 'NO_POSTDATING_OBSERVED_NOT_LEGAL_VALIDATION',
                     'evidence_status' => 'METADATA_LOCATOR_ONLY_PDF_NOT_PINNED',
                     'mapping_status' => 'MAPPING_CANDIDATE',
                     'review_status' => 'REVIEW_REQUIRED',
