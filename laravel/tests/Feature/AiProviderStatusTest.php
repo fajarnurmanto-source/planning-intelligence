@@ -26,7 +26,8 @@ class AiProviderStatusTest extends TestCase
             ->assertJsonPath('numeric_comparison', 'BLOCKED')
             ->assertJsonPath('production_admission', 'DENIED')
             ->assertJsonPath('api_keys_returned', false)
-            ->assertJsonCount(4, 'providers');
+            ->assertJsonCount(7, 'providers')
+            ->assertJsonCount(5, 'cloud_providers');
         $this->assertArrayNotHasKey('api_key', $response->json('providers.0'));
     }
 }
