@@ -129,16 +129,18 @@ final class RegulatoryGenealogyTest extends TestCase
     {
         Http::preventStrayRequests();
         $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']));
-        $this->getJson('/api/qa-regulatory-r74/taxonomy')->assertOk()
+        $catalogue = $this->getJson('/api/qa-regulatory-r74/taxonomy')->assertOk()
             ->assertJsonPath('schema', 'PI_R74_REGULATORY_TAXONOMY_V1')
-            ->assertJsonPath('production_admission', 'DENIED')
-            ->assertHeader('Cache-Control', 'private, no-store');
-        $this->getJson(self::ENDPOINT.'?root=PP-81-2012&direction=ancestors&lens=legal&depth=3')
+            ->assertJsonPath('production_admission', 'DENIED');
+        $this->assertStringContainsString('no-store', (string) $catalogue->headers->get('Cache-Control'));
+        $this->assertStringContainsString('private', (string) $catalogue->headers->get('Cache-Control'));
+        $trace = $this->getJson(self::ENDPOINT.'?root=PP-81-2012&direction=ancestors&lens=legal&depth=3')
             ->assertOk()
             ->assertJsonPath('schema', 'PI_R74_BIDIRECTIONAL_GENEALOGY_TRACE_V1')
             ->assertJsonPath('result_status', 'PARTIAL_EVIDENCE_GRAPH_NOT_LEGAL_FINDING')
-            ->assertJsonPath('numeric_comparison', 'BLOCKED')
-            ->assertHeader('Cache-Control', 'private, no-store');
+            ->assertJsonPath('numeric_comparison', 'BLOCKED');
+        $this->assertStringContainsString('no-store', (string) $trace->headers->get('Cache-Control'));
+        $this->assertStringContainsString('private', (string) $trace->headers->get('Cache-Control'));
         $this->getJson(self::ENDPOINT.'?root=NO-99-2099')->assertNotFound()
             ->assertJsonPath('code', 'UNKNOWN_REGULATORY_NODE');
         $this->getJson(self::ENDPOINT.'?root=UU-18-2008&depth=99')->assertUnprocessable();
