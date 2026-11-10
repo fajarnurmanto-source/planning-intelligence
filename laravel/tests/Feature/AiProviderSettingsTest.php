@@ -153,6 +153,9 @@ class AiProviderSettingsTest extends TestCase
 
     public function test_public_excerpts_are_sent_only_with_separate_explicit_opt_in(): void
     {
+        // This contract test intentionally makes a stale request then a valid one.
+        // Isolate the transport throttle (2/min); the production route remains throttled.
+        $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
         Storage::fake('local');
         Http::preventStrayRequests();
         $user = User::factory()->create([
