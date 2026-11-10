@@ -58,7 +58,7 @@ jobs:
         run: node --test laravel/tests/js/regulatory-r73.test.cjs
 
   laravel-regression:
-    name: Laravel R72 R73 and AI gateway regression (PHP 8.5)
+    name: Laravel source-independent guard regression (PHP 8.5)
     runs-on: ubuntu-latest
     timeout-minutes: 12
     defaults:
@@ -76,5 +76,9 @@ jobs:
         run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
       - name: Install locked Laravel dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
-      - name: Focused Laravel PHPUnit regression
-        run: php vendor/bin/phpunit --filter 'RegulatoryChangeTraceTest|AiProviderSettingsTest|AiEvidenceContextTest'
+      - name: PHP guards that do not need local regulatory source snapshots
+        run: >-
+          php vendor/bin/phpunit --filter
+          'test_only_tenant_administrators_can_view_provider_settings|test_admin_can_save_encrypted_credentials_without_exposing_secrets|test_password_is_required_to_modify_or_delete_credentials|test_evidence_context_requires_authenticated_tenant|test_change_trace_requires_authenticated_tenant|test_tampered_or_unapproved_source_is_rejected'
+      - name: Declare real-data test boundary
+        run: echo 'PI_GITHUB_REAL_DATA_E2E=NOT_RUN_PRIVATE_PINNED_SOURCE_UNAVAILABLE; full 13-test suite requires local Windows evidence snapshots'
