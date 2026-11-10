@@ -5,6 +5,8 @@
   let providers = []
   let context = null
   let output = null
+  let excerptPreview = null
+  let excerptFocus = ''
 
   const errors = {
     PROVIDER_NOT_CONFIGURED: 'API key atau model provider belum tersedia di backend.',
@@ -24,6 +26,7 @@
     LOCAL_AI_INFERENCE_UNAVAILABLE: 'Inferensi lokal tidak dapat dijalankan.',
     AI_EVIDENCE_CONTEXT_UNAVAILABLE: 'Paket bukti regulasi belum siap.',
     AI_REVIEW_BRIEF_UNAVAILABLE: 'Paket telaah deterministik belum siap.',
+    PUBLIC_EXCERPTS_NOT_AVAILABLE: 'Kutipan regulasi publik tidak tersedia atau belum terverifikasi untuk dikirim.',
   }
 
   function feedback(message, error = false) {
@@ -53,7 +56,17 @@
     return data
   }
 
+  function clearExcerptPreview() {
+    excerptPreview = null
+    excerptFocus = ''
+    el('approvedExcerpts').checked = false
+    el('approvedExcerpts').disabled = true
+    el('excerptPreviewWrap').hidden = true
+    el('excerptPreview').textContent = ''
+  }
+
   function clearApproval() {
+    clearExcerptPreview()
     el('approvedFocus').checked = false
     el('approvedEvidence').checked = false
     el('approvedLocal').checked = false
@@ -117,6 +130,44 @@
     }, null, 2)
   }
 
+  async function previewPublicExcerpts() {
+    const focus = el('focus').value.trim()
+    if (!context || !Array.isArray(context.documents) || !focus) {
+      feedback('Isi pertanyaan terlebih dahulu sebelum mempratinjau kutipan.', true)
+      return
+    }
+    clearExcerptPreview()
+    const button = el('previewExcerptsButton')
+    button.disabled = true
+    feedback('Memeriksa kutipan publik terverifikasi tanpa memanggil provider AI…')
+    try {
+      const data = await getJson('/api/ai-r69a/evidence-context?public_excerpt_preview=1&focus=' +
+        encodeURIComponent(focus))
+      if (el('focus').value.trim() !== focus || data.preview_focus !== focus) {
+        throw new Error('Pertanyaan berubah saat pratinjau diproses. Ulangi pratinjau.')
+      }
+      const excerpts = Array.isArray(data.public_excerpt_preview) ? data.public_excerpt_preview : []
+      if (excerpts.length === 0) {
+        throw new Error('Belum tersedia kutipan publik terverifikasi untuk pertanyaan ini.')
+      }
+      const previewText = excerpts.map(item =>
+        [item.source_id + ' · halaman ' + item.pdf_page + ' · ' + item.source_section,
+          'SHA256 sumber: ' + item.excerpt_sha256,
+          item.excerpt_text + (item.excerpt_truncated ? ' […] (kutipan dipotong)' : '')].join('\n')
+      ).join('\n\n')
+      el('excerptPreview').textContent = previewText
+      el('excerptPreviewWrap').hidden = false
+      el('excerptPreviewWrap').open = true
+      excerptPreview = excerpts
+      excerptFocus = focus
+      el('approvedExcerpts').disabled = false
+      feedback(excerpts.length + ' kutipan terbatas siap ditinjau. Centang persetujuan kutipan hanya jika ingin mengirimkannya ke cloud.')
+    } catch (error) {
+      clearExcerptPreview()
+      feedback('Pratinjau gagal: ' + String(error.message || error), true)
+    } finally { button.disabled = false }
+  }
+
   function refreshProvider() {
     clearApproval()
     const id = el('provider').value
@@ -158,7 +209,7 @@
     listItems('briefProofs', proofs)
     el('briefMeta').textContent = deterministic
       ? 'Paket deterministik · tanpa inferensi AI · review manusia wajib'
-      : `Provider: ${response.provider} · Model: ${response.model} · review manusia wajib`
+      : `Provider: ${response.provider} · Model: ${response.model} · ${response.public_excerpt_mode === 'EXPLICIT_OPT_IN' ? response.public_excerpt_count + ' kutipan publik disetujui' : 'metadata saja'} · review manusia wajib`
     el('resultStatus').textContent = deterministic ? 'PAKET BUKTI' : `DRAF ${brief.status}`
     el('resultSub').textContent = deterministic
       ? 'Paket dari Laravel, tanpa permintaan provider.'
@@ -203,11 +254,13 @@
     }
     const button = el('generateButton')
     button.disabled = true
-    feedback(remote ? 'Mengirim metadata publik tersaring ke provider yang dipilih…' : 'Memanggil Ollama lokal…')
+    const sendExcerpts = remote && el('approvedExcerpts').checked && Array.isArray(excerptPreview) && excerptFocus === focus
+    feedback(remote ? (sendExcerpts ? 'Mengirim kutipan publik yang telah disetujui…' : 'Mengirim metadata publik tersaring…') : 'Memanggil Ollama lokal…')
     try {
       const endpoint = remote ? '/api/ai-r69a/cloud-inference' : '/api/ai-r69a/local-inference'
       const payload = remote
-        ? {provider, focus, approved_focus: true, approved_public_evidence: true}
+        ? {provider, focus, approved_focus: true, approved_public_evidence: true,
+            ...(sendExcerpts ? {approved_public_excerpts: true} : {})}
         : {provider: 'ollama', focus, consent: true}
       const result = await postJson(endpoint, payload)
       renderResult(result)
@@ -219,6 +272,7 @@
       el('approvedFocus').checked = false
       el('approvedEvidence').checked = false
       el('approvedLocal').checked = false
+      clearExcerptPreview()
     }
   }
 
@@ -238,6 +292,7 @@
   async function initialize() {
     el('provider').addEventListener('change', refreshProvider)
     el('focus').addEventListener('input', () => {clearApproval(); renderContext()})
+    el('previewExcerptsButton').addEventListener('click', previewPublicExcerpts)
     el('reviewButton').addEventListener('click', showDeterministicPacket)
     el('generateButton').addEventListener('click', requestInference)
     el('downloadResult').addEventListener('click', download)

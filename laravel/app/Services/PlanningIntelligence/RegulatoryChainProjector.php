@@ -15,7 +15,7 @@ final class RegulatoryChainProjector
     private int $evidenceVerified = 0;
 
     /** @return array<string, mixed> */
-    public function project(string $ledgerPath, string $scopePath): array
+    public function project(string $ledgerPath, string $scopePath, bool $includeVerifiedExcerpts = false): array
     {
         $this->evidenceVerified = 0;
         $ledger = $this->load($ledgerPath);
@@ -72,7 +72,7 @@ final class RegulatoryChainProjector
             $this->requireSame($id.'.sequence', $entry['sequence'] ?? null, $row['sequence'] ?? null);
 
             $pdfHash = $this->fingerprint($entry['pdf_sha256'] ?? null, $id.'.pdf_sha256');
-            $ledgerEvidence = $this->evidenceRefs($entry['evidence'] ?? null, $id, $pdfHash);
+            $ledgerEvidence = $this->evidenceRefs($entry['evidence'] ?? null, $id, $pdfHash, $includeVerifiedExcerpts);
             $ledgerTargets = $entry['explicit_targets'] ?? null;
             $scopeTargets = $row['targets'] ?? null;
             $this->requireTrue(is_array($ledgerTargets) && array_is_list($ledgerTargets),
@@ -111,7 +111,7 @@ final class RegulatoryChainProjector
                     'organizational_code_count' => count($codes),
                     'organizational_codes' => $codes,
                     'review_status' => $target['review_status'] ?? 'REVIEW_REQUIRED',
-                    'evidence' => $this->evidenceRefs($target['evidence'] ?? null, $id, $pdfHash),
+                    'evidence' => $this->evidenceRefs($target['evidence'] ?? null, $id, $pdfHash, $includeVerifiedExcerpts),
                 ];
             }
 
@@ -141,7 +141,7 @@ final class RegulatoryChainProjector
             $dates = [];
             foreach (($row['dates'] ?? []) as $date) {
                 $this->requireTrue(is_array($date), $id.':DATE_NOT_OBJECT');
-                $dateEvidence = $this->evidenceRefs([$date['evidence'] ?? null], $id, $pdfHash);
+                $dateEvidence = $this->evidenceRefs([$date['evidence'] ?? null], $id, $pdfHash, $includeVerifiedExcerpts);
                 $dates[] = [
                     'type' => $date['type'] ?? null,
                     'date_as_printed' => $date['date_as_printed'] ?? null,
@@ -245,7 +245,7 @@ final class RegulatoryChainProjector
     }
 
     /** @return list<array<string, mixed>> */
-    private function evidenceRefs(mixed $items, string $id, string $pdfHash): array
+    private function evidenceRefs(mixed $items, string $id, string $pdfHash, bool $includeVerifiedExcerpts): array
     {
         $this->requireTrue(is_array($items) && array_is_list($items), $id.':EVIDENCE_NOT_LIST');
         $refs = [];
@@ -263,7 +263,7 @@ final class RegulatoryChainProjector
             $this->requireSame($id.':EXCERPT_HASH_MISMATCH', $excerptHash,
                 strtoupper(hash('sha256', $excerpt)));
             $this->evidenceVerified++;
-            $refs[] = [
+            $ref = [
                 'source_id' => $id,
                 'pdf_sha256' => $pdfHash,
                 'pdf_page' => $page,
@@ -271,6 +271,10 @@ final class RegulatoryChainProjector
                 'excerpt_sha256' => $excerptHash,
                 'review_status' => $item['review_status'] ?? ($item['status'] ?? 'REVIEW_REQUIRED'),
             ];
+            if ($includeVerifiedExcerpts) {
+                $ref['excerpt'] = $excerpt;
+            }
+            $refs[] = $ref;
         }
 
         return $refs;

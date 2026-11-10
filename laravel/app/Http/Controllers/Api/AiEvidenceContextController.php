@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\PlanningIntelligence\RegulatoryChainProjector;
+use App\Services\PlanningIntelligence\PublicRegulatoryExcerptSelector;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Throwable;
 
 /**
@@ -13,12 +15,20 @@ use Throwable;
  */
 final class AiEvidenceContextController extends Controller
 {
-    public function __invoke(RegulatoryChainProjector $projector): JsonResponse
+    public function __invoke(Request $request, RegulatoryChainProjector $projector, PublicRegulatoryExcerptSelector $selector): JsonResponse
     {
+        $withPublicExcerpts = $request->query('public_excerpt_preview') === '1';
+        $focus = '';
+        if ($withPublicExcerpts) {
+            $focus = trim((string) $request->validate([
+                'focus' => ['required', 'string', 'max:300'],
+            ])['focus']);
+        }
         try {
             $model = $projector->project(
                 (string) config('pi.regulatory.ledger_path'),
                 (string) config('pi.regulatory.scope_path'),
+                $withPublicExcerpts,
             );
 
             $documents = [];
@@ -48,7 +58,7 @@ final class AiEvidenceContextController extends Controller
                 ];
             }
 
-            return response()->json([
+            $payload = [
                 'schema' => 'PI_R69A_LARAVEL_AI_EVIDENCE_CONTEXT_V1',
                 'tenant_id' => $model['tenant_id'],
                 'source_schema' => $model['schema'],
@@ -61,7 +71,14 @@ final class AiEvidenceContextController extends Controller
                 'legal_harmonization' => 'NOT_ASSESSED',
                 'numeric_comparison' => 'BLOCKED',
                 'production_admission' => 'DENIED',
-            ])->header('Cache-Control', 'private, no-store');
+            ];
+            if ($withPublicExcerpts) {
+                $payload['public_excerpt_preview'] = $selector->select($model, $focus);
+                $payload['preview_focus'] = $focus;
+                $payload['preview_provider_called'] = false;
+            }
+
+            return response()->json($payload)->header('Cache-Control', 'private, no-store');
         } catch (Throwable $error) {
             report($error);
 

@@ -141,9 +141,79 @@ class AiProviderSettingsTest extends TestCase
         $response->assertOk()->assertJsonPath('provider', 'gemini')
             ->assertJsonPath('model', 'gemini-3.5-flash-lite')
             ->assertJsonPath('brief.status', 'REVIEW_REQUIRED')
+            ->assertJsonPath('public_excerpt_mode', 'METADATA_ONLY')
+            ->assertJsonPath('public_excerpt_count', 0)
             ->assertJsonPath('human_review', 'REQUIRED');
         $this->assertStringNotContainsString($key, $response->getContent());
-        Http::assertSent(fn ($request) => $request->hasHeader('x-goog-api-key', $key));
+        Http::assertSent(fn ($request) => $request->hasHeader('x-goog-api-key', $key)
+            && ! str_contains($request->data()['contents'][0]['parts'][0]['text'],
+                'approved_public_excerpt_snippets'));
+        Http::assertSentCount(1);
+    }
+
+    public function test_public_excerpts_are_sent_only_with_separate_explicit_opt_in(): void
+    {
+        Storage::fake('local');
+        Http::preventStrayRequests();
+        $user = User::factory()->create([
+            'role' => 'institution_admin',
+            'password' => 'test-admin-password-123',
+        ]);
+        $key = 'test-GEMINI-key-1234567890';
+        $this->actingAs($user)->putJson('/api/ai-r69a/provider-settings/gemini', [
+            'model' => 'gemini-3.5-flash-lite',
+            'api_key' => $key,
+            'password' => 'test-admin-password-123',
+        ])->assertOk();
+
+        $preview = $this->actingAs($user)->getJson(
+            '/api/ai-r69a/evidence-context?public_excerpt_preview=1&focus=perubahan%20lampiran'
+        )->assertOk()->json('public_excerpt_preview');
+        $this->assertNotEmpty($preview);
+        $first = $preview[0];
+        $ref = [
+            'source_id' => $first['source_id'],
+            'pdf_page' => $first['pdf_page'],
+            'excerpt_sha256' => $first['excerpt_sha256'],
+        ];
+        $reply = json_encode([
+            'status' => 'REVIEW_REQUIRED',
+            'summary' => 'Kutipan pada halaman bukti membutuhkan review perubahan lampiran.',
+            'uncertainties' => ['Kutipan pendek tidak cukup untuk keputusan hukum.'],
+            'questions_for_reviewer' => ['Apakah perubahan lampiran konsisten dengan dokumen utuh?'],
+            'evidence_refs' => [$ref],
+        ]);
+        Http::fake(['https://generativelanguage.googleapis.com/*' => Http::response([
+            'candidates' => [['content' => ['parts' => [['text' => $reply]]]]],
+        ], 200)]);
+
+        $response = $this->actingAs($user)->postJson('/api/ai-r69a/cloud-inference', [
+            'provider' => 'gemini',
+            'focus' => 'perubahan lampiran',
+            'approved_focus' => true,
+            'approved_public_evidence' => true,
+            'approved_public_excerpts' => true,
+        ]);
+        $response->assertOk()
+            ->assertJsonPath('public_excerpt_mode', 'EXPLICIT_OPT_IN')
+            ->assertJsonPath('human_review', 'REQUIRED')
+            ->assertJsonPath('legal_harmonization', 'NOT_ASSESSED')
+            ->assertJsonPath('numeric_comparison', 'BLOCKED')
+            ->assertJsonPath('production_admission', 'DENIED');
+        $this->assertGreaterThan(0, $response->json('public_excerpt_count'));
+        $this->assertStringNotContainsString($key, $response->getContent());
+        Http::assertSent(function ($request) use ($first, $key) {
+            $sent = $request->data();
+            $input = json_decode($sent['contents'][0]['parts'][0]['text'], true);
+            $excerpts = $input['approved_public_excerpt_snippets'] ?? [];
+            return $request->hasHeader('x-goog-api-key', $key)
+                && ! empty($excerpts)
+                && ! isset($input['tenant_id'])
+                && ! isset($input['pdf_content'])
+                && ($excerpts[0]['source_id'] ?? null) === $first['source_id']
+                && ($excerpts[0]['excerpt_sha256'] ?? null) === $first['excerpt_sha256']
+                && ($excerpts[0]['excerpt_text'] ?? '') !== '';
+        });
         Http::assertSentCount(1);
     }
 

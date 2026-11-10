@@ -32,5 +32,33 @@ class AiEvidenceContextTest extends TestCase
         $this->assertNotEmpty($documents);
         $this->assertArrayHasKey('evidence_anchors', $documents[0]);
         $this->assertArrayNotHasKey('api_key', $response->json());
+        $this->assertStringNotContainsString('"excerpt_text"', $response->getContent());
+    }
+
+    public function test_public_excerpt_preview_is_explicit_hash_grounded_and_provider_free(): void
+    {
+        $user = User::factory()->create(['tenant_id' => 'ID-DIY-YOG']);
+        $this->actingAs($user)->getJson('/api/ai-r69a/evidence-context?public_excerpt_preview=1')
+            ->assertUnprocessable();
+
+        $preview = $this->actingAs($user)->getJson(
+            '/api/ai-r69a/evidence-context?public_excerpt_preview=1&focus=perubahan%20lampiran'
+        )->assertOk()->assertJsonPath('preview_focus', 'perubahan lampiran')
+            ->assertJsonPath('ai_provider_called', false)
+            ->assertJsonPath('preview_provider_called', false)
+            ->assertJsonPath('numeric_comparison', 'BLOCKED')
+            ->assertJsonPath('production_admission', 'DENIED');
+
+        $excerpts = $preview->json('public_excerpt_preview');
+        $this->assertNotEmpty($excerpts);
+        $this->assertLessThanOrEqual(21, count($excerpts));
+        foreach ($excerpts as $excerpt) {
+            $this->assertSame('REVIEW_REQUIRED', $excerpt['review_status']);
+            $this->assertMatchesRegularExpression('/^[A-Fa-f0-9]{64}$/', $excerpt['excerpt_sha256']);
+            $this->assertGreaterThan(0, $excerpt['pdf_page']);
+            $this->assertSame(1, preg_match('/^.{1,320}$/us', $excerpt['excerpt_text']));
+        }
+        $this->assertArrayNotHasKey('excerpt', $preview->json('documents.0.evidence_anchors.0'));
+        $this->assertStringNotContainsString('api_key', $preview->getContent());
     }
 }

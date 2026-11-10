@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\PlanningIntelligence\AiProviderCredentialVault;
 use App\Services\PlanningIntelligence\RegulatoryChainProjector;
+use App\Services\PlanningIntelligence\PublicRegulatoryExcerptSelector;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -14,15 +15,17 @@ use Throwable;
 /** Per-request approved cloud AI review with filtered public metadata only. */
 final class AiCloudInferenceController extends Controller
 {
-    public function __invoke(Request $request, RegulatoryChainProjector $projector, AiProviderCredentialVault $vault): JsonResponse
+    public function __invoke(Request $request, RegulatoryChainProjector $projector, AiProviderCredentialVault $vault, PublicRegulatoryExcerptSelector $selector): JsonResponse
     {
         $input = $request->validate([
             'provider' => ['required', 'in:gemini,deepseek,groq,openrouter,openai'],
             'focus' => ['required', 'string', 'max:300'],
             'approved_focus' => ['required', 'accepted'],
             'approved_public_evidence' => ['required', 'accepted'],
+            'approved_public_excerpts' => ['sometimes', 'accepted'],
         ]);
         $provider = $input['provider'];
+        $withPublicExcerpts = $request->boolean('approved_public_excerpts');
         $configuration = $vault->resolve((string) $request->user()->tenant_id, $provider);
         $apiKey = $configuration['api_key'];
         $model = $configuration['model'];
@@ -33,6 +36,7 @@ final class AiCloudInferenceController extends Controller
             $projected = $projector->project(
                 (string) config('pi.regulatory.ledger_path'),
                 (string) config('pi.regulatory.scope_path'),
+                $withPublicExcerpts,
             );
             $sources = [];
             $validRefs = [];
@@ -54,12 +58,23 @@ final class AiCloudInferenceController extends Controller
                     'public_evidence_refs' => $refs,
                 ];
             }
+            $publicExcerpts = $withPublicExcerpts ? $selector->select($projected, $input['focus']) : [];
+            if ($withPublicExcerpts && $publicExcerpts === []) {
+                return $this->reject('PUBLIC_EXCERPTS_NOT_AVAILABLE', 422);
+            }
+            foreach ($publicExcerpts as $excerpt) {
+                $validRefs[$excerpt['source_id'].':'.$excerpt['pdf_page'].':'.$excerpt['excerpt_sha256']] = true;
+            }
+            $approvedContext = [
+                'approved_focus' => $input['focus'],
+                'approved_public_regulatory_metadata' => $sources,
+                'guard' => 'HUMAN_REVIEW_REQUIRED_NUMERIC_BLOCKED_LEGAL_NOT_ASSESSED',
+            ];
+            if ($withPublicExcerpts) {
+                $approvedContext['approved_public_excerpt_snippets'] = $publicExcerpts;
+            }
             try {
-                $context = json_encode([
-                    'approved_focus' => $input['focus'],
-                    'approved_public_regulatory_metadata' => $sources,
-                    'guard' => 'HUMAN_REVIEW_REQUIRED_NUMERIC_BLOCKED_LEGAL_NOT_ASSESSED',
-                ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                $context = json_encode($approvedContext, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
             } catch (JsonException) {
                 return $this->reject('APPROVED_CONTEXT_ENCODING_FAILED', 422);
             }
@@ -70,7 +85,11 @@ final class AiCloudInferenceController extends Controller
                 .'Jangan memutuskan legalitas, harmonisasi atau angka. Jawab HANYA JSON: '
                 .'status REVIEW_REQUIRED atau ABSTAIN, summary string, uncertainties array, '
                 .'questions_for_reviewer array, evidence_refs array berisi source_id, pdf_page, '
-                .'excerpt_sha256 yang persis terdapat dalam input.';
+                .'excerpt_sha256 yang persis terdapat dalam input. '
+                .'Jika approved_public_excerpt_snippets tersedia, gunakan hanya kutipan tersebut untuk '
+                .'membuat ringkasan dan pertanyaan yang spesifik dengan sumber serta halaman. '
+                .'Kutipan terpotong bukan bukti lengkap. Jika informasi kurang, pilih ABSTAIN. '
+                .'Jangan menyimpulkan legalitas atau kesesuaian angka.';
             if ($provider === 'gemini') {
                 $response = Http::connectTimeout(5)->timeout(35)->acceptJson()
                     ->withHeaders(['x-goog-api-key' => $apiKey])
@@ -152,6 +171,8 @@ final class AiCloudInferenceController extends Controller
                 'provider' => $provider,
                 'model' => $model,
                 'brief' => $brief,
+                'public_excerpt_mode' => $withPublicExcerpts ? 'EXPLICIT_OPT_IN' : 'METADATA_ONLY',
+                'public_excerpt_count' => count($publicExcerpts),
                 'human_review' => 'REQUIRED',
                 'legal_harmonization' => 'NOT_ASSESSED',
                 'numeric_comparison' => 'BLOCKED',
