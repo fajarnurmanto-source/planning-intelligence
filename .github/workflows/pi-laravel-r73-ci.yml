@@ -1,0 +1,78 @@
+name: PI Laravel regulatory excerpt R73
+
+on:
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+    paths:
+      - 'laravel/public/regulatory-change-trace-r72.*'
+      - 'laravel/public/regulatory-laravel-r70g.html'
+      - 'laravel/tests/js/regulatory-r73.test.cjs'
+      - 'laravel/tests/Feature/RegulatoryChangeTraceTest.php'
+      - 'laravel/tests/Feature/AiEvidenceContextTest.php'
+      - 'laravel/tests/Feature/AiProviderSettingsTest.php'
+      - 'laravel/app/Services/PlanningIntelligence/**'
+      - 'laravel/app/Http/Controllers/Api/**'
+      - 'laravel/routes/web.php'
+      - 'laravel/composer.json'
+      - 'laravel/composer.lock'
+      - 'laravel/phpunit.xml'
+      - '.github/workflows/pi-laravel-r73-ci.yml'
+  pull_request:
+    paths:
+      - 'laravel/public/regulatory-change-trace-r72.*'
+      - 'laravel/public/regulatory-laravel-r70g.html'
+      - 'laravel/tests/js/regulatory-r73.test.cjs'
+      - 'laravel/tests/Feature/RegulatoryChangeTraceTest.php'
+      - 'laravel/tests/Feature/AiEvidenceContextTest.php'
+      - 'laravel/tests/Feature/AiProviderSettingsTest.php'
+      - 'laravel/app/Services/PlanningIntelligence/**'
+      - 'laravel/app/Http/Controllers/Api/**'
+      - 'laravel/routes/web.php'
+      - 'laravel/composer.json'
+      - 'laravel/composer.lock'
+      - 'laravel/phpunit.xml'
+      - '.github/workflows/pi-laravel-r73-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pi-r73-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  excerpt-ui-contract:
+    name: R73 on-demand browser contract (Node 22)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax
+        run: node --check laravel/public/regulatory-change-trace-r72.js
+      - name: Secure opt-in / hash / denial behavior
+        run: node --test laravel/tests/js/regulatory-r73.test.cjs
+
+  laravel-regression:
+    name: Laravel R72 R73 and AI gateway regression (PHP 8.5)
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - name: Install locked Laravel dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: Focused Laravel PHPUnit regression
+        run: php vendor/bin/phpunit --filter 'RegulatoryChangeTraceTest|AiProviderSettingsTest|AiEvidenceContextTest'
