@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>PI · Pengaturan Penyedia AI</title>
+  <link rel="stylesheet" href="./ai-decision.css">
+  <link rel="stylesheet" href="./ai-settings.css">
+  <script defer src="./ai-settings.js"></script>
+  <script defer src="./pi-auth-shell.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand"><span class="brand-symbol">PI</span><div><strong>Planning Intelligence</strong><small>SUPERADMIN · PENGATURAN AI</small></div></div>
+    <a href="./ai-gateway.html" class="back-link">← Kembali ke AI Gateway</a>
+  </header>
+  <main class="container">
+    <div class="kicker">PI / ADMINISTRASI AI <span>AKSES ADMIN SAJA</span></div>
+    <section class="hero settings-hero">
+      <div><small class="hero-eyebrow">AI PROVIDER MANAGEMENT · LARAVEL</small><h1>Satu tempat untuk<br><em>seluruh kunci AI.</em></h1>
+        <p>Atur penyedia, model, dan API Key untuk institusi Anda. Kunci dienkripsi di server dan tidak pernah ditampilkan kembali.</p>
+      </div>
+      <aside><small>BATAS KEAMANAN</small><strong>TERSIMPAN DI SERVER.<br>HANYA ADMIN MENGELOLA.</strong><p>Setiap perubahan meminta kata sandi akun. Penggunaan AI tetap memerlukan persetujuan saat telaah.</p><b>PRODUCTION ADMISSION DENIED</b></aside>
+    </section>
+    <section id="accessNotice" class="panel"><h2>Status akses pengaturan</h2><p id="accessFeedback" role="status" aria-live="polite">Memeriksa sesi administrator…</p></section>
+    <div class="columns settings-columns">
+      <section id="settingsPanel" class="panel config" hidden aria-labelledby="settings-title">
+        <div class="panel-heading"><div><small>01 · KONFIGURASI</small><h2 id="settings-title">Kelola koneksi cloud</h2><p>API Key yang sudah tersimpan tidak akan ditampilkan kembali.</p></div><span class="pill">ADMIN ONLY</span></div>
+        <label for="provider">Penyedia AI</label>
+        <select id="provider">
+          <option value="gemini">Gemini</option><option value="deepseek">DeepSeek</option><option value="groq">Groq</option><option value="openrouter">OpenRouter</option><option value="openai">OpenAI API</option>
+        </select>
+        <div class="info-box"><span>STATUS PENYEDIA</span><strong id="state">Memuat…</strong><span id="source">Memeriksa konfigurasi.</span></div>
+        <label for="model">Nama model</label><input id="model" type="text" maxlength="100" spellcheck="false" autocomplete="off" required placeholder="Contoh: gemini-3.5-flash-lite">
+        <label for="apiKey">API Key baru</label><input id="apiKey" type="password" maxlength="512" autocomplete="off" spellcheck="false" placeholder="Kosongkan untuk mempertahankan kunci yang sudah aktif">
+        <p class="hint">Kunci hanya dikirim ke server ketika Anda menekan Simpan. Jangan tempelkan kunci di kolom pertanyaan AI atau percakapan.</p>
+        <label for="password">Kata sandi akun PI</label><input id="password" type="password" autocomplete="current-password" required placeholder="Diperlukan setiap kali menyimpan atau menghapus">
+        <div class="buttons"><button class="primary" id="save" type="button">Simpan konfigurasi</button><button class="secondary" id="remove" type="button">Hapus konfigurasi tersimpan</button></div>
+        <div id="feedback" role="status" aria-live="polite" class="feedback">Memuat pengaturan…</div>
+      </section>
+      <section class="panel evidence" aria-labelledby="notes-title">
+        <div class="panel-heading"><div><small>02 · KETENTUAN</small><h2 id="notes-title">Keamanan dan penggunaan</h2></div><span class="pill outline">PRIVATE STORAGE</span></div>
+        <ul class="settings-notes">
+          <li>Konfigurasi dipisahkan menurut tenant institusi.</li>
+          <li>Kunci disimpan terenkripsi dengan APP_KEY Laravel pada penyimpanan privat, bukan GitHub atau JavaScript.</li>
+          <li>Kolom kunci akan selalu kosong ketika halaman dibuka kembali.</li>
+          <li>Menghapus konfigurasi tersimpan dapat mengaktifkan kembali konfigurasi environment jika sebelumnya ada.</li>
+          <li>Perubahan model tidak otomatis memanggil API. Pengujian inferensi dilakukan di AI Gateway, dengan persetujuan eksplisit.</li>
+        </ul>
+        <p class="warn">Jaga kerahasiaan APP_KEY dan cadangan berkas terenkripsi. Perubahan APP_KEY tanpa migrasi dapat membuat kunci yang tersimpan tidak dapat didekripsi.</p>
+        <a class="settings-gateway-link" href="./ai-gateway.html">Buka AI Gateway untuk menguji model →</a>
+      </section>
+    </div>
+    <p class="gate">AI MAY PROPOSE · HUMAN REVIEW REQUIRED · NUMERIC COMPARISON BLOCKED · PRODUCTION DENIED</p>
+  </main>
+</body>
+</html>

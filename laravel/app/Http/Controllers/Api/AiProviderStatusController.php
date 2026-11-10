@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\PlanningIntelligence\AiProviderCredentialVault;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Laravel-native migration of R69A provider configuration discovery.
@@ -11,7 +13,7 @@ use Illuminate\Http\JsonResponse;
  */
 final class AiProviderStatusController extends Controller
 {
-    public function __invoke(): JsonResponse
+    public function __invoke(Request $request, AiProviderCredentialVault $vault): JsonResponse
     {
         $providers = [];
         foreach ([
@@ -23,7 +25,9 @@ final class AiProviderStatusController extends Controller
             'openai' => ['model_key' => 'PI_AI_OPENAI_MODEL', 'default' => '', 'key' => 'OPENAI_API_KEY'],
             'compatible' => ['model_key' => 'PI_AI_COMPAT_MODEL', 'default' => '', 'key' => 'PI_AI_COMPAT_API_KEY'],
         ] as $name => $settings) {
-            $model = trim((string) (getenv($settings['model_key']) ?: $settings['default']));
+            $cloud = isset(AiProviderCredentialVault::PROVIDERS[$name])
+                ? $vault->resolve((string) $request->user()->tenant_id, $name) : null;
+            $model = trim((string) ($cloud['model'] ?? (getenv($settings['model_key']) ?: $settings['default'])));
             $reason = 'READY_TO_ATTEMPT_NOT_TESTED';
             $valid = preg_match('~^[A-Za-z0-9_.:/-]{1,100}$~D', $model) === 1;
             if (! $valid) {
@@ -42,7 +46,8 @@ final class AiProviderStatusController extends Controller
                 }
             }
 
-            if ($valid && $settings['key'] !== null && trim((string) getenv($settings['key'])) === '') {
+            if ($valid && $settings['key'] !== null
+                && trim((string) ($cloud['api_key'] ?? getenv($settings['key']))) === '') {
                 $valid = false;
                 $reason = 'API_KEY_OR_MODEL_NOT_CONFIGURED';
             }

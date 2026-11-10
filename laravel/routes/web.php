@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AiEvidenceContextController;
 use App\Http\Controllers\Api\AiReviewBriefController;
 use App\Http\Controllers\Api\AiLocalInferenceController;
 use App\Http\Controllers\Api\AiCloudInferenceController;
+use App\Http\Controllers\Api\AiProviderSettingsController;
 use App\Http\Controllers\Api\EntitlementController;
 use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\NormativePlanningReadinessController;
@@ -31,6 +32,12 @@ Route::prefix('api')->group(function (): void {
         Route::get('/auth/session', [SessionController::class, 'show'])->name('auth.session');
         Route::get('/ai-r69a/status', AiProviderStatusController::class)
             ->name('pi.ai.provider-status');
+        Route::get('/ai-r69a/provider-settings', [AiProviderSettingsController::class, 'index'])
+            ->name('pi.ai.provider-settings');
+        Route::put('/ai-r69a/provider-settings/{provider}', [AiProviderSettingsController::class, 'save'])
+            ->middleware('throttle:5,1')->name('pi.ai.provider-settings.save');
+        Route::delete('/ai-r69a/provider-settings/{provider}', [AiProviderSettingsController::class, 'forget'])
+            ->middleware('throttle:5,1')->name('pi.ai.provider-settings.forget');
         Route::get('/ai-r69a/evidence-context', AiEvidenceContextController::class)
             ->name('pi.ai.evidence-context');
         Route::get('/ai-r69a/review-brief', AiReviewBriefController::class)

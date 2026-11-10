@@ -1,0 +1,12 @@
+.settings-hero{margin-bottom:20px}
+.settings-columns{align-items:start}
+.settings-notes{margin:0 0 22px;padding-left:22px;color:#d0e3de;line-height:1.75}
+.settings-notes li{margin:8px 0}
+.settings-gateway-link{display:inline-block;margin-top:14px;font-weight:800;text-decoration:none}
+.settings-columns .config input:not([type=checkbox]){display:block;width:100%;background:#0c2630;border:1px solid #35616a;color:#fff;border-radius:9px;padding:11px 12px;outline-offset:2px;font:inherit}
+.settings-columns .config input:focus,.settings-columns .config select:focus{outline:2px solid #a5f1c5}
+.settings-columns .hint{font-size:11px;color:#a6c4c5;line-height:1.6;margin:8px 0 16px}
+.settings-columns .feedback{margin-top:18px}
+.settings-columns .feedback.bad{color:#ffd0ab}
+.settings-columns button:disabled{cursor:not-allowed;opacity:.55}
+@media(max-width:900px){.settings-hero{grid-template-columns:1fr}}

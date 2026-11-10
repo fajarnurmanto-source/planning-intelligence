@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\PlanningIntelligence\AiProviderCredentialVault;
 use App\Services\PlanningIntelligence\RegulatoryChainProjector;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ use Throwable;
 /** Per-request approved cloud AI review with filtered public metadata only. */
 final class AiCloudInferenceController extends Controller
 {
-    public function __invoke(Request $request, RegulatoryChainProjector $projector): JsonResponse
+    public function __invoke(Request $request, RegulatoryChainProjector $projector, AiProviderCredentialVault $vault): JsonResponse
     {
         $input = $request->validate([
             'provider' => ['required', 'in:gemini,deepseek,groq,openrouter,openai'],
@@ -21,15 +22,9 @@ final class AiCloudInferenceController extends Controller
             'approved_public_evidence' => ['required', 'accepted'],
         ]);
         $provider = $input['provider'];
-        [$keyName, $modelName, $fallback] = match ($provider) {
-            'gemini' => ['GEMINI_API_KEY', 'PI_AI_GEMINI_MODEL', 'gemini-3.5-flash-lite'],
-            'deepseek' => ['DEEPSEEK_API_KEY', 'PI_AI_DEEPSEEK_MODEL', 'deepseek-flash'],
-            'groq' => ['GROQ_API_KEY', 'PI_AI_GROQ_MODEL', ''],
-            'openrouter' => ['OPENROUTER_API_KEY', 'PI_AI_OPENROUTER_MODEL', ''],
-            'openai' => ['OPENAI_API_KEY', 'PI_AI_OPENAI_MODEL', ''],
-        };
-        $apiKey = trim((string) getenv($keyName));
-        $model = trim((string) (getenv($modelName) ?: $fallback));
+        $configuration = $vault->resolve((string) $request->user()->tenant_id, $provider);
+        $apiKey = $configuration['api_key'];
+        $model = $configuration['model'];
         if ($apiKey === '' || preg_match('~^[A-Za-z0-9_.:/-]{1,100}$~D', $model) !== 1) {
             return $this->reject('PROVIDER_NOT_CONFIGURED', 503);
         }
