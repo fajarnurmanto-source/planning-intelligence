@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\RegulatoryEvidenceController;
 use App\Http\Controllers\Api\RegulatoryDiscoveryController;
 use App\Http\Controllers\Api\RegulatoryReadModelController;
 use App\Http\Controllers\Api\RegulatoryChangeTraceController;
+use App\Http\Controllers\Api\RegulatoryGenealogyController;
 use App\Http\Controllers\Auth\SessionController;
 use Illuminate\Support\Facades\Route;
 
@@ -66,6 +67,10 @@ Route::prefix('api')->group(function (): void {
             ->name('pi.regulatory.read-model');
         Route::get('/qa-regulatory-r72/change-trace', RegulatoryChangeTraceController::class)
             ->name('pi.regulatory.change-trace');
+        Route::get('/qa-regulatory-r74/taxonomy', [RegulatoryGenealogyController::class, 'catalogue'])
+            ->middleware('throttle:20,1')->name('pi.regulatory.taxonomy');
+        Route::get('/qa-regulatory-r74/genealogy', [RegulatoryGenealogyController::class, 'trace'])
+            ->middleware('throttle:20,1')->name('pi.regulatory.genealogy');
         Route::get('/qa-regulatory-r70h/evidence/{sourceId}/{excerptSha256}', RegulatoryEvidenceController::class)
             ->where(['sourceId' => '[A-Z0-9_]+', 'excerptSha256' => '[A-Fa-f0-9]{64}'])
             ->name('pi.regulatory.evidence');

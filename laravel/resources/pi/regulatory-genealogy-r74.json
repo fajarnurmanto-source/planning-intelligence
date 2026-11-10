@@ -1,0 +1,138 @@
+{
+  "schema": "PI_R74_REGULATORY_GENEALOGY_SEED_V1",
+  "catalogue_as_of": "2026-11-11",
+  "normative_policy": "SOURCE_LINKED_CANDIDATES_ONLY_NO_AUTOMATED_LEGAL_FINDING",
+  "taxonomy_source": "https://peraturan.go.id/files/uu12-2011bt.pdf",
+  "types": [
+    {"code": "UUD", "label": "UUD NRI Tahun 1945", "group": "ARTICLE_7", "rank": 1},
+    {"code": "TAP_MPR", "label": "Ketetapan MPR", "group": "ARTICLE_7", "rank": 2},
+    {"code": "UU", "label": "Undang-Undang", "group": "ARTICLE_7", "rank": 3},
+    {"code": "PERPU", "label": "Peraturan Pemerintah Pengganti Undang-Undang", "group": "ARTICLE_7", "rank": 3},
+    {"code": "PP", "label": "Peraturan Pemerintah", "group": "ARTICLE_7", "rank": 4},
+    {"code": "PERPRES", "label": "Peraturan Presiden", "group": "ARTICLE_7", "rank": 5},
+    {"code": "PERDA_PROV", "label": "Peraturan Daerah Provinsi", "group": "ARTICLE_7", "rank": 6},
+    {"code": "PERDA_KABKOTA", "label": "Peraturan Daerah Kabupaten/Kota", "group": "ARTICLE_7", "rank": 7},
+    {"code": "PERMEN", "label": "Peraturan Menteri", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERMENDAGRI", "label": "Peraturan Menteri Dalam Negeri", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_MPR", "label": "Peraturan MPR", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_DPR", "label": "Peraturan DPR", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_DPD", "label": "Peraturan DPD", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_MA", "label": "Peraturan Mahkamah Agung", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_MK", "label": "Peraturan Mahkamah Konstitusi", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_BPK", "label": "Peraturan Badan Pemeriksa Keuangan", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_KY", "label": "Peraturan Komisi Yudisial", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_BI", "label": "Peraturan Bank Indonesia", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_LEMBAGA", "label": "Peraturan Badan/Lembaga/Komisi", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERGUB", "label": "Peraturan Gubernur", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERBUP", "label": "Peraturan Bupati", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERWALI", "label": "Peraturan Wali Kota", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_DPRD", "label": "Peraturan DPRD", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_DPRD_PROV", "label": "Peraturan DPRD Provinsi", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_DPRD_KABKOTA", "label": "Peraturan DPRD Kabupaten/Kota", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_BERSAMA_KEPALA_DAERAH", "label": "Peraturan Bersama Kepala Daerah", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERDES", "label": "Peraturan Desa", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_KEPALA_DESA", "label": "Peraturan Kepala Desa", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERATURAN_BERSAMA_KEPALA_DESA", "label": "Peraturan Bersama Kepala Desa", "group": "ARTICLE_8", "rank": null},
+    {"code": "PERDAIS", "label": "Peraturan Daerah Istimewa DIY (rezim khusus)", "group": "SPECIAL_REGIONAL_SUBTYPE", "rank": null},
+    {"code": "QANUN", "label": "Qanun Aceh (rezim khusus)", "group": "SPECIAL_REGIONAL_SUBTYPE", "rank": null},
+    {"code": "KEPUTUSAN", "label": "Keputusan/penetapan", "group": "OTHER_LEGAL_INSTRUMENT", "rank": null},
+    {"code": "SURAT_EDARAN", "label": "Surat Edaran", "group": "OTHER_LEGAL_INSTRUMENT", "rank": null},
+    {"code": "INSTRUKSI", "label": "Instruksi", "group": "OTHER_LEGAL_INSTRUMENT", "rank": null}
+  ],
+  "topics": [
+    {"id": "TOPIC:PEMERINTAHAN", "label": "Pemerintahan", "broader": []},
+    {"id": "TOPIC:PELAYANAN_PUBLIK", "label": "Pelayanan Publik", "broader": ["TOPIC:PEMERINTAHAN"]},
+    {"id": "TOPIC:LINGKUNGAN", "label": "Lingkungan Hidup", "broader": []},
+    {"id": "TOPIC:PERSAMPAHAN", "label": "Persampahan", "broader": ["TOPIC:LINGKUNGAN", "TOPIC:PELAYANAN_PUBLIK"]},
+    {"id": "TOPIC:PERENCANAAN_DAERAH", "label": "Perencanaan Pembangunan Daerah", "broader": ["TOPIC:PEMERINTAHAN"]},
+    {"id": "TOPIC:PEMBENTUKAN_REGULASI", "label": "Pembentukan Regulasi", "broader": ["TOPIC:PEMERINTAHAN"]},
+    {"id": "TOPIC:SANKSI_DAERAH", "label": "Sanksi dalam Peraturan Daerah", "broader": ["TOPIC:PEMBENTUKAN_REGULASI"]}
+  ],
+  "instruments": [
+    {
+      "id": "UU-18-2008", "kind": "UU", "number": 18, "year": 2008,
+      "title": "Pengelolaan Sampah", "jurisdiction": "ID",
+      "source_url": "https://peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf",
+      "topics": ["TOPIC:PERSAMPAHAN"]
+    },
+    {
+      "id": "PP-81-2012", "kind": "PP", "number": 81, "year": 2012,
+      "title": "Pengelolaan Sampah Rumah Tangga dan Sampah Sejenis Sampah Rumah Tangga", "jurisdiction": "ID",
+      "source_url": "https://peraturan.go.id/files/pp81-2012bt.pdf",
+      "topics": ["TOPIC:PERSAMPAHAN"]
+    },
+    {
+      "id": "PERMENDAGRI-86-2017", "kind": "PERMENDAGRI", "number": 86, "year": 2017,
+      "title": "Tata Cara Perencanaan, Pengendalian dan Evaluasi Pembangunan Daerah", "jurisdiction": "ID",
+      "source_url": "https://peraturan.go.id/files/bn1312-2017bt.pdf",
+      "topics": ["TOPIC:PERENCANAAN_DAERAH"]
+    },
+    {
+      "id": "PERMENDAGRI-10-2025", "kind": "PERMENDAGRI", "number": 10, "year": 2025,
+      "title": "Pedoman Penyusunan RKPD Tahun 2026", "jurisdiction": "ID",
+      "source_url": "https://peraturan.go.id/files/permendagri-no-10-tahun-2025.pdf",
+      "topics": ["TOPIC:PERENCANAAN_DAERAH"]
+    },
+    {
+      "id": "UU-12-2011", "kind": "UU", "number": 12, "year": 2011,
+      "title": "Pembentukan Peraturan Perundang-undangan", "jurisdiction": "ID",
+      "source_url": "https://peraturan.go.id/files/uu12-2011bt.pdf",
+      "topics": ["TOPIC:PEMBENTUKAN_REGULASI", "TOPIC:SANKSI_DAERAH"]
+    },
+    {
+      "id": "UU-15-2019", "kind": "UU", "number": 15, "year": 2019,
+      "title": "Perubahan atas UU 12 Tahun 2011", "jurisdiction": "ID",
+      "source_url": "https://peraturan.bpk.go.id/Details/121716/uu-no-15-tahun-2019",
+      "topics": ["TOPIC:PEMBENTUKAN_REGULASI"]
+    },
+    {
+      "id": "UU-13-2022", "kind": "UU", "number": 13, "year": 2022,
+      "title": "Perubahan Kedua atas UU 12 Tahun 2011", "jurisdiction": "ID",
+      "source_url": "https://peraturan.go.id/files/uu13-2022.pdf",
+      "topics": ["TOPIC:PEMBENTUKAN_REGULASI"]
+    },
+    {
+      "id": "UU-1-2026", "kind": "UU", "number": 1, "year": 2026,
+      "title": "Penyesuaian Pidana", "jurisdiction": "ID",
+      "source_url": "https://www.peraturan.go.id/files/uu-no-1-tahun-2026.pdf",
+      "topics": ["TOPIC:SANKSI_DAERAH"]
+    }
+  ],
+  "provisions": [
+    {"id": "UU-18-2008:PASAL-16", "instrument_id": "UU-18-2008", "locator": "Pasal 16", "topics": ["TOPIC:PERSAMPAHAN"]},
+    {"id": "PERMENDAGRI-86-2017:PASAL-76", "instrument_id": "PERMENDAGRI-86-2017", "locator": "Pasal 76", "topics": ["TOPIC:PERENCANAAN_DAERAH"]},
+    {"id": "UU-12-2011:PASAL-15", "instrument_id": "UU-12-2011", "locator": "Pasal 15", "topics": ["TOPIC:SANKSI_DAERAH"]}
+  ],
+  "relations": [
+    {
+      "from": "PP-81-2012", "to": "UU-18-2008:PASAL-16", "type": "IMPLEMENTS_PROVISION_OF",
+      "source_url": "https://peraturan.go.id/files/pp81-2012bt.pdf",
+      "locator": "Menimbang; merujuk pelaksanaan Pasal 16 UU 18/2008",
+      "status": "PRIMARY_TEXT_LOCATOR_NOT_HASH_PINNED"
+    },
+    {
+      "from": "PERMENDAGRI-10-2025", "to": "PERMENDAGRI-86-2017:PASAL-76", "type": "IMPLEMENTS_PROVISION_OF",
+      "source_url": "https://peraturan.go.id/files/permendagri-no-10-tahun-2025.pdf",
+      "locator": "Menimbang huruf b; merujuk pelaksanaan Pasal 76 Permendagri 86/2017",
+      "status": "PRIMARY_TEXT_LOCATOR_NOT_HASH_PINNED"
+    },
+    {
+      "from": "UU-15-2019", "to": "UU-12-2011", "type": "AMENDS",
+      "source_url": "https://peraturan.bpk.go.id/Details/121716/uu-no-15-tahun-2019",
+      "locator": "Judul peraturan perubahan",
+      "status": "OFFICIAL_METADATA_NO_PROVISION_RECONCILIATION"
+    },
+    {
+      "from": "UU-13-2022", "to": "UU-12-2011", "type": "AMENDS",
+      "source_url": "https://peraturan.go.id/files/uu13-2022.pdf",
+      "locator": "Judul peraturan perubahan kedua",
+      "status": "PRIMARY_TEXT_LOCATOR_NOT_HASH_PINNED"
+    },
+    {
+      "from": "UU-1-2026", "to": "UU-12-2011:PASAL-15", "type": "AMENDS_PROVISION_OF",
+      "source_url": "https://www.peraturan.go.id/files/uu-no-1-tahun-2026.pdf",
+      "locator": "Pasal V; perubahan Pasal 15 UU 12/2011",
+      "status": "PRIMARY_TEXT_LOCATOR_NOT_HASH_PINNED"
+    }
+  ]
+}
