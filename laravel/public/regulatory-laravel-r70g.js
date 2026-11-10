@@ -311,6 +311,7 @@
 
   function sourceCard(area, item, integrity) {
     const card = node(area, 'article', 'r70g-card')
+    if (validId(item.id)) card.id = 'r70g-doc-' + item.id
     const top = node(card, 'div', 'r70g-top')
     const title = node(top, 'div')
     const role = item.document_role === 'AMENDING_REGULATION' ? 'PERUBAHAN KE-' + item.sequence : item.document_role === 'BASE_PENJABARAN_APBD' ? 'NASKAH DASAR' : 'PERATURAN PENDUKUNG'
