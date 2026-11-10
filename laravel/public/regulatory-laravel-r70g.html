@@ -11,12 +11,14 @@
   <link rel="stylesheet" href="./regulatory-scope-r70d.css">
   <link rel="stylesheet" href="./regulatory-laravel-r70g.css">
   <link rel="stylesheet" href="./regulatory-change-trace-r72.css?v=r73">
+  <link rel="stylesheet" href="./regulatory-genealogy-r74.css">
   <link rel="stylesheet" href="./planning-lineage-r70j.css">
   <link rel="stylesheet" href="./regulatory-review-r75.css">
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./regulatory-laravel-r70g.js"></script>
   <script defer src="./regulatory-change-trace-r72.js?v=r73"></script>
+  <script defer src="./regulatory-genealogy-r74.js"></script>
   <script defer src="./planning-lineage-r70j.js"></script>
   <script defer src="./planning-program-r70k.js"></script>
   <script defer src="./normative-root-r70l.js"></script>
@@ -135,6 +137,26 @@
         <p id="r70r-status" class="r70g-status" role="status" aria-live="polite">Memulai penelusuran otomatis sumber hukum resmi…</p>
         <div id="r70r-results" class="r70g-stack" aria-label="Kandidat aturan induk dari sumber resmi yang ditelusuri tanpa input pengguna"></div>
         <p class="r70h-caveat">Cakupan implementasi saat ini: dua dokumen awal dan kutipan dasar hukumnya. Resolusi semua induk hingga akar, seluruh perubahan/pencabutan, pembuktian berlaku pada tanggal kasus, dan keputusan harmonisasi masih perlu diproses otomatis pada tahap berikutnya. Temuan ini bukan kesimpulan hukum; REVIEW EXCEPTION ONLY · ABSTAIN · NUMERIC BLOCKED · PRODUCTION DENIED.</p>
+      </section>
+      <section class="panel r74-panel" aria-labelledby="r74-title">
+        <div class="panel-heading"><div>
+          <span class="section-number">04D · REGULATORY TAXONOMY &amp; GENEALOGY · R74</span>
+          <h2 id="r74-title">Telusuri induk, turunan, dan keluarga tema</h2>
+          <p>Jelajahi hierarki Pasal 7/8 dan graf hubungan resmi yang tersedia. Hubungan yuridis, riwayat perubahan, serta kedekatan tema dipisahkan. Kutipan metadata R70R hanya kandidat; sumber PDF belum diikat hash dan keputusan hukum tidak dihasilkan otomatis.</p>
+        </div></div>
+        <div id="r74-taxonomy" class="r74-taxonomy" aria-label="Ringkasan taksonomi peraturan">Memuat taksonomi hukum…</div>
+        <form id="r74-form" class="r74-controls">
+          <label for="r74-root">Regulasi atau tema</label>
+          <select id="r74-root" required><option value="">Memuat daftar…</option></select>
+          <label for="r74-direction">Arah penelusuran</label>
+          <select id="r74-direction"><option value="ancestors">Ke induk</option><option value="descendants">Ke turunan</option><option value="both">Kedua arah</option></select>
+          <label for="r74-lens">Jenis hubungan</label>
+          <select id="r74-lens"><option value="legal">Hukum / delegasi</option><option value="version">Perubahan versi</option><option value="thematic">Genealogi tematik</option><option value="all">Seluruh hubungan (berlabel)</option></select>
+          <button type="submit" class="r70h-evidence-button">Telusuri graf</button>
+        </form>
+        <p id="r74-status" class="r70g-status" role="status" aria-live="polite">Menunggu taksonomi Laravel…</p>
+        <div id="r74-results" class="r74-results" aria-label="Simpul dan relasi genealogi"></div>
+        <p class="r70h-caveat">GRAPH PARTIAL · REVIEW_REQUIRED · LEGAL_HARMONIZATION NOT_ASSESSED · NUMERIC BLOCKED · PRODUCTION DENIED. Tidak ada perubahan database atau keputusan hukum otomatis.</p>
       </section>
       <section class="panel r75-panel" aria-labelledby="r75-title">
         <div class="panel-heading"><div>
