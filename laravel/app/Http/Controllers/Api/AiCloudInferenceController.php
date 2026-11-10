@@ -23,6 +23,7 @@ final class AiCloudInferenceController extends Controller
             'approved_focus' => ['required', 'accepted'],
             'approved_public_evidence' => ['required', 'accepted'],
             'approved_public_excerpts' => ['sometimes', 'accepted'],
+            'approved_public_excerpts_sha256' => ['sometimes', 'string', 'regex:/^[A-F0-9]{64}$/'],
         ]);
         $provider = $input['provider'];
         $withPublicExcerpts = $request->boolean('approved_public_excerpts');
@@ -61,6 +62,12 @@ final class AiCloudInferenceController extends Controller
             $publicExcerpts = $withPublicExcerpts ? $selector->select($projected, $input['focus']) : [];
             if ($withPublicExcerpts && $publicExcerpts === []) {
                 return $this->reject('PUBLIC_EXCERPTS_NOT_AVAILABLE', 422);
+            }
+            if ($withPublicExcerpts && ! hash_equals(
+                $selector->fingerprint($publicExcerpts),
+                (string) ($input['approved_public_excerpts_sha256'] ?? '')
+            )) {
+                return $this->reject('PUBLIC_EXCERPT_PREVIEW_STALE', 409);
             }
             foreach ($publicExcerpts as $excerpt) {
                 $validRefs[$excerpt['source_id'].':'.$excerpt['pdf_page'].':'.$excerpt['excerpt_sha256']] = true;

@@ -73,7 +73,9 @@ final class AiEvidenceContextController extends Controller
                 'production_admission' => 'DENIED',
             ];
             if ($withPublicExcerpts) {
-                $payload['public_excerpt_preview'] = $selector->select($model, $focus);
+                $excerpts = $selector->select($model, $focus);
+                $payload['public_excerpt_preview'] = $excerpts;
+                $payload['public_excerpt_preview_sha256'] = $selector->fingerprint($excerpts);
                 $payload['preview_focus'] = $focus;
                 $payload['preview_provider_called'] = false;
             }

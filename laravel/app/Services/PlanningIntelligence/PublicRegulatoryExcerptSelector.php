@@ -41,6 +41,13 @@ final class PublicRegulatoryExcerptSelector
         return array_slice($selected, 0, 21);
     }
 
+    /** @param list<array<string, mixed>> $excerpts */
+    public function fingerprint(array $excerpts): string
+    {
+        return strtoupper(hash('sha256',
+            json_encode($excerpts, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)));
+    }
+
     /** @param array<int, array<string, mixed>> $candidates
      *  @param array<string, bool> $seen
      *  @param list<string> $keywords

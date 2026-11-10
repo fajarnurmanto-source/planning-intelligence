@@ -7,6 +7,7 @@
   let output = null
   let excerptPreview = null
   let excerptFocus = ''
+  let excerptDigest = ''
 
   const errors = {
     PROVIDER_NOT_CONFIGURED: 'API key atau model provider belum tersedia di backend.',
@@ -27,6 +28,7 @@
     AI_EVIDENCE_CONTEXT_UNAVAILABLE: 'Paket bukti regulasi belum siap.',
     AI_REVIEW_BRIEF_UNAVAILABLE: 'Paket telaah deterministik belum siap.',
     PUBLIC_EXCERPTS_NOT_AVAILABLE: 'Kutipan regulasi publik tidak tersedia atau belum terverifikasi untuk dikirim.',
+    PUBLIC_EXCERPT_PREVIEW_STALE: 'Pratinjau kutipan berbeda dari data terbaru. Buka pratinjau ulang dan berikan persetujuan baru.',
   }
 
   function feedback(message, error = false) {
@@ -59,6 +61,7 @@
   function clearExcerptPreview() {
     excerptPreview = null
     excerptFocus = ''
+    excerptDigest = ''
     el('approvedExcerpts').checked = false
     el('approvedExcerpts').disabled = true
     el('excerptPreviewWrap').hidden = true
@@ -150,6 +153,9 @@
       if (excerpts.length === 0) {
         throw new Error('Belum tersedia kutipan publik terverifikasi untuk pertanyaan ini.')
       }
+      if (!/^[A-F0-9]{64}$/.test(data.public_excerpt_preview_sha256 || '')) {
+        throw new Error('Sidik jari paket pratinjau tidak valid.')
+      }
       const previewText = excerpts.map(item =>
         [item.source_id + ' · halaman ' + item.pdf_page + ' · ' + item.source_section,
           'SHA256 sumber: ' + item.excerpt_sha256,
@@ -160,6 +166,7 @@
       el('excerptPreviewWrap').open = true
       excerptPreview = excerpts
       excerptFocus = focus
+      excerptDigest = data.public_excerpt_preview_sha256
       el('approvedExcerpts').disabled = false
       feedback(excerpts.length + ' kutipan terbatas siap ditinjau. Centang persetujuan kutipan hanya jika ingin mengirimkannya ke cloud.')
     } catch (error) {
@@ -252,6 +259,11 @@
       feedback('Setujui inferensi lokal untuk permintaan ini.', true)
       return
     }
+    if (remote && el('approvedExcerpts').checked &&
+      (!/^[A-F0-9]{64}$/.test(excerptDigest) || excerptFocus !== focus)) {
+      feedback('Pratinjau kutipan sudah tidak cocok; ulangi pratinjau sebelum inferensi.', true)
+      return
+    }
     const button = el('generateButton')
     button.disabled = true
     const sendExcerpts = remote && el('approvedExcerpts').checked && Array.isArray(excerptPreview) && excerptFocus === focus
@@ -260,7 +272,8 @@
       const endpoint = remote ? '/api/ai-r69a/cloud-inference' : '/api/ai-r69a/local-inference'
       const payload = remote
         ? {provider, focus, approved_focus: true, approved_public_evidence: true,
-            ...(sendExcerpts ? {approved_public_excerpts: true} : {})}
+            ...(sendExcerpts ? {approved_public_excerpts: true,
+              approved_public_excerpts_sha256: excerptDigest} : {})}
         : {provider: 'ollama', focus, consent: true}
       const result = await postJson(endpoint, payload)
       renderResult(result)

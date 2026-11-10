@@ -52,6 +52,10 @@ class AiEvidenceContextTest extends TestCase
         $excerpts = $preview->json('public_excerpt_preview');
         $this->assertNotEmpty($excerpts);
         $this->assertLessThanOrEqual(21, count($excerpts));
+        $this->assertSame(
+            strtoupper(hash('sha256', json_encode($excerpts, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE))),
+            $preview->json('public_excerpt_preview_sha256')
+        );
         foreach ($excerpts as $excerpt) {
             $this->assertSame('REVIEW_REQUIRED', $excerpt['review_status']);
             $this->assertMatchesRegularExpression('/^[A-Fa-f0-9]{64}$/', $excerpt['excerpt_sha256']);

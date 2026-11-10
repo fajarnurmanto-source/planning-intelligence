@@ -166,9 +166,11 @@ class AiProviderSettingsTest extends TestCase
             'password' => 'test-admin-password-123',
         ])->assertOk();
 
-        $preview = $this->actingAs($user)->getJson(
+        $previewResponse = $this->actingAs($user)->getJson(
             '/api/ai-r69a/evidence-context?public_excerpt_preview=1&focus=perubahan%20lampiran'
-        )->assertOk()->json('public_excerpt_preview');
+        )->assertOk();
+        $preview = $previewResponse->json('public_excerpt_preview');
+        $digest = $previewResponse->json('public_excerpt_preview_sha256');
         $this->assertNotEmpty($preview);
         $first = $preview[0];
         $ref = [
@@ -187,13 +189,20 @@ class AiProviderSettingsTest extends TestCase
             'candidates' => [['content' => ['parts' => [['text' => $reply]]]]],
         ], 200)]);
 
-        $response = $this->actingAs($user)->postJson('/api/ai-r69a/cloud-inference', [
+        $staleRequest = [
             'provider' => 'gemini',
             'focus' => 'perubahan lampiran',
             'approved_focus' => true,
             'approved_public_evidence' => true,
             'approved_public_excerpts' => true,
-        ]);
+            'approved_public_excerpts_sha256' => str_repeat('0', 64),
+        ];
+        $this->actingAs($user)->postJson('/api/ai-r69a/cloud-inference', $staleRequest)
+            ->assertStatus(409)->assertJsonPath('code', 'PUBLIC_EXCERPT_PREVIEW_STALE');
+        Http::assertNothingSent();
+
+        $staleRequest['approved_public_excerpts_sha256'] = $digest;
+        $response = $this->actingAs($user)->postJson('/api/ai-r69a/cloud-inference', $staleRequest);
         $response->assertOk()
             ->assertJsonPath('public_excerpt_mode', 'EXPLICIT_OPT_IN')
             ->assertJsonPath('human_review', 'REQUIRED')
