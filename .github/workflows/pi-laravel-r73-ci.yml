@@ -72,6 +72,8 @@ jobs:
           extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
           tools: composer:v2
           coverage: none
+      - name: Prepare ephemeral Laravel runtime directories
+        run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
       - name: Install locked Laravel dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
       - name: Focused Laravel PHPUnit regression
