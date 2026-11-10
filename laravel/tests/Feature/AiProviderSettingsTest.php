@@ -146,4 +146,62 @@ class AiProviderSettingsTest extends TestCase
         Http::assertSent(fn ($request) => $request->hasHeader('x-goog-api-key', $key));
         Http::assertSentCount(1);
     }
+
+    public function test_malformed_model_json_fails_closed_with_specific_code(): void
+    {
+        Storage::fake('local');
+        Http::preventStrayRequests();
+        $user = User::factory()->create([
+            'role' => 'institution_admin',
+            'password' => 'test-admin-password-123',
+        ]);
+        $this->actingAs($user)->putJson('/api/ai-r69a/provider-settings/gemini', [
+            'model' => 'gemini-3.5-flash-lite',
+            'api_key' => 'test-GEMINI-key-1234567890',
+            'password' => 'test-admin-password-123',
+        ])->assertOk();
+
+        Http::fake(['https://generativelanguage.googleapis.com/*' => Http::response([
+            'candidates' => [['finishReason' => 'STOP', 'content' => [
+                'parts' => [['text' => '{"status":"REVIEW_REQUIRED",']],
+            ]]],
+        ], 200)]);
+
+        $this->actingAs($user)->postJson('/api/ai-r69a/cloud-inference', [
+            'provider' => 'gemini',
+            'focus' => 'Telaah perubahan regulasi',
+            'approved_focus' => true,
+            'approved_public_evidence' => true,
+        ])->assertStatus(502)->assertJsonPath('code', 'CLOUD_OUTPUT_INVALID_JSON');
+        Http::assertSentCount(1);
+    }
+
+    public function test_token_truncation_is_rejected_before_json_parsing(): void
+    {
+        Storage::fake('local');
+        Http::preventStrayRequests();
+        $user = User::factory()->create([
+            'role' => 'institution_admin',
+            'password' => 'test-admin-password-123',
+        ]);
+        $this->actingAs($user)->putJson('/api/ai-r69a/provider-settings/gemini', [
+            'model' => 'gemini-3.5-flash-lite',
+            'api_key' => 'test-GEMINI-key-1234567890',
+            'password' => 'test-admin-password-123',
+        ])->assertOk();
+
+        Http::fake(['https://generativelanguage.googleapis.com/*' => Http::response([
+            'candidates' => [['finishReason' => 'MAX_TOKENS', 'content' => [
+                'parts' => [['text' => '{"status":']],
+            ]]],
+        ], 200)]);
+
+        $this->actingAs($user)->postJson('/api/ai-r69a/cloud-inference', [
+            'provider' => 'gemini',
+            'focus' => 'Telaah perubahan regulasi',
+            'approved_focus' => true,
+            'approved_public_evidence' => true,
+        ])->assertStatus(502)->assertJsonPath('code', 'CLOUD_OUTPUT_TRUNCATED');
+        Http::assertSentCount(1);
+    }
 }

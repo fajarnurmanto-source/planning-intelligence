@@ -8,6 +8,7 @@ use App\Services\PlanningIntelligence\RegulatoryChainProjector;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use JsonException;
 use Throwable;
 
 /** Per-request approved cloud AI review with filtered public metadata only. */
@@ -53,11 +54,15 @@ final class AiCloudInferenceController extends Controller
                     'public_evidence_refs' => $refs,
                 ];
             }
-            $context = json_encode([
-                'approved_focus' => $input['focus'],
-                'approved_public_regulatory_metadata' => $sources,
-                'guard' => 'HUMAN_REVIEW_REQUIRED_NUMERIC_BLOCKED_LEGAL_NOT_ASSESSED',
-            ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            try {
+                $context = json_encode([
+                    'approved_focus' => $input['focus'],
+                    'approved_public_regulatory_metadata' => $sources,
+                    'guard' => 'HUMAN_REVIEW_REQUIRED_NUMERIC_BLOCKED_LEGAL_NOT_ASSESSED',
+                ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            } catch (JsonException) {
+                return $this->reject('APPROVED_CONTEXT_ENCODING_FAILED', 422);
+            }
             if (strlen($context) > 24000) {
                 return $this->reject('APPROVED_CONTEXT_TOO_LARGE', 413);
             }
@@ -72,7 +77,7 @@ final class AiCloudInferenceController extends Controller
                     ->post('https://generativelanguage.googleapis.com/v1beta/models/'.$model.':generateContent', [
                         'systemInstruction' => ['parts' => [['text' => $instruction]]],
                         'contents' => [['role' => 'user', 'parts' => [['text' => $context]]]],
-                        'generationConfig' => ['temperature' => 0.1, 'maxOutputTokens' => 1200, 'responseMimeType' => 'application/json'],
+                        'generationConfig' => ['temperature' => 0.1, 'maxOutputTokens' => 3072, 'responseMimeType' => 'application/json'],
                     ]);
                 $raw = $response->json('candidates.0.content.parts.0.text');
             } else {
@@ -106,11 +111,26 @@ final class AiCloudInferenceController extends Controller
                 };
                 return $this->reject($code, 502);
             }
+            $finishReason = $provider === 'gemini'
+                ? $response->json('candidates.0.finishReason')
+                : $response->json('choices.0.finish_reason');
+            if ($finishReason === 'MAX_TOKENS' || $finishReason === 'length') {
+                return $this->reject('CLOUD_OUTPUT_TRUNCATED', 502);
+            }
             if (strlen($response->body()) > 131072
                 || ! is_string($raw) || strlen($raw) > 65536) {
                 return $this->reject('CLOUD_EMPTY_CONTENT_OR_OVERSIZE', 502);
             }
-            $brief = json_decode($raw, true, 64, JSON_THROW_ON_ERROR);
+            $raw = trim($raw);
+            $raw = preg_replace('/\A\xEF\xBB\xBF/', '', $raw);
+            if (preg_match('/\A```(?:json)?\s*([\s\S]*?)\s*```\z/i', $raw, $matches) === 1) {
+                $raw = $matches[1];
+            }
+            try {
+                $brief = json_decode($raw, true, 64, JSON_THROW_ON_ERROR);
+            } catch (JsonException) {
+                return $this->reject('CLOUD_OUTPUT_INVALID_JSON', 502);
+            }
             if (! is_array($brief)
                 || ! in_array($brief['status'] ?? null, ['ABSTAIN', 'REVIEW_REQUIRED'], true)
                 || ! is_string($brief['summary'] ?? null)
