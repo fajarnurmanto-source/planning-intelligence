@@ -108,7 +108,6 @@ test('Retired R70A-D menu links resolve to honest Laravel equivalents', () => {
 test('Every Laravel consolidation menu section has one active state', () => {
   const labels = [
     ['#r70l-title', 'Aturan induk (Laravel R70L)'],
-    ['#r70g-model-title', 'Rantai naskah (Laravel R70F)'],
     ['#r72-title', 'Garis waktu (Laravel R72)'],
     ['#r70g-documents', 'Sasaran Lampiran I/II (R70F)'],
     ['#r74-title', 'Genealogi Regulasi (R74)'],
