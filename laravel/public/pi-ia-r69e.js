@@ -147,5 +147,13 @@
     }).catch(()=>{ /* default Free; server rejects unauthorized routes */ })
   const root=document.getElementById('root')
   if(root)new MutationObserver(schedule).observe(root,{subtree:true,childList:true,characterData:true})
+  window.addEventListener('hashchange', () => {
+    // R74 and R75 share one HTML document: a hash-only navigation must
+    // refresh the active sidebar item without reloading the page.
+    for (const nav of document.querySelectorAll('nav[data-pi-app-nav]')) {
+      nav.dataset.piHierarchyReady = ''
+      draw(nav)
+    }
+  })
   document.addEventListener('DOMContentLoaded',schedule)
 })()
