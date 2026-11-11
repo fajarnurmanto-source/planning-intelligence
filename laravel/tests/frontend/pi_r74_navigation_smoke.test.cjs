@@ -84,3 +84,47 @@ test('Switching hash updates active item and never duplicates navigation', () =>
   assert.equal(ui.item('Genealogi Regulasi (R74)')?.classList.contains('active'), false)
   assert.equal(ui.item('Meja Review Terpadu (R75)')?.classList.contains('active'), true)
 })
+
+test('Retired R70A-D menu links resolve to honest Laravel equivalents', () => {
+  const ui = mount('/index.html', '')
+  const html = fs.readFileSync(path.resolve(__dirname, '../../public/regulatory-laravel-r70g.html'), 'utf8')
+  const mappings = [
+    ['Aturan induk (Laravel R70L)', 'r70l-title'],
+    ['Rantai naskah (Laravel R70F)', 'r70g-model-title'],
+    ['Garis waktu (Laravel R72)', 'r72-title'],
+    ['Sasaran Lampiran I/II (R70F)', 'r70g-documents']
+  ]
+  for (const [label, anchor] of mappings) {
+    const target = ui.item(label)?.href
+    assert.equal(target, './regulatory-laravel-r70g.html#' + anchor)
+    assert.ok(html.includes('id="' + anchor + '"'), 'Missing target HTML anchor ' + anchor)
+  }
+  for (const link of ui.links()) {
+    assert.ok(!/regulatory-(?:trace-r70a|sources-r70b|ledger-r70c|scope-r70d)\.html/.test(link.href || ''),
+      'Menu still points to retired API page: ' + link.href)
+  }
+})
+
+test('Every Laravel consolidation menu section has one active state', () => {
+  const labels = [
+    ['#r70l-title', 'Aturan induk (Laravel R70L)'],
+    ['#r70g-model-title', 'Rantai naskah (Laravel R70F)'],
+    ['#r72-title', 'Garis waktu (Laravel R72)'],
+    ['#r70g-documents', 'Sasaran Lampiran I/II (R70F)'],
+    ['#r74-title', 'Genealogi Regulasi (R74)'],
+    ['#r75-title', 'Meja Review Terpadu (R75)']
+  ]
+  for (const [hash, label] of labels) {
+    const ui = mount('/regulatory-laravel-r70g.html', hash)
+    const active = ui.links().filter(item => item.classList.contains('active'))
+    assert.equal(active.length, 1, 'Expected exactly one active menu at ' + hash)
+    assert.equal(active[0].textContent, label)
+  }
+})
+
+test('New navigation refuses to represent unavailable legacy parity as complete', () => {
+  const html = fs.readFileSync(path.resolve(__dirname, '../../public/regulatory-laravel-r70g.html'), 'utf8')
+  assert.ok(html.includes('bukan kesetaraan seluruh fungsi legacy'))
+  assert.ok(!html.includes('href="./regulatory-scope-r70d.html"'))
+  assert.ok(!html.includes('href="./regulatory-ledger-r70c.html"'))
+})
