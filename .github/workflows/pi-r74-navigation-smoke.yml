@@ -6,6 +6,7 @@ on:
       - pilot/pi-laravel-github-bridge-20261108
     paths:
       - 'laravel/public/pi-ia-r69e.js'
+      - 'laravel/public/regulatory-laravel-r70g.html'
       - 'laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs'
       - '.github/workflows/pi-r74-navigation-smoke.yml'
   push:
@@ -14,6 +15,7 @@ on:
       - feature/pi-r74-sidebar-genealogy-20261112
     paths:
       - 'laravel/public/pi-ia-r69e.js'
+      - 'laravel/public/regulatory-laravel-r70g.html'
       - 'laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs'
       - '.github/workflows/pi-r74-navigation-smoke.yml'
 
