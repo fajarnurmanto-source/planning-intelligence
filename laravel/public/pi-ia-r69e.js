@@ -31,7 +31,7 @@
     {id:'regulatory',label:'Regulatory Intelligence',subtitle:'Dasar hukum dan harmonisasi',items:[
       {label:'Telaah regulasi',href:'./regulatory-r69e.html',key:'regulasi'},
       {label:'Aturan induk (Laravel R70L)',href:'./regulatory-laravel-r70g.html#r70l-title',key:'norma'},
-      {label:'Rantai naskah (Laravel R70F)',href:'./regulatory-laravel-r70g.html#r70g-model-title',key:'naskah'},
+      {label:'Naskah & PDF (Laravel R78)',href:'./regulatory-sources-r70b.html',key:'naskah'},
       {label:'Garis waktu (Laravel R72)',href:'./regulatory-laravel-r70g.html#r72-title',key:'perubahan'},
       {label:'Sasaran Lampiran I/II (R70F)',href:'./regulatory-laravel-r70g.html#r70g-documents',key:'cakupan'},
       {label:'Genealogi Regulasi (R74)',href:'./regulatory-laravel-r70g.html#r74-title',key:'genealogi'},
