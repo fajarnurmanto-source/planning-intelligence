@@ -31,6 +31,7 @@
       {label:'Naskah lengkap & perubahan',href:'./regulatory-sources-r70b.html',key:'naskah'},
       {label:'Jejak perubahan regulasi',href:'./regulatory-ledger-r70c.html',key:'perubahan'},
       {label:'Cakupan perubahan Pasal I',href:'./regulatory-scope-r70d.html',key:'cakupan'},
+      {label:'Genealogi Regulasi (R74)',href:'./regulatory-laravel-r70g.html#r74-title',key:'genealogi'},
       {label:'Meja Review Terpadu (R75)',href:'./regulatory-laravel-r70g.html#r75-title',key:'laravel'},
     ]},
     {id:'performance',label:'Performance Intelligence',subtitle:'Sasaran, indikator dan target',items:[
@@ -66,7 +67,7 @@
       if(i===1) create('div','pi-app-group-label','5 APLIKASI SPESIALIS',nav)
       const details=create('details','pi-app-group',null,nav)
       details.dataset.piApp=group.id
-      const hasActive=group.items.some(x=>(onWorkspace&&x.key===section)||(onRegulatory&&x.key==='regulasi')||(onTrace&&x.key==='norma')||(onFullSources&&x.key==='naskah')||(onLedger&&x.key==='perubahan')||(onScope&&x.key==='cakupan')||(onLaravel&&x.key==='laravel'))
+      const hasActive=group.items.some(x=>(onWorkspace&&x.key===section)||(onRegulatory&&x.key==='regulasi')||(onTrace&&x.key==='norma')||(onFullSources&&x.key==='naskah')||(onLedger&&x.key==='perubahan')||(onScope&&x.key==='cakupan')||(onLaravel&&((x.key==='genealogi'&&location.hash==='#r74-title')||(x.key==='laravel'&&location.hash!=='#r74-title'))))
       details.open=!locked && (hasActive || (!onWorkspace&&i===0))
       const summary=create('summary','pi-app-group-summary',null,details)
       create('span','pi-app-group-name',group.label,summary)
@@ -86,7 +87,7 @@
         if(item.href) {
           const a=create('a','pi-app-item',item.label,list)
           a.href=item.href
-          if((onWorkspace&&item.key===section) || (onRegulatory&&item.key==='regulasi') || (onTrace&&item.key==='norma') || (onFullSources&&item.key==='naskah') || (onLedger&&item.key==='perubahan') || (onScope&&item.key==='cakupan') || (onLaravel&&item.key==='laravel') || (!onWorkspace&&!onRegulatory&&!onTrace&&!onFullSources&&!onLedger&&!onScope&&!onLaravel&&item.key==='home'&&location.hash==='')) {
+          if((onWorkspace&&item.key===section) || (onRegulatory&&item.key==='regulasi') || (onTrace&&item.key==='norma') || (onFullSources&&item.key==='naskah') || (onLedger&&item.key==='perubahan') || (onScope&&item.key==='cakupan') || (onLaravel&&((item.key==='genealogi'&&location.hash==='#r74-title')||(item.key==='laravel'&&location.hash!=='#r74-title'))) || (!onWorkspace&&!onRegulatory&&!onTrace&&!onFullSources&&!onLedger&&!onScope&&!onLaravel&&item.key==='home'&&location.hash==='')) {
             a.classList.add('active')
             a.setAttribute('aria-current','page')
           }
@@ -146,5 +147,13 @@
     }).catch(()=>{ /* default Free; server rejects unauthorized routes */ })
   const root=document.getElementById('root')
   if(root)new MutationObserver(schedule).observe(root,{subtree:true,childList:true,characterData:true})
+  window.addEventListener('hashchange', () => {
+    // R74 and R75 share one HTML document: a hash-only navigation must
+    // refresh the active sidebar item without reloading the page.
+    for (const nav of document.querySelectorAll('nav[data-pi-app-nav]')) {
+      nav.dataset.piHierarchyReady = ''
+      draw(nav)
+    }
+  })
   document.addEventListener('DOMContentLoaded',schedule)
 })()
