@@ -1,0 +1,35 @@
+name: PI R74 Navigation Smoke
+
+on:
+  pull_request:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+    paths:
+      - 'laravel/public/pi-ia-r69e.js'
+      - 'laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs'
+      - '.github/workflows/pi-r74-navigation-smoke.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r74-sidebar-genealogy-20261112
+    paths:
+      - 'laravel/public/pi-ia-r69e.js'
+      - 'laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs'
+      - '.github/workflows/pi-r74-navigation-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  sidebar-navigation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax
+        run: node --check laravel/public/pi-ia-r69e.js
+      - name: R74 and R75 sidebar smoke tests
+        run: node --test laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs
