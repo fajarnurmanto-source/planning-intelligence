@@ -16,8 +16,8 @@
   let modulesAllowed = new Set(["regulatory"]) // fail-closed until server confirms
   let planName = "FREE"
   // Canonical Laravel equivalents, not claims of complete R70A-D feature parity.
-  const laravelHashes = {norma:'#r70l-title',naskah:'#r70g-model-title',perubahan:'#r72-title',cakupan:'#r70g-documents',genealogi:'#r74-title',laravel:'#r75-title'}
-  const isLaravelActive = key => onLaravel && (location.hash ? laravelHashes[key] === location.hash : key === 'naskah')
+  const laravelHashes = {norma:'#r70l-title',perubahan:'#r72-title',cakupan:'#r70g-documents',genealogi:'#r74-title',laravel:'#r75-title'}
+  const isLaravelActive = key => onLaravel && (location.hash ? laravelHashes[key] === location.hash : key === 'laravel')
   const spec = [
     {id:'superior',label:'PI Superior',subtitle:'Pusat keputusan lintas aplikasi',items:[
       {label:'Beranda',href:'./index.html',key:'home'},
