@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\RegulatoryEvidenceController;
 use App\Http\Controllers\Api\RegulatoryDiscoveryController;
 use App\Http\Controllers\Api\RegulatoryReadModelController;
 use App\Http\Controllers\Api\RegulatoryLegacyProjectionController;
+use App\Http\Controllers\Api\RegulatorySnapshotController;
 use App\Http\Controllers\Api\RegulatoryChangeTraceController;
 use App\Http\Controllers\Api\RegulatoryGenealogyController;
 use App\Http\Controllers\Auth\SessionController;
@@ -66,6 +67,10 @@ Route::prefix('api')->group(function (): void {
             ->name('pi.planning.lineage-candidates');
         Route::get('/qa-regulatory-r70g/laravel-read-model', RegulatoryReadModelController::class)
             ->name('pi.regulatory.read-model');
+        Route::get('/qa-regulatory-r70b/sources', [RegulatorySnapshotController::class, 'sources'])
+            ->name('pi.regulatory.snapshot-catalog');
+        Route::get('/qa-regulatory-r70b/pdf', [RegulatorySnapshotController::class, 'pdf'])
+            ->middleware('throttle:12,1')->name('pi.regulatory.snapshot-pdf');
         Route::get('/qa-regulatory-r70c/ledger', [RegulatoryLegacyProjectionController::class, 'ledger'])
             ->name('pi.regulatory.legacy-ledger');
         Route::get('/qa-regulatory-r70d/scope', [RegulatoryLegacyProjectionController::class, 'scope'])

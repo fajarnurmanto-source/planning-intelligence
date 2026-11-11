@@ -1,0 +1,78 @@
+name: PI R78 Native PDF Snapshot QA
+
+on:
+  pull_request:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+    paths:
+      - 'laravel/app/Http/Controllers/Api/RegulatorySnapshotController.php'
+      - 'laravel/app/Services/PlanningIntelligence/RegulatoryPdfSnapshotRegistry.php'
+      - 'laravel/tests/Feature/RegulatorySnapshotTest.php'
+      - 'laravel/public/regulatory-sources-r70b.html'
+      - 'laravel/public/pi-ia-r69e.js'
+      - 'laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs'
+      - 'laravel/config/pi.php'
+      - 'laravel/routes/web.php'
+      - '.github/workflows/pi-r78-native-pdf-qa.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r78-native-pdf-snapshots-20261112
+    paths:
+      - 'laravel/app/Http/Controllers/Api/RegulatorySnapshotController.php'
+      - 'laravel/app/Services/PlanningIntelligence/RegulatoryPdfSnapshotRegistry.php'
+      - 'laravel/tests/Feature/RegulatorySnapshotTest.php'
+      - 'laravel/public/regulatory-sources-r70b.html'
+      - 'laravel/public/pi-ia-r69e.js'
+      - 'laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs'
+      - 'laravel/config/pi.php'
+      - 'laravel/routes/web.php'
+      - '.github/workflows/pi-r78-native-pdf-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  laravel-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - name: Prepare ephemeral Laravel runtime directories
+        run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+      - name: Install locked Laravel dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: PHP syntax
+        run: |
+          php -l app/Services/PlanningIntelligence/RegulatoryPdfSnapshotRegistry.php
+          php -l app/Http/Controllers/Api/RegulatorySnapshotController.php
+          php -l tests/Feature/RegulatorySnapshotTest.php
+          php -l routes/web.php
+      - name: Synthetic R70B PDF provenance tests
+        run: php vendor/bin/phpunit --filter 'RegulatorySnapshotTest|RegulatoryLegacyProjectionTest'
+      - name: API registrations
+        run: |
+          php artisan route:list --path=api/qa-regulatory-r70b/sources
+          php artisan route:list --path=api/qa-regulatory-r70b/pdf
+
+  navigation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JS
+        run: node --check laravel/public/pi-ia-r69e.js && node --check laravel/public/regulatory-sources-r70b.js
+      - name: Sidebar routes and active state
+        run: node --test laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs

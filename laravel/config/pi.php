@@ -24,5 +24,8 @@ return [
     'regulatory' => [
         'ledger_path' => env('PI_REGULATORY_LEDGER_PATH'),
         'scope_path' => env('PI_REGULATORY_SCOPE_PATH'),
+        // Opt-in local QA snapshots: disabled until both paths are set.
+        'pdf_root' => env('PI_REGULATORY_PDF_ROOT'),
+        'pdf_manifest_path' => env('PI_REGULATORY_PDF_MANIFEST_PATH'),
     ],
 ];

@@ -90,7 +90,7 @@ test('Retired R70A-D menu links resolve to honest Laravel equivalents', () => {
   const html = fs.readFileSync(path.resolve(__dirname, '../../public/regulatory-laravel-r70g.html'), 'utf8')
   const mappings = [
     ['Aturan induk (Laravel R70L)', 'r70l-title'],
-    ['Rantai naskah (Laravel R70F)', 'r70g-model-title'],
+    
     ['Garis waktu (Laravel R72)', 'r72-title'],
     ['Sasaran Lampiran I/II (R70F)', 'r70g-documents']
   ]
@@ -100,7 +100,7 @@ test('Retired R70A-D menu links resolve to honest Laravel equivalents', () => {
     assert.ok(html.includes('id="' + anchor + '"'), 'Missing target HTML anchor ' + anchor)
   }
   for (const link of ui.links()) {
-    assert.ok(!/regulatory-(?:trace-r70a|sources-r70b|ledger-r70c|scope-r70d)\.html/.test(link.href || ''),
+    assert.ok(!/regulatory-(?:trace-r70a|ledger-r70c|scope-r70d)\.html/.test(link.href || ''),
       'Menu still points to retired API page: ' + link.href)
   }
 })
@@ -108,7 +108,6 @@ test('Retired R70A-D menu links resolve to honest Laravel equivalents', () => {
 test('Every Laravel consolidation menu section has one active state', () => {
   const labels = [
     ['#r70l-title', 'Aturan induk (Laravel R70L)'],
-    ['#r70g-model-title', 'Rantai naskah (Laravel R70F)'],
     ['#r72-title', 'Garis waktu (Laravel R72)'],
     ['#r70g-documents', 'Sasaran Lampiran I/II (R70F)'],
     ['#r74-title', 'Genealogi Regulasi (R74)'],
@@ -127,4 +126,13 @@ test('New navigation refuses to represent unavailable legacy parity as complete'
   assert.ok(html.includes('bukan kesetaraan seluruh fungsi legacy'))
   assert.ok(!html.includes('href="./regulatory-scope-r70d.html"'))
   assert.ok(!html.includes('href="./regulatory-ledger-r70c.html"'))
+})
+
+
+test('R78 full-source page is selected from the canonical sidebar', () => {
+  const home = mount('/index.html', '')
+  assert.equal(home.item('Naskah & PDF (Laravel R78)')?.href, './regulatory-sources-r70b.html')
+  const snapshot = mount('/regulatory-sources-r70b.html', '')
+  assert.equal(snapshot.item('Naskah & PDF (Laravel R78)')?.classList.contains('active'), true)
+  assert.equal(snapshot.links().filter(x => x.classList.contains('active')).length, 1)
 })
