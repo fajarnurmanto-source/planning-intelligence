@@ -31,7 +31,7 @@ final class RegulatorySnapshotTest extends TestCase
     {
         $this->fixture();
         foreach (['/api/qa-regulatory-r70b/sources', '/api/qa-regulatory-r70b/pdf?source_id=BASE_2026'] as $url) {
-            $this->get($url)->assertUnauthorized();
+            $this->getJson($url)->assertUnauthorized();
         }
         $this->actingAs(User::factory()->create(['tenant_id' => 'QA-OTHER']))
             ->getJson('/api/qa-regulatory-r70b/sources')->assertForbidden();
