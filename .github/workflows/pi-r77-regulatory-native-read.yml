@@ -1,0 +1,56 @@
+name: PI R77 Native Regulatory Legacy Read Models
+
+on:
+  pull_request:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+    paths:
+      - 'laravel/app/Http/Controllers/Api/RegulatoryLegacyProjectionController.php'
+      - 'laravel/tests/Feature/RegulatoryLegacyProjectionTest.php'
+      - 'laravel/routes/web.php'
+      - '.github/workflows/pi-r77-regulatory-native-read.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r77-native-ledger-scope-20261112
+    paths:
+      - 'laravel/app/Http/Controllers/Api/RegulatoryLegacyProjectionController.php'
+      - 'laravel/tests/Feature/RegulatoryLegacyProjectionTest.php'
+      - 'laravel/routes/web.php'
+      - '.github/workflows/pi-r77-regulatory-native-read.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  native-read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - name: Prepare ephemeral Laravel runtime directories
+        run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+      - name: Install locked Laravel dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: PHP syntax checks
+        run: |
+          php -l app/Http/Controllers/Api/RegulatoryLegacyProjectionController.php
+          php -l tests/Feature/RegulatoryLegacyProjectionTest.php
+          php -l routes/web.php
+      - name: Test isolated synthetic hash-linked source fixtures
+        run: php vendor/bin/phpunit --filter RegulatoryLegacyProjectionTest
+      - name: Verify Laravel API registrations
+        run: |
+          php artisan route:list --path=api/qa-regulatory-r70c/ledger
+          php artisan route:list --path=api/qa-regulatory-r70d/scope
+      - name: Boundaries
+        run: echo 'PI_R77_REAL_SOURCE_E2E=NOT_RUN_LOCAL_WINDOWS_SNAPSHOT_REQUIRED; no PDF streaming, no production admission'
