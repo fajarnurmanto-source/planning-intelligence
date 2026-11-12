@@ -34,15 +34,30 @@ function fixtures() {
     production_admission:'DENIED',
     sources:ids.map(id=>({id,sha256:sha(id),has_local_pdf:true,identity:'PDF_SHA256_MATCHES_LEDGER'})),
   }
-  const graph = nodes => ({
-    schema:'PI_R74_BIDIRECTIONAL_GENEALOGY_TRACE_V1',tenant_id:'ID-DIY-YOG',
-    legal_harmonization:'NOT_ASSESSED',production_admission:'DENIED',
+  const legalEdges = [
+    {from:'PP-81-2012',to:'UU-18-2008:PASAL-16',type:'IMPLEMENTS_PROVISION_OF'},
+    {from:'UU-18-2008:PASAL-16',to:'UU-18-2008',type:'PROVISION_OF'}
+  ]
+  const thematicEdges = [
+    {from:'UU-18-2008',to:'TOPIC:PERSAMPAHAN',type:'REGULATES_TOPIC'},
+    {from:'PP-81-2012',to:'TOPIC:PERSAMPAHAN',type:'REGULATES_TOPIC'}
+  ]
+  const graph = (nodes,root,direction,lens,rels) => ({
+    schema:'PI_R74_BIDIRECTIONAL_GENEALOGY_TRACE_V1',
+    tenant_id:'ID-DIY-YOG',root,direction,lens,
+    legal_harmonization:'NOT_ASSESSED',numeric_comparison:'BLOCKED',
+    review_status:'REVIEW_REQUIRED',production_admission:'DENIED',
     result_status:'PARTIAL_EVIDENCE_GRAPH_NOT_LEGAL_FINDING',
-    nodes:nodes.map(id=>({id})),
+    nodes:nodes.map(id=>({id})),node_count:nodes.length,
+    relations:rels.map((e,i)=>({...e,id:(i+1).toString(16).toUpperCase().padStart(64,'0'),legal_effect:'NOT_ASSESSED'})),
+    edge_count:rels.length,
   })
-  const parents=graph(['PP-81-2012','UU-18-2008:PASAL-16','UU-18-2008'])
-  const children=graph(['UU-18-2008','UU-18-2008:PASAL-16','PP-81-2012'])
-  const thematic=graph(['TOPIC:PERSAMPAHAN','UU-18-2008','PP-81-2012'])
+  const parents=graph(['PP-81-2012','UU-18-2008:PASAL-16','UU-18-2008'],
+    'PP-81-2012','ancestors','legal',legalEdges)
+  const children=graph(['UU-18-2008','UU-18-2008:PASAL-16','PP-81-2012'],
+    'UU-18-2008','descendants','legal',legalEdges)
+  const thematic=graph(['TOPIC:PERSAMPAHAN','UU-18-2008','PP-81-2012'],
+    'TOPIC:PERSAMPAHAN','both','thematic',thematicEdges)
   return {trace,catalog,parents,children,thematic}
 }
 const evalFixture = f => evaluate(f.trace,f.catalog,f.parents,f.children,f.thematic)
@@ -89,4 +104,36 @@ test('The R79 page contains the user-triggered acceptance panel and script',()=>
   assert.ok(html.includes('id="r79-acceptance-result"'))
   assert.ok(html.includes('regulatory-trace-acceptance-r79.js'))
   assert.ok(html.includes('bukan</strong> validasi hukum'))
+})
+
+
+test('R74 nodes alone without traversed evidence edges must never pass',()=>{
+  const f=fixtures()
+  f.parents.relations=[]
+  f.parents.edge_count=0
+  f.children.relations=[]
+  f.children.edge_count=0
+  f.thematic.relations=[]
+  f.thematic.edge_count=0
+  const result=evalFixture(f)
+  assert.equal(result.pass,false)
+  assert.equal(result.checks.slice(5).filter(x=>x.pass).length,0)
+})
+
+test('Wrong traversal direction or edge count must not be accepted',()=>{
+  const f=fixtures()
+  f.parents.direction='descendants'
+  f.children.edge_count=5
+  f.thematic.lens='legal'
+  const result=evalFixture(f)
+  assert.equal(result.pass,false)
+  assert.equal(result.checks.slice(5).filter(x=>x.pass).length,0)
+})
+
+test('Unassessed legal_effect on source graph edges is required',()=>{
+  const f=fixtures()
+  f.parents.relations[0].legal_effect='CERTIFIED'
+  const result=evalFixture(f)
+  assert.equal(result.pass,false)
+  assert.equal(result.checks[5].pass,false)
 })
