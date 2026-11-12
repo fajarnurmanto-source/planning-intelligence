@@ -8,6 +8,9 @@ on:
       - 'laravel/tests/Feature/RegulatoryLegalTraceTest.php'
       - 'laravel/public/regulatory-trace-r70a.html'
       - 'laravel/public/regulatory-trace-r70a.js'
+      - 'laravel/public/regulatory-trace-acceptance-r79.js'
+      - 'laravel/public/regulatory-trace-r70a.css'
+      - 'laravel/tests/frontend/pi_r79_browser_acceptance.test.cjs'
       - 'laravel/public/pi-ia-r69e.js'
       - 'laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs'
       - 'laravel/routes/web.php'
@@ -21,6 +24,9 @@ on:
       - 'laravel/tests/Feature/RegulatoryLegalTraceTest.php'
       - 'laravel/public/regulatory-trace-r70a.html'
       - 'laravel/public/regulatory-trace-r70a.js'
+      - 'laravel/public/regulatory-trace-acceptance-r79.js'
+      - 'laravel/public/regulatory-trace-r70a.css'
+      - 'laravel/tests/frontend/pi_r79_browser_acceptance.test.cjs'
       - 'laravel/public/pi-ia-r69e.js'
       - 'laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs'
       - 'laravel/routes/web.php'
@@ -69,5 +75,6 @@ jobs:
         run: |
           node --check laravel/public/pi-ia-r69e.js
           node --check laravel/public/regulatory-trace-r70a.js
+          node --check laravel/public/regulatory-trace-acceptance-r79.js
       - name: Sidebar smoke
-        run: node --test laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs
+        run: node --test laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs laravel/tests/frontend/pi_r79_browser_acceptance.test.cjs
