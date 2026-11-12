@@ -2,7 +2,11 @@ const test = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('node:fs')
 const path = require('node:path')
-const {evaluate} = require('../../public/regulatory-trace-acceptance-r79.js')
+const vm = require('node:vm')
+const browserSource = fs.readFileSync(path.resolve(__dirname, '../../public/regulatory-trace-acceptance-r79.js'), 'utf8')
+const moduleShim = {exports: {}}
+vm.runInNewContext(browserSource, {module: moduleShim}, {filename:'regulatory-trace-acceptance-r79.js'})
+const {evaluate} = moduleShim.exports
 
 const ids = ['PERDA11_2025','PERWALI74_2025','PERWALI1_2026','PERWALI4_2026','PERWALI12_2026','PERWALI13_2026','PERWALI15_2026']
 const sha = id => id.padEnd(64,'A').slice(0,64).replace(/[^A-F0-9]/g,'A')
