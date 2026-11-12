@@ -55,6 +55,17 @@ jobs:
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\pi-bridge\Pin-R81NationalPdfSnapshots.ps1 -Root $root -Pp81Pdf $pdf1 -Uu18Pdf $pdf2
           if ($LASTEXITCODE -ne 0) { throw 'R81_IDEMPOTENCY_FAILED' }
           [IO.File]::WriteAllBytes($pdf1,[Text.Encoding]::ASCII.GetBytes('%PDF-1.4' + ('X' * 600) + '%%EOF'))
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\pi-bridge\Pin-R81NationalPdfSnapshots.ps1 -Root $root -Pp81Pdf $pdf1 -Uu18Pdf $pdf2
-          if ($LASTEXITCODE -eq 0) { throw 'R81_DRIFT_WAS_NOT_REJECTED' }
+          # Expected rejection must not be interpreted as a workflow error
+          # just because native PowerShell 5.1 writes the exception to stderr.
+          $stdout = Join-Path $env:RUNNER_TEMP 'pi-r81-negative-stdout.log'
+          $stderr = Join-Path $env:RUNNER_TEMP 'pi-r81-negative-stderr.log'
+          $child = Start-Process -FilePath powershell.exe -ArgumentList @(
+            '-NoProfile', '-ExecutionPolicy', 'Bypass',
+            '-File', '.\tools\pi-bridge\Pin-R81NationalPdfSnapshots.ps1',
+            '-Root', $root, '-Pp81Pdf', $pdf1, '-Uu18Pdf', $pdf2
+          ) -NoNewWindow -Wait -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+          if ($child.ExitCode -eq 0) { throw 'R81_DRIFT_WAS_NOT_REJECTED' }
+          if ((Get-Content -LiteralPath $stderr -Raw) -notmatch 'R81_EXISTING_SNAPSHOT_DRIFT') {
+            throw 'R81_WRONG_NEGATIVE_FAILURE'
+          }
           Write-Output 'PI_R81_OFFLINE_SYNTHETIC_GATES=PASS'
