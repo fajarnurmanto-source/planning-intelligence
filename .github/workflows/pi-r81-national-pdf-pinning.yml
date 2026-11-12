@@ -1,0 +1,60 @@
+name: PI R81 National PDF Pinning Offline QA
+
+on:
+  pull_request:
+    branches: [pilot/pi-laravel-github-bridge-20261108]
+    paths:
+      - 'tools/pi-bridge/Pin-R81NationalPdfSnapshots.ps1'
+      - '.github/workflows/pi-r81-national-pdf-pinning.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r81-national-pdf-snapshot-capture-20261113
+    paths:
+      - 'tools/pi-bridge/Pin-R81NationalPdfSnapshots.ps1'
+      - '.github/workflows/pi-r81-national-pdf-pinning.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  offline-pdf-acquisition:
+    runs-on: windows-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: PowerShell 5.1 SHA and PDF container checks
+        shell: powershell
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\pi-bridge\Pin-R81NationalPdfSnapshots.ps1 -SelfTest
+      - name: Synthetic local-copy capture and repeated hash guard
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:RUNNER_TEMP 'PI-R81-SYNTHETIC'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $pdf1 = Join-Path $env:RUNNER_TEMP 'synthetic-pp.pdf'
+          $pdf2 = Join-Path $env:RUNNER_TEMP 'synthetic-uu.pdf'
+          [IO.File]::WriteAllBytes($pdf1,[Text.Encoding]::ASCII.GetBytes('%PDF-1.4' + ('P' * 600) + '%%EOF'))
+          [IO.File]::WriteAllBytes($pdf2,[Text.Encoding]::ASCII.GetBytes('%PDF-1.4' + ('U' * 800) + '%%EOF'))
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\pi-bridge\Pin-R81NationalPdfSnapshots.ps1 -Root $root -Pp81Pdf $pdf1 -Uu18Pdf $pdf2
+          if ($LASTEXITCODE -ne 0) { throw 'R81_SYNTHETIC_CAPTURE_FAILED' }
+          $manifest = Join-Path $root '08_RUNTIME\R81_NATIONAL_PDF_SNAPSHOTS\observed-manifest.json'
+          $json = Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json
+          if ($json.schema -ne 'PI_R81_NATIONAL_PDF_OBSERVED_SNAPSHOTS_V1' -or
+              $json.source_count -ne 2 -or
+              $json.production_admission -ne 'DENIED' -or
+              $json.r80_relation_promotion -ne 'NOT_PERFORMED') {
+            throw 'R81_MANIFEST_GUARD_FAILED'
+          }
+          $json.sources | ForEach-Object {
+            if ($_.acquisition_mode -ne 'OPERATOR_SUPPLIED_UNVERIFIED_ORIGIN' -or
+                $_.sha256_observed -notmatch '^[A-F0-9]{64}$' -or
+                $_.primary_passage_evidence -ne 'NOT_VERIFIED') { throw 'R81_SOURCE_GUARD_FAILED' }
+          }
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\pi-bridge\Pin-R81NationalPdfSnapshots.ps1 -Root $root -Pp81Pdf $pdf1 -Uu18Pdf $pdf2
+          if ($LASTEXITCODE -ne 0) { throw 'R81_IDEMPOTENCY_FAILED' }
+          [IO.File]::WriteAllBytes($pdf1,[Text.Encoding]::ASCII.GetBytes('%PDF-1.4' + ('X' * 600) + '%%EOF'))
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\pi-bridge\Pin-R81NationalPdfSnapshots.ps1 -Root $root -Pp81Pdf $pdf1 -Uu18Pdf $pdf2
+          if ($LASTEXITCODE -eq 0) { throw 'R81_DRIFT_WAS_NOT_REJECTED' }
+          Write-Output 'PI_R81_OFFLINE_SYNTHETIC_GATES=PASS'
