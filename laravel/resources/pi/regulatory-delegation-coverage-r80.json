@@ -1,0 +1,59 @@
+{
+  "schema": "PI_R80_DELEGATION_COVERAGE_CANDIDATES_V1",
+  "catalogue_as_of": "2026-11-13",
+  "policy": "OFFICIAL_PDF_LOCATOR_NOT_EXCERPT_OR_LEGAL_VALIDATION",
+  "sources": [
+    {
+      "source_instrument_id": "PP-81-2012",
+      "target_instrument_id": "UU-18-2008",
+      "official_pdf_url": "https://peraturan.go.id/files/pp81-2012bt.pdf",
+      "pdf_page": 1,
+      "locator": "Menimbang (halaman pertama PP 81 Tahun 2012)",
+      "document_sha256": null,
+      "evidence_state": "OFFICIAL_PDF_LINK_ONLY_NOT_HASH_PINNED",
+      "provisions": [
+        {
+          "article": 11,
+          "paragraphs": [
+            2
+          ]
+        },
+        {
+          "article": 16,
+          "paragraphs": []
+        },
+        {
+          "article": 20,
+          "paragraphs": [
+            5
+          ]
+        },
+        {
+          "article": 22,
+          "paragraphs": [
+            2
+          ]
+        },
+        {
+          "article": 24,
+          "paragraphs": [
+            3
+          ]
+        },
+        {
+          "article": 25,
+          "paragraphs": [
+            3,
+            4
+          ]
+        },
+        {
+          "article": 28,
+          "paragraphs": [
+            3
+          ]
+        }
+      ]
+    }
+  ]
+}

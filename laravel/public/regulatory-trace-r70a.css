@@ -20,3 +20,10 @@
 .trace-acceptance-list{padding-left:20px;margin:9px 0 0}.trace-acceptance-list li{padding:4px 0}
 .trace-acceptance-ok{color:#a2f2c7}.trace-acceptance-fail{color:#ffba9f}
 #r79-acceptance-run:disabled{opacity:.55;cursor:wait}
+
+.r80-coverage-results{padding:16px;background:#133842;border:1px solid #2a545c;border-radius:10px;color:#b5dfd5}
+.r80-coverage-summary{font-weight:700;color:#a2f2c7;margin:0 0 12px}
+.r80-coverage-row{font-size:12px;line-height:1.65;padding:7px 0;border-bottom:1px solid #27505a}
+.r80-coverage-heading{font-weight:700;color:#fff}
+.r80-coverage-candidate{padding-left:12px}
+.r80-coverage-warning{color:#ffcb98;border-bottom:0}
