@@ -67,7 +67,8 @@ final class RegulatoryDelegationCoverage
                 || ! is_string($source['locator'] ?? null) || trim($source['locator']) === ''
                 || ! $this->registry->officialUrl($source['official_pdf_url'] ?? null)
                 || $source['official_pdf_url'] !== $instruments[$from]['source_url']
-                || ($source['document_sha256'] ?? 'unexpected') !== null
+                || ! array_key_exists('document_sha256', $source)
+                || $source['document_sha256'] !== null
                 || ($source['evidence_state'] ?? null) !== 'OFFICIAL_PDF_LINK_ONLY_NOT_HASH_PINNED'
                 || ! is_array($source['provisions'] ?? null)
                 || ! array_is_list($source['provisions'])
