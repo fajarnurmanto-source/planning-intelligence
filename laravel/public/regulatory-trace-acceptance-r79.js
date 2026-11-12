@@ -54,21 +54,47 @@
         typeof item.href === 'string' && item.href.startsWith('https://') &&
         !['CERTIFIED_HARMONIZATION','LEGALLY_VALIDATED'].includes(item.status)))
 
-    const safeGraph = data => data?.schema === 'PI_R74_BIDIRECTIONAL_GENEALOGY_TRACE_V1' &&
-      data?.tenant_id === 'ID-DIY-YOG' && data?.legal_harmonization === 'NOT_ASSESSED' &&
+    const safeGraph = (data, root, direction, lens) =>
+      data?.schema === 'PI_R74_BIDIRECTIONAL_GENEALOGY_TRACE_V1' &&
+      data?.tenant_id === 'ID-DIY-YOG' &&
+      data?.root === root && data?.direction === direction && data?.lens === lens &&
+      data?.legal_harmonization === 'NOT_ASSESSED' &&
+      data?.numeric_comparison === 'BLOCKED' &&
+      data?.review_status === 'REVIEW_REQUIRED' &&
       data?.production_admission === 'DENIED' &&
-      data?.result_status === 'PARTIAL_EVIDENCE_GRAPH_NOT_LEGAL_FINDING'
+      data?.result_status === 'PARTIAL_EVIDENCE_GRAPH_NOT_LEGAL_FINDING' &&
+      Array.isArray(data?.nodes) && Array.isArray(data?.relations) &&
+      data.node_count === data.nodes.length &&
+      data.edge_count === data.relations.length &&
+      data.relations.every(edge =>
+        edge.legal_effect === 'NOT_ASSESSED' &&
+        typeof edge.id === 'string' && /^[A-F0-9]{64}$/.test(edge.id))
+
+    // Require actual source-linked edges, not just names coexisting in a node list.
+    // These are evidence-trace candidates; edges do NOT certify legal authority.
+    const edge = (data, from, to, type) =>
+      Array.isArray(data?.relations) &&
+      data.relations.some(item =>
+        item.from === from && item.to === to && item.type === type)
+
+    const legalPath = data =>
+      has(data, 'PP-81-2012') && has(data, 'UU-18-2008:PASAL-16') &&
+      has(data, 'UU-18-2008') &&
+      edge(data, 'PP-81-2012', 'UU-18-2008:PASAL-16', 'IMPLEMENTS_PROVISION_OF') &&
+      edge(data, 'UU-18-2008:PASAL-16', 'UU-18-2008', 'PROVISION_OF')
 
     check('R74: PP 81/2012 menuju Pasal 16 dan UU 18/2008',
-      safeGraph(parents) && has(parents, 'PP-81-2012') &&
-      has(parents, 'UU-18-2008:PASAL-16') && has(parents, 'UU-18-2008'))
+      safeGraph(parents, 'PP-81-2012', 'ancestors', 'legal') && legalPath(parents))
 
     check('R74: UU 18/2008 menemukan turunannya PP 81/2012',
-      safeGraph(children) && has(children, 'UU-18-2008') && has(children, 'PP-81-2012'))
+      safeGraph(children, 'UU-18-2008', 'descendants', 'legal') && legalPath(children))
 
     check('R74: tema Persampahan menemukan UU dan PP',
-      safeGraph(thematic) && has(thematic, 'TOPIC:PERSAMPAHAN') &&
-      has(thematic, 'UU-18-2008') && has(thematic, 'PP-81-2012'))
+      safeGraph(thematic, 'TOPIC:PERSAMPAHAN', 'both', 'thematic') &&
+      has(thematic, 'TOPIC:PERSAMPAHAN') &&
+      has(thematic, 'UU-18-2008') && has(thematic, 'PP-81-2012') &&
+      edge(thematic, 'UU-18-2008', 'TOPIC:PERSAMPAHAN', 'REGULATES_TOPIC') &&
+      edge(thematic, 'PP-81-2012', 'TOPIC:PERSAMPAHAN', 'REGULATES_TOPIC'))
 
     return {pass: checks.every(item => item.pass), checks}
   }
