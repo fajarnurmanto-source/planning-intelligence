@@ -16,7 +16,7 @@
   let modulesAllowed = new Set(["regulatory"]) // fail-closed until server confirms
   let planName = "FREE"
   // Canonical Laravel equivalents, not claims of complete R70A-D feature parity.
-  const laravelHashes = {norma:'#r70l-title',perubahan:'#r72-title',cakupan:'#r70g-documents',genealogi:'#r74-title',laravel:'#r75-title'}
+  const laravelHashes = {perubahan:'#r72-title',cakupan:'#r70g-documents',genealogi:'#r74-title',laravel:'#r75-title'}
   const isLaravelActive = key => onLaravel && (location.hash ? laravelHashes[key] === location.hash : key === 'laravel')
   const spec = [
     {id:'superior',label:'PI Superior',subtitle:'Pusat keputusan lintas aplikasi',items:[
@@ -30,7 +30,7 @@
     ]},
     {id:'regulatory',label:'Regulatory Intelligence',subtitle:'Dasar hukum dan harmonisasi',items:[
       {label:'Telaah regulasi',href:'./regulatory-r69e.html',key:'regulasi'},
-      {label:'Aturan induk (Laravel R70L)',href:'./regulatory-laravel-r70g.html#r70l-title',key:'norma'},
+      {label:'Jejak norma (Laravel R79)',href:'./regulatory-trace-r70a.html',key:'norma'},
       {label:'Naskah & PDF (Laravel R78)',href:'./regulatory-sources-r70b.html',key:'naskah'},
       {label:'Garis waktu (Laravel R72)',href:'./regulatory-laravel-r70g.html#r72-title',key:'perubahan'},
       {label:'Sasaran Lampiran I/II (R70F)',href:'./regulatory-laravel-r70g.html#r70g-documents',key:'cakupan'},

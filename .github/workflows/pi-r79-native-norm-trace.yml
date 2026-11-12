@@ -1,0 +1,73 @@
+name: PI R79 Native Norm Trace QA
+
+on:
+  pull_request:
+    branches: [pilot/pi-laravel-github-bridge-20261108]
+    paths:
+      - 'laravel/app/Http/Controllers/Api/RegulatoryLegalTraceController.php'
+      - 'laravel/tests/Feature/RegulatoryLegalTraceTest.php'
+      - 'laravel/public/regulatory-trace-r70a.html'
+      - 'laravel/public/regulatory-trace-r70a.js'
+      - 'laravel/public/pi-ia-r69e.js'
+      - 'laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs'
+      - 'laravel/routes/web.php'
+      - '.github/workflows/pi-r79-native-norm-trace.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r79-native-norm-trace-20261112
+    paths:
+      - 'laravel/app/Http/Controllers/Api/RegulatoryLegalTraceController.php'
+      - 'laravel/tests/Feature/RegulatoryLegalTraceTest.php'
+      - 'laravel/public/regulatory-trace-r70a.html'
+      - 'laravel/public/regulatory-trace-r70a.js'
+      - 'laravel/public/pi-ia-r69e.js'
+      - 'laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs'
+      - 'laravel/routes/web.php'
+      - '.github/workflows/pi-r79-native-norm-trace.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  trace-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - name: Prepare ephemeral Laravel runtime
+        run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+      - name: Install locked dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: PHP syntax
+        run: |
+          php -l app/Http/Controllers/Api/RegulatoryLegalTraceController.php
+          php -l tests/Feature/RegulatoryLegalTraceTest.php
+          php -l routes/web.php
+      - name: Tenant, synthetic source, and legal guard tests
+        run: php vendor/bin/phpunit --filter 'RegulatoryLegalTraceTest|RegulatoryGenealogyTest|RegulatoryLegacyProjectionTest'
+      - name: Native R70A route
+        run: php artisan route:list --path=api/qa-regulatory-r70a/trace
+  navigation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax
+        run: |
+          node --check laravel/public/pi-ia-r69e.js
+          node --check laravel/public/regulatory-trace-r70a.js
+      - name: Sidebar smoke
+        run: node --test laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs

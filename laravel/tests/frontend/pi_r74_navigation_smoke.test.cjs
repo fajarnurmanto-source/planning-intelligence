@@ -89,7 +89,6 @@ test('Retired R70A-D menu links resolve to honest Laravel equivalents', () => {
   const ui = mount('/index.html', '')
   const html = fs.readFileSync(path.resolve(__dirname, '../../public/regulatory-laravel-r70g.html'), 'utf8')
   const mappings = [
-    ['Aturan induk (Laravel R70L)', 'r70l-title'],
     
     ['Garis waktu (Laravel R72)', 'r72-title'],
     ['Sasaran Lampiran I/II (R70F)', 'r70g-documents']
@@ -100,14 +99,13 @@ test('Retired R70A-D menu links resolve to honest Laravel equivalents', () => {
     assert.ok(html.includes('id="' + anchor + '"'), 'Missing target HTML anchor ' + anchor)
   }
   for (const link of ui.links()) {
-    assert.ok(!/regulatory-(?:trace-r70a|ledger-r70c|scope-r70d)\.html/.test(link.href || ''),
+    assert.ok(!/regulatory-(?:ledger-r70c|scope-r70d)\.html/.test(link.href || ''),
       'Menu still points to retired API page: ' + link.href)
   }
 })
 
 test('Every Laravel consolidation menu section has one active state', () => {
   const labels = [
-    ['#r70l-title', 'Aturan induk (Laravel R70L)'],
     ['#r72-title', 'Garis waktu (Laravel R72)'],
     ['#r70g-documents', 'Sasaran Lampiran I/II (R70F)'],
     ['#r74-title', 'Genealogi Regulasi (R74)'],
@@ -135,4 +133,16 @@ test('R78 full-source page is selected from the canonical sidebar', () => {
   const snapshot = mount('/regulatory-sources-r70b.html', '')
   assert.equal(snapshot.item('Naskah & PDF (Laravel R78)')?.classList.contains('active'), true)
   assert.equal(snapshot.links().filter(x => x.classList.contains('active')).length, 1)
+})
+
+
+test('R79 Laravel native trace appears in Regulatory sidebar and has honest caution', () => {
+  const home = mount('/index.html', '')
+  assert.equal(home.item('Jejak norma (Laravel R79)')?.href, './regulatory-trace-r70a.html')
+  const trace = mount('/regulatory-trace-r70a.html', '')
+  assert.equal(trace.item('Jejak norma (Laravel R79)')?.classList.contains('active'), true)
+  assert.equal(trace.links().filter(x => x.classList.contains('active')).length, 1)
+  const html = fs.readFileSync(path.resolve(__dirname, '../../public/regulatory-trace-r70a.html'), 'utf8')
+  assert.ok(html.includes('kesetaraan parsial'))
+  assert.ok(html.includes('belum diverifikasi hash pasalnya'))
 })

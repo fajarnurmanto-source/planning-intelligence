@@ -11,7 +11,7 @@
   }
   const safeLink = (parent,label,value) => {
     if(typeof value!=='string')return
-    const isOfficial=/^https:\/\/(?:peraturan\.go\.id|jdih\.jogjakota\.go\.id)\//.test(value)
+    const isOfficial=/^https:\/\/(?:peraturan\.go\.id|www\.peraturan\.go\.id|peraturan\.bpk\.go\.id|jdih\.jogjakota\.go\.id)\//.test(value)
     const isLocal=/^\.\/(?:sources_r68\/r68_yog_(?:apbd|penjabaran_apbd|renja_dlh)_selected_pages\.pdf|uu12-2011-r70a\.pdf)(?:#page=\d+)?$/.test(value)
     if(!isOfficial&&!isLocal)return
     const a=add('a','',label,parent);a.href=value
