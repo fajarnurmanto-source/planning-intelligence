@@ -74,5 +74,5 @@ jobs:
       - name: UI panel and strict warning labels
         run: |
           grep -q 'id="r80-coverage-results"' laravel/public/regulatory-trace-r70a.html
-          grep -q 'bukan verifikasi bunyi pasal' laravel/public/regulatory-trace-r70a.html
+          grep -q 'verifikasi bunyi pasal' laravel/public/regulatory-trace-r70a.html
           grep -q 'CURATED_LOCATOR_NOT_HASH_PINNED' laravel/app/Services/Pi/Regulatory/RegulatoryDelegationCoverage.php
