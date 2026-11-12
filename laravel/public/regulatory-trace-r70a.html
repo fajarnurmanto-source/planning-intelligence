@@ -11,6 +11,7 @@
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./regulatory-trace-r70a.js"></script>
+  <script defer src="./regulatory-trace-acceptance-r79.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -29,6 +30,12 @@
           <div class="hero-side"><span>CAKUPAN AKTIF</span><strong>Pemerintah Kota Yogyakarta</strong><p>Penjabaran APBD 2026 · Dokumen QA</p><span class="status-pill">● Keputusan reviewer diperlukan</span></div>
         </section>
         <section class="reg-trace-stats" aria-label="Ringkasan jejak normatif"><article><small>Simpul sumber</small><strong id="trace-nodes">—</strong><span>Termasuk peraturan tingkat atas</span></article><article><small>Relasi berbukti</small><strong id="trace-edges">—</strong><span>Relasi terkurasi, telaah wajib</span></article><article><small>Metadata perubahan</small><strong id="trace-amends">—</strong><span>Isi belum direkonsiliasi</span></article><article><small>Harmonisasi</small><strong>ABSTAIN</strong><span>Audit substantif belum selesai</span></article></section>
+        <section class="panel trace-panel" aria-labelledby="r79-acceptance-title">
+          <div class="panel-heading"><div><span class="section-number">QA · PENERIMAAN INTEGRASI</span><h2 id="r79-acceptance-title">Periksa koneksi R79 ↔ R78 ↔ R74</h2>
+          <p>Pengujian baca-saja menggunakan sesi PI Anda: tujuh bukti sumber, lima penanda perubahan, dan hubungan induk–turunan serta tematik persampahan. Ini <strong>bukan</strong> validasi hukum atau persetujuan produksi.</p></div></div>
+          <button id="r79-acceptance-run" class="primary-btn" type="button">Jalankan 8 pemeriksaan integrasi</button>
+          <div id="r79-acceptance-result" class="trace-acceptance-result" role="status" aria-live="polite">Belum diperiksa pada sesi browser ini.</div>
+        </section>
         <section class="panel trace-panel" aria-labelledby="trace-graph-title"><div class="panel-heading"><div><span class="section-number">01 · JEJAK RELASI</span><h2 id="trace-graph-title">Hubungan peraturan berbasis sumber</h2><p>Setiap hubungan menampilkan lokasi yang perlu diperiksa langsung pada sumber resmi. Arah panah menunjukkan klaim rujukan yang ditandai, bukan temuan harmonisasi atau jenjang kekuatan hukum yang sudah diputus.</p></div></div><div id="trace-relationships" class="trace-links"><p class="loading">Memeriksa jejak sumber…</p></div></section>
         <div class="reg-columns">
           <section class="panel" aria-labelledby="trace-findings-title"><div class="panel-heading"><div><span class="section-number">02 · HASIL PEMERIKSAAN AWAL</span><h2 id="trace-findings-title">Apa yang terbukti dan belum?</h2><p>Setiap status berfungsi sebagai antrean telaah, tanpa klaim konflik otomatis.</p></div></div><div id="trace-findings" class="reg-list"><p class="loading">Memeriksa status…</p></div></section>

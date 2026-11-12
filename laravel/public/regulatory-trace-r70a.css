@@ -15,3 +15,8 @@
 .trace-error{background:#4a312b;border:1px solid #9f6a50;border-radius:7px;padding:13px;color:#ffe3d7;font-size:12px}
 @media(max-width:1050px){.reg-trace-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.trace-links{grid-template-columns:1fr}}
 @media(max-width:600px){.reg-trace-stats{grid-template-columns:1fr}}
+
+.trace-acceptance-result{margin-top:14px;padding:14px;background:#153b45;border:1px solid #2c5d61;border-radius:9px;color:#bfe3d9;font-size:12px;line-height:1.7}
+.trace-acceptance-list{padding-left:20px;margin:9px 0 0}.trace-acceptance-list li{padding:4px 0}
+.trace-acceptance-ok{color:#a2f2c7}.trace-acceptance-fail{color:#ffba9f}
+#r79-acceptance-run:disabled{opacity:.55;cursor:wait}
