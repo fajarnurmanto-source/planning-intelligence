@@ -1,0 +1,78 @@
+name: PI R80 Evidence-Limited Delegation Coverage
+
+on:
+  pull_request:
+    branches: [pilot/pi-laravel-github-bridge-20261108]
+    paths:
+      - 'laravel/resources/pi/regulatory-delegation-coverage-r80.json'
+      - 'laravel/app/Services/Pi/Regulatory/RegulatoryDelegationCoverage.php'
+      - 'laravel/app/Http/Controllers/Api/RegulatoryDelegationCoverageController.php'
+      - 'laravel/tests/Feature/RegulatoryDelegationCoverageTest.php'
+      - 'laravel/routes/web.php'
+      - 'laravel/public/regulatory-trace-r70a.html'
+      - 'laravel/public/regulatory-delegation-coverage-r80.js'
+      - '.github/workflows/pi-r80-delegation-coverage.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r80-delegation-coverage-20261113
+    paths:
+      - 'laravel/resources/pi/regulatory-delegation-coverage-r80.json'
+      - 'laravel/app/Services/Pi/Regulatory/RegulatoryDelegationCoverage.php'
+      - 'laravel/app/Http/Controllers/Api/RegulatoryDelegationCoverageController.php'
+      - 'laravel/tests/Feature/RegulatoryDelegationCoverageTest.php'
+      - 'laravel/routes/web.php'
+      - 'laravel/public/regulatory-trace-r70a.html'
+      - 'laravel/public/regulatory-delegation-coverage-r80.js'
+      - '.github/workflows/pi-r80-delegation-coverage.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  delegation-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - name: Prepare ephemeral Laravel runtime
+        run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+      - name: Install locked dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: PHP syntax
+        run: |
+          php -l app/Services/Pi/Regulatory/RegulatoryDelegationCoverage.php
+          php -l app/Http/Controllers/Api/RegulatoryDelegationCoverageController.php
+          php -l tests/Feature/RegulatoryDelegationCoverageTest.php
+          php -l routes/web.php
+      - name: Candidate coverage plus accepted existing genealogy regression
+        run: php vendor/bin/phpunit --filter 'RegulatoryDelegationCoverageTest|RegulatoryGenealogyTest|RegulatoryLegalTraceTest'
+      - name: Registry route
+        run: php artisan route:list --path=api/qa-regulatory-r80/delegation-coverage
+
+  frontend-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: R80 UI JavaScript syntax
+        run: node --check laravel/public/regulatory-delegation-coverage-r80.js
+      - name: R79 acceptance remains independent
+        run: node --test laravel/tests/frontend/pi_r79_browser_acceptance.test.cjs
+      - name: UI panel and strict warning labels
+        run: |
+          grep -q 'id="r80-coverage-results"' laravel/public/regulatory-trace-r70a.html
+          grep -q 'bukan verifikasi bunyi pasal' laravel/public/regulatory-trace-r70a.html
+          grep -q 'CURATED_LOCATOR_NOT_HASH_PINNED' laravel/app/Services/Pi/Regulatory/RegulatoryDelegationCoverage.php
