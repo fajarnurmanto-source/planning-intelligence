@@ -138,94 +138,17 @@ try {
       $errors = @()
       foreach ($url in $entry.urls) {
         try {
-          # Do not accept an unexpected redirect or silently approve another host.
+          # Reject redirects or a 200 response containing HTML.
           Get-PinnedOfficialPdf -Url $url -Destination $candidate
-          # A 200 response with HTML is not a successful official PDF source.
           $candidateHash = Test-PdfContainer $candidate
-          if ($candidateHash -notmatch '^[A-F0-9]{64}
-          break
-        }
-        catch {
-          $errors += ($url + ' -> ' + $_.Exception.Message)
-          # Only the temporary staging copy may be removed before retry.
-          if (Test-Path -LiteralPath $candidate) {
-            Remove-Item -LiteralPath $candidate -Force -ErrorAction Stop
+          if ($candidateHash -notmatch '^[A-F0-9]{64}$') {
+            throw 'R81_CANDIDATE_HASH_INVALID'
           }
-          Write-Output ('R81_OFFICIAL_CANDIDATE_FAILED=' + $entry.id + ';URL=' + $url)
-        }
-      }
-      if ($null -eq $actualDownloadUrl) {
-        throw ('R81_ACQUISITION_FAILED_' + $entry.id + ': ' + ($errors -join ' | '))
-      }
-    }
-    $sha = Test-PdfContainer $candidate
-    $records += [ordered]@{
-      instrument_id=$entry.id
-      official_reference_url=$entry.urls[0]
-      acquisition_url=$actualDownloadUrl
-      relative_path=('pdf/' + $entry.file)
-      sha256_observed=$sha
-      bytes=[long](Get-Item -LiteralPath $candidate).Length
-      acquisition_mode=$mode
-      source_identity='REVIEW_REQUIRED'
-      primary_passage_evidence='NOT_VERIFIED'
-      legal_harmonization='NOT_ASSESSED'
-    }
-    Write-Output ('R81_STAGED=' + $entry.id + ';HASH=' + $sha + ';MODE=' + $mode)
-  }
-
-  $data = [ordered]@{
-    schema='PI_R81_NATIONAL_PDF_OBSERVED_SNAPSHOTS_V1'
-    tenant_id='ID-DIY-YOG'
-    source_count=2
-    source_identity_certification='NOT_PERFORMED'
-    source_passage_verification='NOT_PERFORMED'
-    r80_relation_promotion='NOT_PERFORMED'
-    legal_harmonization='NOT_ASSESSED'
-    production_admission='DENIED'
-    sources=$records
-  }
-  $encoded = ($data | ConvertTo-Json -Depth 8).Trim()
-  foreach ($record in $records) {
-    $filename = [IO.Path]::GetFileName($record.relative_path)
-    $existing = Join-Path $finalDir $filename
-    if (Test-Path -LiteralPath $existing) {
-      if ((Test-PdfContainer $existing) -cne $record.sha256_observed) { throw ('R81_EXISTING_SNAPSHOT_DRIFT=' + $record.instrument_id) }
-    }
-  }
-  if (Test-Path -LiteralPath $manifest) {
-    if ([IO.File]::ReadAllText($manifest).Trim() -cne $encoded) { throw 'R81_MANIFEST_ALREADY_EXISTS_WITH_DIFFERENT_CONTENT' }
-  }
-  New-Item -ItemType Directory -Path $finalDir -Force | Out-Null
-  foreach ($record in $records) {
-    $filename = [IO.Path]::GetFileName($record.relative_path)
-    $final = Join-Path $finalDir $filename
-    if (!(Test-Path -LiteralPath $final)) {
-      Copy-Item -LiteralPath (Join-Path $stage $filename) -Destination $final -ErrorAction Stop
-    }
-    if ((Test-PdfContainer $final) -cne $record.sha256_observed) { throw 'R81_CANONICAL_HASH_FAILED' }
-  }
-  if (!(Test-Path -LiteralPath $manifest)) {
-    $tempManifest = $manifest + '.tmp-' + [guid]::NewGuid().ToString('N')
-    [IO.File]::WriteAllText($tempManifest,$encoded + [Environment]::NewLine,[Text.UTF8Encoding]::new($false))
-    Move-Item -LiteralPath $tempManifest -Destination $manifest -ErrorAction Stop
-  }
-  Write-Output 'PI_R81_NATIONAL_PDF_SNAPSHOTS=2/2'
-  Write-Output ('R81_OBSERVED_MANIFEST=' + $manifest)
-  Write-Output 'PI_R81_PRIMARY_PASSAGES=NOT_VERIFIED'
-  Write-Output 'PI_R81_LEGAL_HARMONIZATION=NOT_ASSESSED'
-  Write-Output 'PI_R81_PRODUCTION_ADMISSION=DENIED'
-  Write-Output 'PI_R81_LOCAL_CAPTURE=PASS'
-} finally {
-  if (Test-Path -LiteralPath $stage) { Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue }
-}
-) { throw 'R81_CANDIDATE_HASH_INVALID' }
           $actualDownloadUrl = $url
           break
-        }
-        catch {
+        } catch {
           $errors += ($url + ' -> ' + $_.Exception.Message)
-          # Only the temporary staging copy may be removed before retry.
+          # Only a temporary staging copy is removed prior to retry.
           if (Test-Path -LiteralPath $candidate) {
             Remove-Item -LiteralPath $candidate -Force -ErrorAction Stop
           }
