@@ -11,6 +11,7 @@ on:
       - pilot/pi-laravel-github-bridge-20261108
       - feature/pi-r81-national-pdf-snapshot-capture-20261113
       - fix/pi-r81-uu18-official-fallback-20261113
+      - fix/pi-r81-verified-bpk-jdihn-fallback-20261113
     paths:
       - 'tools/pi-bridge/Pin-R81NationalPdfSnapshots.ps1'
       - '.github/workflows/pi-r81-national-pdf-pinning.yml'
@@ -74,6 +75,8 @@ jobs:
           # without requiring external network access in synthetic CI.
           $scriptText = Get-Content -LiteralPath '.\tools\pi-bridge\Pin-R81NationalPdfSnapshots.ps1' -Raw
           $approvedUrls = @(
+            'https://peraturan.bpk.go.id/Download/28462/UU%20Nomor%2018%20Tahun%202008.pdf',
+            'https://jdihn.go.id/file/download?id_anggota=2098&id_dokumen=1369',
             'https://www.peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf',
             'https://peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf',
             'https://dpr.go.id/dokjdih/document/uu/UU_2008_18.pdf'
