@@ -38,6 +38,8 @@ function Get-PinnedOfficialPdf {
   param([string]$Url,[string]$Destination)
   $allowed = @(
     'https://www.peraturan.go.id/files/pp81-2012bt.pdf',
+    'https://peraturan.bpk.go.id/Download/28462/UU%20Nomor%2018%20Tahun%202008.pdf',
+    'https://jdihn.go.id/file/download?id_anggota=2098&id_dokumen=1369',
     'https://dpr.go.id/dokjdih/document/uu/UU_2008_18.pdf',
     'https://www.peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf',
     'https://peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf'
@@ -113,6 +115,8 @@ $inputs = @(
   @{
     id='UU-18-2008'
     urls=@(
+      'https://peraturan.bpk.go.id/Download/28462/UU%20Nomor%2018%20Tahun%202008.pdf',
+      'https://jdihn.go.id/file/download?id_anggota=2098&id_dokumen=1369',
       'https://www.peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf',
       'https://peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf',
       'https://dpr.go.id/dokjdih/document/uu/UU_2008_18.pdf'
