@@ -10,6 +10,7 @@ on:
     branches:
       - pilot/pi-laravel-github-bridge-20261108
       - feature/pi-r81-national-pdf-snapshot-capture-20261113
+      - fix/pi-r81-uu18-official-fallback-20261113
     paths:
       - 'tools/pi-bridge/Pin-R81NationalPdfSnapshots.ps1'
       - '.github/workflows/pi-r81-national-pdf-pinning.yml'
@@ -50,6 +51,7 @@ jobs:
           $json.sources | ForEach-Object {
             if ($_.acquisition_mode -ne 'OPERATOR_SUPPLIED_UNVERIFIED_ORIGIN' -or
                 $_.sha256_observed -notmatch '^[A-F0-9]{64}$' -or
+                $null -ne $_.acquisition_url -or
                 $_.primary_passage_evidence -ne 'NOT_VERIFIED') { throw 'R81_SOURCE_GUARD_FAILED' }
           }
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\pi-bridge\Pin-R81NationalPdfSnapshots.ps1 -Root $root -Pp81Pdf $pdf1 -Uu18Pdf $pdf2
@@ -67,5 +69,20 @@ jobs:
           if ($child.ExitCode -eq 0) { throw 'R81_DRIFT_WAS_NOT_REJECTED' }
           if ((Get-Content -LiteralPath $stderr -Raw) -notmatch 'R81_EXISTING_SNAPSHOT_DRIFT') {
             throw 'R81_WRONG_NEGATIVE_FAILURE'
+          }
+          # Verify the pinned government fallbacks and preserve guards
+          # without requiring external network access in synthetic CI.
+          $scriptText = Get-Content -LiteralPath '.\tools\pi-bridge\Pin-R81NationalPdfSnapshots.ps1' -Raw
+          $approvedUrls = @(
+            'https://www.peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf',
+            'https://peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf',
+            'https://dpr.go.id/dokjdih/document/uu/UU_2008_18.pdf'
+          )
+          foreach ($url in $approvedUrls) {
+            if (-not $scriptText.Contains($url)) { throw 'R81_OFFICIAL_FALLBACK_NOT_ALLOWLISTED' }
+          }
+          if ($scriptText -notmatch 'AllowAutoRedirect = \$false' -or
+              $scriptText -notmatch 'Test-PdfContainer \$candidate') {
+            throw 'R81_OFFICIAL_FALLBACK_INTEGRITY_GUARD_MISSING'
           }
           Write-Output 'PI_R81_OFFLINE_SYNTHETIC_GATES=PASS'

@@ -38,7 +38,9 @@ function Get-PinnedOfficialPdf {
   param([string]$Url,[string]$Destination)
   $allowed = @(
     'https://www.peraturan.go.id/files/pp81-2012bt.pdf',
-    'https://dpr.go.id/dokjdih/document/uu/UU_2008_18.pdf'
+    'https://dpr.go.id/dokjdih/document/uu/UU_2008_18.pdf',
+    'https://www.peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf',
+    'https://peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf'
   )
   if ($Url -cnotin $allowed) { throw 'R81_UNTRUSTED_URL' }
   $handler = New-Object Net.Http.HttpClientHandler
@@ -102,8 +104,22 @@ $registry = Join-Path $base '08_RUNTIME\R81_NATIONAL_PDF_SNAPSHOTS'
 $finalDir = Join-Path $registry 'pdf'
 $manifest = Join-Path $registry 'observed-manifest.json'
 $inputs = @(
-  @{id='PP-81-2012';url='https://www.peraturan.go.id/files/pp81-2012bt.pdf';file='PP-81-2012.pdf';local=$Pp81Pdf},
-  @{id='UU-18-2008';url='https://dpr.go.id/dokjdih/document/uu/UU_2008_18.pdf';file='UU-18-2008.pdf';local=$Uu18Pdf}
+  @{
+    id='PP-81-2012'
+    urls=@('https://www.peraturan.go.id/files/pp81-2012bt.pdf')
+    file='PP-81-2012.pdf'
+    local=$Pp81Pdf
+  },
+  @{
+    id='UU-18-2008'
+    urls=@(
+      'https://www.peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf',
+      'https://peraturan.go.id/files/UU%2B18%2BTahun%2B2008.pdf',
+      'https://dpr.go.id/dokjdih/document/uu/UU_2008_18.pdf'
+    )
+    file='UU-18-2008.pdf'
+    local=$Uu18Pdf
+  }
 )
 New-Item -ItemType Directory -Path $registry -Force | Out-Null
 $stage = Join-Path $registry ('stage-' + [guid]::NewGuid().ToString('N'))
@@ -113,18 +129,41 @@ try {
   foreach ($entry in $inputs) {
     $candidate = Join-Path $stage $entry.file
     $mode = 'OFFICIAL_HTTPS_NO_REDIRECT'
+    $actualDownloadUrl = $null
     if (![string]::IsNullOrWhiteSpace($entry.local)) {
       $source = (Resolve-Path -LiteralPath $entry.local -ErrorAction Stop).Path
       Copy-Item -LiteralPath $source -Destination $candidate -ErrorAction Stop
       $mode = 'OPERATOR_SUPPLIED_UNVERIFIED_ORIGIN'
     } else {
-      try { Get-PinnedOfficialPdf -Url $entry.url -Destination $candidate }
-      catch { throw ('R81_ACQUISITION_FAILED_' + $entry.id + ': ' + $_.Exception.Message) }
+      $errors = @()
+      foreach ($url in $entry.urls) {
+        try {
+          # Reject redirects or a 200 response containing HTML.
+          Get-PinnedOfficialPdf -Url $url -Destination $candidate
+          $candidateHash = Test-PdfContainer $candidate
+          if ($candidateHash -notmatch '^[A-F0-9]{64}$') {
+            throw 'R81_CANDIDATE_HASH_INVALID'
+          }
+          $actualDownloadUrl = $url
+          break
+        } catch {
+          $errors += ($url + ' -> ' + $_.Exception.Message)
+          # Only a temporary staging copy is removed prior to retry.
+          if (Test-Path -LiteralPath $candidate) {
+            Remove-Item -LiteralPath $candidate -Force -ErrorAction Stop
+          }
+          Write-Output ('R81_OFFICIAL_CANDIDATE_FAILED=' + $entry.id + ';URL=' + $url)
+        }
+      }
+      if ($null -eq $actualDownloadUrl) {
+        throw ('R81_ACQUISITION_FAILED_' + $entry.id + ': ' + ($errors -join ' | '))
+      }
     }
     $sha = Test-PdfContainer $candidate
     $records += [ordered]@{
       instrument_id=$entry.id
-      official_reference_url=$entry.url
+      official_reference_url=$entry.urls[0]
+      acquisition_url=$actualDownloadUrl
       relative_path=('pdf/' + $entry.file)
       sha256_observed=$sha
       bytes=[long](Get-Item -LiteralPath $candidate).Length
