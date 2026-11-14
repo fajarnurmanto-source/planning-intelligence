@@ -1,0 +1,60 @@
+name: PI R82 Extractor Diagnostics Offline QA
+
+on:
+  pull_request:
+    branches: [pilot/pi-laravel-github-bridge-20261108]
+    paths:
+      - 'tools/pi-bridge/Diagnose-R82TextExtractor.ps1'
+      - '.github/workflows/pi-r82-extractor-diagnostic.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r82-extractor-diagnostic-20261115
+    paths:
+      - 'tools/pi-bridge/Diagnose-R82TextExtractor.ps1'
+      - '.github/workflows/pi-r82-extractor-diagnostic.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows-selftest:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Windows PowerShell 5.1 AST
+        shell: powershell
+        run: |
+          $path = 'tools/pi-bridge/Diagnose-R82TextExtractor.ps1'
+          $tokens = $null
+          $parseErrors = $null
+          $ast = [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path -LiteralPath $path).Path,
+            [ref]$tokens,
+            [ref]$parseErrors
+          )
+          if ($null -eq $ast -or $parseErrors.Count -ne 0) {
+            $parseErrors | ForEach-Object { Write-Error $_.Message }
+            throw 'PI_R82_DIAGNOSTIC_SYNTAX_INVALID'
+          }
+          Write-Output 'PI_R82_DIAGNOSTIC_POWERSHELL_AST=PASS'
+      - name: Run offline source path and SHA selftest
+        shell: powershell
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\pi-bridge\Diagnose-R82TextExtractor.ps1 -SelfTest
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R82_DIAGNOSTIC_SELFTEST_FAILED' }
+      - name: No hidden writes or fetches in default mode
+        shell: powershell
+        run: |
+          $code = Get-Content -LiteralPath 'tools/pi-bridge/Diagnose-R82TextExtractor.ps1' -Raw
+          if ($code -notmatch 'InstallWslPoppler' -or
+              $code -notmatch 'PI_R82_SOURCE_INTEGRITY=PASS_2_OF_2' -or
+              $code -notmatch 'PI_R82_DIRECT_TEXT_EXTRACTION=PASS_2_OF_2' -or
+              $code -notmatch 'CHECK=PHP_SYMFONY_PROCESS_EXECUTION_PATH') {
+            throw 'PI_R82_DIAGNOSTIC_CONTRACT_INVALID'
+          }
+          if ($code -match 'Invoke-WebRequest|Start-BitsTransfer|Set-Content.*observed-manifest|Remove-Item.*R81_NATIONAL_PDF') {
+            throw 'PI_R82_DIAGNOSTIC_UNEXPECTED_NETWORK_OR_SOURCE_MUTATION'
+          }
+          Write-Output 'PI_R82_READ_ONLY_DEFAULT_POLICY=PASS'
