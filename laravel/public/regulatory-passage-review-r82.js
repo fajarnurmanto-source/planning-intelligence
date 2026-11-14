@@ -9,6 +9,7 @@
       report.tenant_id !== 'ID-DIY-YOG' ||
       report.source_snapshot_integrity !== 'R81_TWO_INDEPENDENT_SHA256_PINS_MATCH' ||
       report.passage_verification !== 'UNREVIEWED_TEXT_LAYER_CANDIDATES_ONLY' ||
+      report.review_status !== 'REVIEW_REQUIRED' ||
       report.relation_admission !== 'NOT_PERFORMED' ||
       report.legal_harmonization !== 'NOT_ASSESSED' ||
       report.numeric_comparison !== 'BLOCKED' ||
@@ -34,6 +35,11 @@
     }
 
     for (const record of report.candidates) {
+      if (record.review_status !== 'REVIEW_REQUIRED' ||
+        record.relation_admission !== 'NOT_PERFORMED' ||
+        record.legal_effect !== 'NOT_ASSESSED') {
+        throw Error('Status kandidat R82 tidak aman untuk telaah')
+      }
       const detail = document.createElement('details')
       detail.className = 'r82-candidate'
       const heading = document.createElement('summary')
