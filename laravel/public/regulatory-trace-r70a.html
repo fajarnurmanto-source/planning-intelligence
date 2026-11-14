@@ -13,6 +13,7 @@
   <script defer src="./regulatory-trace-r70a.js"></script>
   <script defer src="./regulatory-trace-acceptance-r79.js"></script>
   <script defer src="./regulatory-delegation-coverage-r80.js"></script>
+  <script defer src="./regulatory-passage-review-r82.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -41,6 +42,15 @@
           <div class="panel-heading"><div><span class="section-number">QA · CAKUPAN PENDELEGASIAN R80</span><h2 id="r80-coverage-title">Pasal rujukan yang belum seluruhnya terpetakan</h2>
           <p>Daftar kandidat berasal dari bagian <em>Menimbang</em> PP 81/2012 dan diperbandingkan dengan locator terkurasi R74. <strong>Ini bukan verifikasi bunyi pasal, keberlakuan, atau harmonisasi hukum.</strong></p></div></div>
           <div id="r80-coverage-results" class="r80-coverage-results" aria-live="polite">Memeriksa cakupan locator sumber…</div>
+        </section>
+        <section class="panel trace-panel" aria-labelledby="r82-review-title">
+          <div class="panel-heading"><div>
+            <span class="section-number">QA · VERIFIKASI TEKS NASIONAL R82</span>
+            <h2 id="r82-review-title">Kandidat bukti pasal dan ayat dari PDF yang terkunci</h2>
+            <p>Hasil ekstraksi lokal dari PP 81/2012 dan UU 18/2008, masing-masing dibandingkan dengan SHA-256 R81. Potongan teks, nomor halaman PDF, dan hash kutipan disajikan untuk telaah. <strong>Belum merupakan persetujuan atau putusan harmonisasi hukum.</strong></p>
+          </div></div>
+          <button id="r82-passage-refresh" type="button" class="primary-btn">Periksa kandidat bukti R82</button>
+          <div id="r82-passage-results" class="r82-results" aria-live="polite">Belum diperiksa dari PDF nasional.</div>
         </section>
         <section class="panel trace-panel" aria-labelledby="trace-graph-title"><div class="panel-heading"><div><span class="section-number">01 · JEJAK RELASI</span><h2 id="trace-graph-title">Hubungan peraturan berbasis sumber</h2><p>Setiap hubungan menampilkan lokasi yang perlu diperiksa langsung pada sumber resmi. Arah panah menunjukkan klaim rujukan yang ditandai, bukan temuan harmonisasi atau jenjang kekuatan hukum yang sudah diputus.</p></div></div><div id="trace-relationships" class="trace-links"><p class="loading">Memeriksa jejak sumber…</p></div></section>
         <div class="reg-columns">
