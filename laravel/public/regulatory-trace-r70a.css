@@ -27,3 +27,12 @@
 .r80-coverage-heading{font-weight:700;color:#fff}
 .r80-coverage-candidate{padding-left:12px}
 .r80-coverage-warning{color:#ffcb98;border-bottom:0}
+
+.r82-results{margin-top:14px;padding:14px;background:#153b45;border:1px solid #2c5d61;border-radius:10px;color:#c7e1da;max-height:680px;overflow:auto}
+.r82-summary{font-weight:700;color:#b0f6d1;margin:0 0 12px}
+.r82-source{font-size:12px;color:#abddca;word-break:break-word}
+.r82-candidate{margin:11px 0;border:1px solid #426a71;border-radius:8px;padding:10px 13px}
+.r82-candidate summary{cursor:pointer;font-weight:650}
+.r82-excerpt-label{font-size:11px;color:#a5d9d0;margin-top:12px}
+.r82-excerpt{font-size:12px;line-height:1.75;border-left:3px solid #659f9b;padding:10px 12px;margin:8px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.r82-warning{font-size:12px;color:#ffcf9e}
