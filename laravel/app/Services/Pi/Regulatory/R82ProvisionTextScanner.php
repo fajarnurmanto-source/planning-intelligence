@@ -47,7 +47,7 @@ final class R82ProvisionTextScanner
         $preamble = '';
         $preambleOffset = null;
         if (preg_match('/\bMenimbang\s*:\s*(.*?)\bMengingat\s*:/isu', $ppText, $found, PREG_OFFSET_CAPTURE)) {
-            $preamble = preg_replace('/\s+/u', ' ', $found[1][0]) ?? '';
+            $preamble = $found[1][0];
             $preambleOffset = $found[1][1];
         }
 
@@ -66,8 +66,8 @@ final class R82ProvisionTextScanner
 
             $ref = null;
             if ($preamble !== '' &&
-                preg_match('/\bPasal\s+'.preg_quote((string)$article, '/').'\b(?:(?!\bPasal\b).){0,160}/iu', $preamble, $m)) {
-                $candidateText = $m[0];
+                preg_match('/\bPasal\s+'.preg_quote((string)$article, '/').'\b(?:(?!\bPasal\b)[\s\S]){0,160}/iu', $preamble, $m, PREG_OFFSET_CAPTURE)) {
+                $candidateText = trim(preg_replace('/\s+/u', ' ', $m[0][0]) ?? '');
                 $complete = true;
                 foreach ($paragraphs as $para) {
                     if (! is_int($para) || $para < 1 || $para > 99
@@ -77,7 +77,7 @@ final class R82ProvisionTextScanner
                 }
                 if ($complete) {
                     $ref = [
-                        'pdf_page' => $this->page($ppText, $preambleOffset ?? 0),
+                        'pdf_page' => $this->page($ppText, ($preambleOffset ?? 0) + $m[0][1]),
                         'excerpt' => $candidateText,
                         'excerpt_sha256' => strtoupper(hash('sha256', $candidateText)),
                         'evidence_state' => 'EXTRACTED_PP_PREAMBLE_REFERENCE_FOR_REVIEW',
