@@ -205,6 +205,12 @@ final class R82NationalPassageTest extends TestCase
         $this->getJson($url)->assertUnauthorized();
         $this->actingAs(User::factory()->create(['tenant_id' => 'QA-OTHER']))
             ->getJson($url)->assertForbidden();
+        // Force a missing/unverifiable source instead of depending on
+        // whether a REAL R82 report already exists on the developer laptop.
+        $this->mock(R82NationalSourceVerifier::class, function (\Mockery\MockInterface $mock): void {
+            $mock->shouldReceive('verify')->once()
+                ->andThrow(new RuntimeException('R82_TEST_SOURCE_UNAVAILABLE'));
+        });
         $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
             ->getJson($url)->assertStatus(503)
             ->assertJsonPath('status', 'ABSTAIN')
