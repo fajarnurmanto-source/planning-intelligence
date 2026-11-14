@@ -205,10 +205,23 @@ final class R82NationalPassageTest extends TestCase
         $this->getJson($url)->assertUnauthorized();
         $this->actingAs(User::factory()->create(['tenant_id' => 'QA-OTHER']))
             ->getJson($url)->assertForbidden();
-        $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
-            ->getJson($url)->assertStatus(503)
-            ->assertJsonPath('status', 'ABSTAIN')
-            ->assertJsonPath('production_admission', 'DENIED');
+        // The same test runs both in clean CI (no R81/R82 files) and after
+        // real local R82 acceptance (a valid prepared report may exist).
+        $pipeline = app(\App\Services\Pi\Regulatory\R82NationalEvidencePipeline::class);
+        $prepared = is_file($pipeline->outputPath()) &&
+            is_file($pipeline->snapshotDirectory().DIRECTORY_SEPARATOR.'observed-manifest.json');
+        $response = $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
+            ->getJson($url);
+        if ($prepared) {
+            $response->assertOk()
+                ->assertJsonPath('review_status', 'REVIEW_REQUIRED')
+                ->assertJsonPath('legal_harmonization', 'NOT_ASSESSED')
+                ->assertJsonPath('production_admission', 'DENIED');
+        } else {
+            $response->assertStatus(503)
+                ->assertJsonPath('status', 'ABSTAIN')
+                ->assertJsonPath('production_admission', 'DENIED');
+        }
         Http::assertNothingSent();
     }
 }
