@@ -94,6 +94,17 @@ final class R82NationalPassageTest extends TestCase
         }
     }
 
+    public function test_pp_reference_page_is_based_on_reference_offset_not_menimbang_heading(): void
+    {
+        $pp = str_replace('dan Pasal 28 ayat (3)',
+            "dan \fPasal 28 ayat (3)", $this->pp());
+        $result = app(R82ProvisionTextScanner::class)
+            ->scan($pp, $this->uu(), $this->candidates());
+        $this->assertSame(7, $result['extracted']);
+        $this->assertSame(2, $result['records'][6]['pp_reference']['pdf_page']);
+        $this->assertSame(1, $result['records'][0]['pp_reference']['pdf_page']);
+    }
+
     public function test_wrong_paragraph_and_explanation_only_articles_are_not_admitted(): void
     {
         $uu = str_replace("(4) Isi contoh empat.\n", '', $this->uu());
