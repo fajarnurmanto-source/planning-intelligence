@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\Pi\Regulatory\R82NationalEvidencePipeline;
 use App\Services\Pi\Regulatory\OfficialNormativeAncestry;
 use App\Services\Pi\Regulatory\OfficialParentEvidenceExpansion;
 use App\Services\Pi\Regulatory\OfficialParentResolver;
@@ -140,3 +141,63 @@ Schedule::command('pi:regulatory-ancestry:refresh')->dailyAt('03:30')->timezone(
 // scheduled task is not restarted or modified.
 Schedule::command('pi:regulatory-ancestry:advance')
     ->everySixHours()->timezone('Asia/Jakarta')->withoutOverlapping(60);
+
+
+// R82: explicit local-only command. Reuses R81 pinned bytes and R80 candidates.
+// It never writes to R81, edits the law graph, calls AI, or approves legal effects.
+Artisan::command('pi:r82:build', function (): int {
+    try {
+        $pipeline = app(R82NationalEvidencePipeline::class);
+        $report = $pipeline->build();
+        $this->line('PI_R82_SOURCE_INTEGRITY=PASS_2_OF_2');
+        $this->line('PI_R82_TEXT_PP='.$report['sources'][0]['text_layer_status']);
+        $this->line('PI_R82_TEXT_UU='.$report['sources'][1]['text_layer_status']);
+
+        if (count(array_filter($report['sources'],
+            static fn (array $source): bool =>
+                $source['text_layer_status'] === 'LOCAL_TEXT_LAYER_EXTRACTED')) !== 2) {
+            $this->warn('PI_R82_TEXT_EXTRACTION=ABSTAIN_EXTRACTOR_OR_TEXT_LAYER_UNAVAILABLE');
+            $this->warn('PI_R82_REPORT_NOT_WRITTEN=YES');
+            return 2;
+        }
+
+        $json = json_encode($report,
+            JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)."\n";
+        $destination = $pipeline->outputPath();
+        $dir = dirname($destination);
+        if (! is_dir($dir) && ! mkdir($dir, 0750, true) && ! is_dir($dir)) {
+            throw new RuntimeException('R82_OUTPUT_DIRECTORY_UNAVAILABLE');
+        }
+
+        if (is_file($destination)) {
+            if (file_get_contents($destination) !== $json) {
+                throw new RuntimeException('R82_EXISTING_REPORT_DIFF_REVIEW_REQUIRED');
+            }
+            $this->line('PI_R82_REPORT=ALREADY_PREPARED');
+        } else {
+            $tmp = $destination.'.tmp-'.bin2hex(random_bytes(8));
+            if (file_put_contents($tmp, $json, LOCK_EX) !== strlen($json)) {
+                @unlink($tmp);
+                throw new RuntimeException('R82_REPORT_WRITE_FAILED');
+            }
+            if (file_exists($destination) || ! rename($tmp, $destination)) {
+                @unlink($tmp);
+                throw new RuntimeException('R82_REPORT_PUBLISH_FAILED');
+            }
+            $this->info('PI_R82_REPORT=PREPARED');
+        }
+
+        $this->line('PI_R82_CANDIDATES='.$report['r80_candidate_article_count']);
+        $this->line('PI_R82_TEXT_CANDIDATES='.$report['text_candidate_article_count']);
+        $this->line('PI_R82_UNRESOLVED='.$report['unresolved_article_count']);
+        $this->line('PI_R82_HUMAN_REVIEW=REQUIRED');
+        $this->line('PI_R82_RELATION_ADMISSION=NOT_PERFORMED');
+        $this->line('PI_R82_PRODUCTION_ADMISSION=DENIED');
+        $this->line('PI_R82_LOCAL_REPORT=PASS');
+        return 0;
+    } catch (Throwable $error) {
+        report($error);
+        $this->error('PI_R82_BUILD_BLOCKED='.$error->getMessage());
+        return 1;
+    }
+})->purpose('Extract review-only national provision candidates from immutable R81 snapshots');
