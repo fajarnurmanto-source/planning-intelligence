@@ -1,0 +1,79 @@
+name: PI R82 Immutable National Passage Review QA
+
+on:
+  pull_request:
+    branches: [pilot/pi-laravel-github-bridge-20261108]
+    paths:
+      - 'laravel/app/Services/Pi/Regulatory/R82*.php'
+      - 'laravel/app/Http/Controllers/Api/R82*.php'
+      - 'laravel/tests/Feature/R82*.php'
+      - 'laravel/tests/frontend/pi_r82_review_smoke.test.cjs'
+      - 'laravel/public/regulatory-passage-review-r82.js'
+      - 'laravel/public/regulatory-trace-r70a.html'
+      - 'laravel/routes/web.php'
+      - 'laravel/routes/console.php'
+      - '.github/workflows/pi-r82-national-passage-review.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r82-pinned-passage-review-20261114
+    paths:
+      - 'laravel/app/Services/Pi/Regulatory/R82*.php'
+      - 'laravel/app/Http/Controllers/Api/R82*.php'
+      - 'laravel/tests/Feature/R82*.php'
+      - 'laravel/tests/frontend/pi_r82_review_smoke.test.cjs'
+      - 'laravel/public/regulatory-passage-review-r82.js'
+      - 'laravel/public/regulatory-trace-r70a.html'
+      - 'laravel/routes/web.php'
+      - 'laravel/routes/console.php'
+      - '.github/workflows/pi-r82-national-passage-review.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  source-verification-and-scanner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - name: Prepare Laravel runtime
+        run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+      - name: Install locked dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: PHP syntax
+        run: |
+          php -l app/Services/Pi/Regulatory/R82NationalSourceVerifier.php
+          php -l app/Services/Pi/Regulatory/R82ProvisionTextScanner.php
+          php -l app/Services/Pi/Regulatory/R82NationalEvidencePipeline.php
+          php -l app/Http/Controllers/Api/R82NationalPassageReviewController.php
+          php -l tests/Feature/R82NationalPassageTest.php
+          php -l routes/console.php
+          php -l routes/web.php
+      - name: CI tests with synthetic text and corrupt PDF fixtures
+        run: php vendor/bin/phpunit --filter 'R82NationalPassageTest|RegulatoryDelegationCoverageTest|RegulatoryLegalTraceTest|RegulatorySnapshotTest'
+      - name: No new runtime ports or unprotected APIs
+        run: |
+          php artisan route:list --path=api/qa-regulatory-r82
+          php artisan list --raw | grep 'pi:r82:build'
+  reviewer-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax
+        run: node --check laravel/public/regulatory-passage-review-r82.js
+      - name: R82 UI plus accepted R79 regression
+        run: node --test laravel/tests/frontend/pi_r82_review_smoke.test.cjs laravel/tests/frontend/pi_r79_browser_acceptance.test.cjs laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs
