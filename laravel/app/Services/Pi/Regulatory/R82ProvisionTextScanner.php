@@ -24,7 +24,9 @@ final class R82ProvisionTextScanner
         }
 
         // Never attribute mentions from explanatory sections to operative law.
-        $body = $uuText;
+        // Preserve form-feed page numbers while turning PDF page transitions
+        // into line boundaries for anchored Pasal headings.
+        $body = str_replace("\f", "\n\f\n", $uuText);
         if (preg_match('/(?m)^\h*P\s*E\s*N\s*J\s*E\s*L\s*A\s*S\s*A\s*N(?:\h*$|\h+ATAS\b)/iu', $body, $cut, PREG_OFFSET_CAPTURE)) {
             $body = substr($body, 0, $cut[0][1]);
         }
@@ -97,7 +99,7 @@ final class R82ProvisionTextScanner
                 $segment = substr($body, $start, $end - $start);
                 if (is_string($segment) && $segment !== '') {
                     if ($paragraphs === []) {
-                        $passages[] = $this->snippet($uuText, $segment, $start, 'PASAL', null);
+                        $passages[] = $this->snippet($body, $segment, $start, 'PASAL', null);
                     } else {
                         $paragraphMatches = [];
                         preg_match_all('/(?m)^\h*\(\s*([0-9]{1,2})\s*\)\h*/u', $segment, $pars, PREG_OFFSET_CAPTURE);
@@ -127,7 +129,7 @@ final class R82ProvisionTextScanner
                                     break;
                                 }
                             }
-                            $passages[] = $this->snippet($uuText, substr($segment, $rel, $next - $rel),
+                            $passages[] = $this->snippet($body, substr($segment, $rel, $next - $rel),
                                 $start + $rel, 'AYAT', $para);
                         }
                     }
