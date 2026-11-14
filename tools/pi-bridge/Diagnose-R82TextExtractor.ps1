@@ -187,7 +187,9 @@ try {
       ';METHOD=' + $result.Mode + ';BYTES=' + $result.Bytes +
       ';HAS_PASAL=' + $result.HasPasal)
   }
-  if (@($results | Where-Object { $_.State -eq 'TEXT_EXTRACTED' }).Count -ne 2) {
+  if (@($results | Where-Object {
+    $_.State -eq 'TEXT_EXTRACTED' -and $_.HasPasal
+  }).Count -ne 2) {
     Write-Output 'PI_R82_DIRECT_TEXT_EXTRACTION=BLOCKED'
     Write-Output 'PI_R82_BUILD_SKIPPED=INSUFFICIENT_TEXT_OR_EXECUTABLE'
     Write-Output 'R81_PDFS_AND_MANIFEST=UNCHANGED'
