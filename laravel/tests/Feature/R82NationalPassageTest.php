@@ -205,16 +205,23 @@ final class R82NationalPassageTest extends TestCase
         $this->getJson($url)->assertUnauthorized();
         $this->actingAs(User::factory()->create(['tenant_id' => 'QA-OTHER']))
             ->getJson($url)->assertForbidden();
-        // Force a missing/unverifiable source instead of depending on
-        // whether a REAL R82 report already exists on the developer laptop.
-        $this->mock(R82NationalSourceVerifier::class, function (\Mockery\MockInterface $mock): void {
-            $mock->shouldReceive('verify')->once()
-                ->andThrow(new RuntimeException('R82_TEST_SOURCE_UNAVAILABLE'));
-        });
-        $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
-            ->getJson($url)->assertStatus(503)
-            ->assertJsonPath('status', 'ABSTAIN')
-            ->assertJsonPath('production_admission', 'DENIED');
+        // The same test runs both in clean CI (no R81/R82 files) and after
+        // real local R82 acceptance (a valid prepared report may exist).
+        $pipeline = app(\App\Services\Pi\Regulatory\R82NationalEvidencePipeline::class);
+        $prepared = is_file($pipeline->outputPath()) &&
+            is_file($pipeline->snapshotDirectory().DIRECTORY_SEPARATOR.'observed-manifest.json');
+        $response = $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
+            ->getJson($url);
+        if ($prepared) {
+            $response->assertOk()
+                ->assertJsonPath('review_status', 'REVIEW_REQUIRED')
+                ->assertJsonPath('legal_harmonization', 'NOT_ASSESSED')
+                ->assertJsonPath('production_admission', 'DENIED');
+        } else {
+            $response->assertStatus(503)
+                ->assertJsonPath('status', 'ABSTAIN')
+                ->assertJsonPath('production_admission', 'DENIED');
+        }
         Http::assertNothingSent();
     }
 }
