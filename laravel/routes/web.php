@@ -1,28 +1,29 @@
 <?php
 
-use App\Http\Controllers\Api\AutomatedAncestryController;
-use App\Http\Controllers\Api\AiProviderStatusController;
-use App\Http\Controllers\Api\AiEvidenceContextController;
-use App\Http\Controllers\Api\AiReviewBriefController;
-use App\Http\Controllers\Api\AiLocalInferenceController;
 use App\Http\Controllers\Api\AiCloudInferenceController;
+use App\Http\Controllers\Api\AiEvidenceContextController;
+use App\Http\Controllers\Api\AiLocalInferenceController;
 use App\Http\Controllers\Api\AiProviderSettingsController;
+use App\Http\Controllers\Api\AiProviderStatusController;
+use App\Http\Controllers\Api\AiReviewBriefController;
+use App\Http\Controllers\Api\AutomatedAncestryController;
 use App\Http\Controllers\Api\EntitlementController;
-use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\NormativePlanningReadinessController;
+use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\PlanningLineageController;
 use App\Http\Controllers\Api\PlanningProgramCandidateController;
-use App\Http\Controllers\Api\RegulatoryEvidenceController;
-use App\Http\Controllers\Api\RegulatoryDiscoveryController;
-use App\Http\Controllers\Api\RegulatoryReadModelController;
-use App\Http\Controllers\Api\RegulatoryLegacyProjectionController;
-use App\Http\Controllers\Api\RegulatoryLegalTraceController;
-use App\Http\Controllers\Api\RegulatorySnapshotController;
-use App\Http\Controllers\Api\RegulatoryChangeTraceController;
-use App\Http\Controllers\Api\RegulatoryGenealogyController;
-use App\Http\Controllers\Api\RegulatoryDelegationCoverageController;
 use App\Http\Controllers\Api\R82NationalPassageReviewController;
 use App\Http\Controllers\Api\R83NationalPdfReviewController;
+use App\Http\Controllers\Api\R84EvidenceReviewController;
+use App\Http\Controllers\Api\RegulatoryChangeTraceController;
+use App\Http\Controllers\Api\RegulatoryDelegationCoverageController;
+use App\Http\Controllers\Api\RegulatoryDiscoveryController;
+use App\Http\Controllers\Api\RegulatoryEvidenceController;
+use App\Http\Controllers\Api\RegulatoryGenealogyController;
+use App\Http\Controllers\Api\RegulatoryLegacyProjectionController;
+use App\Http\Controllers\Api\RegulatoryLegalTraceController;
+use App\Http\Controllers\Api\RegulatoryReadModelController;
+use App\Http\Controllers\Api\RegulatorySnapshotController;
 use App\Http\Controllers\Auth\SessionController;
 use Illuminate\Support\Facades\Route;
 
@@ -85,6 +86,10 @@ Route::prefix('api')->group(function (): void {
             ->name('pi.regulatory.change-trace');
         Route::get('/qa-regulatory-r83/national-pdf', R83NationalPdfReviewController::class)
             ->middleware('throttle:12,1')->name('pi.regulatory.national-pdf-review');
+        Route::get('/qa-regulatory-r84/evidence-reviews', [R84EvidenceReviewController::class, 'index'])
+            ->name('pi.regulatory.evidence-reviews');
+        Route::post('/qa-regulatory-r84/evidence-reviews', [R84EvidenceReviewController::class, 'store'])
+            ->middleware('throttle:12,1')->name('pi.regulatory.evidence-reviews.store');
         Route::get('/qa-regulatory-r82/passage-candidates', R82NationalPassageReviewController::class)
             ->middleware('throttle:8,1')->name('pi.regulatory.national-passage-candidates');
         Route::get('/qa-regulatory-r80/delegation-coverage', RegulatoryDelegationCoverageController::class)
