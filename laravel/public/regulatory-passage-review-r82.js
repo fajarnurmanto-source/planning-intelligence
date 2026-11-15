@@ -50,14 +50,29 @@
       detail.appendChild(heading)
 
       const reference = record.pp_reference
-      const fragments = (reference ? [{...reference, origin: 'PP 81/2012 – Menimbang'}] : [])
-        .concat(record.uu_passages.map(x => ({...x, origin:'UU 18/2008 – batang tubuh'})))
+      const fragments = (reference ? [{
+        ...reference, origin: 'PP 81/2012 – Menimbang', source_id: 'PP-81-2012'
+      }] : []).concat(record.uu_passages.map(x => ({
+        ...x, origin: 'UU 18/2008 – batang tubuh', source_id: 'UU-18-2008'
+      })))
       for (const excerpt of fragments) {
         const label = document.createElement('p')
         label.className = 'r82-excerpt-label'
         label.textContent = excerpt.origin + ' · PDF halaman ' + excerpt.pdf_page +
           ' · teks SHA-256 ' + excerpt.excerpt_sha256.slice(0, 16) + '…'
         detail.appendChild(label)
+        if (!['PP-81-2012', 'UU-18-2008'].includes(excerpt.source_id) ||
+          !Number.isInteger(excerpt.pdf_page) || excerpt.pdf_page < 1) {
+          throw Error('Referensi PDF R83 tidak valid')
+        }
+        const pdfLink = document.createElement('a')
+        pdfLink.className = 'r83-pdf-link'
+        pdfLink.href = '/api/qa-regulatory-r83/national-pdf?source_id=' +
+          encodeURIComponent(excerpt.source_id) + '#page=' + excerpt.pdf_page
+        pdfLink.target = '_blank'
+        pdfLink.rel = 'noopener noreferrer'
+        pdfLink.textContent = 'Buka PDF R81 asli · halaman ' + excerpt.pdf_page
+        detail.appendChild(pdfLink)
         const prose = document.createElement('blockquote')
         prose.className = 'r82-excerpt'
         prose.textContent = excerpt.excerpt
