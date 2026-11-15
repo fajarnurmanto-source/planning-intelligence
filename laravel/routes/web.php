@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\RegulatoryChangeTraceController;
 use App\Http\Controllers\Api\RegulatoryGenealogyController;
 use App\Http\Controllers\Api\RegulatoryDelegationCoverageController;
 use App\Http\Controllers\Api\R82NationalPassageReviewController;
+use App\Http\Controllers\Api\R83NationalPdfReviewController;
 use App\Http\Controllers\Auth\SessionController;
 use Illuminate\Support\Facades\Route;
 
@@ -82,6 +83,8 @@ Route::prefix('api')->group(function (): void {
             ->name('pi.regulatory.legacy-scope');
         Route::get('/qa-regulatory-r72/change-trace', RegulatoryChangeTraceController::class)
             ->name('pi.regulatory.change-trace');
+        Route::get('/qa-regulatory-r83/national-pdf', R83NationalPdfReviewController::class)
+            ->middleware('throttle:12,1')->name('pi.regulatory.national-pdf-review');
         Route::get('/qa-regulatory-r82/passage-candidates', R82NationalPassageReviewController::class)
             ->middleware('throttle:8,1')->name('pi.regulatory.national-passage-candidates');
         Route::get('/qa-regulatory-r80/delegation-coverage', RegulatoryDelegationCoverageController::class)
