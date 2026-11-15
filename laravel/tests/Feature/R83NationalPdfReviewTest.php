@@ -42,9 +42,14 @@ final class R83NationalPdfReviewTest extends TestCase
             if ($realSourcesPresent) {
                 $response->assertOk()
                     ->assertHeader('content-type', 'application/pdf')
-                    ->assertHeader('cache-control', 'private, no-store, max-age=0')
                     ->assertHeader('x-content-type-options', 'nosniff')
-                    ->assertHeader('x-frame-options', 'SAMEORIGIN');
+                    ->assertHeader('x-frame-options', 'SAMEORIGIN')
+                    ->assertHeader('referrer-policy', 'no-referrer');
+                $cacheControl = (string) $response->headers->get('cache-control');
+                $this->assertStringContainsString('private', $cacheControl);
+                $this->assertStringContainsString('no-store', $cacheControl);
+                $this->assertStringContainsString('max-age=0', $cacheControl);
+                $this->assertStringNotContainsString('public', $cacheControl);
                 $this->assertStringContainsString('inline',
                     $response->headers->get('content-disposition'));
             } else {

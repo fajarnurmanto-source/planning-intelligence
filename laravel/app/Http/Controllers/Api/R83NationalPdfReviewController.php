@@ -44,14 +44,22 @@ final class R83NationalPdfReviewController extends Controller
                 throw new RuntimeException('R83_REVIEW_SOURCE_UNAVAILABLE');
             }
 
-            return response()->file($source['path'], [
+            $response = response()->file($source['path'], [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="'.$names[$id].'"',
-                'Cache-Control' => 'private, no-store, max-age=0',
                 'X-Content-Type-Options' => 'nosniff',
                 'X-Frame-Options' => 'SAMEORIGIN',
                 'Referrer-Policy' => 'no-referrer',
             ]);
+
+            // BinaryFileResponse defaults to public after applying constructor
+            // headers. Set cache policy through the response API so the final,
+            // prepared response remains private and cannot be shared.
+            $response->setPrivate();
+            $response->setMaxAge(0);
+            $response->headers->addCacheControlDirective('no-store');
+
+            return $response;
         } catch (Throwable $error) {
             report($error);
 
