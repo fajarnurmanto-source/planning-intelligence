@@ -1,0 +1,70 @@
+name: PI R83 Authenticated National PDF Review QA
+
+on:
+  pull_request:
+    branches: [pilot/pi-laravel-github-bridge-20261108]
+    paths:
+      - 'laravel/app/Http/Controllers/Api/R83NationalPdfReviewController.php'
+      - 'laravel/routes/web.php'
+      - 'laravel/public/regulatory-passage-review-r82.js'
+      - 'laravel/public/regulatory-trace-r70a.css'
+      - 'laravel/tests/Feature/R83NationalPdfReviewTest.php'
+      - 'laravel/tests/frontend/pi_r83_pdf_review.test.cjs'
+      - '.github/workflows/pi-r83-national-pdf-review.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r83-authenticated-pdf-review-20261115
+    paths:
+      - 'laravel/app/Http/Controllers/Api/R83NationalPdfReviewController.php'
+      - 'laravel/routes/web.php'
+      - 'laravel/public/regulatory-passage-review-r82.js'
+      - 'laravel/public/regulatory-trace-r70a.css'
+      - 'laravel/tests/Feature/R83NationalPdfReviewTest.php'
+      - 'laravel/tests/frontend/pi_r83_pdf_review.test.cjs'
+      - '.github/workflows/pi-r83-national-pdf-review.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  secure-source-controller:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - name: Prepare ephemeral Laravel test runtime
+        run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+      - name: Install locked dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: Syntax
+        run: |
+          php -l app/Http/Controllers/Api/R83NationalPdfReviewController.php
+          php -l tests/Feature/R83NationalPdfReviewTest.php
+          php -l routes/web.php
+      - name: Auth, tenant, immutable PDF and existing R82 regressions
+        run: php vendor/bin/phpunit --filter 'R83NationalPdfReviewTest|R82NationalPassageTest|RegulatoryDelegationCoverageTest'
+      - name: Confirm protected route
+        run: php artisan route:list --path=api/qa-regulatory-r83/national-pdf
+
+  secure-reviewer-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax
+        run: node --check laravel/public/regulatory-passage-review-r82.js
+      - name: R83 UI and accepted R79 graph QA
+        run: node --test laravel/tests/frontend/pi_r83_pdf_review.test.cjs laravel/tests/frontend/pi_r82_review_smoke.test.cjs laravel/tests/frontend/pi_r79_browser_acceptance.test.cjs
