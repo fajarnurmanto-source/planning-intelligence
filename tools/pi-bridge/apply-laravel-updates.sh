@@ -121,6 +121,7 @@ stage_dir="$(mktemp -d "$bridge_root/.pi_stage_XXXXXX")"
 timestamp="$(date +%Y%m%d_%H%M%S)"
 backup_dir="$pi_root/PI_GITHUB_BRIDGE_BACKUPS/$timestamp"
 declare -a deployed_indices=()
+preapplied_count=0
 current_temp=''
 
 on_exit() {
@@ -152,6 +153,16 @@ for i in "${!paths[@]}"; do
   if [[ "${statuses[$i]}" == M ]]; then
     [[ -f "$target" ]] || stop "Existing local source missing: $rel"
     if ! git show "$applied_sha:$path" | cmp -s - "$target"; then
+      # Work or an earlier operator may have installed the exact upstream
+      # revision before the bridge's state marker advanced. No overwrite.
+      # Only byte-for-byte identity with the current remote Git blob qualifies;
+      # any genuinely different local edit still stops the entire batch.
+      if git show "$remote_sha:$path" | cmp -s - "$target"; then
+        statuses[$i]='P'
+        preapplied_count=$((preapplied_count + 1))
+        printf 'PI_BRIDGE_ALREADY_UPSTREAM=%s\n' "$rel"
+        continue
+      fi
       stop "SOURCE_DRIFT: $rel (local edit preserved; nothing applied)"
     fi
   else
@@ -166,6 +177,7 @@ for i in "${!paths[@]}"; do
   path="${paths[$i]}"
   rel="${path#laravel/}"
   target="$app_root/$rel"
+  [[ "${statuses[$i]}" != P ]] || continue
   if [[ "${statuses[$i]}" == M ]]; then
     mkdir -p "$backup_dir/$(dirname "$rel")"
     cp -p -- "$target" "$backup_dir/$rel"
@@ -178,8 +190,9 @@ for i in "${!paths[@]}"; do
   path="${paths[$i]}"
   rel="${path#laravel/}"
   target="$app_root/$rel"
+  [[ "${statuses[$i]}" != P ]] || continue
   mkdir -p "$(dirname "$target")"
-  current_temp="$target.pi-bridge-next.$$"
+  current_temp="$target.pi-bridge-next.$"
   [[ ! -e "$current_temp" ]] || stop "Temporary file collision: $rel"
   install -m 644 "$stage_dir/$path" "$current_temp"
   mv -f -- "$current_temp" "$target"
@@ -189,7 +202,8 @@ done
 
 printf '%s\n' "$remote_sha" > "$state_file"
 printf 'PI_BRIDGE_APPLY=PASS\nFILES=%s\nCOMMIT=%s\nBACKUP=%s\n' \
-  "${#paths[@]}" "$remote_sha" "$backup_dir"
+  "${#deployed_indices[@]}" "$remote_sha" "$backup_dir"
+printf 'PI_BRIDGE_ALREADY_UPSTREAM_FILES=%s\n' "$preapplied_count"
 printf 'NOTE=Source-only; no database migrations, composer/npm install, build, or restart executed\n'
 if (( r84_source_staged > 0 )); then
   printf 'PI_R84_MIGRATION_SOURCE=STAGED_ONLY\n'
