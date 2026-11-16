@@ -14,6 +14,7 @@
   <script defer src="./regulatory-trace-acceptance-r79.js"></script>
   <script defer src="./regulatory-delegation-coverage-r80.js"></script>
   <script defer src="./regulatory-passage-review-r82.js"></script>
+  <script defer src="./regulatory-evidence-review-r84.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -51,6 +52,61 @@
           </div></div>
           <button id="r82-passage-refresh" type="button" class="primary-btn">Periksa kandidat bukti R82</button>
           <div id="r82-passage-results" class="r82-results" aria-live="polite">Belum diperiksa dari PDF nasional.</div>
+        </section>
+        <section id="r84-review-workspace" class="panel trace-panel" aria-labelledby="r84-review-title">
+          <div class="panel-heading"><div>
+            <span class="section-number">REVIEWER · LEDGER BUKTI R84</span>
+            <h2 id="r84-review-title">Ruang keputusan berbasis sumber asli</h2>
+            <p>Bandingkan rujukan PP dan bunyi UU pada PDF R81, kemudian catat hasil penilaian per dimensi. <strong>Pencatatan keputusan tidak otomatis mempromosikan relasi atau menetapkan harmonisasi.</strong></p>
+          </div></div>
+          <div class="r84-status-bar">
+            <p id="r84-review-status" role="status" aria-live="polite">Memeriksa kesiapan ruang reviewer…</p>
+            <button id="r84-review-refresh" class="secondary-btn" type="button">Muat ulang status</button>
+          </div>
+          <div class="r84-workspace">
+            <nav class="r84-candidates" aria-label="Tujuh kandidat pasal R84">
+              <h3>Kandidat untuk ditelaah</h3>
+              <div id="r84-candidate-menu" class="r84-candidate-menu"></div>
+            </nav>
+            <div class="r84-workspace-main">
+              <div id="r84-evidence-detail" aria-live="polite" class="r84-evidence-detail">
+                <p>Pilih kandidat setelah data sumber dimuat.</p>
+              </div>
+              <div class="r84-review-actions">
+                <h3>Catat keputusan reviewer</h3>
+                <p class="r84-guard">Setiap keputusan terkait satu kandidat dan satu dimensi: akurasi kutipan, hubungan hukum, atau harmonisasi. Hasilnya tetap memerlukan tata kelola dan tidak otomatis mengubah graf regulasi.</p>
+                <p id="r84-current-candidate" class="r84-current-id" aria-live="polite">Belum ada kandidat dipilih</p>
+                <form id="r84-decision-form" hidden>
+                  <div class="r84-fields">
+                    <label for="r84-review-dimension">Dimensi keputusan</label>
+                    <select id="r84-review-dimension" required>
+                      <option value="CITATION_ACCURACY">Akurasi kutipan sumber</option>
+                      <option value="LEGAL_RELATION">Hubungan hukum</option>
+                      <option value="HARMONIZATION">Harmonisasi regulasi</option>
+                    </select>
+                    <label for="r84-review-decision">Keputusan</label>
+                    <select id="r84-review-decision" required>
+                      <option value="REVISION_REQUIRED">Perlu revisi</option>
+                      <option value="REJECTED">Ditolak</option>
+                      <option value="ACCEPTED">Diterima untuk dimensi ini</option>
+                    </select>
+                    <label for="r84-review-reason">Alasan dan rujukan pemeriksaan</label>
+                    <textarea id="r84-review-reason" rows="4" minlength="12" maxlength="2000" required placeholder="Tuliskan alasan, halaman sumber, dan keterbatasan pemeriksaan."></textarea>
+                  </div>
+                  <label class="r84-attestation" for="r84-reviewed-original">
+                    <input id="r84-reviewed-original" type="checkbox" required>
+                    Saya telah memeriksa PDF asli dan memahami bahwa keputusan ini tidak mengesahkan relasi secara otomatis.
+                  </label>
+                  <button id="r84-decision-submit" class="primary-btn" type="submit" disabled>Catat ke ledger R84</button>
+                </form>
+                <p id="r84-write-status" role="status" aria-live="polite" class="r84-write-status">Penyimpanan keputusan bergantung pada migrasi database yang disetujui.</p>
+              </div>
+              <section class="r84-history" aria-labelledby="r84-history-title">
+                <h3 id="r84-history-title">Riwayat keputusan</h3>
+                <div id="r84-review-history" aria-live="polite">Riwayat belum dimuat.</div>
+              </section>
+            </div>
+          </div>
         </section>
         <section class="panel trace-panel" aria-labelledby="trace-graph-title"><div class="panel-heading"><div><span class="section-number">01 · JEJAK RELASI</span><h2 id="trace-graph-title">Hubungan peraturan berbasis sumber</h2><p>Setiap hubungan menampilkan lokasi yang perlu diperiksa langsung pada sumber resmi. Arah panah menunjukkan klaim rujukan yang ditandai, bukan temuan harmonisasi atau jenjang kekuatan hukum yang sudah diputus.</p></div></div><div id="trace-relationships" class="trace-links"><p class="loading">Memeriksa jejak sumber…</p></div></section>
         <div class="reg-columns">

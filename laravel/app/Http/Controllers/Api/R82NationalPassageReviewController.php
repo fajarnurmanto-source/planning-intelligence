@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\Pi\Regulatory\R82NationalEvidencePipeline;
 use App\Services\Pi\Regulatory\R82NationalSourceVerifier;
+use App\Services\Pi\Regulatory\R84EvidenceFingerprint;
 use Illuminate\Http\JsonResponse;
 use RuntimeException;
 use Throwable;
@@ -14,7 +15,8 @@ final class R82NationalPassageReviewController extends Controller
 {
     public function __invoke(
         R82NationalEvidencePipeline $pipeline,
-        R82NationalSourceVerifier $verifier
+        R82NationalSourceVerifier $verifier,
+        R84EvidenceFingerprint $fingerprint
     ): JsonResponse {
         try {
             $source = $verifier->verify($pipeline->snapshotDirectory());
@@ -83,6 +85,13 @@ final class R82NationalPassageReviewController extends Controller
                     }
                 }
             }
+            // Add an exact server-calculated fingerprint to the HTTP read model.
+            // This does NOT change the immutable R82 candidate-manifest.json.
+            foreach ($report['candidates'] as $index => $candidate) {
+                $report['candidates'][$index]['review_candidate_sha256'] =
+                    $fingerprint->candidate($candidate);
+            }
+
             return response()->json($report)
                 ->header('Cache-Control', 'private, no-store')
                 ->header('X-Content-Type-Options', 'nosniff');
