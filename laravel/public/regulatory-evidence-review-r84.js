@@ -49,11 +49,14 @@
     node.textContent = message
     node.classList.toggle('r84-warning', warning)
   }
-  const request = async (url, options={}) => fetch(url, {
-    cache:'no-store', credentials:'same-origin',
-    headers:{Accept:'application/json', ...(options.headers || {})},
-    ...options,
-  })
+  const request = async (url, options={}) => {
+    const {headers = {}, ...rest} = options
+    return fetch(url, {
+      cache:'no-store', credentials:'same-origin',
+      ...rest,
+      headers:{Accept:'application/json', ...headers},
+    })
+  }
   const canSubmit = () => Boolean(state.ready && !state.loading &&
     state.session && REVIEW_ROLES.includes(state.session.role) &&
     state.selected && state.selected.evidence_status === 'TEXT_LAYER_CANDIDATE_REVIEW_REQUIRED')
