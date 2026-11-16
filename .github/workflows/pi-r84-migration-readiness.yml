@@ -1,0 +1,47 @@
+name: PI R84 Migration Readiness Preflight (No DB Writes)
+
+on:
+  pull_request:
+    branches: [pilot/pi-laravel-github-bridge-20261108]
+    paths:
+      - 'tools/pi-bridge/Inspect-R84MigrationReadiness.ps1'
+      - '.github/workflows/pi-r84-migration-readiness.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r84-safe-migration-readiness-20261116
+    paths:
+      - 'tools/pi-bridge/Inspect-R84MigrationReadiness.ps1'
+      - '.github/workflows/pi-r84-migration-readiness.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows-offline-guard:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect PowerShell syntax and read-only policy
+        shell: powershell
+        run: |
+          $file = 'tools/pi-bridge/Inspect-R84MigrationReadiness.ps1'
+          $tokens = $null
+          $errors = $null
+          $ast = [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path $file).Path, [ref]$tokens, [ref]$errors
+          )
+          if (!$ast -or $errors.Count -gt 0) { throw 'PI_R84_READINESS_AST_FAILED' }
+          $scriptText = Get-Content -LiteralPath $file -Raw
+          if ($scriptText -notmatch 'migrate:status --no-ansi' -or
+              $scriptText -match '(?m)^\s*(?:&\s+)?php\s+artisan\s+migrate(?:\s|$)(?!:status)' -or
+              $scriptText -match 'migrate:fresh|migrate:reset|schema::drop|Remove-Item') {
+            throw 'PI_R84_READINESS_POLICY_VIOLATION'
+          }
+          Write-Output 'PI_R84_READ_ONLY_POLICY=PASS'
+      - name: Verify parser with synthetic migration status only
+        shell: powershell
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\pi-bridge\Inspect-R84MigrationReadiness.ps1 -SelfTest
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R84_PRECHECK_SELFTEST_FAILED' }
