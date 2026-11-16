@@ -1,0 +1,2 @@
+# WSL/Linux scripts must not be converted to CRLF by Windows Git checkout.
+*.sh text eol=lf

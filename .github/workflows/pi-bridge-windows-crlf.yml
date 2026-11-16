@@ -1,0 +1,79 @@
+name: PI Bridge Windows CRLF Safe WSL Deployment QA
+
+on:
+  pull_request:
+    branches: [pilot/pi-laravel-github-bridge-20261108]
+    paths:
+      - '.gitattributes'
+      - 'tools/pi-bridge/apply-laravel-updates.sh'
+      - 'tools/pi-bridge/Invoke-R84SourceStage.ps1'
+      - '.github/workflows/pi-bridge-windows-crlf.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - fix/pi-r84-windows-crlf-safe-bridge-20261116
+    paths:
+      - '.gitattributes'
+      - 'tools/pi-bridge/apply-laravel-updates.sh'
+      - 'tools/pi-bridge/Invoke-R84SourceStage.ps1'
+      - '.github/workflows/pi-bridge-windows-crlf.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows-powershell:
+    runs-on: windows-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate PowerShell 5.1 syntax and Git LF checkout
+        shell: powershell
+        run: |
+          $file = 'tools/pi-bridge/Invoke-R84SourceStage.ps1'
+          $tokens = $null
+          $errors = $null
+          $ast = [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path $file).Path, [ref]$tokens, [ref]$errors
+          )
+          if ($null -eq $ast -or $errors.Count -ne 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            throw 'PI_BRIDGE_CRLF_POWERSHELL_SYNTAX_FAILED'
+          }
+          $sh = [IO.File]::ReadAllText((Resolve-Path 'tools/pi-bridge/apply-laravel-updates.sh').Path)
+          if ($sh.Contains([char]13)) { throw 'PI_BRIDGE_GIT_ATTR_LF_ENFORCEMENT_FAILED' }
+          Write-Output 'PI_BRIDGE_WINDOWS_LF_CHECKOUT=PASS'
+      - name: Validate committed-script PowerShell launcher against simulated local CRLF
+        shell: powershell
+        run: |
+          $script = 'tools/pi-bridge/apply-laravel-updates.sh'
+          $file = (Resolve-Path $script).Path
+          $original = [IO.File]::ReadAllText($file)
+          $crlf = $original.Replace("`n", "`r`n")
+          [IO.File]::WriteAllText($file, $crlf, (New-Object Text.UTF8Encoding($false)))
+          $result = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\pi-bridge\Invoke-R84SourceStage.ps1 -SelfTest
+          if ($LASTEXITCODE -ne 0 -or $result -notcontains 'PI_BRIDGE_COMMITTED_SCRIPT_LF=PASS') {
+            throw 'PI_BRIDGE_CRLF_SAFE_LAUNCHER_FAILED'
+          }
+          Write-Output 'PI_BRIDGE_WINDOWS_CRLF_ISOLATED_SELFTEST=PASS'
+
+  linux-bridge-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Simulate Windows CRLF and verify committed-blob runner
+        run: |
+          bash -n tools/pi-bridge/apply-laravel-updates.sh
+          grep -Fx '*.sh text eol=lf' .gitattributes
+          tmp="$(mktemp)"
+          trap 'rm -f "$tmp"' EXIT
+          sed 's/$/\r/' tools/pi-bridge/apply-laravel-updates.sh > "$tmp"
+          if bash "$tmp" --self-test >/dev/null 2>&1; then
+            echo 'PI_BRIDGE_CRLF_FAILURE_REPRO_NOT_SEEN'; exit 1
+          fi
+          tr -d '\r' < "$tmp" | bash -s -- --self-test
+          git show HEAD:tools/pi-bridge/apply-laravel-updates.sh | tr -d '\r' | bash -s -- --self-test
+          echo 'PI_BRIDGE_COMMITTED_LF_RECOVERY=PASS'
+      - name: Retest opt-in source-only deployment on synthetic repo
+        run: bash tools/pi-bridge/tests/test-r84-source-staging.sh
