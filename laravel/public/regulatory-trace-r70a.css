@@ -39,3 +39,42 @@
 
 .r83-pdf-link{display:inline-flex;align-items:center;font-size:12px;font-weight:650;text-decoration:underline;text-underline-offset:3px;color:#a6f0d4;margin:4px 0 6px}
 .r83-pdf-link:hover,.r83-pdf-link:focus-visible{color:#fff}
+
+/* R84 — operational reviewer controls. Retains source/review caution. */
+.r84-status-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:12px 0;padding:12px 14px;background:#12343e;border:1px solid #2b5660;border-radius:9px}
+.r84-status-bar p{margin:0;line-height:1.55;font-size:12px;color:#cbf5df}
+.r84-status-bar .r84-warning,.r84-warning{color:#ffd6a7}
+.r84-workspace{display:grid;grid-template-columns:minmax(170px,230px) minmax(0,1fr);gap:16px;margin-top:12px}
+.r84-candidates{padding:14px;background:#102f39;border-radius:10px;border:1px solid #2b5660}
+.r84-candidates h3,.r84-workspace-main h3{font-size:14px;margin:0 0 12px;color:#eafff2}
+.r84-candidate-menu{display:flex;flex-direction:column;gap:8px}
+.r84-candidate-button{display:flex;flex-direction:column;gap:6px;text-align:left;width:100%;border:1px solid #3d6570;border-radius:8px;background:#173e48;color:#eafff4;padding:10px 12px;cursor:pointer}
+.r84-candidate-button small{font-size:10px;color:#b6dad0;line-height:1.5}
+.r84-candidate-button[aria-pressed="true"]{border-color:#8bd8b1;background:#24544c;box-shadow:inset 3px 0 #a7edba}
+.r84-candidate-button:focus-visible,.r84-pdf-link:focus-visible{outline:2px solid #b9f5c8;outline-offset:3px}
+.r84-workspace-main{min-width:0}
+.r84-evidence-detail,.r84-review-actions,.r84-history{border:1px solid #315962;background:#153b45;border-radius:10px;padding:16px;margin-bottom:14px}
+.r84-evidence-detail h3{margin-bottom:4px}
+.r84-guard{font-size:12px;line-height:1.6;color:#ffd6a7}
+.r84-side-by-side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.r84-source-card{border:1px solid #3e6770;border-radius:9px;padding:12px;background:#102f39;overflow-wrap:anywhere}
+.r84-source-title{display:block;font-size:12px;line-height:1.55;color:#e4ffea}
+.r84-source-meta{display:block;font-size:11px;margin-top:6px;color:#b3ddd0}
+.r84-pdf-link{display:inline-block;color:#a7f2c8;font-size:12px;font-weight:650;text-decoration:underline;text-underline-offset:3px;margin:9px 0}
+.r84-quote{margin:8px 0 0;border-left:3px solid #85caa8;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.75;color:#d4f2e4}
+.r84-fields{display:grid;gap:8px}
+.r84-fields label{font-size:12px;font-weight:700;color:#d7f0e3}
+.r84-fields select,.r84-fields textarea{width:100%;box-sizing:border-box;min-height:38px;border-radius:7px;border:1px solid #60918b;padding:10px;background:#102f39;color:#f0fff5;font:inherit;font-size:12px}
+.r84-fields textarea{resize:vertical;line-height:1.6}
+.r84-attestation{display:flex;gap:9px;align-items:flex-start;color:#d2eadf;font-size:12px;line-height:1.6;margin:14px 0}
+.r84-attestation input{flex-shrink:0;margin-top:3px}
+.r84-write-status{font-size:12px;line-height:1.6;color:#bddcd3;margin:11px 0 0}
+.r84-current-id{font:600 11px ui-monospace,Consolas,monospace;word-break:break-all;color:#a8dec8}
+.r84-review-actions [hidden]{display:none}
+.r84-history-item{border-top:1px solid #375962;padding:11px 0}
+.r84-history-item strong{display:block;font-size:12px;color:#c1f5cc}
+.r84-history-item small{display:block;font-size:11px;color:#a7c9be;margin-top:5px}
+.r84-history-item p{font-size:12px;line-height:1.65;overflow-wrap:anywhere;margin:8px 0}
+.r84-empty{font-size:12px;color:#b5d9c9}
+@media(max-width:850px){.r84-workspace,.r84-side-by-side{grid-template-columns:1fr}.r84-candidate-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.r84-candidate-menu{grid-template-columns:1fr}}
