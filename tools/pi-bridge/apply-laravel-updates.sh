@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # PI bridge: apply source-only GitHub updates to the existing Laravel app.
+# Windows checkout: LF required; use Invoke-R84SourceStage.ps1 if local file has CRLF.
 # No file deletions, migrations, dependency installs, restarts, or database writes.
 set -euo pipefail
 
