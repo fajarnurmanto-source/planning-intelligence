@@ -1,0 +1,38 @@
+name: PI R84 Pinned Migration Source Staging - Safe Bridge QA
+
+on:
+  pull_request:
+    branches: [pilot/pi-laravel-github-bridge-20261108]
+    paths:
+      - 'tools/pi-bridge/apply-laravel-updates.sh'
+      - 'tools/pi-bridge/tests/test-r84-source-staging.sh'
+      - '.github/workflows/pi-r84-source-stage-bridge.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - fix/pi-r84-controlled-migration-source-deploy-20261116
+    paths:
+      - 'tools/pi-bridge/apply-laravel-updates.sh'
+      - 'tools/pi-bridge/tests/test-r84-source-staging.sh'
+      - '.github/workflows/pi-r84-source-stage-bridge.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  offline-synthetic-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shell syntax and pinned source blob
+        run: |
+          bash -n tools/pi-bridge/apply-laravel-updates.sh
+          bash -n tools/pi-bridge/tests/test-r84-source-staging.sh
+          test "$(git hash-object laravel/database/migrations/2026_11_15_150000_create_regulatory_evidence_reviews_table.php)" = '2588a8f6356fd5eafad5a867f2948f77689dc2e8'
+          if grep -Eq 'php artisan migrate( |$)|migrate:fresh|artisan db:seed' tools/pi-bridge/apply-laravel-updates.sh; then
+            echo "Unsafe DB operation found in bridge"; exit 1
+          fi
+          echo 'PI_R84_PINNED_STAGE_SYNTAX_POLICY=PASS'
+      - name: Execute default refusal and explicit pinned-source staging on isolated synthetic repo
+        run: bash tools/pi-bridge/tests/test-r84-source-staging.sh

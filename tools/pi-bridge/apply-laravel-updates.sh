@@ -11,6 +11,40 @@ state_file="$bridge_root/.pi_bridge_last_applied.sha"
 lock_dir="$bridge_root/.pi_bridge_apply.lock"
 
 stop() { printf 'PI_BRIDGE_APPLY=STOP: %s\n' "$*" >&2; exit 1; }
+
+# The only separately audited schema FILE permitted for source staging.
+# SHA is the Git blob SHA of the merged PR #59 file, not a database state.
+r84_migration_path='laravel/database/migrations/2026_11_15_150000_create_regulatory_evidence_reviews_table.php'
+r84_migration_blob='2588a8f6356fd5eafad5a867f2948f77689dc2e8'
+stage_r84_source=0
+r84_source_staged=0
+
+r84_source_allowed() {
+  local path="$1" status="$2" blob="$3" opted_in="$4"
+  [[ "$path" == "$r84_migration_path" &&
+     "$status" == 'A' &&
+     "$blob" == "$r84_migration_blob" &&
+     "$opted_in" == '1' ]]
+}
+
+if [[ "${1-}" == '--self-test' && $# -eq 1 ]]; then
+  r84_source_allowed "$r84_migration_path" 'A' "$r84_migration_blob" '1' ||
+    stop 'Self-test of allowlisted source failed'
+  if r84_source_allowed "$r84_migration_path" 'A' "$r84_migration_blob" '0' ||
+    r84_source_allowed "$r84_migration_path" 'M' "$r84_migration_blob" '1' ||
+    r84_source_allowed 'laravel/database/migrations/unsafe.php' 'A' "$r84_migration_blob" '1' ||
+    r84_source_allowed "$r84_migration_path" 'A' 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' '1'; then
+    stop 'Self-test failed to reject non-approved migration source'
+  fi
+  printf 'PI_R84_SOURCE_STAGING_OFFLINE_SELFTEST=PASS\n'
+  printf 'PI_R84_ACTIVE_DATABASE_MUTATION=NONE\n'
+  exit 0
+elif [[ "${1-}" == '--stage-r84-migration-source' && $# -eq 1 ]]; then
+  stage_r84_source=1
+elif (( $# != 0 )); then
+  stop 'Usage: apply-laravel-updates.sh [--stage-r84-migration-source|--self-test]'
+fi
+
 [[ -d "$bridge_root/.git" && -f "$app_root/artisan" ]] || stop 'Bridge checkout or canonical Laravel missing'
 mkdir "$lock_dir" 2>/dev/null || { printf 'PI_BRIDGE_APPLY=ALREADY_RUNNING\n'; exit 0; }
 trap 'rmdir "$lock_dir" 2>/dev/null || true' EXIT
@@ -58,9 +92,17 @@ while IFS= read -r -d '' status && IFS= read -r -d '' path; do
   esac
   case "$path" in */.env|*/.env.*|*.sqlite*|*.db|*.pem|*.key|*.p12|*.pfx) stop "Sensitive path: $path";; esac
   case "$path" in
-    laravel/composer.json|laravel/composer.lock|laravel/package.json|laravel/package-lock.json|\
+    laravel/composer.json|laravel/composer.lock|laravel/package.json|laravel/package-lock.json)
+      stop "Dependency change requires a separate safe deployment: $path" ;;
     laravel/database/migrations/*)
-      stop "Dependency/schema change requires a separate safe deployment: $path" ;;
+      # Source staging is NOT running a schema migration. Default remains
+      # fail-closed; explicit mode permits exactly one immutable new file.
+      blob="$(git rev-parse "$remote_sha:$path")" || stop "Cannot resolve migration source blob: $path"
+      if ! r84_source_allowed "$path" "$status" "$blob" "$stage_r84_source"; then
+        stop "Dependency/schema change requires a separate safe deployment: $path"
+      fi
+      r84_source_staged=$((r84_source_staged + 1))
+      ;;
   esac
   mode="$(git ls-tree "$remote_sha" -- "$path" | cut -d ' ' -f 1)"
   [[ "$mode" == 100644 || "$mode" == 100755 ]] || stop "Non-regular file or symlink refused: $path"
@@ -148,3 +190,7 @@ printf '%s\n' "$remote_sha" > "$state_file"
 printf 'PI_BRIDGE_APPLY=PASS\nFILES=%s\nCOMMIT=%s\nBACKUP=%s\n' \
   "${#paths[@]}" "$remote_sha" "$backup_dir"
 printf 'NOTE=Source-only; no database migrations, composer/npm install, build, or restart executed\n'
+if (( r84_source_staged > 0 )); then
+  printf 'PI_R84_MIGRATION_SOURCE=STAGED_ONLY\n'
+  printf 'PI_R84_DATABASE_MIGRATION=NOT_EXECUTED\n'
+fi
