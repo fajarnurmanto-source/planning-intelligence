@@ -57,7 +57,7 @@ test('Review history, evidence and links are protected from HTML injection and e
   assert.ok(js.includes("link.rel = 'noopener noreferrer'"))
   assert.ok(js.includes("entry.candidate_sha256 !== state.selected.review_candidate_sha256"))
   assert.equal(js.includes('innerHTML'),false)
-  assert.equal(js.includes('localStorage'),true) // prohibition explicitly stated in the module header
+  assert.equal(/\blocalStorage\.(getItem|setItem|removeItem|clear)\s*\(/.test(js),false)
   assert.equal(/fetch\(\s*['"]https?:\/\//i.test(js),false)
 })
 
