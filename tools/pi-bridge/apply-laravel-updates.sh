@@ -19,6 +19,7 @@ r84_migration_path='laravel/database/migrations/2026_11_15_150000_create_regulat
 r84_migration_blob='2588a8f6356fd5eafad5a867f2948f77689dc2e8'
 stage_r84_source=0
 r84_source_staged=0
+audit_only=0
 
 r84_source_allowed() {
   local path="$1" status="$2" blob="$3" opted_in="$4"
@@ -42,8 +43,11 @@ if [[ "${1-}" == '--self-test' && $# -eq 1 ]]; then
   exit 0
 elif [[ "${1-}" == '--stage-r84-migration-source' && $# -eq 1 ]]; then
   stage_r84_source=1
+elif [[ "${1-}" == '--audit-r84-local' && $# -eq 1 ]]; then
+  stage_r84_source=1
+  audit_only=1
 elif (( $# != 0 )); then
-  stop 'Usage: apply-laravel-updates.sh [--stage-r84-migration-source|--self-test]'
+  stop 'Usage: apply-laravel-updates.sh [--stage-r84-migration-source|--audit-r84-local|--self-test]'
 fi
 
 [[ -d "$bridge_root/.git" && -f "$app_root/artisan" ]] || stop 'Bridge checkout or canonical Laravel missing'
@@ -121,6 +125,7 @@ stage_dir="$(mktemp -d "$bridge_root/.pi_stage_XXXXXX")"
 timestamp="$(date +%Y%m%d_%H%M%S)"
 backup_dir="$pi_root/PI_GITHUB_BRIDGE_BACKUPS/$timestamp"
 declare -a deployed_indices=()
+declare -a collisions=()
 preapplied_count=0
 current_temp=''
 
@@ -144,33 +149,63 @@ on_exit() {
 }
 trap on_exit EXIT
 
-# Preflight EVERY changed file before touching the canonical application.
+# Preflight ALL changed files before touching the canonical app or state.
+# Report every collision in one run, instead of iterative one-at-a-time STOPs.
 for i in "${!paths[@]}"; do
   path="${paths[$i]}"
   rel="${path#laravel/}"
   target="$app_root/$rel"
-  [[ ! -L "$target" ]] || stop "Local symlink found: $rel"
+  if [[ -L "$target" ]]; then
+    collisions+=("LOCAL_SYMLINK:$rel")
+    continue
+  fi
   if [[ "${statuses[$i]}" == M ]]; then
-    [[ -f "$target" ]] || stop "Existing local source missing: $rel"
+    if [[ ! -f "$target" ]]; then
+      collisions+=("MODIFIED_SOURCE_MISSING:$rel")
+      continue
+    fi
     if ! git show "$applied_sha:$path" | cmp -s - "$target"; then
-      # Work or an earlier operator may have installed the exact upstream
-      # revision before the bridge's state marker advanced. No overwrite.
-      # Only byte-for-byte identity with the current remote Git blob qualifies;
-      # any genuinely different local edit still stops the entire batch.
       if git show "$remote_sha:$path" | cmp -s - "$target"; then
         statuses[$i]='P'
         preapplied_count=$((preapplied_count + 1))
         printf 'PI_BRIDGE_ALREADY_UPSTREAM=%s\n' "$rel"
         continue
       fi
-      stop "SOURCE_DRIFT: $rel (local edit preserved; nothing applied)"
+      collisions+=("SOURCE_DRIFT:$rel")
+      continue
     fi
   else
-    [[ ! -e "$target" ]] || stop "New upstream file collides with local file: $rel"
+    if [[ -e "$target" ]]; then
+      # A pre-existing 'new' upstream file might have been placed by Work.
+      # Preserve it ONLY when its raw bytes equal the exact remote Git blob.
+      if [[ -f "$target" ]] && git show "$remote_sha:$path" | cmp -s - "$target"; then
+        statuses[$i]='P'
+        preapplied_count=$((preapplied_count + 1))
+        printf 'PI_BRIDGE_ALREADY_UPSTREAM=%s\n' "$rel"
+        continue
+      fi
+      collisions+=("NEW_SOURCE_COLLISION:$rel")
+      continue
+    fi
   fi
   mkdir -p "$stage_dir/$(dirname "$path")"
   git show "$remote_sha:$path" > "$stage_dir/$path"
 done
+
+if (( ${#collisions[@]} > 0 )); then
+  for conflict in "${collisions[@]}"; do
+    printf 'PI_BRIDGE_CONFLICT=%s\n' "$conflict" >&2
+  done
+  stop "Local source conflicts: ${#collisions[@]} (no files or marker changed)"
+fi
+
+if (( audit_only == 1 )); then
+  printf 'PI_BRIDGE_LOCAL_AUDIT=PASS\n'
+  printf 'PI_BRIDGE_PENDING_FILES=%s\n' "$(( ${#paths[@]} - preapplied_count ))"
+  printf 'PI_BRIDGE_ALREADY_UPSTREAM_FILES=%s\n' "$preapplied_count"
+  printf 'PI_R84_DATABASE_MIGRATION=NOT_EXECUTED\n'
+  exit 0
+fi
 
 mkdir -p "$backup_dir"
 for i in "${!paths[@]}"; do
@@ -192,11 +227,14 @@ for i in "${!paths[@]}"; do
   target="$app_root/$rel"
   [[ "${statuses[$i]}" != P ]] || continue
   mkdir -p "$(dirname "$target")"
-  current_temp="$target.pi-bridge-next.$"
+  current_temp="${target}.pi-bridge-next.$"
   [[ ! -e "$current_temp" ]] || stop "Temporary file collision: $rel"
   install -m 644 "$stage_dir/$path" "$current_temp"
   mv -f -- "$current_temp" "$target"
   current_temp=''
+  if [[ "$path" == "$r84_migration_path" ]]; then
+    r84_source_staged=1
+  fi
   deployed_indices+=("$i")
 done
 
@@ -207,5 +245,7 @@ printf 'PI_BRIDGE_ALREADY_UPSTREAM_FILES=%s\n' "$preapplied_count"
 printf 'NOTE=Source-only; no database migrations, composer/npm install, build, or restart executed\n'
 if (( r84_source_staged > 0 )); then
   printf 'PI_R84_MIGRATION_SOURCE=STAGED_ONLY\n'
+fi
+if (( stage_r84_source == 1 )); then
   printf 'PI_R84_DATABASE_MIGRATION=NOT_EXECUTED\n'
 fi
