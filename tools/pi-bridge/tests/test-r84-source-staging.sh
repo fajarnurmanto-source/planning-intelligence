@@ -91,6 +91,9 @@ echo 'PI_R84_SOURCE_ONLY_IDEMPOTENCE=PASS'
 
 # A genuinely divergent local edit is never silently overwritten, even with
 # the explicit R84 source-only flag. No marker or other source may change.
+# Refresh ONLY the synthetic Git checkout to its already deployed target
+# before creating the next fast-forward commit; never reset operator files.
+git -C "$bridge_root" reset -q --hard "$target"
 printf 'new remote edit\n' > "$bridge_root/laravel/app/Example.php"
 git -C "$bridge_root" add laravel/app/Example.php
 git -C "$bridge_root" commit -qm 'synthetic next remote source revision'
