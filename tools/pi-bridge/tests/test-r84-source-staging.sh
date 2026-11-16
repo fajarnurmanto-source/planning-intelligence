@@ -39,6 +39,7 @@ git -C "$bridge_root" push -q -u origin "$branch"
 
 printf 'changed\n' > "$bridge_root/laravel/app/Example.php"
 printf 'new upstream already\n' > "$bridge_root/laravel/app/Already.php"
+printf 'new file placed by Work\n' > "$bridge_root/laravel/app/NewAlready.php"
 mkdir -p "$bridge_root/laravel/database/migrations"
 cp "$source_file" "$bridge_root/laravel/database/migrations/$r84_file"
 git -C "$bridge_root" add laravel
@@ -53,6 +54,7 @@ printf 'baseline\n' > "$app_root/app/Example.php"
 # Simulate a manually deployed PR file already byte-identical to remote HEAD.
 # Its local drift from the old state marker is benign and must be preserved.
 printf 'new upstream already\n' > "$app_root/app/Already.php"
+printf 'new file placed by Work\n' > "$app_root/app/NewAlready.php"
 : > "$app_root/artisan"
 
 # Full branch/source logic executes unchanged with only synthetic PI root.
@@ -68,19 +70,34 @@ grep -F -q 'PI_BRIDGE_APPLY=STOP: Dependency/schema change requires a separate s
 [[ ! -e "$app_root/database/migrations/$r84_file" ]]
 [[ "$(<"$app_root/app/Example.php")" == 'baseline' ]]
 [[ "$(<"$app_root/app/Already.php")" == 'new upstream already' ]]
+[[ "$(<"$app_root/app/NewAlready.php")" == 'new file placed by Work' ]]
 [[ "$(<"$bridge_root/.pi_bridge_last_applied.sha")" == "$baseline" ]]
 echo 'PI_R84_DEFAULT_DEPLOY_FAIL_CLOSED=PASS'
+
+# Audit all files before application writes; exact upstream source may already
+# exist both in original modified and newly introduced Laravel files.
+bash "$sandbox/apply-test.sh" --audit-r84-local > "$sandbox/audit.log"
+grep -F -q 'PI_BRIDGE_LOCAL_AUDIT=PASS' "$sandbox/audit.log"
+grep -F -q 'PI_BRIDGE_ALREADY_UPSTREAM=app/NewAlready.php' "$sandbox/audit.log"
+grep -F -q 'PI_BRIDGE_PENDING_FILES=2' "$sandbox/audit.log"
+grep -F -q 'PI_BRIDGE_ALREADY_UPSTREAM_FILES=2' "$sandbox/audit.log"
+[[ ! -e "$app_root/database/migrations/$r84_file" ]]
+[[ "$(<"$app_root/app/Example.php")" == 'baseline' ]]
+[[ "$(<"$bridge_root/.pi_bridge_last_applied.sha")" == "$baseline" ]]
+echo 'PI_BRIDGE_READ_ONLY_FULL_AUDIT=PASS'
 
 bash "$sandbox/apply-test.sh" --stage-r84-migration-source >"$sandbox/approved.log"
 grep -F -q 'PI_BRIDGE_APPLY=PASS' "$sandbox/approved.log"
 grep -F -q 'PI_R84_MIGRATION_SOURCE=STAGED_ONLY' "$sandbox/approved.log"
 grep -F -q 'PI_R84_DATABASE_MIGRATION=NOT_EXECUTED' "$sandbox/approved.log"
 grep -F -q 'PI_BRIDGE_ALREADY_UPSTREAM=app/Already.php' "$sandbox/approved.log"
-grep -F -q 'PI_BRIDGE_ALREADY_UPSTREAM_FILES=1' "$sandbox/approved.log"
+grep -F -q 'PI_BRIDGE_ALREADY_UPSTREAM=app/NewAlready.php' "$sandbox/approved.log"
+grep -F -q 'PI_BRIDGE_ALREADY_UPSTREAM_FILES=2' "$sandbox/approved.log"
 grep -F -q 'FILES=2' "$sandbox/approved.log"
 cmp -s "$source_file" "$app_root/database/migrations/$r84_file"
 [[ "$(<"$app_root/app/Example.php")" == 'changed' ]]
 [[ "$(<"$app_root/app/Already.php")" == 'new upstream already' ]]
+[[ "$(<"$app_root/app/NewAlready.php")" == 'new file placed by Work' ]]
 [[ "$(<"$bridge_root/.pi_bridge_last_applied.sha")" == "$target" ]]
 echo 'PI_BRIDGE_ALREADY_UPSTREAM_RECONCILE=PASS'
 echo 'PI_R84_SOURCE_ONLY_INSTALL=PASS'
@@ -95,16 +112,30 @@ echo 'PI_R84_SOURCE_ONLY_IDEMPOTENCE=PASS'
 # before creating the next fast-forward commit; never reset operator files.
 git -C "$bridge_root" reset -q --hard "$target"
 printf 'new remote edit\n' > "$bridge_root/laravel/app/Example.php"
-git -C "$bridge_root" add laravel/app/Example.php
+printf 'remote new file\n' > "$bridge_root/laravel/app/NewDrift.php"
+git -C "$bridge_root" add laravel/app/Example.php laravel/app/NewDrift.php
 git -C "$bridge_root" commit -qm 'synthetic next remote source revision'
 git -C "$bridge_root" push -q origin "$branch"
 printf 'operator local custom edit\n' > "$app_root/app/Example.php"
+printf 'operator local collided new file\n' > "$app_root/app/NewDrift.php"
+# Both conflicts must surface in a single read-only audit.
+if bash "$sandbox/apply-test.sh" --audit-r84-local >"$sandbox/audit-conflict.log" 2>&1; then
+  echo 'PI_BRIDGE_READ_ONLY_CONFLICT_AUDIT_IMPROPERLY_PASSED'
+  exit 1
+fi
+grep -F -q 'PI_BRIDGE_CONFLICT=SOURCE_DRIFT:app/Example.php' "$sandbox/audit-conflict.log"
+grep -F -q 'PI_BRIDGE_CONFLICT=NEW_SOURCE_COLLISION:app/NewDrift.php' "$sandbox/audit-conflict.log"
+grep -F -q 'Local source conflicts: 2' "$sandbox/audit-conflict.log"
+[[ "$(<"$bridge_root/.pi_bridge_last_applied.sha")" == "$target" ]]
+echo 'PI_BRIDGE_ALL_LOCAL_CONFLICTS_VISIBLE=PASS'
 if bash "$sandbox/apply-test.sh" --stage-r84-migration-source >"$sandbox/drift.log" 2>&1; then
   echo 'PI_BRIDGE_REAL_SOURCE_DRIFT_IMPROPERLY_ACCEPTED'
   exit 1
 fi
-grep -F -q 'PI_BRIDGE_APPLY=STOP: SOURCE_DRIFT: app/Example.php' "$sandbox/drift.log"
+grep -F -q 'PI_BRIDGE_CONFLICT=SOURCE_DRIFT:app/Example.php' "$sandbox/drift.log"
+grep -F -q 'PI_BRIDGE_CONFLICT=NEW_SOURCE_COLLISION:app/NewDrift.php' "$sandbox/drift.log"
 [[ "$(<"$app_root/app/Example.php")" == 'operator local custom edit' ]]
+[[ "$(<"$app_root/app/NewDrift.php")" == 'operator local collided new file' ]]
 [[ "$(<"$bridge_root/.pi_bridge_last_applied.sha")" == "$target" ]]
 echo 'PI_BRIDGE_REAL_SOURCE_DRIFT_FAIL_CLOSED=PASS'
 echo 'PI_R84_ACTIVE_DATABASE_MUTATION=NONE'

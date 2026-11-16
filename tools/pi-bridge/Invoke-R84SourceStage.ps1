@@ -9,14 +9,15 @@ execute migration), operator explicitly passes -StageMigrationSource.
 [CmdletBinding()]
 param(
     [switch]$SelfTest,
-    [switch]$StageMigrationSource
+    [switch]$StageMigrationSource,
+    [switch]$AuditLocal
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
-if ([bool]$SelfTest -eq [bool]$StageMigrationSource) {
-    throw 'PI_BRIDGE_USAGE=Specify exactly one of -SelfTest or -StageMigrationSource'
+if (@($SelfTest, $StageMigrationSource, $AuditLocal | Where-Object { $_ }).Count -ne 1) {
+    throw 'PI_BRIDGE_USAGE=Specify exactly one of -SelfTest, -AuditLocal or -StageMigrationSource'
 }
 
 $Bridge = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..\..') -ErrorAction Stop).Path
@@ -36,6 +37,7 @@ $source = ($lines -join [char]10) + [char]10
 if (!$source.StartsWith('#!/usr/bin/env bash' + [char]10) -or
     !$source.Contains('set -euo pipefail') -or
     !$source.Contains('--stage-r84-migration-source') -or
+    !$source.Contains('--audit-r84-local') -or
     !$source.Contains($ExpectedR84Blob)) {
     throw 'PI_BRIDGE_SCRIPT_CONTRACT_NOT_VERIFIED'
 }
@@ -85,9 +87,14 @@ Write-Output '=== PI R84 VERIFIED WSL SOURCE STAGING ==='
 if ($LASTEXITCODE -ne 0) {
     throw 'PI_R84_WSL_COMMITTED_SELFTEST_FAILED'
 }
-& wsl.exe -d Ubuntu-24.04 -e bash -c $runner pi-bridge "$wslPath" '--stage-r84-migration-source'
+$mode = if ($AuditLocal) { '--audit-r84-local' } else { '--stage-r84-migration-source' }
+& wsl.exe -d Ubuntu-24.04 -e bash -c $runner pi-bridge "$wslPath" $mode
 if ($LASTEXITCODE -ne 0) {
-    throw 'PI_R84_WSL_PINNED_SOURCE_STAGE_FAILED'
+    throw 'PI_R84_WSL_PINNED_SOURCE_PREFLIGHT_OR_STAGE_FAILED'
 }
-Write-Output 'PI_R84_CRLF_SAFE_SOURCE_STAGE=PASS'
+if ($AuditLocal) {
+    Write-Output 'PI_R84_CRLF_SAFE_LOCAL_AUDIT=PASS'
+} else {
+    Write-Output 'PI_R84_CRLF_SAFE_SOURCE_STAGE=PASS'
+}
 Write-Output 'PI_R84_ACTIVE_DATABASE_MUTATION=NONE'
