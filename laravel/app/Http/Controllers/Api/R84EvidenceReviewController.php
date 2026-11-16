@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\RegulatoryEvidenceReview;
 use App\Services\Pi\Regulatory\R82NationalEvidencePipeline;
 use App\Services\Pi\Regulatory\R82NationalSourceVerifier;
+use App\Services\Pi\Regulatory\R84EvidenceFingerprint;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 use RuntimeException;
 use Throwable;
@@ -27,6 +29,17 @@ final class R84EvidenceReviewController extends Controller
             abort(404);
         }
 
+        // Source-only bridge installs PHP before any approved DB migration.
+        // A missing R84 ledger must be a clear, non-mutating 503, not HTTP 500.
+        if (! Schema::hasTable('regulatory_evidence_reviews')) {
+            return response()->json([
+                'status' => 'ABSTAIN',
+                'code' => 'R84_DATABASE_MIGRATION_PENDING',
+                'relation_promotion' => 'NOT_PERFORMED',
+                'production_admission' => 'DENIED',
+            ], 503)->header('Cache-Control', 'private, no-store');
+        }
+
         $history = RegulatoryEvidenceReview::query()
             ->where('tenant_id', (string) $request->user()->tenant_id)
             ->when($candidateId, fn ($query) => $query->where('candidate_id', $candidateId))
@@ -38,6 +51,7 @@ final class R84EvidenceReviewController extends Controller
             'schema' => 'PI_R84_CONTROLLED_RELATION_REVIEW_V1',
             'tenant_id' => $request->user()->tenant_id,
             'history' => $history,
+            'review_storage_state' => 'READY',
             'relation_promotion' => 'NOT_PERFORMED',
             'legal_harmonization' => 'NOT_AUTOMATED',
             'production_admission' => 'DENIED',
@@ -47,10 +61,20 @@ final class R84EvidenceReviewController extends Controller
     public function store(
         Request $request,
         R82NationalEvidencePipeline $pipeline,
-        R82NationalSourceVerifier $verifier
+        R82NationalSourceVerifier $verifier,
+        R84EvidenceFingerprint $fingerprint
     ): JsonResponse {
         if (! in_array($request->user()->role, ['reviewer', 'institution_admin'], true)) {
             abort(403);
+        }
+
+        if (! Schema::hasTable('regulatory_evidence_reviews')) {
+            return response()->json([
+                'status' => 'ABSTAIN',
+                'code' => 'R84_DATABASE_MIGRATION_PENDING',
+                'relation_promotion' => 'DENIED',
+                'production_admission' => 'DENIED',
+            ], 503)->header('Cache-Control', 'private, no-store');
         }
 
         $input = $request->validate([
@@ -74,7 +98,7 @@ final class R84EvidenceReviewController extends Controller
             if (! is_array($candidate)
                 || ($candidate['review_status'] ?? null) !== 'REVIEW_REQUIRED'
                 || ($candidate['relation_admission'] ?? null) !== 'NOT_PERFORMED'
-                || $input['candidate_sha256'] !== $this->candidateHash($candidate)) {
+                || $input['candidate_sha256'] !== $fingerprint->candidate($candidate)) {
                 throw new RuntimeException('R84_CANDIDATE_DRIFT');
             }
 
@@ -121,12 +145,6 @@ final class R84EvidenceReviewController extends Controller
         }
 
         return $report;
-    }
-
-    /** @param array<string, mixed> $candidate */
-    private function candidateHash(array $candidate): string
-    {
-        return strtoupper(hash('sha256', json_encode($candidate, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)));
     }
 
     /** @return list<string> */
