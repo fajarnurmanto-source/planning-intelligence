@@ -86,6 +86,64 @@
     link.rel = 'noopener noreferrer'
   }
 
+  // Portable reviewer handoff of the already-verified R81/R82 evidence.
+  // Copying cannot mutate the R84 ledger or turn a candidate into a legal ruling.
+  function evidenceCitation(sourceId, excerpt) {
+    const candidate = state.selected
+    const report = state.report
+    const source = report?.sources?.find(item => item.instrument_id === sourceId)
+    if (!candidate || !source || !['PP-81-2012', 'UU-18-2008'].includes(sourceId) ||
+        !isSha(report.r81_manifest_sha256) || !isSha(candidate.review_candidate_sha256) ||
+        !isSha(source.pdf_sha256) || !isSha(excerpt?.excerpt_sha256) ||
+        !Number.isInteger(excerpt.pdf_page) || excerpt.pdf_page < 1 ||
+        typeof excerpt.excerpt !== 'string' || !excerpt.excerpt ||
+        typeof source.acquisition_url !== 'string' ||
+        !source.acquisition_url.startsWith('https://')) return null
+
+    return [
+      'BUKTI TEKS PDF — BELUM DISAHKAN REVIEWER',
+      'Kandidat: ' + candidate.target_provision_id,
+      'Dokumen: ' + sourceId,
+      'Halaman PDF: ' + excerpt.pdf_page,
+      'Kutipan: ' + excerpt.excerpt,
+      'Kutipan terpotong: ' + (excerpt.truncated ? 'YA; periksa PDF lengkap' : 'TIDAK'),
+      'URL akuisisi sumber: ' + source.acquisition_url,
+      'SHA-256 PDF: ' + source.pdf_sha256,
+      'SHA-256 kutipan: ' + excerpt.excerpt_sha256,
+      'SHA-256 manifest R81: ' + report.r81_manifest_sha256,
+      'Fingerprint kandidat R84: ' + candidate.review_candidate_sha256,
+      'Status: REVIEW_REQUIRED; RELATION_ADMISSION=NOT_PERFORMED; LEGAL_HARMONIZATION=NOT_ASSESSED',
+    ].join('\n')
+  }
+
+  async function copyEvidence(text, button, feedback) {
+    button.disabled = true
+    try {
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        await navigator.clipboard.writeText(text)
+      } else {
+        // Old browser fallback only; no persistent storage or network request.
+        const field = document.createElement('textarea')
+        field.value = text
+        field.readOnly = true
+        field.style.position = 'fixed'
+        field.style.opacity = '0'
+        document.body.appendChild(field)
+        try {
+          field.select()
+          if (!document.execCommand('copy')) throw Error('Clipboard unavailable')
+        } finally {
+          field.remove()
+        }
+      }
+      feedback.textContent = 'Sitasi dan hash bukti tersalin. Statusnya tetap perlu review.'
+    } catch (_) {
+      feedback.textContent = 'Gagal menyalin. Izinkan akses clipboard atau gunakan browser yang mendukung penyalinan.'
+    } finally {
+      button.disabled = false
+    }
+  }
+
   function passage(parent, label, excerpt, sourceId) {
     const card = create('div', 'r84-source-card', null, parent)
     create('strong', 'r84-source-title', label, card)
@@ -97,6 +155,15 @@
       ' · SHA kutipan ' + excerpt.excerpt_sha256.slice(0,16) + '…', card)
     sourceLink(card, sourceId, excerpt.pdf_page)
     create('blockquote', 'r84-quote', excerpt.excerpt, card)
+    const citation = evidenceCitation(sourceId, excerpt)
+    if (citation !== null) {
+      const copy = create('button', 'secondary-btn r84-copy-citation', 'Salin sitasi + hash bukti', card)
+      copy.type = 'button'
+      const feedback = create('small', 'r84-copy-status', '', card)
+      feedback.setAttribute('role', 'status')
+      feedback.setAttribute('aria-live', 'polite')
+      copy.addEventListener('click', () => copyEvidence(citation, copy, feedback))
+    }
     if (excerpt.truncated) {
       create('p', 'r84-warning', 'Kutipan terpotong. Baca seluruh isi pada PDF sumber.', card)
     }
