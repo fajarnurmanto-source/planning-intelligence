@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\RegulatoryEvidenceController;
 use App\Http\Controllers\Api\RegulatoryGenealogyController;
 use App\Http\Controllers\Api\RegulatoryLegacyProjectionController;
 use App\Http\Controllers\Api\RegulatoryLegalTraceController;
+use App\Http\Controllers\Api\RegulatoryLifecycleController;
 use App\Http\Controllers\Api\RegulatoryReadModelController;
 use App\Http\Controllers\Api\RegulatorySnapshotController;
 use App\Http\Controllers\Auth\SessionController;
@@ -61,6 +62,8 @@ Route::prefix('api')->group(function (): void {
             ->name('pi.entitlements');
         Route::get('/qa-superior-r85/development-case', GovernmentDevelopmentCaseController::class)
             ->name('pi.superior.development-case');
+        Route::get('/qa-superior-r86/regulatory-lifecycle', RegulatoryLifecycleController::class)
+            ->name('pi.superior.regulatory-lifecycle');
         Route::get('/qa-planning-r70k/program-candidate', PlanningProgramCandidateController::class)
             ->name('pi.planning.program-candidate');
         Route::get('/qa-regulatory-r70l/normative-root', NormativeRootController::class)

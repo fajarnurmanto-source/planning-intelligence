@@ -260,3 +260,23 @@ Simpan riwayat keputusan `CD-YYYYMMDD-NN` bila ada perubahan prioritas bermakna,
 **Change decision `CD-20261108-01`:** Pemilik menginstruksikan penyatuan seluruh master roadmap dan mandat terbaru menjadi pegangan. Dokumen ini **menggantikan roadmap sementara untuk pengembangan pilot**; sumber historis tetap utuh. Ia **tidak menyatakan** path master asli Windows telah ditemukan, tidak menimpa dokumen Windows dan tidak menaikkan status legal/numeric/production. Setelah roadmap ini, eksekusi berlanjut ke NEXT-01/02 menurut bukti kesiapan.
 
 **Change decision CD-20261109-02:** Pemilik mewajibkan traversal induk hukum otomatis tanpa pencarian manual; AUTO-ANCESTRY-008 adalah gerbang produk, bukan izin mengabaikan verifikasi sumber atau mempromosikan produksi.
+
+## 13. R86 — Integrated Government Regulatory & Development Lifecycle Intelligence (18 November 2026)
+
+**Change decision `CD-20261118-03`:** R86 menjadikan regulatory backbone sebagai kemampuan bersama PI Superior dan lima Specialized Apps tanpa mengganti kontrak R85. Registry awal menggunakan 38 entri handoff sebagai **katalog riset yang wajib diverifikasi**, bukan daftar aturan yang otomatis sah/berlaku. Implementasi berada pada branch kandidat `feature/r86-regulatory-backbone-lifecycle`, berbasis accepted baseline `62415afa23af4dbeb81e861e1d0bda219f23e5a0`, dan tidak mengubah database.
+
+Hasil kandidat R86 yang sudah tersedia:
+
+- panel **Siklus Pemerintahan & Dasar Regulasi** terintegrasi di workspace PI Superior/R85; tidak ada aplikasi atau dashboard paralel;
+- satu read model Laravel yang memakai kembali `DevelopmentCaseGraph`, empat graf, lima pertanyaan, autentikasi dan isolasi tenant R85;
+- registry berversi dengan status sumber, tanggal efektif, tahun perencanaan/anggaran, provision locator, provenance dan fail-closed validation;
+- graf dependensi 10 tahap: kewenangan, perencanaan, penganggaran, pelaksanaan/perbendaharaan, monitoring, evaluasi, APIP, BPK, tindak lanjut dan umpan balik ke perencanaan berikutnya;
+- lima projection bersama untuk Evidence, Regulatory, Performance, Fiscal dan Evaluation Intelligence, tanpa engine duplikat;
+- vertical slice `YOG-2026-PERSAMPAHAN`, termasuk gap/`ABSTAIN` untuk artefak monitoring, evaluasi, pengawasan dan audit yang belum tersedia;
+- temporal projection membedakan pedoman RKPD/APBD 2026 dan 2027 serta transisi SPKN Peraturan BPK 1/2017 ke Peraturan BPK 1/2026 pada 10 April 2028;
+- tautan kembali ke reviewer R84; registry/relation tidak membuat keputusan reviewer atau kesimpulan harmonisasi otomatis;
+- ekspor JSON dan Markdown berlabel `NOT_APPROVED`.
+
+Status verifikasi kandidat: tes R86 backend `5/5` (`60` assertions), regresi inti R84–R86/auth/tenant/lineage `17/17` (`171` assertions), frontend `37/37`, route dan production build `PASS`, serta HTTP lokal untuk halaman `200` dan endpoint tanpa sesi `401`. Suite backend penuh masih `94/98 PASS`; empat kegagalan baseline di luar berkas R86 tetap terbuka dan menahan klaim seluruh suite hijau. Acceptance visual browser login desktop/mobile dan ekspor yang benar-benar diunduh masih `NOT_RUN` pada sesi ini.
+
+Gerbang R86 tetap: `LEGAL_HARMONIZATION=NOT_ASSESSED`, `NUMERIC_COMPARISON=BLOCKED`, `REVIEW_DECISION=NO_ACTIVE_DECISION`, `PRODUCTION_ADMISSION=DENIED`. NEXT setelah review PR adalah acceptance browser dengan sesi manusia, verifikasi provision/temporal untuk kandidat prioritas yang belum terpin, dan perbaikan empat baseline failures secara terpisah tanpa memperluas scope R86.
