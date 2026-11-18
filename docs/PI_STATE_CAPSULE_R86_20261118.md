@@ -1,12 +1,14 @@
 # PI STATE CAPSULE — R86 REGULATORY BACKBONE
 
-Tanggal keadaan: **18 November 2026 (Asia/Jakarta)**
+Tanggal keadaan: **19 November 2026 (Asia/Jakarta)**
 
 Branch kandidat: `feature/r86-regulatory-backbone-lifecycle`
 
 Starting commit: `62415afa23af4dbeb81e861e1d0bda219f23e5a0`
 
-Pull request: `PENDING_CREATION`
+Commit implementasi: `b17684d0c036e3a2191ed45aaee8e24c995f641b`
+
+Pull request: [#69](https://github.com/fajarnurmanto-source/planning-intelligence/pull/69) — **DRAFT, TIDAK DI-MERGE**
 
 Target integrasi: `pilot/pi-laravel-github-bridge-20261108`
 

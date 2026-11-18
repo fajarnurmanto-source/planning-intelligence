@@ -263,7 +263,7 @@ Simpan riwayat keputusan `CD-YYYYMMDD-NN` bila ada perubahan prioritas bermakna,
 
 ## 13. R86 — Integrated Government Regulatory & Development Lifecycle Intelligence (18 November 2026)
 
-**Change decision `CD-20261118-03`:** R86 menjadikan regulatory backbone sebagai kemampuan bersama PI Superior dan lima Specialized Apps tanpa mengganti kontrak R85. Registry awal menggunakan 38 entri handoff sebagai **katalog riset yang wajib diverifikasi**, bukan daftar aturan yang otomatis sah/berlaku. Implementasi berada pada branch kandidat `feature/r86-regulatory-backbone-lifecycle`, berbasis accepted baseline `62415afa23af4dbeb81e861e1d0bda219f23e5a0`, dan tidak mengubah database.
+**Change decision `CD-20261118-03`:** R86 menjadikan regulatory backbone sebagai kemampuan bersama PI Superior dan lima Specialized Apps tanpa mengganti kontrak R85. Registry awal menggunakan 38 entri handoff sebagai **katalog riset yang wajib diverifikasi**, bukan daftar aturan yang otomatis sah/berlaku. Implementasi berada pada branch kandidat `feature/r86-regulatory-backbone-lifecycle`, berbasis accepted baseline `62415afa23af4dbeb81e861e1d0bda219f23e5a0`, commit implementasi `b17684d0c036e3a2191ed45aaee8e24c995f641b`, dan draft PR [#69](https://github.com/fajarnurmanto-source/planning-intelligence/pull/69); PR belum di-merge dan tidak mengubah database.
 
 Hasil kandidat R86 yang sudah tersedia:
 
