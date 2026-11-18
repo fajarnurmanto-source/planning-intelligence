@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AiProviderStatusController;
 use App\Http\Controllers\Api\AiReviewBriefController;
 use App\Http\Controllers\Api\AutomatedAncestryController;
 use App\Http\Controllers\Api\EntitlementController;
+use App\Http\Controllers\Api\GovernmentDevelopmentCaseController;
 use App\Http\Controllers\Api\NormativePlanningReadinessController;
 use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\PlanningLineageController;
@@ -58,6 +59,8 @@ Route::prefix('api')->group(function (): void {
         Route::post('/auth/logout', [SessionController::class, 'destroy'])->name('auth.logout');
         Route::get('/qa-subscription-r69e/entitlements', EntitlementController::class)
             ->name('pi.entitlements');
+        Route::get('/qa-superior-r85/development-case', GovernmentDevelopmentCaseController::class)
+            ->name('pi.superior.development-case');
         Route::get('/qa-planning-r70k/program-candidate', PlanningProgramCandidateController::class)
             ->name('pi.planning.program-candidate');
         Route::get('/qa-regulatory-r70l/normative-root', NormativeRootController::class)

@@ -1,0 +1,163 @@
+{
+  "schema": "PI_R85_GOVERNMENT_DEVELOPMENT_CASE_SOURCE_V1",
+  "case": {
+    "id": "YOG-2026-PERSAMPAHAN",
+    "label": "Kota Yogyakarta 2026 — Pengelolaan Persampahan",
+    "jurisdiction_id": "ID-DIY-YOG",
+    "planning_year": 2026,
+    "topic_id": "PERSAMPAHAN",
+    "case_status": "REVIEW_READY_WITH_ABSTENTIONS",
+    "summary": "Irisan baca lintas regulasi, kewenangan, perencanaan, program, indikator, dan anggaran. Hubungan kandidat tidak dipromosikan menjadi kesimpulan hukum atau keputusan review.",
+    "questions": [
+      {
+        "id": "why",
+        "question": "Mengapa dokumen pembangunan ini ada?",
+        "answer": "RKPD 2026 adalah artefak perencanaan tahunan yang menjadi penghubung menuju proses anggaran. Untuk kasus persampahan, regulasi nasional yang sudah dipin menyediakan akar bukti tematik; hubungan substantif ke dokumen daerah masih kandidat review.",
+        "status": "MIXED_VERIFIED_SOURCE_AND_CANDIDATE_RELATION",
+        "edge_ids": ["E01", "E06", "E15"]
+      },
+      {
+        "id": "authority",
+        "question": "Siapa yang memiliki kewenangan?",
+        "answer": "Wali Kota terverifikasi sebagai penerbit Perwali RKPD. Pemerintah Kota dan DLH ditampilkan sebagai kandidat pelaksana urusan persampahan berdasarkan sumber yang tersedia; dasar kewenangan pada tingkat ketentuan belum diputuskan.",
+        "status": "CANDIDATE_REQUIRES_LEGAL_REVIEW",
+        "edge_ids": ["E02", "E03", "E04"]
+      },
+      {
+        "id": "process",
+        "question": "Bagaimana urutan prosesnya?",
+        "answer": "Jejak yang tersedia bergerak dari pedoman normatif, RPJMD/RKPD, Renstra/Renja, program dan indikator, lalu artefak anggaran. Urutan ini adalah jejak dokumen dan bukan klaim bahwa seluruh tahapan telah patuh.",
+        "status": "DOCUMENTARY_SEQUENCE_REVIEW_REQUIRED",
+        "edge_ids": ["E07", "E08", "E09", "E14", "E16", "E17"]
+      },
+      {
+        "id": "outputs",
+        "question": "Keluaran apa yang harus tersedia?",
+        "answer": "Keluaran minimum yang dapat ditelusuri adalah artefak rencana, program/subkegiatan, indikator keluaran, dan artefak anggaran beserta lokator bukti. Kecukupan dan konsistensi angka belum dinilai.",
+        "status": "OUTPUT_TRACE_CANDIDATE_NUMERIC_BLOCKED",
+        "edge_ids": ["E10", "E11", "E12", "E13"]
+      },
+      {
+        "id": "two_way_trace",
+        "question": "Dapatkah jejak pembangunan dibaca dua arah?",
+        "answer": "Ya untuk navigasi bukti: dari regulasi menuju rencana/program/anggaran dan dari program kembali ke artefak serta sumber. Ini bukan pengesahan otomatis atas penerapan norma, keselarasan substantif, atau keputusan reviewer.",
+        "status": "TRACE_AVAILABLE_DECISION_ABSTAIN",
+        "edge_ids": ["E01", "E05", "E10", "E11", "E13", "E18"]
+      }
+    ],
+    "nodes": [
+      {"id":"REG-UU18-2008","type":"RegulationVersion","label":"UU 18/2008 tentang Pengelolaan Sampah","status":"VERIFIED_SOURCE_BYTES"},
+      {"id":"REG-PP81-2012","type":"RegulationVersion","label":"PP 81/2012 tentang Sampah Rumah Tangga","status":"VERIFIED_SOURCE_BYTES"},
+      {"id":"REG-PMD10-2025","type":"RegulationVersion","label":"Permendagri 10/2025 tentang RKPD 2026","status":"SOURCE_LOCATED_NOT_HASH_PINNED"},
+      {"id":"PROV-UU18-P16","type":"Provision","label":"Pasal 16 UU 18/2008","status":"REVIEW_CANDIDATE"},
+      {"id":"PROV-PMD10-P12-2","type":"Provision","label":"Pasal 12 ayat (2) Permendagri 10/2025","status":"SOURCE_LOCATED_NOT_HASH_PINNED"},
+      {"id":"AUTH-PEMKOT","type":"Authority","label":"Pemerintah Kota Yogyakarta","status":"AUTHORITY_CANDIDATE"},
+      {"id":"AUTH-WALIKOTA","type":"Authority","label":"Wali Kota Yogyakarta sebagai penerbit RKPD","status":"OFFICIAL_METADATA_CONFIRMED"},
+      {"id":"AUTH-DLH","type":"Authority","label":"Dinas Lingkungan Hidup Kota Yogyakarta","status":"ADMINISTRATIVE_RESPONSIBILITY_CANDIDATE"},
+      {"id":"AFFAIR-WASTE","type":"GovernmentAffair","label":"Urusan lingkungan hidup — persampahan","status":"MAPPING_CANDIDATE"},
+      {"id":"PLAN-RPJMD","type":"PlanningArtifactVersion","label":"RPJMD Kota Yogyakarta 2025–2029","status":"OFFICIAL_METADATA_LOCATED"},
+      {"id":"PLAN-RKPD","type":"PlanningArtifactVersion","label":"RKPD Kota Yogyakarta 2026","status":"OFFICIAL_METADATA_LOCATED"},
+      {"id":"PLAN-RENSTRA-DLH","type":"PlanningArtifactVersion","label":"Renstra DLH Kota Yogyakarta","status":"LOCAL_QA_OBSERVATION"},
+      {"id":"PLAN-RENJA-DLH","type":"PlanningArtifactVersion","label":"Renja DLH Kota Yogyakarta 2026","status":"LOCAL_QA_OBSERVATION"},
+      {"id":"STAGE-PLANNING","type":"ProcessStage","label":"Perencanaan pembangunan tahunan","status":"DOCUMENTARY_STAGE"},
+      {"id":"STAGE-BUDGET","type":"ProcessStage","label":"Penganggaran daerah 2026","status":"DOCUMENTARY_STAGE"},
+      {"id":"EVENT-RKPD-ISSUED","type":"ProcessEvent","label":"Perwali 34/2025 menetapkan RKPD 2026","status":"OFFICIAL_METADATA_CONFIRMED"},
+      {"id":"PROGRAM-WASTE-0004","type":"PlanningProgram","label":"Subkegiatan pengelolaan persampahan …0004","status":"LOCAL_QA_MAPPING_CANDIDATE"},
+      {"id":"IND-WASTE-COMMUNITY","type":"Indicator","label":"Indikator keluaran pelibatan masyarakat dalam pengelolaan persampahan","status":"LOCAL_QA_OBSERVATION"},
+      {"id":"BUDGET-APBD-2026","type":"BudgetArtifact","label":"APBD/Penjabaran APBD Kota Yogyakarta 2026","status":"LOCAL_QA_OBSERVATION"},
+      {"id":"EVID-R81","type":"EvidenceLocator","label":"Snapshot R81: UU 18/2008 dan PP 81/2012","status":"TWO_SHA256_PINS_MATCH"},
+      {"id":"EVID-R69C","type":"EvidenceLocator","label":"Proyeksi bukti lokal R69C","status":"LOCAL_QA_NOT_SOURCE_PINNED"},
+      {"id":"DECISION-NONE","type":"ReviewDecision","label":"Belum ada keputusan review aktif","status":"NO_ACTIVE_DECISION"}
+    ],
+    "edges": [
+      {
+        "id":"E01","from":"REG-PP81-2012","to":"PROV-UU18-P16","relation":"IMPLEMENTS_PROVISION_OF_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R81-PP-81-2012","locator":"Menimbang; rujukan pelaksanaan Pasal 16 UU 18/2008","source_url":"https://www.peraturan.go.id/files/pp81-2012bt.pdf","source_sha256":"542CE23457FE19529887D3B0BD4B14FAAE7F6F1E269CBFC5B840E117B2CDEE53","version":"PP 81 Tahun 2012","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"VERIFIED_SOURCE_BYTES","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E02","from":"PROV-UU18-P16","to":"AUTH-PEMKOT","relation":"INFORMS_MUNICIPAL_AUTHORITY_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R81-UU-18-2008","locator":"Pasal 16; applicability and authority require legal review","source_url":"https://peraturan.bpk.go.id/Download/28462/UU%20Nomor%2018%20Tahun%202008.pdf","source_sha256":"DC7735DB65D6DEDC650FF78C36B6C6F076CF931861B005EDAB03F30E513026F4","version":"UU 18 Tahun 2008","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"VERIFIED_SOURCE_BYTES","uncertainty":"HIGH"}
+      },
+      {
+        "id":"E03","from":"AUTH-WALIKOTA","to":"PLAN-RKPD","relation":"ISSUES_ARTIFACT",
+        "status":"SOURCE_LOCATED","provenance":{"source_id":"R70J-RKPD-2026","locator":"Metadata Perwali Kota Yogyakarta Nomor 34 Tahun 2025","source_url":"https://jdih.jogjakota.go.id/home/produk_hukum/detail/3758","source_sha256":null,"version":"Perwali 34 Tahun 2025","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"SOURCE_LOCATED_NOT_HASH_PINNED","uncertainty":"LOW"}
+      },
+      {
+        "id":"E04","from":"AUTH-DLH","to":"AFFAIR-WASTE","relation":"ADMINISTRATIVE_RESPONSIBILITY_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R69C-OVERVIEW","locator":"Renstra/Renja DLH stages for persampahan","source_url":"./overview-r69c.json","source_sha256":null,"version":"local QA projection R69C","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E05","from":"AFFAIR-WASTE","to":"PROGRAM-WASTE-0004","relation":"CLASSIFIES_PROGRAM_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R69C-OVERVIEW","locator":"Observed waste subactivity code ending .0004","source_url":"./overview-r69c.json","source_sha256":null,"version":"local QA projection R69C","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E06","from":"PLAN-RPJMD","to":"PLAN-RKPD","relation":"GUIDES_ANNUAL_PLAN_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R70J-RPJMD-2025-2029","locator":"Pasal 2 ayat (4) huruf a","source_url":"https://jdih.jogjakota.go.id/home/produk_hukum/detail/3774","source_sha256":null,"version":"Perda 2 Tahun 2025","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"SOURCE_LOCATED_NOT_HASH_PINNED","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E07","from":"REG-PMD10-2025","to":"PROV-PMD10-P12-2","relation":"CONTAINS_PROVISION",
+        "status":"SOURCE_LOCATED","provenance":{"source_id":"R70L-PMD10-2025","locator":"Pasal 12 ayat (2) huruf a–c; halaman cetak -8-","source_url":"https://peraturan.go.id/files/permendagri-no-10-tahun-2025.pdf","source_sha256":null,"version":"Permendagri 10 Tahun 2025","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"SOURCE_LOCATED_NOT_HASH_PINNED","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E08","from":"PLAN-RPJMD","to":"PLAN-RENSTRA-DLH","relation":"GUIDES_AGENCY_STRATEGIC_PLAN_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R69C-OVERVIEW","locator":"RPJMD to Renstra documentary stage","source_url":"./overview-r69c.json","source_sha256":null,"version":"local QA projection R69C","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED","uncertainty":"HIGH"}
+      },
+      {
+        "id":"E09","from":"PLAN-RKPD","to":"PLAN-RENJA-DLH","relation":"GUIDES_AGENCY_ANNUAL_PLAN_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R69C-OVERVIEW","locator":"RKPD to Renja documentary stage","source_url":"./overview-r69c.json","source_sha256":null,"version":"local QA projection R69C","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED","uncertainty":"HIGH"}
+      },
+      {
+        "id":"E10","from":"PLAN-RENSTRA-DLH","to":"PROGRAM-WASTE-0004","relation":"STRATEGIC_PLAN_CONTAINS_PROGRAM_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R69C-OVERVIEW","locator":"Renstra stage; waste target and subactivity .0004","source_url":"./overview-r69c.json","source_sha256":null,"version":"local QA projection R69C","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E11","from":"PLAN-RENJA-DLH","to":"PROGRAM-WASTE-0004","relation":"ANNUAL_PLAN_CONTAINS_PROGRAM_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R69C-OVERVIEW","locator":"Renja DLH stage; subactivity .0004","source_url":"./overview-r69c.json","source_sha256":null,"version":"local QA projection R69C","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E12","from":"PROGRAM-WASTE-0004","to":"IND-WASTE-COMMUNITY","relation":"MEASURED_BY_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R69C-OVERVIEW","locator":"Renja/APBD observed output indicator for community involvement","source_url":"./overview-r69c.json","source_sha256":null,"version":"local QA projection R69C","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E13","from":"PROGRAM-WASTE-0004","to":"BUDGET-APBD-2026","relation":"BUDGETED_IN_CANDIDATE",
+        "status":"CANDIDATE","provenance":{"source_id":"R69C-OVERVIEW","locator":"APBD and Penjabaran stages; code ending .0004","source_url":"./overview-r69c.json","source_sha256":null,"version":"local QA projection R69C","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E14","from":"PROV-PMD10-P12-2","to":"STAGE-BUDGET","relation":"RKPD_TO_BUDGET_PROCESS_GUIDANCE",
+        "status":"SOURCE_LOCATED","provenance":{"source_id":"R70L-PMD10-2025","locator":"Pasal 12 ayat (2) huruf a–c; halaman cetak -8-","source_url":"https://peraturan.go.id/files/permendagri-no-10-tahun-2025.pdf","source_sha256":null,"version":"Permendagri 10 Tahun 2025","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"SOURCE_LOCATED_NOT_HASH_PINNED","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E15","from":"PLAN-RKPD","to":"STAGE-PLANNING","relation":"MATERIALIZES_ANNUAL_PLANNING_STAGE",
+        "status":"SOURCE_LOCATED","provenance":{"source_id":"R70J-RKPD-2026","locator":"Perwali 34 Tahun 2025 metadata and RKPD identity","source_url":"https://jdih.jogjakota.go.id/home/produk_hukum/detail/3758","source_sha256":null,"version":"Perwali 34 Tahun 2025","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"SOURCE_LOCATED_NOT_HASH_PINNED","uncertainty":"LOW"}
+      },
+      {
+        "id":"E16","from":"STAGE-PLANNING","to":"STAGE-BUDGET","relation":"PRECEDES_DOCUMENTARY_STAGE",
+        "status":"DOCUMENTARY_SEQUENCE","provenance":{"source_id":"R70L-PMD10-2025","locator":"Pasal 12 ayat (2) huruf a–c; RKPD as budget guidance","source_url":"https://peraturan.go.id/files/permendagri-no-10-tahun-2025.pdf","source_sha256":null,"version":"Permendagri 10 Tahun 2025","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"SOURCE_LOCATED_NOT_HASH_PINNED","uncertainty":"MEDIUM"}
+      },
+      {
+        "id":"E17","from":"EVENT-RKPD-ISSUED","to":"PLAN-RKPD","relation":"ESTABLISHES_VERSION",
+        "status":"SOURCE_LOCATED","provenance":{"source_id":"R70J-RKPD-2026","locator":"Issued 7 July 2025; Perwali 34 Tahun 2025","source_url":"https://jdih.jogjakota.go.id/home/produk_hukum/detail/3758","source_sha256":null,"version":"Perwali 34 Tahun 2025","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"SOURCE_LOCATED_NOT_HASH_PINNED","uncertainty":"LOW"}
+      },
+      {
+        "id":"E18","from":"EVID-R81","to":"DECISION-NONE","relation":"AVAILABLE_FOR_HUMAN_REVIEW_NO_DECISION",
+        "status":"ABSTAIN","provenance":{"source_id":"R81-UU-18-2008","locator":"R81/R82 verified snapshot pair; no active R84 decision asserted","source_url":"https://peraturan.bpk.go.id/Download/28462/UU%20Nomor%2018%20Tahun%202008.pdf","source_sha256":"DC7735DB65D6DEDC650FF78C36B6C6F076CF931861B005EDAB03F30E513026F4","version":"UU 18 Tahun 2008","as_of_date":"2026-11-18","jurisdiction":"ID-DIY-YOG","verification_status":"VERIFIED_SOURCE_BYTES","uncertainty":"LOW"}
+      }
+    ],
+    "graphs": [
+      {"id":"regulatory_authority","label":"Regulasi dan kewenangan","edge_ids":["E01","E02","E03","E04"]},
+      {"id":"planning_development","label":"Perencanaan dan pembangunan","edge_ids":["E06","E07","E08","E09","E10","E11","E12","E13"]},
+      {"id":"government_affairs_program","label":"Urusan pemerintahan dan taksonomi program","edge_ids":["E04","E05","E10","E11","E12"]},
+      {"id":"development_workflow","label":"Alur kerja pembangunan","edge_ids":["E07","E14","E15","E16","E17","E18"]}
+    ]
+  },
+  "interpretation": {
+    "verified_meaning": "Sumber byte atau identitas metadata telah diperiksa sesuai status provenance; bukan otomatis verifikasi hubungan hukum.",
+    "candidate_meaning": "Hubungan siap ditelaah manusia dan belum boleh dipromosikan menjadi temuan final.",
+    "abstain_meaning": "Sistem tidak menyimpulkan ketika bukti tingkat ketentuan, versi, atau keputusan reviewer belum tersedia.",
+    "legal_harmonization": "NOT_ASSESSED",
+    "substantive_alignment": "NOT_ASSESSED",
+    "numeric_comparison": "BLOCKED",
+    "review_decision": "NO_ACTIVE_DECISION",
+    "production_admission": "DENIED"
+  }
+}
