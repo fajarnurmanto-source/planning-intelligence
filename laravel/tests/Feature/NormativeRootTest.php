@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 final class NormativeRootTest extends TestCase
@@ -32,7 +33,7 @@ final class NormativeRootTest extends TestCase
         $this->actingAs(User::factory()->create(['tenant_id' => 'OTHER-LOCAL-QA']))
             ->getJson($url)->assertForbidden();
 
-        $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
+        $response = $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
             ->getJson($url)->assertOk()
             ->assertJsonPath('schema', 'PI_R70L_NORMATIVE_ROOT_READ_MODEL_V1')
             ->assertJsonPath('tenant_id', 'ID-DIY-YOG')
@@ -61,8 +62,8 @@ final class NormativeRootTest extends TestCase
             ->assertJsonPath('census_snapshot.observations.1.relation_catalogue', 'BELUM_TERSEDIA')
             ->assertJsonPath('gates.result', 'ABSTAIN')
             ->assertJsonPath('gates.numeric_comparison', 'BLOCKED')
-            ->assertJsonPath('gates.production_admission', 'DENIED')
-            ->assertHeader('Cache-Control', 'private, no-store');
+            ->assertJsonPath('gates.production_admission', 'DENIED');
+        $this->assertPrivateNoStore($response);
     }
 
     public function test_unproven_amendment_completion_province_exception_or_forged_source_is_denied(): void
@@ -128,5 +129,18 @@ final class NormativeRootTest extends TestCase
         file_put_contents($file, json_encode($registry, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
         $this->temporaryFiles[] = $file;
         config()->set('pi.normative_root.registry_path', $file);
+    }
+
+    private function assertPrivateNoStore(TestResponse $response): void
+    {
+        $cacheControl = $response->headers->get('Cache-Control');
+        $this->assertIsString($cacheControl);
+        $directives = array_map(
+            static fn (string $directive): string => strtolower(trim($directive)),
+            explode(',', $cacheControl)
+        );
+        sort($directives);
+
+        $this->assertSame(['no-store', 'private'], $directives);
     }
 }

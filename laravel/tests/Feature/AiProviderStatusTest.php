@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AiProviderStatusTest extends TestCase
@@ -17,6 +18,7 @@ class AiProviderStatusTest extends TestCase
 
     public function test_provider_status_is_read_only_and_does_not_expose_secrets(): void
     {
+        Storage::fake('local');
         $user = User::factory()->create(['tenant_id' => 'ID-DIY-YOG']);
 
         $response = $this->actingAs($user)->getJson('/api/ai-r69a/status');

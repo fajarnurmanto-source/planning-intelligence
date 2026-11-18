@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 final class RegulatoryDiscoveryTest extends TestCase
@@ -40,7 +41,7 @@ final class RegulatoryDiscoveryTest extends TestCase
 </body></html>
 HTML, 200, ['Content-Type' => 'text/html; charset=utf-8'])]);
 
-        $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
+        $response = $this->actingAs(User::factory()->create(['tenant_id' => 'ID-DIY-YOG']))
             ->getJson(self::URL.'?q=Permendagri%2086%202017&source=jdih_bpk')
             ->assertOk()
             ->assertJsonPath('schema', 'PI_R70O_OFFICIAL_DISCOVERY_V1')
@@ -50,8 +51,8 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8'])]);
             ->assertJsonPath('normative_alignment', 'ABSTAIN')
             ->assertJsonPath('items.0.official_metadata_url', 'https://peraturan.bpk.go.id/Details/311927/permendagri-no-86-tahun-2017')
             ->assertJsonPath('items.0.source_pdf_sha256', null)
-            ->assertJsonCount(1, 'items')
-            ->assertHeader('Cache-Control', 'private, no-store');
+            ->assertJsonCount(1, 'items');
+        $this->assertPrivateNoStore($response);
         Http::assertSentCount(1);
         Http::assertSent(fn ($request) => str_starts_with($request->url(), 'https://peraturan.bpk.go.id/Search?')
             && str_contains($request->url(), 'keywords=')
@@ -70,7 +71,7 @@ HTML, 200, ['Content-Type' => 'text/html; charset=utf-8'])]);
             ->assertJsonPath('search_mode', 'KEYWORD_BROAD')
             ->assertJsonCount(1, 'items');
         Http::assertSent(fn ($request) => str_contains($request->url(), 'keywords=Perencanaan')
-            && !str_contains($request->url(), 'jenis=40'));
+            && ! str_contains($request->url(), 'jenis=40'));
     }
 
     public function test_broad_query_requires_topic_identity_and_acronym_expansion(): void
@@ -117,5 +118,18 @@ HTML, 200, ['Content-Type' => 'text/html'])]);
             ->assertJsonPath('code', 'OFFICIAL_SOURCE_UNAVAILABLE')
             ->assertJsonPath('items', [])
             ->assertJsonPath('status', 'ABSTAIN');
+    }
+
+    private function assertPrivateNoStore(TestResponse $response): void
+    {
+        $cacheControl = $response->headers->get('Cache-Control');
+        $this->assertIsString($cacheControl);
+        $directives = array_map(
+            static fn (string $directive): string => strtolower(trim($directive)),
+            explode(',', $cacheControl)
+        );
+        sort($directives);
+
+        $this->assertSame(['no-store', 'private'], $directives);
     }
 }
