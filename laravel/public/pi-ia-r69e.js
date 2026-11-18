@@ -12,6 +12,7 @@
   const onLedger = location.pathname.endsWith('/regulatory-ledger-r70c.html')
   const onScope = location.pathname.endsWith('/regulatory-scope-r70d.html')
   const onLaravel = location.pathname.endsWith('/regulatory-laravel-r70g.html')
+  const onDevelopmentCase = location.pathname.endsWith('/development-case-r85.html')
   const onFreeHome = location.pathname.endsWith("/free-home-r69e.html")
   let modulesAllowed = new Set(["regulatory"]) // fail-closed until server confirms
   let planName = "FREE"
@@ -21,6 +22,7 @@
   const spec = [
     {id:'superior',label:'PI Superior',subtitle:'Pusat keputusan lintas aplikasi',items:[
       {label:'Beranda',href:'./index.html',key:'home'},
+      {label:'Kasus pembangunan terpadu',href:'./development-case-r85.html',key:'development-case'},
       {label:'Agenda review',href:'./index.html#actions-title'},
       {label:'Analisis AI',href:'./ai-gateway.html'},
     ]},
@@ -70,7 +72,7 @@
       if(i===1) create('div','pi-app-group-label','5 APLIKASI SPESIALIS',nav)
       const details=create('details','pi-app-group',null,nav)
       details.dataset.piApp=group.id
-      const hasActive=group.items.some(x=>(onWorkspace&&x.key===section)||(onRegulatory&&x.key==='regulasi')||(onTrace&&x.key==='norma')||(onFullSources&&x.key==='naskah')||(onLedger&&x.key==='perubahan')||(onScope&&x.key==='cakupan')||isLaravelActive(x.key))
+      const hasActive=group.items.some(x=>(onWorkspace&&x.key===section)||(onRegulatory&&x.key==='regulasi')||(onTrace&&x.key==='norma')||(onFullSources&&x.key==='naskah')||(onLedger&&x.key==='perubahan')||(onScope&&x.key==='cakupan')||(onDevelopmentCase&&x.key==='development-case')||isLaravelActive(x.key))
       details.open=!locked && (hasActive || (!onWorkspace&&i===0))
       const summary=create('summary','pi-app-group-summary',null,details)
       create('span','pi-app-group-name',group.label,summary)
@@ -84,13 +86,13 @@
       }
       const list=create('div','pi-app-submenu',null,details)
       const displayItems=group.id==="superior"&&planName==="FREE"
-        ? [...group.items.filter(item=>item.key==="home"),{label:"Langganan aplikasi",href:"./subscription-r69e.html"}]
+        ? [...group.items.filter(item=>item.key==="home"||item.key==="development-case"),{label:"Langganan aplikasi",href:"./subscription-r69e.html"}]
         : group.items
       for(const item of displayItems) {
         if(item.href) {
           const a=create('a','pi-app-item',item.label,list)
           a.href=item.href
-          if((onWorkspace&&item.key===section) || (onRegulatory&&item.key==='regulasi') || (onTrace&&item.key==='norma') || (onFullSources&&item.key==='naskah') || (onLedger&&item.key==='perubahan') || (onScope&&item.key==='cakupan') || isLaravelActive(item.key) || (!onWorkspace&&!onRegulatory&&!onTrace&&!onFullSources&&!onLedger&&!onScope&&!onLaravel&&item.key==='home'&&location.hash==='')) {
+          if((onWorkspace&&item.key===section) || (onRegulatory&&item.key==='regulasi') || (onTrace&&item.key==='norma') || (onFullSources&&item.key==='naskah') || (onLedger&&item.key==='perubahan') || (onScope&&item.key==='cakupan') || (onDevelopmentCase&&item.key==='development-case') || isLaravelActive(item.key) || (!onWorkspace&&!onRegulatory&&!onTrace&&!onFullSources&&!onLedger&&!onScope&&!onLaravel&&!onDevelopmentCase&&item.key==='home'&&location.hash==='')) {
             a.classList.add('active')
             a.setAttribute('aria-current','page')
           }

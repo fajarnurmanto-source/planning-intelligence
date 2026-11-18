@@ -12,6 +12,9 @@ return [
     'planning_lineage' => [
         'registry_path' => resource_path('pi/official-planning-lineage-r70j.json'),
     ],
+    'development_case' => [
+        'registry_path' => resource_path('pi/development-case-r85.json'),
+    ],
     'regulatory_auto_ancestry' => [
         // Local pilot: only pinned JDIH BPK sources; file cache needs no migration.
         'enabled' => env('PI_REGULATORY_AUTO_ANCESTRY_ENABLED', true),
