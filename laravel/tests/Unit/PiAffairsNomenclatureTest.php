@@ -37,6 +37,7 @@ final class PiAffairsNomenclatureTest extends TestCase
     public function test_unmapped_prefix_only_and_other_year_do_not_promote(): void
     {
         self::assertSame('ABSTAIN_UNMAPPED', $this->subject()->classify('1.99.99', 2026)['status']);
+        self::assertSame('PREFIX_DERIVED_REVIEW_REQUIRED', $this->subject()->classify('2.11', 2026)['status']);
         self::assertSame('PARENT_PREFIX_CANDIDATE', $this->subject()->classify('2.11.11.2.01.9999', 2026)['status']);
         self::assertSame('YEAR_SCOPE_REVIEW_REQUIRED', $this->subject()->classify('2.11.11.2.01.0004', 2027)['status']);
     }
