@@ -53,7 +53,9 @@ final class AffairFirstNomenclature
         }
         $match = $exact ?? $prefix;
         $status = $exact !== null
-            ? ($exact['year'] === $year ? 'EXACT_LOCAL_OBSERVATION' : 'YEAR_SCOPE_REVIEW_REQUIRED')
+            ? ($exact['year'] !== $year ? 'YEAR_SCOPE_REVIEW_REQUIRED'
+                : ($exact['status'] === 'PREFIX_DERIVED_REVIEW_REQUIRED'
+                    ? 'PREFIX_DERIVED_REVIEW_REQUIRED' : 'EXACT_LOCAL_OBSERVATION'))
             : ($prefix !== null ? 'PARENT_PREFIX_CANDIDATE' : 'ABSTAIN_UNMAPPED');
         $sectoral = [];
         if ($match !== null) {
@@ -184,7 +186,7 @@ final class AffairFirstNomenclature
         if (! is_string($url) || ! filter_var($url, FILTER_VALIDATE_URL)) return false;
         $parts = parse_url($url);
         return is_array($parts) && ($parts['scheme'] ?? null) === 'https'
-            && ! isset($parts['user'], $parts['pass']) && ! isset($parts['port'])
+            && ! isset($parts['user']) && ! isset($parts['pass']) && ! isset($parts['port'])
             && in_array(strtolower((string) ($parts['host'] ?? '')), [
                 'jdih.kemenkeu.go.id', 'jdih.jogjakota.go.id',
                 'peraturan.bpk.go.id', 'peraturan.go.id', 'www.peraturan.go.id',
