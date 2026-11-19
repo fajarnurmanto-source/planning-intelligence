@@ -1,0 +1,428 @@
+{
+  "schema": "PI_AFFAIR_FIRST_NOMENCLATURE_SEED_V1",
+  "snapshot_date": "2026-11-19",
+  "scope": "32 national concurrent affair categories and bounded observed local nomenclature; NOT complete competency or nationwide code inventory",
+  "statutory_source": {
+    "id": "UU23-2014-PASAL12",
+    "url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+    "amendments": "REVIEW_REQUIRED"
+  },
+  "affairs": [
+    {
+      "id": "CONC-BASIC-01",
+      "group": "BASIC",
+      "label": "pendidikan",
+      "provision": "UU 23/2014 Pasal 12 ayat (1) huruf a",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-BASIC-02",
+      "group": "BASIC",
+      "label": "kesehatan",
+      "provision": "UU 23/2014 Pasal 12 ayat (1) huruf b",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-BASIC-03",
+      "group": "BASIC",
+      "label": "pekerjaan umum dan penataan ruang",
+      "provision": "UU 23/2014 Pasal 12 ayat (1) huruf c",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-BASIC-04",
+      "group": "BASIC",
+      "label": "perumahan rakyat dan kawasan permukiman",
+      "provision": "UU 23/2014 Pasal 12 ayat (1) huruf d",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-BASIC-05",
+      "group": "BASIC",
+      "label": "ketenteraman, ketertiban umum, dan pelindungan masyarakat",
+      "provision": "UU 23/2014 Pasal 12 ayat (1) huruf e",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-BASIC-06",
+      "group": "BASIC",
+      "label": "sosial",
+      "provision": "UU 23/2014 Pasal 12 ayat (1) huruf f",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-01",
+      "group": "NON_BASIC",
+      "label": "tenaga kerja",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf a",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-02",
+      "group": "NON_BASIC",
+      "label": "pemberdayaan perempuan dan pelindungan anak",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf b",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-03",
+      "group": "NON_BASIC",
+      "label": "pangan",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf c",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-04",
+      "group": "NON_BASIC",
+      "label": "pertanahan",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf d",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-05",
+      "group": "NON_BASIC",
+      "label": "lingkungan hidup",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf e",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-06",
+      "group": "NON_BASIC",
+      "label": "administrasi kependudukan dan pencatatan sipil",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf f",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-07",
+      "group": "NON_BASIC",
+      "label": "pemberdayaan masyarakat dan Desa",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf g",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-08",
+      "group": "NON_BASIC",
+      "label": "pengendalian penduduk dan keluarga berencana",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf h",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-09",
+      "group": "NON_BASIC",
+      "label": "perhubungan",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf i",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-10",
+      "group": "NON_BASIC",
+      "label": "komunikasi dan informatika",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf j",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-11",
+      "group": "NON_BASIC",
+      "label": "koperasi, usaha kecil, dan menengah",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf k",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-12",
+      "group": "NON_BASIC",
+      "label": "penanaman modal",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf l",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-13",
+      "group": "NON_BASIC",
+      "label": "kepemudaan dan olah raga",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf m",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-14",
+      "group": "NON_BASIC",
+      "label": "statistik",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf n",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-15",
+      "group": "NON_BASIC",
+      "label": "persandian",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf o",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-16",
+      "group": "NON_BASIC",
+      "label": "kebudayaan",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf p",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-17",
+      "group": "NON_BASIC",
+      "label": "perpustakaan",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf q",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-NON_BASIC-18",
+      "group": "NON_BASIC",
+      "label": "kearsipan",
+      "provision": "UU 23/2014 Pasal 12 ayat (2) huruf r",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-OPTIONAL-01",
+      "group": "OPTIONAL",
+      "label": "kelautan dan perikanan",
+      "provision": "UU 23/2014 Pasal 12 ayat (3) huruf a",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-OPTIONAL-02",
+      "group": "OPTIONAL",
+      "label": "pariwisata",
+      "provision": "UU 23/2014 Pasal 12 ayat (3) huruf b",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-OPTIONAL-03",
+      "group": "OPTIONAL",
+      "label": "pertanian",
+      "provision": "UU 23/2014 Pasal 12 ayat (3) huruf c",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-OPTIONAL-04",
+      "group": "OPTIONAL",
+      "label": "kehutanan",
+      "provision": "UU 23/2014 Pasal 12 ayat (3) huruf d",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-OPTIONAL-05",
+      "group": "OPTIONAL",
+      "label": "energi dan sumber daya mineral",
+      "provision": "UU 23/2014 Pasal 12 ayat (3) huruf e",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-OPTIONAL-06",
+      "group": "OPTIONAL",
+      "label": "perdagangan",
+      "provision": "UU 23/2014 Pasal 12 ayat (3) huruf f",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-OPTIONAL-07",
+      "group": "OPTIONAL",
+      "label": "perindustrian",
+      "provision": "UU 23/2014 Pasal 12 ayat (3) huruf g",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    },
+    {
+      "id": "CONC-OPTIONAL-08",
+      "group": "OPTIONAL",
+      "label": "transmigrasi",
+      "provision": "UU 23/2014 Pasal 12 ayat (3) huruf h",
+      "source_url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2014/23TAHUN2014UU.htm",
+      "competence": "NOT_ASSESSED",
+      "legal_currency": "AMENDMENT_CHAIN_REVIEW_REQUIRED"
+    }
+  ],
+  "nomenclature": [
+    {
+      "code": "2.11",
+      "label": "Lingkungan Hidup",
+      "level": "BIDANG_URUSAN",
+      "parent_code": null,
+      "affair_id": "CONC-NON_BASIC-05",
+      "year": 2026,
+      "version": "LOCAL_YOG_2026_OBSERVED",
+      "status": "PREFIX_DERIVED_REVIEW_REQUIRED",
+      "source_url": "https://jdih.jogjakota.go.id/asset/naskah/2026pw3405004.pdf",
+      "locator": "Prefix of the official local program code, not directly verified as national master",
+      "sha256": null,
+      "national_master_verified": false
+    },
+    {
+      "code": "2.11.11",
+      "label": "PROGRAM PENGELOLAAN PERSAMPAHAN",
+      "level": "PROGRAM",
+      "parent_code": "2.11",
+      "affair_id": "CONC-NON_BASIC-05",
+      "year": 2026,
+      "version": "LOCAL_YOG_2026_OBSERVED",
+      "status": "OBSERVED_LOCAL_DOCUMENT",
+      "source_url": "https://jdih.jogjakota.go.id/asset/naskah/2026pw3405004.pdf",
+      "locator": "Program section in municipal document",
+      "sha256": null,
+      "national_master_verified": false
+    },
+    {
+      "code": "2.11.11.2.01",
+      "label": "Pengelolaan Sampah",
+      "level": "KEGIATAN",
+      "parent_code": "2.11.11",
+      "affair_id": "CONC-NON_BASIC-05",
+      "year": 2026,
+      "version": "LOCAL_YOG_2026_OBSERVED",
+      "status": "OBSERVED_LOCAL_DOCUMENT",
+      "source_url": "https://jdih.jogjakota.go.id/asset/naskah/2026pw3405004.pdf",
+      "locator": "Activity section in municipal document",
+      "sha256": null,
+      "national_master_verified": false
+    },
+    {
+      "code": "2.11.11.2.01.0004",
+      "label": "Peningkatan Peran Serta Masyarakat dalam Pengelolaan Persampahan",
+      "level": "SUB_KEGIATAN",
+      "parent_code": "2.11.11.2.01",
+      "affair_id": "CONC-NON_BASIC-05",
+      "year": 2026,
+      "version": "LOCAL_YOG_2026_OBSERVED",
+      "status": "OBSERVED_LOCAL_DOCUMENT",
+      "source_url": "https://jdih.jogjakota.go.id/asset/naskah/2026pw3405004.pdf",
+      "locator": "Subactivity .0004 and community participation indicator",
+      "sha256": null,
+      "national_master_verified": false
+    },
+    {
+      "code": "2.11.11.2.01.0008",
+      "label": "Penyusunan Rencana, Kebijakan dan Strategi Daerah Pengelolaan Sampah kabupaten/kota",
+      "level": "SUB_KEGIATAN",
+      "parent_code": "2.11.11.2.01",
+      "affair_id": "CONC-NON_BASIC-05",
+      "year": 2026,
+      "version": "LOCAL_YOG_2026_OBSERVED",
+      "status": "OBSERVED_LOCAL_DOCUMENT",
+      "source_url": "https://jdih.jogjakota.go.id/asset/naskah/2026pw3405004.pdf",
+      "locator": "Subactivity .0008 in municipal document",
+      "sha256": null,
+      "national_master_verified": false
+    },
+    {
+      "code": "2.11.11.2.01.0017",
+      "label": "Penanganan sampah melalui pemilahan dan pengolahan sampah di instalasi pengolahan sampah TPS3R, PDU, TPST, TPS, SPA, PSEL/PLTSa, RDF, pusat pengomposan, biodigester, Bank Sampah dan fasilitas lainnya sesuai dengan peraturan perundangan",
+      "level": "SUB_KEGIATAN",
+      "parent_code": "2.11.11.2.01",
+      "affair_id": "CONC-NON_BASIC-05",
+      "year": 2026,
+      "version": "LOCAL_YOG_2026_OBSERVED",
+      "status": "OBSERVED_LOCAL_DOCUMENT",
+      "source_url": "https://jdih.jogjakota.go.id/asset/naskah/2026pw3405004.pdf",
+      "locator": "Subactivity .0017 in municipal document",
+      "sha256": null,
+      "national_master_verified": false
+    }
+  ],
+  "sources": [
+    {
+      "id": "PMD90-2019",
+      "url": "https://peraturan.bpk.go.id/Details/139075/permendagri-no-90-tahun-2019",
+      "admission": "STRUCTURE_REFERENCE_ONLY"
+    },
+    {
+      "id": "KMD-900.1-861-2026",
+      "url": "https://bkad.kepriprov.go.id/pengumuman/kodefikasi-dan-nomenklatur-keuangan-daerah-kembali-dimutakhirkan",
+      "admission": "OFFICIAL_NEWS_METADATA_ONLY_NO_NATIONAL_ANNEX"
+    },
+    {
+      "id": "YOG-DOCUMENT-2026",
+      "url": "https://jdih.jogjakota.go.id/asset/naskah/2026pw3405004.pdf",
+      "admission": "LOCAL_OBSERVATION_SOURCE_BYTES_NOT_PINNED"
+    }
+  ],
+  "sectoral_triggers": [
+    {
+      "affair_id": "CONC-NON_BASIC-05",
+      "code_prefix": "2.11.11",
+      "topic": "persampahan",
+      "source_candidates": [
+        {
+          "title": "UU 18 Tahun 2008",
+          "url": "https://peraturan.bpk.go.id/Download/28462/UU%20Nomor%2018%20Tahun%202008.pdf"
+        },
+        {
+          "title": "PP 81 Tahun 2012",
+          "url": "https://www.peraturan.go.id/files/pp81-2012bt.pdf"
+        }
+      ],
+      "status": "DISCOVERY_CANDIDATE_NOT_LEGAL_DETERMINATION"
+    }
+  ],
+  "gates": {
+    "legal_harmonization": "NOT_ASSESSED",
+    "numeric_comparison": "BLOCKED",
+    "review_decision": "NO_ACTIVE_DECISION",
+    "production_admission": "DENIED",
+    "national_nomenclature": "INCOMPLETE"
+  }
+}
