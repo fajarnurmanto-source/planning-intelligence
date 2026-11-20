@@ -7,6 +7,9 @@ on:
     paths:
       - 'laravel/public/regulatory-change-trace-r72.*'
       - 'laravel/public/regulatory-laravel-r70g.html'
+      - 'laravel/public/regulatory-workbench-r87.bundle.*'
+      - 'laravel/tests/frontend/pi_r87_regulatory_asset_bundle.test.cjs'
+      - 'scripts/pi-build-regulatory-assets.mjs'
       - 'laravel/tests/js/regulatory-r73.test.cjs'
       - 'laravel/tests/Feature/RegulatoryChangeTraceTest.php'
       - 'laravel/tests/Feature/AiEvidenceContextTest.php'
@@ -22,6 +25,9 @@ on:
     paths:
       - 'laravel/public/regulatory-change-trace-r72.*'
       - 'laravel/public/regulatory-laravel-r70g.html'
+      - 'laravel/public/regulatory-workbench-r87.bundle.*'
+      - 'laravel/tests/frontend/pi_r87_regulatory_asset_bundle.test.cjs'
+      - 'scripts/pi-build-regulatory-assets.mjs'
       - 'laravel/tests/js/regulatory-r73.test.cjs'
       - 'laravel/tests/Feature/RegulatoryChangeTraceTest.php'
       - 'laravel/tests/Feature/AiEvidenceContextTest.php'
@@ -56,6 +62,12 @@ jobs:
         run: node --check laravel/public/regulatory-change-trace-r72.js
       - name: Secure opt-in / hash / denial behavior
         run: node --test laravel/tests/js/regulatory-r73.test.cjs
+      - name: R87 reproducible asset and full frontend smoke suite
+        run: |
+          node scripts/pi-build-regulatory-assets.mjs --check
+          node --check laravel/public/regulatory-workbench-r87.bundle.js
+          node --test laravel/tests/frontend/*.test.cjs laravel/tests/js/*.test.cjs
+          node scripts/pi-build-regulatory-assets.mjs --metrics
 
   laravel-regression:
     name: Laravel source-independent guard regression (PHP 8.5)
