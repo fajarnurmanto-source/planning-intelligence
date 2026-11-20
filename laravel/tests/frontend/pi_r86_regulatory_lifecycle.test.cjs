@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, '../..')
 const html = fs.readFileSync(path.join(root, 'public/regulatory-lifecycle-r86.js'), 'utf8')
 const page = fs.readFileSync(path.join(root, 'public/development-case-r85.html'), 'utf8')
 const css = fs.readFileSync(path.join(root, 'public/regulatory-lifecycle-r86.css'), 'utf8')
+const r85Css = fs.readFileSync(path.join(root, 'public/development-case-r85.css'), 'utf8')
 
 test('R86 is integrated into the existing R85 PI Superior workspace', () => {
   assert.match(page, /id="r86-lifecycle"/)
@@ -53,5 +54,7 @@ test('R86 layout has explicit desktop and mobile rules', () => {
   assert.match(css, /grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/)
   assert.match(css, /@media \(max-width:720px\)/)
   assert.match(css, /\.r86-controls,.r86-metrics,.r86-temporal,.r86-stages,.r86-apps,.r86-brief \{ grid-template-columns:1fr; \}/)
+  assert.match(r85Css, /\.r85-evidence-item > \* \{ min-width:0; overflow-wrap:anywhere; \}/)
+  assert.match(r85Css, /\.r85-evidence-item \{ grid-template-columns:minmax\(0,1fr\); \}/)
 })
 

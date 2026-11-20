@@ -19,8 +19,9 @@
 .r85-node small { display:block; margin-bottom:3px; color:#75857f; font-size:.62rem; text-transform:uppercase; }
 .r85-arrow { color:#b07d18; text-align:center; font-weight:900; }
 .r85-relation { grid-column:1 / -1; color:#6c7c77; font:600 .65rem ui-monospace,SFMono-Regular,Consolas,monospace; text-align:center; }
-.r85-evidence-list { display:grid; gap:10px; }
-.r85-evidence-item { display:grid; grid-template-columns:55px minmax(170px,.8fr) minmax(260px,1.6fr) auto; gap:14px; align-items:center; border:1px solid #e0e8e5; border-radius:10px; padding:13px; }
+.r85-evidence-list { display:grid; gap:10px; min-width:0; }
+.r85-evidence-item { display:grid; grid-template-columns:55px minmax(170px,.8fr) minmax(260px,1.6fr) auto; gap:14px; align-items:center; min-width:0; max-width:100%; border:1px solid #e0e8e5; border-radius:10px; padding:13px; }
+.r85-evidence-item > * { min-width:0; overflow-wrap:anywhere; }
 .r85-evidence-item code { color:#174c3d; font-weight:800; }
 .r85-evidence-item p { margin:2px 0; color:#5d6d68; font-size:.78rem; }
 .r85-evidence-item a { color:#176d58; font-weight:700; text-decoration:none; }
@@ -32,4 +33,5 @@
 .r85-guards span { padding:8px 11px; border:1px solid #e4c98e; border-radius:999px; background:#fff8e8; color:#6a501b; font-size:.75rem; font-weight:800; }
 .r85-error { padding:18px; border:1px solid #e2a5a5; border-radius:10px; background:#fff1f1; color:#852f2f; }
 @media (max-width:1050px) { .r85-filters { grid-template-columns:repeat(2,1fr); } .r85-graph-grid,.r85-question-grid { grid-template-columns:1fr; } .r85-question:first-child { grid-column:auto; } .r85-evidence-item { grid-template-columns:48px 1fr; } .r85-verification { justify-items:start; } }
-@media (max-width:680px) { .r85-filters { grid-template-columns:1fr; } .r85-flow-row { grid-template-columns:1fr; } .r85-arrow { transform:rotate(90deg); } .r85-evidence-item { grid-template-columns:1fr; } }
+@media (max-width:680px) { .r85-filters { grid-template-columns:1fr; } .r85-flow-row { grid-template-columns:1fr; } .r85-arrow { transform:rotate(90deg); } .r85-evidence-item { grid-template-columns:minmax(0,1fr); } }
+
