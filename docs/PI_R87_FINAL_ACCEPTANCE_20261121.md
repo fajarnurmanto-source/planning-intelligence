@@ -15,7 +15,7 @@ Base: 980e93e031273a8f328b46f3cfa7012d63086b8c. Starting candidate: 045cfd5.
 Frontend/JS: 49/49 PASS. Bundle reproduction PASS. PHP controller syntax PASS.
 Runtime full backend: 103/103 PASS, 1135 assertions. Initial 94/98 run exposed four old baseline tests not yet synchronized from merged PR #70; after guarded test synchronization all passed, including five R87 tests.
 
-R70F authenticated load PASS. R74 partial graph displayed. R75 real candidates PASS after explicit ancestry action. Responsive document widths PASS at 1440/768/390. R84 initially encountered HTTP 429 after repeated reloads; final reacceptance remains pending. R85/R86 browser export reacceptance and logout remain pending; automated regression passed.
+R70F authenticated load PASS. R74 partial graph displayed. R75 real candidates PASS after explicit ancestry action. Responsive document widths PASS at 1440/768/390. R84 initially encountered HTTP 429 after repeated reloads; after the limit window passed it displayed seven candidates, seven mapped quotations and ledger-ready status. No review decision was submitted. R85/R86 browser export reacceptance and logout remain pending; automated regression passed.
 
 Windows source applied with backups under `PI_GITHUB_BRIDGE_BACKUPS/R87_FINAL_20261121`, `R87_FINAL_CONTRAST_20261121`, and `R87_BASELINE_TEST_SYNC_20261121`. Marker unchanged. No database migration or secret change.
 
