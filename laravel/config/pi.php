@@ -15,6 +15,11 @@ return [
     'development_case' => [
         'registry_path' => resource_path('pi/development-case-r85.json'),
     ],
+    'regulatory_backbone' => [
+        'registry_path' => resource_path('pi/regulatory-backbone-lifecycle-r86.json'),
+        'catalogue_path' => resource_path('pi/regulatory-backbone-catalogue-r86.csv'),
+        'catalogue_sha256' => 'BB90F07F6387589EBAC3960B899709C4758D76B6707CB72E542480FD1BA17C5B',
+    ],
     'regulatory_auto_ancestry' => [
         // Local pilot: only pinned JDIH BPK sources; file cache needs no migration.
         'enabled' => env('PI_REGULATORY_AUTO_ANCESTRY_ENABLED', true),

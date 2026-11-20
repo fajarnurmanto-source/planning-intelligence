@@ -1,0 +1,462 @@
+{
+  "schema": "PI_R86_REGULATORY_BACKBONE_SOURCE_V1",
+  "registry_version": "2026-11-18.1",
+  "case_id": "YOG-2026-PERSAMPAHAN",
+  "jurisdiction_id": "ID-DIY-YOG",
+  "planning_year": 2026,
+  "observed_at": "2026-11-18",
+  "catalogue_policy": "38_RESEARCH_CANDIDATES_REQUIRE_PROVISION_AND_TEMPORAL_VERIFICATION",
+  "regulation_versions": [
+    {
+      "id": "REG-UU18-2008",
+      "title": "UU 18 Tahun 2008 tentang Pengelolaan Sampah",
+      "cluster": "GOV",
+      "jurisdiction": "ID",
+      "effective_from": "2008-05-07",
+      "temporal_confidence": "VERIFIED",
+      "source_url": "https://peraturan.bpk.go.id/Download/28462/UU%20Nomor%2018%20Tahun%202008.pdf",
+      "source_sha256": "DC7735DB65D6DEDC650FF78C36B6C6F076CF931861B005EDAB03F30E513026F4",
+      "source_state": "VERIFIED_SOURCE_BYTES"
+    },
+    {
+      "id": "REG-PP81-2012",
+      "title": "PP 81 Tahun 2012 tentang Pengelolaan Sampah Rumah Tangga",
+      "cluster": "GOV",
+      "jurisdiction": "ID",
+      "effective_from": "2012-10-15",
+      "temporal_confidence": "VERIFIED",
+      "source_url": "https://www.peraturan.go.id/files/pp81-2012bt.pdf",
+      "source_sha256": "542CE23457FE19529887D3B0BD4B14FAAE7F6F1E269CBFC5B840E117B2CDEE53",
+      "source_state": "VERIFIED_SOURCE_BYTES"
+    },
+    {
+      "id": "REG-UU23-2014",
+      "title": "UU 23 Tahun 2014 tentang Pemerintahan Daerah",
+      "cluster": "GOV",
+      "jurisdiction": "ID",
+      "effective_from": "2014-10-02",
+      "temporal_confidence": "REVIEW_REQUIRED_FOR_PARTIAL_AMENDMENTS",
+      "source_url": "https://peraturan.bpk.go.id/Details/38685/uu-no-23-tahun-2014",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-UU25-2004",
+      "title": "UU 25 Tahun 2004 tentang Sistem Perencanaan Pembangunan Nasional",
+      "cluster": "PLAN",
+      "jurisdiction": "ID",
+      "effective_from": "2004-10-05",
+      "temporal_confidence": "REVIEW_REQUIRED_FOR_CURRENT_PROVISIONS",
+      "source_url": "https://jdih.bpk.go.id/Dokumen/Peraturan/ce3335ad-6f77-4169-a3ba-1bc77529999f",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PMD86-2017",
+      "title": "Permendagri 86 Tahun 2017 tentang Perencanaan, Pengendalian dan Evaluasi Pembangunan Daerah",
+      "cluster": "PLAN",
+      "jurisdiction": "ID",
+      "effective_from": "2017-09-25",
+      "temporal_confidence": "VERIFIED",
+      "source_url": "https://peraturan.bpk.go.id/Details/311927/permendagri-no-86-tahun-2017",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PMD10-2025",
+      "title": "Permendagri 10 Tahun 2025 tentang Pedoman RKPD Tahun 2026",
+      "cluster": "PLAN",
+      "jurisdiction": "ID",
+      "effective_from": "2025-06-23",
+      "planning_years": [2026],
+      "temporal_confidence": "VERIFIED",
+      "source_url": "https://peraturan.bpk.go.id/Details/321470/permendagri-no-10-tahun-2025",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PMD14-2026",
+      "title": "Permendagri 14 Tahun 2026 tentang Pedoman RKPD Tahun 2027",
+      "cluster": "PLAN",
+      "jurisdiction": "ID",
+      "effective_from": "2026-06-11",
+      "planning_years": [2027],
+      "temporal_confidence": "VERIFIED",
+      "source_url": "https://peraturan.bpk.go.id/Details/357698/permendagri-no-14-tahun-2026-pedoman-penyusunan-rencana-kerja-pemerintah-daerah",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PMD14-2025",
+      "title": "Permendagri 14 Tahun 2025 tentang Pedoman APBD Tahun Anggaran 2026",
+      "cluster": "BUDGET",
+      "jurisdiction": "ID",
+      "effective_from": "2025-10-08",
+      "budget_years": [2026],
+      "temporal_confidence": "REVIEW_REQUIRED_FOR_PROVISION_LOCATORS",
+      "source_url": "https://peraturan.bpk.go.id/Details/331189/permendagri-no-14-tahun-2025",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PMD17-2026",
+      "title": "Permendagri 17 Tahun 2026 tentang Pedoman APBD Tahun Anggaran 2027",
+      "cluster": "BUDGET",
+      "jurisdiction": "ID",
+      "effective_from": null,
+      "budget_years": [2027],
+      "temporal_confidence": "REVIEW_REQUIRED",
+      "source_url": "https://jdih.kemendagri.go.id/",
+      "source_sha256": null,
+      "source_state": "METADATA_CANDIDATE_REVIEW_REQUIRED"
+    },
+    {
+      "id": "REG-PP12-2019",
+      "title": "PP 12 Tahun 2019 tentang Pengelolaan Keuangan Daerah",
+      "cluster": "BUDGET",
+      "jurisdiction": "ID",
+      "effective_from": "2019-03-12",
+      "temporal_confidence": "REVIEW_REQUIRED_FOR_PROVISION_LOCATORS",
+      "source_url": "https://peraturan.bpk.go.id/Details/103888/pp-no-12-tahun-2019",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-UU1-2004",
+      "title": "UU 1 Tahun 2004 tentang Perbendaharaan Negara",
+      "cluster": "ACTION",
+      "jurisdiction": "ID",
+      "effective_from": "2004-01-14",
+      "temporal_confidence": "REVIEW_REQUIRED_FOR_COURT_EFFECTS",
+      "source_url": "https://peraturan.bpk.go.id/Details/40446",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PP39-2006",
+      "title": "PP 39 Tahun 2006 tentang Pengendalian dan Evaluasi Pelaksanaan Rencana Pembangunan",
+      "cluster": "MONITOR",
+      "jurisdiction": "ID",
+      "effective_from": "2006-12-15",
+      "temporal_confidence": "REVIEW_REQUIRED_FOR_PROVISION_LOCATORS",
+      "source_url": "https://peraturan.bpk.go.id/Details/49168/pp-no-39-tahun-2006",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PP60-2008",
+      "title": "PP 60 Tahun 2008 tentang Sistem Pengendalian Intern Pemerintah",
+      "cluster": "MONITOR",
+      "jurisdiction": "ID",
+      "effective_from": "2008-08-28",
+      "temporal_confidence": "REVIEW_REQUIRED_FOR_PROVISION_LOCATORS",
+      "source_url": "https://peraturan.bpk.go.id/Details/4876/pp-no-60-tahun-2008",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PP13-2019",
+      "title": "PP 13 Tahun 2019 tentang Laporan dan Evaluasi Penyelenggaraan Pemerintahan Daerah",
+      "cluster": "EVAL",
+      "jurisdiction": "ID",
+      "effective_from": "2019-03-13",
+      "temporal_confidence": "REVIEW_REQUIRED_FOR_PROVISION_LOCATORS",
+      "source_url": "https://peraturan.bpk.go.id/Details/103890/pp-no-13-tahun-2019",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PP12-2017",
+      "title": "PP 12 Tahun 2017 tentang Pembinaan dan Pengawasan Penyelenggaraan Pemerintahan Daerah",
+      "cluster": "AUDIT",
+      "jurisdiction": "ID",
+      "effective_from": "2017-04-07",
+      "temporal_confidence": "REVIEW_REQUIRED_FOR_PROVISION_LOCATORS",
+      "source_url": "https://peraturan.bpk.go.id/Details/5832/pp-no-12-tahun-2017",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-UU15-2004",
+      "title": "UU 15 Tahun 2004 tentang Pemeriksaan Pengelolaan dan Tanggung Jawab Keuangan Negara",
+      "cluster": "AUDIT",
+      "jurisdiction": "ID",
+      "effective_from": "2004-07-19",
+      "temporal_confidence": "REVIEW_REQUIRED_FOR_PROVISION_LOCATORS",
+      "source_url": "https://peraturan.bpk.go.id/Details/40509/uu-no-15-tahun-2004",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PBPK1-2017",
+      "title": "Peraturan BPK 1 Tahun 2017 tentang SPKN",
+      "cluster": "AUDIT",
+      "jurisdiction": "ID",
+      "effective_from": "2017-01-06",
+      "superseded_by": "REG-PBPK1-2026",
+      "superseded_by_effective_from": "2028-04-10",
+      "temporal_confidence": "VERIFIED",
+      "source_url": "https://peraturan.bpk.go.id/Details/31506/peraturan-bpk-no-1-tahun-2017",
+      "source_sha256": null,
+      "source_state": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "REG-PBPK1-2026",
+      "title": "Peraturan BPK 1 Tahun 2026 tentang SPKN",
+      "cluster": "AUDIT",
+      "jurisdiction": "ID",
+      "enacted_on": "2026-04-10",
+      "promulgated_on": "2026-04-10",
+      "effective_from": "2028-04-10",
+      "repeals_on_effective_date": "REG-PBPK1-2017",
+      "temporal_confidence": "VERIFIED",
+      "source_url": "https://www.peraturan.go.id/files/peraturan-bpk-no-1-tahun-2026.pdf",
+      "source_sha256": "8D585DA7E9664B64CED5358ECA8D1FBE935F4A6D6680CF5F7C83AA11366C3F8D",
+      "source_state": "VERIFIED_SOURCE_BYTES"
+    }
+  ],
+  "provisions": [
+    {
+      "id": "PROV-UU18-2008-P16",
+      "regulation_version_id": "REG-UU18-2008",
+      "locator": "Pasal 16",
+      "summary": "Rujukan normatif untuk pengaturan lebih lanjut pengelolaan sampah rumah tangga dan sejenisnya.",
+      "verification_status": "VERIFIED_SOURCE_BYTES"
+    },
+    {
+      "id": "PROV-PP81-2012-MENIMBANG",
+      "regulation_version_id": "REG-PP81-2012",
+      "locator": "Menimbang; halaman PDF 1",
+      "summary": "PP 81/2012 menyebut pelaksanaan ketentuan Pasal 16 UU 18/2008.",
+      "verification_status": "VERIFIED_SOURCE_BYTES"
+    },
+    {
+      "id": "PROV-UU23-2014-P12-2-E",
+      "regulation_version_id": "REG-UU23-2014",
+      "locator": "Pasal 12 ayat (2) huruf e; Lampiran pembagian urusan bidang lingkungan hidup",
+      "summary": "Lingkungan hidup tercantum sebagai urusan wajib nonpelayanan dasar; pembagian suburusan persampahan tetap memerlukan pemeriksaan lampiran dan perubahan.",
+      "verification_status": "PROVISION_REVIEW_REQUIRED"
+    },
+    {
+      "id": "PROV-PMD86-2017-WORKFLOW",
+      "regulation_version_id": "REG-PMD86-2017",
+      "locator": "Ketentuan RPJMD, RKPD, Renstra, Renja, pengendalian dan evaluasi; locator rinci per tahap belum seluruhnya dipin",
+      "summary": "Sumber workflow perencanaan daerah, tanpa menyatakan seluruh tahapan kasus telah patuh.",
+      "verification_status": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "PROV-PMD10-2025-P12-2",
+      "regulation_version_id": "REG-PMD10-2025",
+      "locator": "Pasal 12 ayat (2) huruf a-c; halaman cetak -8-",
+      "summary": "RKPD kabupaten/kota 2026 menjadi pedoman rancangan KUA-PPAS, sinkronisasi rancangan APBD, dan evaluasi pembangunan daerah.",
+      "verification_status": "SOURCE_LOCATED_NOT_HASH_PINNED"
+    },
+    {
+      "id": "PROV-PMD14-2025-APBD2026",
+      "regulation_version_id": "REG-PMD14-2025",
+      "locator": "Pedoman Penyusunan APBD Tahun Anggaran 2026; locator lampiran rinci perlu dipin",
+      "summary": "Pedoman tahunan APBD 2026 dibedakan dari pedoman RKPD 2026.",
+      "verification_status": "PROVISION_REVIEW_REQUIRED"
+    },
+    {
+      "id": "PROV-PP60-2008-SPIP",
+      "regulation_version_id": "REG-PP60-2008",
+      "locator": "Ketentuan SPIP dan pengawasan intern; locator rinci perlu dipin",
+      "summary": "Pengendalian dan pengawasan intern tidak diperlakukan sebagai pemeriksaan eksternal BPK.",
+      "verification_status": "PROVISION_REVIEW_REQUIRED"
+    },
+    {
+      "id": "PROV-PP12-2017-APIP",
+      "regulation_version_id": "REG-PP12-2017",
+      "locator": "Ketentuan pembinaan dan pengawasan oleh APIP; locator rinci perlu dipin",
+      "summary": "Stage pengawasan intern menggunakan tipe bukti berbeda dari temuan pemeriksaan BPK.",
+      "verification_status": "PROVISION_REVIEW_REQUIRED"
+    },
+    {
+      "id": "PROV-PBPK1-2026-P8",
+      "regulation_version_id": "REG-PBPK1-2026",
+      "locator": "Pasal 8; halaman PDF 4",
+      "summary": "Peraturan BPK 1/2017 dicabut pada saat Peraturan BPK 1/2026 mulai berlaku.",
+      "verification_status": "VERIFIED_SOURCE_BYTES"
+    },
+    {
+      "id": "PROV-PBPK1-2026-P9",
+      "regulation_version_id": "REG-PBPK1-2026",
+      "locator": "Pasal 9; halaman PDF 4",
+      "summary": "Peraturan BPK 1/2026 mulai berlaku setelah dua tahun sejak tanggal diundangkan.",
+      "verification_status": "VERIFIED_SOURCE_BYTES"
+    }
+  ],
+  "lifecycle": {
+    "stages": [
+      {
+        "id": "authority",
+        "label": "Mandat dan kewenangan",
+        "domain": "Regulatory",
+        "actor": "Pemerintah Kota Yogyakarta; penugasan operasional DLH masih kandidat",
+        "required_artifacts": ["competence assignment", "responsible organization version"],
+        "observed_artifacts": ["R85 authority and government-affair candidate nodes"],
+        "regulation_version_ids": ["REG-UU18-2008", "REG-PP81-2012", "REG-UU23-2014"],
+        "evidence_status": "MAPPING_CANDIDATE",
+        "evidence_gaps": ["Lampiran pembagian suburusan dan kewenangan persampahan belum dipin", "Penugasan DLH belum dihubungkan ke produk hukum organisasi daerah"]
+      },
+      {
+        "id": "planning",
+        "label": "Perencanaan",
+        "domain": "Performance",
+        "actor": "Bappeda dan perangkat daerah sesuai tahap; assignment spesifik perlu bukti",
+        "required_artifacts": ["RPJMD", "RKPD", "Renstra Perangkat Daerah", "Renja Perangkat Daerah"],
+        "observed_artifacts": ["RPJMD 2025-2029", "RKPD 2026", "Renstra/Renja DLH pada proyeksi QA"],
+        "regulation_version_ids": ["REG-UU25-2004", "REG-PMD86-2017", "REG-PMD10-2025"],
+        "evidence_status": "OBSERVED_SOURCE_LOCATED",
+        "evidence_gaps": ["Snapshot PDF RPJMD/RKPD belum seluruhnya hash-pinned", "Kepatuhan setiap tahap belum dinilai"]
+      },
+      {
+        "id": "budgeting",
+        "label": "Penganggaran",
+        "domain": "Fiscal",
+        "actor": "Kepala daerah, TAPD, DPRD dan perangkat daerah sesuai kewenangan masing-masing",
+        "required_artifacts": ["KUA-PPAS", "RKA", "APBD", "DPA"],
+        "observed_artifacts": ["APBD/Penjabaran APBD 2026 pada proyeksi QA"],
+        "regulation_version_ids": ["REG-PMD10-2025", "REG-PMD14-2025", "REG-PP12-2019"],
+        "evidence_status": "MAPPING_CANDIDATE",
+        "evidence_gaps": ["KUA-PPAS, RKA dan DPA kasus belum tersedia", "RKPD tidak disamakan dengan otorisasi belanja atau uang keluar"]
+      },
+      {
+        "id": "execution_treasury",
+        "label": "Pelaksanaan dan perbendaharaan",
+        "domain": "Fiscal",
+        "actor": "Pejabat pengelola keuangan dan pelaksana kegiatan sesuai dokumen otorisasi",
+        "required_artifacts": ["DPA", "bukti komitmen", "bukti transaksi", "bukti keluaran"],
+        "observed_artifacts": [],
+        "regulation_version_ids": ["REG-UU1-2004", "REG-PP12-2019"],
+        "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+        "evidence_gaps": ["Tidak ada DPA, transaksi, kontrak, serah terima, atau bukti keluaran dalam kasus"]
+      },
+      {
+        "id": "monitoring",
+        "label": "Monitoring dan pengendalian",
+        "domain": "Performance",
+        "actor": "Pengelola program dan fungsi pengendalian sesuai dasar kewenangan",
+        "required_artifacts": ["monitoring observation", "risk/control evidence", "progress record"],
+        "observed_artifacts": [],
+        "regulation_version_ids": ["REG-PP39-2006", "REG-PP60-2008", "REG-PMD86-2017"],
+        "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+        "evidence_gaps": ["Tidak ada observasi monitoring fisik atau outcome", "Tidak ada bukti pengendalian intern kasus"]
+      },
+      {
+        "id": "evaluation",
+        "label": "Evaluasi dan pelaporan",
+        "domain": "Evaluation",
+        "actor": "Pemerintah daerah dan evaluator sesuai jenis laporan",
+        "required_artifacts": ["LKjIP", "LPPD/LKPJ/EPPD", "evaluation evidence"],
+        "observed_artifacts": [],
+        "regulation_version_ids": ["REG-PP39-2006", "REG-PP13-2019", "REG-PMD86-2017"],
+        "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+        "evidence_gaps": ["Tidak ada hasil evaluasi program persampahan 2026", "Capaian tidak boleh diturunkan dari serapan anggaran"]
+      },
+      {
+        "id": "internal_oversight",
+        "label": "Pengawasan intern / APIP",
+        "domain": "Evaluation",
+        "actor": "APIP sesuai penugasan dan kewenangan",
+        "required_artifacts": ["internal review", "internal audit/review evidence", "recommendation"],
+        "observed_artifacts": [],
+        "regulation_version_ids": ["REG-PP60-2008", "REG-PP12-2017"],
+        "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+        "evidence_gaps": ["Tidak ada laporan reviu atau pengawasan APIP", "Tidak boleh menciptakan temuan APIP"]
+      },
+      {
+        "id": "external_audit",
+        "label": "Pemeriksaan eksternal / BPK",
+        "domain": "Evaluation",
+        "actor": "Badan Pemeriksa Keuangan",
+        "required_artifacts": ["audit report", "audit finding", "recommendation"],
+        "observed_artifacts": [],
+        "regulation_version_ids": ["REG-UU15-2004", "REG-PBPK1-2017", "REG-PBPK1-2026"],
+        "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+        "evidence_gaps": ["Tidak ada laporan atau temuan BPK untuk kasus", "SPKN 2026 belum efektif pada 18 November 2026"]
+      },
+      {
+        "id": "follow_up",
+        "label": "Tindak lanjut",
+        "domain": "Evaluation",
+        "actor": "Entitas yang diperiksa/diawasi sesuai rekomendasi yang sah",
+        "required_artifacts": ["recommendation", "follow-up action", "follow-up evidence"],
+        "observed_artifacts": [],
+        "regulation_version_ids": ["REG-UU15-2004", "REG-PP12-2017"],
+        "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+        "evidence_gaps": ["Tidak ada rekomendasi sah sehingga tidak ada tindak lanjut yang dapat dinilai"]
+      },
+      {
+        "id": "feedback_next_planning",
+        "label": "Masukan ke perencanaan berikutnya",
+        "domain": "Superior",
+        "actor": "Pengambil keputusan dan penyusun rencana dengan review manusia",
+        "required_artifacts": ["validated evaluation", "validated recommendation", "next planning decision"],
+        "observed_artifacts": [],
+        "regulation_version_ids": ["REG-PMD86-2017", "REG-PP39-2006", "REG-PP13-2019"],
+        "evidence_status": "NOT_ASSESSED",
+        "evidence_gaps": ["Tidak ada evaluasi atau rekomendasi tervalidasi untuk memberi umpan balik", "Keputusan tetap pada manusia"]
+      }
+    ],
+    "relations": [
+      {"id":"R86-E01","from":"authority","to":"planning","type":"AUTHORIZES_ROLE_FOR_STAGE","status":"MAPPING_CANDIDATE","basis":"PROV-UU23-2014-P12-2-E"},
+      {"id":"R86-E02","from":"planning","to":"budgeting","type":"REQUIRES_ARTIFACT_FOR_STAGE","status":"SOURCE_LOCATED_NOT_COMPLIANCE","basis":"PROV-PMD10-2025-P12-2"},
+      {"id":"R86-E03","from":"budgeting","to":"execution_treasury","type":"AUTHORIZATION_DEPENDENCY","status":"EVIDENCE_GAP","basis":"PROV-PMD14-2025-APBD2026"},
+      {"id":"R86-E04","from":"execution_treasury","to":"monitoring","type":"MONITORED_BY","status":"EVIDENCE_GAP","basis":"REG-PP39-2006"},
+      {"id":"R86-E05","from":"monitoring","to":"evaluation","type":"EVALUATED_BY","status":"EVIDENCE_GAP","basis":"REG-PP13-2019"},
+      {"id":"R86-E06","from":"execution_treasury","to":"internal_oversight","type":"INTERNALLY_REVIEWED_BY","status":"EVIDENCE_GAP","basis":"PROV-PP12-2017-APIP"},
+      {"id":"R86-E07","from":"execution_treasury","to":"external_audit","type":"EXTERNALLY_AUDITED_BY","status":"EVIDENCE_GAP","basis":"REG-UU15-2004"},
+      {"id":"R86-E08","from":"internal_oversight","to":"follow_up","type":"FOLLOWED_UP_BY","status":"EVIDENCE_GAP","basis":"PROV-PP12-2017-APIP"},
+      {"id":"R86-E09","from":"external_audit","to":"follow_up","type":"FOLLOWED_UP_BY","status":"EVIDENCE_GAP","basis":"REG-UU15-2004"},
+      {"id":"R86-E10","from":"evaluation","to":"feedback_next_planning","type":"FEEDS_NEXT_PLANNING","status":"NOT_ASSESSED","basis":"REG-PMD86-2017"},
+      {"id":"R86-E11","from":"follow_up","to":"feedback_next_planning","type":"FEEDS_NEXT_PLANNING","status":"NOT_ASSESSED","basis":"REG-PMD86-2017"}
+    ]
+  },
+  "specialized_views": [
+    {"app":"Evidence Intelligence","stage_ids":["authority","planning","budgeting","execution_treasury","monitoring","evaluation","internal_oversight","external_audit","follow_up"],"focus":"source, hash, provision, locator, and evidence gap"},
+    {"app":"Regulatory Intelligence","stage_ids":["authority","planning","budgeting","internal_oversight","external_audit"],"focus":"authority, temporal applicability, amendment, and role separation"},
+    {"app":"Performance Intelligence","stage_ids":["planning","monitoring","evaluation","feedback_next_planning"],"focus":"objective, indicator, output/outcome, monitoring, and evaluation without invented achievement"},
+    {"app":"Fiscal Intelligence","stage_ids":["budgeting","execution_treasury","monitoring"],"focus":"planned, appropriated, authorized, spent, and accounted-for states remain distinct"},
+    {"app":"Evaluation Intelligence","stage_ids":["monitoring","evaluation","internal_oversight","external_audit","follow_up","feedback_next_planning"],"focus":"evaluation, APIP, BPK, recommendation, and follow-up evidence remain distinct"}
+  ],
+  "evidence": [
+    {"id":"EV-R81-UU18","source_id":"R81-UU-18-2008","source_url":"https://peraturan.bpk.go.id/Download/28462/UU%20Nomor%2018%20Tahun%202008.pdf","source_sha256":"DC7735DB65D6DEDC650FF78C36B6C6F076CF931861B005EDAB03F30E513026F4","locator":"Pasal 16","verification_status":"VERIFIED_SOURCE_BYTES","rights":"PUBLIC_OFFICIAL_SOURCE_LINK_NO_REPUBLICATION"},
+    {"id":"EV-R81-PP81","source_id":"R81-PP-81-2012","source_url":"https://www.peraturan.go.id/files/pp81-2012bt.pdf","source_sha256":"542CE23457FE19529887D3B0BD4B14FAAE7F6F1E269CBFC5B840E117B2CDEE53","locator":"Menimbang; halaman PDF 1","verification_status":"VERIFIED_SOURCE_BYTES","rights":"PUBLIC_OFFICIAL_SOURCE_LINK_NO_REPUBLICATION"},
+    {"id":"EV-R86-PBPK1-2026","source_id":"R86-PBPK1-2026","source_url":"https://www.peraturan.go.id/files/peraturan-bpk-no-1-tahun-2026.pdf","source_sha256":"8D585DA7E9664B64CED5358ECA8D1FBE935F4A6D6680CF5F7C83AA11366C3F8D","locator":"Pasal 8 dan Pasal 9; halaman PDF 4","verification_status":"VERIFIED_SOURCE_BYTES","verified_at":"2026-11-18","rights":"PUBLIC_OFFICIAL_SOURCE_LINK_LOCAL_RESEARCH_SNAPSHOT_NOT_REPUBLISHED"},
+    {"id":"EV-R70J-RKPD","source_id":"R70J-RKPD-2026","source_url":"https://jdih.jogjakota.go.id/home/produk_hukum/detail/3758","source_sha256":null,"locator":"Perwali Kota Yogyakarta 34 Tahun 2025; RKPD 2026","verification_status":"SOURCE_LOCATED_NOT_HASH_PINNED","rights":"PUBLIC_OFFICIAL_METADATA"}
+  ],
+  "executive_review_brief": {
+    "known": [
+      "R85 menampilkan RPJMD, RKPD, Renstra/Renja, program persampahan dan kandidat jejak APBD 2026.",
+      "UU 18/2008 dan PP 81/2012 memiliki snapshot R81 yang hash-pinned.",
+      "SPKN Peraturan BPK 1/2026 mulai berlaku 10 April 2028, sehingga Peraturan BPK 1/2017 tetap menjadi versi scoped pada 18 November 2026."
+    ],
+    "dependencies": [
+      "Kewenangan persampahan membutuhkan verifikasi Lampiran UU 23/2014 dan aturan organisasi daerah.",
+      "Jejak fiskal membutuhkan KUA-PPAS, RKA, DPA dan bukti pelaksanaan, bukan hanya RKPD/APBD.",
+      "Monitoring, evaluasi, APIP, BPK dan tindak lanjut membutuhkan artefak berbeda."
+    ],
+    "gaps": [
+      "Tidak ada DPA, bukti transaksi, keluaran, monitoring, hasil evaluasi, laporan APIP, laporan BPK, atau tindak lanjut dalam kasus.",
+      "Tidak ada keputusan reviewer aktif dan tidak ada kesimpulan harmonisasi hukum.",
+      "Suburusan dan assignment DLH masih kandidat."
+    ],
+    "next_checks": [
+      "Pin ketentuan pembagian suburusan persampahan pusat/provinsi/kabupaten-kota.",
+      "Minta dokumen KUA-PPAS, RKA/DPA dan bukti keluaran untuk subkegiatan .0004.",
+      "Bila tersedia, ingest laporan monitoring/evaluasi/APIP/BPK sebagai tipe evidence terpisah lalu kirim kandidat ke reviewer R84."
+    ],
+    "human_decision": "NO_ACTIVE_DECISION"
+  },
+  "interpretation": {
+    "legal_harmonization": "NOT_ASSESSED",
+    "substantive_alignment": "NOT_ASSESSED",
+    "numeric_comparison": "BLOCKED",
+    "review_decision": "NO_ACTIVE_DECISION",
+    "production_admission": "DENIED",
+    "catalogue_admission": "CANDIDATE_ONLY",
+    "documentary_trace_is_compliance": false
+  }
+}

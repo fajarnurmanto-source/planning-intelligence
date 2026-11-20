@@ -8,9 +8,11 @@
   <link rel="stylesheet" href="./institution-home.css">
   <link rel="stylesheet" href="./pi-ia-r69e.css">
   <link rel="stylesheet" href="./development-case-r85.css">
+  <link rel="stylesheet" href="./regulatory-lifecycle-r86.css">
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./development-case-r85.js"></script>
+  <script defer src="./regulatory-lifecycle-r86.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -36,6 +38,25 @@
           <label>Kasus<select id="r85-case" name="case"></select></label>
           <button class="primary-btn" type="submit">Tampilkan jejak</button>
         </form>
+
+        <section id="r86-lifecycle" class="panel r86-panel" aria-labelledby="r86-title">
+          <div class="panel-heading"><div><span class="section-number">R86 · SIKLUS PEMERINTAHAN &amp; DASAR REGULASI</span><h2 id="r86-title">Dari kewenangan sampai perbaikan perencanaan</h2><p>Satu registry bersama untuk PI Superior dan lima aplikasi spesialis. Tahapan adalah graf dependensi, bukan garis waktu tunggal; bukti yang tidak tersedia tetap ditampilkan sebagai gap.</p></div><span class="small-tag amber">REVIEW MANUSIA</span></div>
+          <form id="r86-controls" class="r86-controls" aria-label="Filter siklus pemerintahan">
+            <label>Tanggal acuan<input id="r86-as-of" name="as_of" type="date" value="2026-11-18" min="2000-01-01" max="2100-12-31"></label>
+            <label>Tahap<select id="r86-stage" name="stage"><option value="">Semua tahap</option></select></label>
+            <button class="primary-btn" type="submit">Periksa siklus</button>
+            <button id="r86-export-json" class="secondary-btn" type="button" disabled>Ekspor JSON</button>
+            <button id="r86-export-md" class="secondary-btn" type="button" disabled>Ekspor Markdown</button>
+            <a class="secondary-btn" href="/regulatory-trace-r70a.html#r84-review-workspace">Buka reviewer R84</a>
+          </form>
+          <div id="r86-status" class="r86-status" role="status" aria-live="polite">Memuat regulatory backbone…</div>
+          <div id="r86-metrics" class="r86-metrics"></div>
+          <section class="r86-subsection" aria-labelledby="r86-temporal-title"><h3 id="r86-temporal-title">Aturan waktu dan transisi</h3><div id="r86-temporal" class="r86-temporal"></div></section>
+          <section class="r86-subsection" aria-labelledby="r86-stages-title"><h3 id="r86-stages-title">Tahap, aktor, artefak dan gap</h3><div id="r86-stages" class="r86-stages"></div></section>
+          <section class="r86-subsection" aria-labelledby="r86-apps-title"><h3 id="r86-apps-title">Satu engine, lima aplikasi spesialis</h3><div id="r86-apps" class="r86-apps"></div></section>
+          <section class="r86-subsection" aria-labelledby="r86-sources-title"><h3 id="r86-sources-title">Bukti primer dan lokator</h3><div id="r86-sources" class="r86-sources"></div></section>
+          <section class="r86-subsection" aria-labelledby="r86-brief-title"><h3 id="r86-brief-title">Executive review brief</h3><div id="r86-brief" class="r86-brief"></div></section>
+        </section>
 
         <section class="panel" aria-labelledby="r85-questions-title">
           <div class="panel-heading"><div><span class="section-number">01 · LIMA PERTANYAAN INTI</span><h2 id="r85-questions-title">Jawaban ringkas untuk pengambil keputusan</h2><p>Setiap jawaban menunjuk ke relasi dan status buktinya.</p></div></div>
