@@ -1536,7 +1536,16 @@
       status.textContent = String(error.message || error)
     }
   }
-  load()
+  const activate = document.createElement('button')
+  activate.type = 'button'
+  activate.className = 'r70h-evidence-button'
+  activate.textContent = 'Telusuri dasar hukum resmi'
+  status.textContent = 'Penelusuran sumber resmi dijalankan saat Anda memintanya.'
+  status.before(activate)
+  activate.addEventListener('click', async () => {
+    activate.disabled = true
+    try { await load() } finally { activate.disabled = false }
+  })
 })()
 ;
 /* END regulatory-ancestry-r70r.js */
