@@ -43,8 +43,15 @@ test('R86 provides inspectable official evidence, stage filtering, JSON and Mark
   assert.match(html, /NOT_APPROVED/)
 })
 
+test('R86 temporal labels state their metadata-only scope', () => {
+  assert.match(html, /BERLAKU SECARA TEMPORAL \(METADATA\)/)
+  assert.match(html, /bukan sertifikasi penerapan hukum, harmonisasi, atau keputusan reviewer/i)
+  assert.match(css, /\.r86-temporal-note/)
+})
+
 test('R86 layout has explicit desktop and mobile rules', () => {
   assert.match(css, /grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/)
   assert.match(css, /@media \(max-width:720px\)/)
   assert.match(css, /\.r86-controls,.r86-metrics,.r86-temporal,.r86-stages,.r86-apps,.r86-brief \{ grid-template-columns:1fr; \}/)
 })
+

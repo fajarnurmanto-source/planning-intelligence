@@ -24,6 +24,13 @@
     }
   }
   const statusLabel = value => String(value).replaceAll('_', ' ')
+  const temporalStatusLabel = value => ({
+    CURRENTLY_APPLICABLE:'BERLAKU SECARA TEMPORAL (METADATA)',
+    NOT_YET_EFFECTIVE:'BELUM EFEKTIF SECARA TEMPORAL (METADATA)',
+    REPEALED_OR_SUPERSEDED:'DICABUT/DIGANTIKAN SECARA TEMPORAL (METADATA)',
+    OUT_OF_SCOPE_CASE_YEAR:'DI LUAR TAHUN KASUS',
+    REVIEW_REQUIRED:'PERLU REVIEW'
+  })[value] || statusLabel(value)
   const assertData = data => {
     if (data.schema !== 'PI_R86_REGULATORY_DEVELOPMENT_LIFECYCLE_V1'
       || data.tenant_id !== 'ID-DIY-YOG'
@@ -83,11 +90,12 @@
     const wanted = new Set(['REG-PMD10-2025', 'REG-PMD14-2026', 'REG-PMD14-2025', 'REG-PMD17-2026', 'REG-PBPK1-2017', 'REG-PBPK1-2026'])
     const container = byId('r86-temporal')
     container.replaceChildren()
+    add(container, 'p', 'r86-temporal-note', 'Status di bawah adalah proyeksi tanggal/tahun dari metadata registry. Status bukan sertifikasi penerapan hukum, harmonisasi, atau keputusan reviewer.')
     for (const item of data.case.temporal_rules.filter(row => wanted.has(row.regulation_version_id))) {
       const kind = item.status === 'CURRENTLY_APPLICABLE' ? 'current'
         : item.status === 'NOT_YET_EFFECTIVE' ? 'pending' : 'out'
       const card = add(container, 'article', `r86-time-card ${kind}`)
-      add(card, 'span', 'r86-chip', statusLabel(item.status))
+      add(card, 'span', 'r86-chip', temporalStatusLabel(item.status))
       add(card, 'h4', '', item.title)
       add(card, 'p', '', `Efektif: ${item.effective_from || 'belum terverifikasi'} · acuan ${item.as_of}`)
       add(card, 'p', '', statusLabel(item.reason))
@@ -225,3 +233,4 @@
     load()
   })
 })()
+
