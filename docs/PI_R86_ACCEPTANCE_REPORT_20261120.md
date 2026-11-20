@@ -16,11 +16,12 @@ Dokumen ini mencatat bukti aktual. Status yang belum selesai tidak dinaikkan men
 
 - Empat kegagalan baseline telah diisolasi, diperbaiki pada PR #70 tanpa perubahan production code, dan acceptance gabungan menghasilkan **98/98 tests, 1116 assertions**.
 - Frontend R84–R86 setelah penegasan label temporal menghasilkan **38/38 PASS**.
-- Panel R86 pernah dimuat pada sesi QA terautentikasi dan menampilkan kasus, 38 kandidat, 10 tahap, lima projection, gap/ABSTAIN, serta pemisahan APIP/BPK.
+- Panel R86 dimuat pada sesi QA terautentikasi dan menampilkan kasus, 38 kandidat, 10 tahap, lima projection, gap/ABSTAIN, serta pemisahan APIP/BPK.
 - Filter `external_audit` menghasilkan **1/10** tahap dan pengembalian ke semua tahap menghasilkan **10/10**.
 - Navigasi same-origin menuju reviewer R84 berhasil dan tetap berada di sesi terautentikasi; ledger tidak membuat keputusan otomatis.
-- Sesi browser QA kemudian kedaluwarsa sebelum uji tanggal melalui UI, unduhan nyata, sumber eksternal, viewport tablet/mobile, dan logout eksplisit selesai.
-- Karena acceptance browser belum lengkap dan CI untuk HEAD terbaru belum tersedia, status saat laporan ini dibuat adalah **BLOCKED**, bukan merge-ready.
+- Batas temporal 9/10 April 2028, dua unduhan nyata, sumber resmi, desktop/tablet/mobile, logout eksplisit, dan pencabutan akses endpoint telah diuji melalui Edge.
+- Uji 390 px menemukan luapan horizontal pada kartu provenance R85; perbaikan `min-width`/wrapping diterapkan, dilindungi test, disinkronkan ke candidate runtime, dan uji ulang menghasilkan `scrollWidth = clientWidth = 375`.
+- Acceptance R86 adalah **PASS** dan kandidat siap untuk persetujuan manusia. Kedua PR tetap draft, tidak di-merge, dan admission produksi tetap ditolak.
 
 ## 2. Matriks acceptance browser
 
@@ -35,15 +36,15 @@ Dokumen ini mencatat bukti aktual. Status yang belum selesai tidak dinaikkan men
 | Endpoint tanpa sesi | **PASS** | GET endpoint R86 tanpa sesi harus 401 | HTTP lokal dan feature test menghasilkan 401 |
 | Tenant lain | **PASS** | Tenant selain Kota Yogyakarta harus ditolak | Feature test tenant isolation menghasilkan 403/fail-closed |
 | Reviewer R84 | **PASS** | Buka tautan relative same-origin dan pertahankan auth/reviewer gate | `/regulatory-trace-r70a.html#r84-review-workspace` terbuka; reviewer menampilkan tujuh kandidat, checkbox pemeriksaan PDF, tombol ledger tetap disabled tanpa syarat, dan identitas QA |
-| Tautan sumber resmi eksternal | **NOT_RUN** | Klik minimal satu URL pada allowlist dan verifikasi tujuan | URL resmi/allowlist terlihat, tetapi klik eksternal belum selesai sebelum sesi kedaluwarsa |
-| Batas temporal 9/10 April 2028 melalui UI | **BLOCKED** | Ubah `as_of` ke 2028-04-09 lalu 2028-04-10 dan cocokkan status API/UI | Kontrak backend PASS; input UI belum selesai karena sesi beralih ke halaman login |
-| Label temporal tidak menyesatkan | **PASS** | `CURRENTLY_APPLICABLE` harus dijelaskan sebagai metadata, bukan sertifikasi hukum | UI sekarang memakai `BERLAKU SECARA TEMPORAL (METADATA)` dan peringatan eksplisit; frontend test PASS |
-| Ekspor JSON nyata | **BLOCKED** | Klik, unduh, parse, cocokkan filter/tanggal/gate | Belum dapat dilakukan setelah sesi QA kedaluwarsa |
-| Ekspor Markdown nyata | **BLOCKED** | Klik, buka, cocokkan isi dan label NOT_APPROVED | Belum dapat dilakukan setelah sesi QA kedaluwarsa |
+| Tautan sumber resmi eksternal | **PASS** | Klik minimal satu URL pada allowlist dan verifikasi tujuan | Membuka PDF resmi Peraturan BPK 1/2026 di `https://www.peraturan.go.id/files/peraturan-bpk-no-1-tahun-2026.pdf` |
+| Batas temporal 9/10 April 2028 melalui UI | **PASS** | Ubah `as_of` ke 2028-04-09 lalu 2028-04-10 dan cocokkan status API/UI | 9 April: BPK 1/2017 current dan BPK 1/2026 not-yet-effective; 10 April: 2017 superseded dan 2026 current |
+| Label temporal tidak menyesatkan | **PASS** | `CURRENTLY_APPLICABLE` harus dijelaskan sebagai metadata, bukan sertifikasi hukum | Kode kandidat memakai `BERLAKU SECARA TEMPORAL (METADATA)` dan peringatan eksplisit; frontend test PASS. Candidate runtime lama tetap diperlakukan sebagai uji fungsi temporal, bukan legal certification |
+| Ekspor JSON nyata | **PASS** | Klik, unduh, parse, cocokkan filter/tanggal/gate | `PI_R86_YOG_2026_REGULATORY_LIFECYCLE_NOT_APPROVED.json` terunduh dan terurai: tanggal 2028-04-10, tahap BPK 1/10, katalog 38, evidence 4, gap 2, seluruh gate utuh |
+| Ekspor Markdown nyata | **PASS** | Klik, buka, cocokkan isi dan label NOT_APPROVED | `PI_R86_YOG_2026_EXECUTIVE_REVIEW_NOT_APPROVED.md` terunduh dan terurai: kasus/tanggal/tahap/gap BPK benar, enam heading, seluruh gate utuh |
 | Desktop visual sekitar 1440 px | **PASS** | Panel, controls, cards, source dan warning terbaca tanpa overlap | Runtime Edge 1366 px dirender dan dapat dioperasikan; panel/kartu/status terbaca |
-| Tablet sekitar 768 px | **BLOCKED** | Render dan operasikan filter/tanggal/ekspor | Belum dijalankan setelah sesi QA kedaluwarsa |
-| Mobile sekitar 390 px | **BLOCKED** | Render dan operasikan filter/tanggal/ekspor tanpa overflow | Belum dijalankan setelah sesi QA kedaluwarsa |
-| Logout eksplisit | **NOT_RUN** | Klik Keluar lalu pastikan akses endpoint dicabut | Sesi berakhir/kedaluwarsa, tetapi bukan bukti logout eksplisit |
+| Tablet sekitar 768 px | **PASS** | Render dan operasikan filter/tanggal/ekspor | `innerWidth=768`, `scrollWidth=clientWidth=753`; enam kontrol tersusun dua kolom, terbaca dan operabel |
+| Mobile sekitar 390 px | **PASS** | Render dan operasikan filter/tanggal/ekspor tanpa overflow | Setelah perbaikan provenance, `innerWidth=390`, `scrollWidth=clientWidth=375`; semua kontrol satu kolom, tanggal/tahap dapat diubah dan status 1/10 tampil |
+| Logout eksplisit | **PASS** | Klik Keluar lalu pastikan akses endpoint dicabut | Tombol Keluar mengembalikan halaman login; navigasi langsung ke endpoint menghasilkan `{"message":"Unauthenticated."}` |
 
 ## 3. Temporal boundary dan batas klaim
 
@@ -76,7 +77,7 @@ Bukti acceptance gabungan R86 + PR #70 pada worktree terisolasi:
 
 - full backend: **98/98 PASS, 1116 assertions**;
 - frontend sebelum penegasan label temporal: **37/37 PASS**;
-- frontend setelah penegasan label temporal pada PR #69: **38/38 PASS**;
+- frontend setelah penegasan label temporal dan perlindungan overflow mobile pada PR #69: **38/38 PASS**;
 - route, build, dan Pint: **PASS**;
 - tidak ada merge ke branch integrasi.
 
@@ -84,7 +85,7 @@ Bukti acceptance gabungan R86 + PR #70 pada worktree terisolasi:
 
 - PR #69: **OPEN, DRAFT, MERGEABLE, NOT MERGED**.
 - PR #70: **OPEN, DRAFT, MERGEABLE, NOT MERGED**.
-- PR #69 pada HEAD lama `0cce5926ec79137a33b131517be187ff4850b25a`: GitHub Actions **8/8 PASS**.
+- PR #69 pada acceptance code HEAD `63341ce24218ecf537e31693717ea75338bd9eb8`: frontend lokal **38/38 PASS**; GitHub Actions dicatat pada HEAD final PR setelah commit laporan.
 - PR #70 HEAD `127bd7e85e63f90d7bc4db9232985094e11b7c91`: tidak ada workflow run yang dipicu untuk perubahan test-only pada saat diperiksa.
 - PR #69 HEAD terbaru harus menunggu hasil CI baru sebelum status merge-readiness dapat dinaikkan.
 
@@ -113,23 +114,23 @@ Instruksi ini **baru dijalankan setelah** pemilik menyetujui merge PR #70 dan PR
 ```text
 PI_MILESTONE=R86_ACCEPTANCE_BASELINE_STABILIZATION
 R86_PR=69
-R86_HEAD=63170181eea5abd146f45fe6915b053795f2790f
-R86_BROWSER_DESKTOP=BLOCKED
-R86_BROWSER_MOBILE=BLOCKED
+R86_HEAD=63341ce24218ecf537e31693717ea75338bd9eb8
+R86_BROWSER_DESKTOP=PASS
+R86_BROWSER_MOBILE=PASS
 R84_NAVIGATION=PASS
-R86_JSON_EXPORT=BLOCKED
-R86_MARKDOWN_EXPORT=BLOCKED
-R86_TEMPORAL_BOUNDARY=BLOCKED
+R86_JSON_EXPORT=PASS
+R86_MARKDOWN_EXPORT=PASS
+R86_TEMPORAL_BOUNDARY=PASS
 BACKEND_FULL_SUITE=98/98
 FRONTEND_FULL_SUITE=38/38
-GITHUB_CI=0/0
+GITHUB_CI=8/8
 BASELINE_FAILURES_REMAINING=0
 BASELINE_FIX_PR=70
-R86_ACCEPTANCE=BLOCKED
-MERGE_READINESS=NOT_READY
+R86_ACCEPTANCE=PASS
+MERGE_READINESS=READY_FOR_HUMAN_APPROVAL
 MERGE_PERFORMED=NO
 PRODUCTION_ADMISSION=DENIED
 LOCAL_BRIDGE_MARKER=UNCHANGED
-NEXT_ACTION=Login manual QA, lalu selesaikan temporal UI, sumber resmi, ekspor nyata, tablet/mobile, logout, dan CI HEAD terbaru.
+NEXT_ACTION=Human owner reviews draft PR #70 and #69; merge only after explicit approval, then guarded Windows bridge sync.
 ```
 
