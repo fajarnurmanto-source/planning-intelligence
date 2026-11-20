@@ -85,9 +85,10 @@ Bukti acceptance gabungan R86 + PR #70 pada worktree terisolasi:
 
 - PR #69: **OPEN, DRAFT, MERGEABLE, NOT MERGED**.
 - PR #70: **OPEN, DRAFT, MERGEABLE, NOT MERGED**.
-- PR #69 pada acceptance code HEAD `63341ce24218ecf537e31693717ea75338bd9eb8`: frontend lokal **38/38 PASS**; GitHub Actions dicatat pada HEAD final PR setelah commit laporan.
+- PR #69 pada acceptance code HEAD `63341ce24218ecf537e31693717ea75338bd9eb8`: frontend lokal **38/38 PASS**.
+- PR #69 pada evidence HEAD `9ae1d78e4cf75f347fd04093a299ddced6180463`: GitHub Actions **8/8 PASS**.
 - PR #70 HEAD `127bd7e85e63f90d7bc4db9232985094e11b7c91`: tidak ada workflow run yang dipicu untuk perubahan test-only pada saat diperiksa.
-- PR #69 HEAD terbaru harus menunggu hasil CI baru sebelum status merge-readiness dapat dinaikkan.
+- Perubahan setelah acceptance code head hanya dokumentasi bukti; status functional acceptance tidak dinaikkan oleh dokumentasi tersebut.
 
 ```text
 LEGAL_HARMONIZATION=NOT_ASSESSED
@@ -114,7 +115,8 @@ Instruksi ini **baru dijalankan setelah** pemilik menyetujui merge PR #70 dan PR
 ```text
 PI_MILESTONE=R86_ACCEPTANCE_BASELINE_STABILIZATION
 R86_PR=69
-R86_HEAD=63341ce24218ecf537e31693717ea75338bd9eb8
+R86_HEAD=9ae1d78e4cf75f347fd04093a299ddced6180463
+R86_ACCEPTANCE_CODE_HEAD=63341ce24218ecf537e31693717ea75338bd9eb8
 R86_BROWSER_DESKTOP=PASS
 R86_BROWSER_MOBILE=PASS
 R84_NAVIGATION=PASS
