@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\RegulatoryLegacyProjectionController;
 use App\Http\Controllers\Api\RegulatoryLegalTraceController;
 use App\Http\Controllers\Api\RegulatoryLifecycleController;
 use App\Http\Controllers\Api\RegulatoryReadModelController;
+use App\Http\Controllers\Api\R89SemanticRegulatoryController;
 use App\Http\Controllers\Api\RegulatorySnapshotController;
 use App\Http\Controllers\Auth\SessionController;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +62,8 @@ Route::prefix('api')->group(function (): void {
         Route::get('/qa-subscription-r69e/entitlements', EntitlementController::class)
             ->name('pi.entitlements');
         Route::get('/qa-superior-r88/planning-crosswalk', \App\Http\Controllers\Api\RegulatoryPlanningCrosswalkController::class)->name('pi.superior.planning-crosswalk');
+        Route::post('/qa-superior-r89/semantic-candidates', R89SemanticRegulatoryController::class)
+            ->middleware('throttle:2,1')->name('pi.superior.semantic-candidates');
         Route::get('/qa-superior-r85/development-case', GovernmentDevelopmentCaseController::class)
             ->name('pi.superior.development-case');
         Route::get('/qa-superior-r86/regulatory-lifecycle', RegulatoryLifecycleController::class)
