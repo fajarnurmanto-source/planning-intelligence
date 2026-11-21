@@ -4,6 +4,8 @@ on:
     paths:
       - 'scripts/pi-audit-existing-launcher.ps1'
       - 'scripts/pi-r74-ensure-runtime.ps1'
+      - 'scripts/pi-r74-inplace-upgrade.ps1'
+      - 'scripts/windows/r74/**'
       - 'laravel/public/pi-r74-runtime-identity.txt'
       - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
@@ -37,7 +39,17 @@ jobs:
             $errors | Format-List
             throw 'PI_R74_RUNTIME_ADAPTER_PARSE_FAILURE'
           }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-inplace-upgrade.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_INPLACE_UPGRADE_PARSE_FAILURE'
+          }
           Write-Host 'PI_EXISTING_LAUNCHER_AUDIT_PARSE=PASS'
+          Write-Host 'PI_R74_INPLACE_UPGRADE_PARSE=PASS'
       - name: Run read-only inventory on clean runner
         shell: powershell
         run: |
@@ -73,7 +85,7 @@ jobs:
           if ($occupied) { throw 'PI_CI_AUDIT_PORT_UNEXPECTEDLY_OCCUPIED' }
           $actual = & '.\scripts\pi-r74-ensure-runtime.ps1' -AppRoot $PWD.Path -Port $candidate -Mode Audit
           if ($actual -notcontains 'PI_R74_AUDIT_MUTATION=NONE' -or
-              $actual -notcontains 'PI_R74_ORIGIN_NOT_RUNNING=YES') {
+              $actual -notcontains 'PI_R74_SERVER_ABSENT=YES') {
             throw 'PI_R74_READ_ONLY_AUDIT_FAILED'
           }
           Write-Host 'PI_R74_READ_ONLY_AUDIT=PASS'
@@ -81,12 +93,8 @@ jobs:
         shell: powershell
         run: |
           $code = Get-Content 'scripts/pi-r74-ensure-runtime.ps1' -Raw
-          $marker = (Get-Content 'laravel/public/pi-r74-runtime-identity.txt' -Raw).Trim()
-          if ($marker -ne 'PI_R74_LARAVEL_SINGLE_RUNTIME_20261122_V1') {
-            throw 'PI_R74_MARKER_MISMATCH'
-          }
-          foreach ($needle in @('Assert-PortOwnership','PI_R74_APP_URL_DOES_NOT_MATCH_EXPLICIT_PORT',
-              'PI_R74_LISTENER_APP_IDENTITY_MISMATCH','PI_R74_STARTUP_MUTEX_TIMEOUT',
+          foreach ($needle in @('Test-OwnedOrigin','Test-ExactAsset',
+              'PI_R74_PROBE_HASH_OR_HEALTH_MISMATCH','PI_R74_START_LOCK_TIMEOUT',
               'PI_R74_AUDIT_MUTATION=NONE','--host=127.0.0.1')) {
             if (-not $code.Contains($needle)) { throw ('PI_R74_GUARD_MISSING: ' + $needle) }
           }
@@ -96,3 +104,44 @@ jobs:
             if ($code.Contains($forbidden)) { throw ('PI_R74_UNSAFE_ACTION: ' + $forbidden) }
           }
           Write-Host 'PI_R74_SOURCE_ONLY_GUARDS=PASS'
+
+      - name: Original R74 file preservation and in-place package guard
+        shell: powershell
+        run: |
+          $installer = Get-Content 'scripts/pi-r74-inplace-upgrade.ps1' -Raw
+          $hidden = Get-Content 'scripts/windows/r74/BUKA-PI-LARAVEL-HIDDEN.cmd' -Raw
+          $manual = Get-Content 'scripts/windows/r74/BUKA-PI-LARAVEL.cmd' -Raw
+          foreach ($needle in @('9FC0BF471E18','D59A6681D3A0','A0238A4B33E5',
+              'PI_R74_UPGRADE=READ_ONLY_PREFLIGHT_PASS','-not $Apply',
+              'ORIGINAL_SHA256.json','PI_R74_MAIN_DB_AND_ENV=UNTOUCHED')) {
+            if (-not $installer.Contains($needle)) { throw ('PI_R74_INSTALL_GUARD_MISSING: ' + $needle) }
+          }
+          foreach ($needle in @('PI-R74-RUNTIME.ps1','-Port 8820 -Mode Ensure',
+              '127.0.0.1:8820')) {
+            if (-not $hidden.Contains($needle)) { throw ('PI_R74_ORIGINAL_CMD_UPGRADE_BAD: ' + $needle) }
+          }
+          if (-not $manual.Contains('BUKA-PI-LARAVEL-HIDDEN.cmd')) {
+            throw 'PI_R74_MANUAL_LAUNCHER_HAS_SECOND_SERVER'
+          }
+          foreach ($forbidden in @('artisan migrate','migrate:fresh','db:wipe',
+              'Stop-Process','New-Service','Register-ScheduledTask','CreateShortcut')) {
+            if ($installer.Contains($forbidden) -or $hidden.Contains($forbidden) -or
+                $manual.Contains($forbidden)) {
+              throw ('PI_R74_UPGRADE_DESTRUCTIVE_ACTION: ' + $forbidden)
+            }
+          }
+          Write-Host 'PI_R74_EXISTING_ICON_AND_8820=PINNED'
+          Write-Host 'PI_R74_GUARDED_INPLACE_PACKAGE=PASS'
+      - name: Fail closed on unavailable owner's original D drive
+        shell: powershell
+        run: |
+          $errors = @()
+          try {
+            & '.\scripts\pi-r74-inplace-upgrade.ps1' -ErrorAction Stop
+          } catch {
+            $errors += [string]$_.Exception.Message
+          }
+          if ($errors.Count -ne 1 -or $errors[0] -notmatch 'PI_R74_ORIGINAL_LAUNCHER_NOT_FOUND') {
+            throw 'PI_R74_MISSING_REAL_APP_DID_NOT_FAIL_CLOSED'
+          }
+          Write-Host 'PI_R74_NO_WINDOWS_OWNER_MUTATION=PASS'
