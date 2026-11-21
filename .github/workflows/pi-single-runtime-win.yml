@@ -6,7 +6,6 @@ on:
       - 'scripts/pi-r74-ensure-runtime.ps1'
       - 'scripts/pi-r74-inplace-upgrade.ps1'
       - 'scripts/windows/r74/**'
-      - 'laravel/public/pi-r74-runtime-identity.txt'
       - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
       - '.github/workflows/pi-single-runtime-win.yml'
