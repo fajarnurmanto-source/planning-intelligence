@@ -11,6 +11,7 @@ final class RegulatoryPlanningCrosswalk
     public function __construct(
         private readonly DevelopmentCaseGraph $graph,
         private readonly RegulatoryBackboneLifecycle $backbone,
+        private readonly HybridSemanticReasoner $semantic,
     ) {}
 
     public function read(array $filters): array
@@ -65,7 +66,7 @@ final class RegulatoryPlanningCrosswalk
             $classification['sectoral_discovery_candidates'] = [];
         }
 
-        return [
+        $model = [
             'schema' => 'PI_R88_REGULATORY_PLANNING_CROSSWALK_V1',
             'tenant_id' => 'ID-DIY-YOG',
             'filters' => ['year' => $year, 'as_of' => $asOf, 'code' => $code],
@@ -95,5 +96,11 @@ final class RegulatoryPlanningCrosswalk
             'interpretation' => $graph['interpretation'],
             'reviewer_url' => '/regulatory-trace-r70a.html#r84-review-workspace',
         ];
+
+        // Embed semantic reasoning in the same canonical read model (and JSON export).
+        // With no opted-in adapter, the answer is an explicit, zero-spend ABSTAIN.
+        $model['semantic_reasoning'] = $this->semantic->read($model);
+
+        return $model;
     }
 }
