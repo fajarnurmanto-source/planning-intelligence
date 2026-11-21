@@ -80,6 +80,11 @@ jobs:
             if ($response.StatusCode -ne 200) { throw 'PI_HTTP_FIXTURE_NOT_200' }
             Write-Host 'PI_RUNTIME_SINGLE_INSTANCE=PASS'
             Write-Host 'PI_RUNTIME_HTTP_8820=PASS'
+          } catch {
+            Write-Host ('PI_FIXTURE_FAILURE=' + $_.Exception.Message)
+            Get-ChildItem (Join-Path $root 'storage\logs') -Filter 'pi-main-*.err.log' |
+              ForEach-Object { Write-Host ('PI_FIXTURE_PHP_LOG=' + $_.Name); Get-Content $_.FullName -Tail 30 }
+            throw
           } finally {
             & $script -Action Stop -AppRoot $root
           }
