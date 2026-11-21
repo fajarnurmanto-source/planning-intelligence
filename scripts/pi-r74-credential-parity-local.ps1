@@ -45,7 +45,7 @@ try {
     $start.RedirectStandardInput = $true
     $start.RedirectStandardOutput = $true
     $start.RedirectStandardError = $true
-    $start.StandardInputEncoding = New-Object System.Text.UTF8Encoding($false)
+    $start.StandardInputEncoding = [System.Text.UTF8Encoding]::new($false)
     $process = New-Object System.Diagnostics.Process
     $process.StartInfo = $start
     try {
