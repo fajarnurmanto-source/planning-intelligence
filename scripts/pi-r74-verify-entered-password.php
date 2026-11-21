@@ -33,6 +33,12 @@ if (!is_string($entered) || strlen($entered) > 1024) {
     exit(2);
 }
 // PowerShell pipes one native-process line ending; strip precisely one.
+// PowerShell 5.1 can prepend EF BB BF to native-process STDIN.
+// Strip exactly one transport BOM before comparing the real entered bytes.
+$transportHadBom = str_starts_with($entered, "\xEF\xBB\xBF");
+if ($transportHadBom) {
+    $entered = substr($entered, 3);
+}
 $entered = preg_replace('/(?:\r\n|\n)\z/D', '', $entered);
 if (!is_string($entered) || $entered === '') {
     fwrite(STDERR, "PI_R74_PASSWORD_STDIN_EMPTY\n");
@@ -73,8 +79,16 @@ try {
         }
         // Same bcrypt verification primitive as Laravel's Hash::check.
         $matched = password_verify($entered, $stored);
+        // In the 21-Nov R87 recovery, PowerShell piped the entered password
+        // to PHP and stripped a newline only. If that transport supplied a
+        // UTF-8 BOM, the database could contain the hash of BOM+password.
+        // Detect this historical mistake without changing the account.
+        $historicalBomMatch = !$matched
+            && password_verify("\xEF\xBB\xBF" . $entered, $stored);
         echo 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=' .
             ($matched ? 'YES' : 'NO') . "\n";
+        echo 'PI_R74_R87_RECOVERY_BOM_PREFIX_MATCH=' .
+            ($historicalBomMatch ? 'YES' : 'NO') . "\n";
         echo "PI_R74_CREDENTIAL_CHECK_READ_ONLY=YES\n";
     } finally {
         $db->close();
