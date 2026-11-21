@@ -50,6 +50,14 @@
             <button id="r88-export" type="button" class="secondary-btn" disabled>Ekspor bukti JSON</button>
           </form>
           <p id="r88-status" role="status" aria-live="polite">Pilih Telusuri crosswalk untuk memuat bukti.</p>
+          <section id="r89-panel" class="r89-panel" aria-labelledby="r89-title">
+            <h3 id="r89-title">R89 · Analisis hubungan makna berbasis bukti</h3>
+            <p>Model Ollama lokal hanya dijalankan jika Anda memilihnya. Sumber yang dianalisis adalah label observasi QA, bukan teks pasal terverifikasi. Usulan AI tidak mengesahkan hukum, indikator, atau anggaran.</p>
+            <label><input id="r89-consent" type="checkbox"> Saya menyetujui analisis dua istilah QA dan penunjuk bukti dengan model lokal di perangkat ini.</label>
+            <button id="r89-run" class="secondary-btn" type="button" disabled>Analisis semantik lokal</button>
+            <p id="r89-status" role="status" aria-live="polite">Muat crosswalk 2026, kemudian pilih persetujuan jika ingin menjalankan model lokal.</p>
+            <div id="r89-results" class="r85-question-grid"></div>
+          </section>
           <a href="/regulatory-trace-r70a.html#r84-review-workspace">Tinjau kandidat melalui reviewer R84</a>
           <div id="r88-results" class="r85-question-grid"></div>
         </section>
