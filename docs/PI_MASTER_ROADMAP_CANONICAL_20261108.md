@@ -284,3 +284,9 @@ Gerbang R86 tetap: `LEGAL_HARMONIZATION=NOT_ASSESSED`, `NUMERIC_COMPARISON=BLOCK
 
 ## R88 — 21 November 2026
 R87 merged through PR72 (ebbada1). R88 isolated implementation composes existing R85/R86/R87 engines in one protected crosswalk endpoint and user-triggered PI Superior panel. Operational definitions retain candidate status; no 2027 equivalence without evidence. See PI_R88_ARCHITECTURE_GAPS_20261121.md and PI_STATE_CAPSULE_R88_20261121.md. Backend106/106, frontend50/50; desktop/mobile replay PASS. Live authenticated E2E outstanding; overall R88 PARTIAL, production DENIED. No new reviewer or numerical/legal promotion.
+
+## 14. PI-HYBRID-001 — Mandat Inti Regulatory × Semantic Reasoning (21 November 2026)
+
+**Change decision CD-20261121-04 (persetujuan pemilik):** Semantic Regulatory Reasoning adalah **arsitektur inti PI**, bukan chatbot atau lapisan pelengkap. R88 wajib diperkuat dengan boundary deterministik dan bukti; R89 mengembangkan candidate-generation AI semantik berprovenance; R90 menggabungkannya ke alur reviewer dan lima Specialized Apps. Aturan deterministik menguasai legal/version/tenant/evidence gates; AI mengusulkan relasi makna saja dan tidak pernah mengesahkan relasi hukum, angka, atau keputusan reviewer. Confidence model, bukti dan validasi hukum adalah tiga dimensi berbeda.
+
+Rujukan operasional dan acceptance: [PI-HYBRID-001](PI_HYBRID_REGULATORY_SEMANTIC_MANDATE_20261121.md). Mandat ini **menambah** norma induk, taxonomy, rights, human-review dan 1+5 yang sudah kanonis; tidak menggantikannya. R88 browser QA pada 21 November: crosswalk 2026/2027, export, R70A/R82/R84 read-only HTTP 200 pada runtime lokal; status legal/numeric/production tetap ditahan. Pengakuan semantik/model deployment **NOT_IMPLEMENTED sampai diverifikasi terpisah**. PR #74 tetap OPEN/NOT_MERGED dan tidak boleh auto-merge.
