@@ -9,6 +9,8 @@ on:
       - 'scripts/pi-r74-verify-backup.ps1'
       - 'scripts/pi-r74-auth-runtime-diagnostic.ps1'
       - 'scripts/pi-r74-auth-db-readonly.php'
+      - 'scripts/pi-r74-verify-entered-password.php'
+      - 'scripts/pi-r74-credential-parity-local.ps1'
       - 'scripts/windows/r74/**'
       - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
@@ -81,6 +83,16 @@ jobs:
             $errors | Format-List
             throw 'PI_R74_AUTH_DIAGNOSTIC_PARSE_FAILURE'
           }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-credential-parity-local.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_CREDENTIAL_PARITY_PS51_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R74_CREDENTIAL_PARITY_PS51_PARSE=PASS'
           Write-Host 'PI_R74_AUTH_DIAGNOSTIC_PARSE=PASS'
           Write-Host 'PI_R74_ACCEPTANCE_PARSE=PASS'
       - name: Run read-only inventory on clean runner
@@ -327,3 +339,61 @@ jobs:
           $after = (Get-FileHash -LiteralPath $dbFile -Algorithm SHA256).Hash
           if ($before -ne $after) { throw 'PI_R74_AUTH_DB_PROBE_MUTATED_FIXTURE' }
           Write-Host 'PI_R74_AUTH_SQLITE_READ_ONLY=PASS'
+
+      - name: R74 bcrypt parity verifies typed password without SQLite writes
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $passwordProbe = Get-Content 'scripts/pi-r74-verify-entered-password.php' -Raw
+          $wrapper = Get-Content 'scripts/pi-r74-credential-parity-local.ps1' -Raw
+          foreach ($needle in @('SQLITE3_OPEN_READONLY','password_verify',
+              'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=')) {
+            if (-not $passwordProbe.Contains($needle)) { throw ('PI_R74_BCRYPT_SOURCE_GUARD_MISSING=' + $needle) }
+          }
+          foreach ($needle in @('Read-Host','-AsSecureString','ZeroFreeBSTR',
+              'PI_R74_CREDENTIAL_PARITY=LOCAL_READ_ONLY')) {
+            if (-not $wrapper.Contains($needle)) { throw ('PI_R74_SECURE_PROMPT_GUARD_MISSING=' + $needle) }
+          }
+          foreach ($bad in @('UPDATE users','DELETE FROM users','SQLITE3_OPEN_READWRITE',
+              'password_hash(', 'file_put_contents(', '->save(')) {
+            if ($passwordProbe.Contains($bad)) { throw ('PI_R74_BCRYPT_PROBE_MUTATION_FORBIDDEN=' + $bad) }
+          }
+          foreach ($bad in @('Start-Process','Stop-Process','Set-Content',
+              'Register-ScheduledTask','artisan migrate')) {
+            if ($wrapper.Contains($bad)) { throw ('PI_R74_SECURE_WRAPPER_MUTATION_FORBIDDEN=' + $bad) }
+          }
+          & php -l 'scripts/pi-r74-verify-entered-password.php'
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R74_BCRYPT_PHP_LINT_FAILED' }
+          $tempDir=Join-Path $env:RUNNER_TEMP ('pi-r74-pass-fixture-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $tempDir | Out-Null
+          $dbPath=Join-Path $tempDir 'fixture.sqlite'
+          $fixturePhp=Join-Path $tempDir 'fixture.php'
+          $fixtureCode=@'
+          <?php
+          $db=new SQLite3($argv[1], SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+          $db->exec("CREATE TABLE users(username TEXT,tenant_id TEXT,role TEXT,password TEXT)");
+          $q=$db->prepare("INSERT INTO users VALUES (:u,:t,:r,:p)");
+          $q->bindValue(":u","qa-only.fixture",SQLITE3_TEXT);
+          $q->bindValue(":t","ID-DIY-YOG",SQLITE3_TEXT);
+          $q->bindValue(":r","institution_admin",SQLITE3_TEXT);
+          $q->bindValue(":p",password_hash("ci-password-not-real",PASSWORD_BCRYPT),SQLITE3_TEXT);
+          if (!$q->execute()) {exit(2);}
+          $db->close();
+          '@
+          [IO.File]::WriteAllText($fixturePhp,$fixtureCode)
+          & php $fixturePhp $dbPath
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R74_BCRYPT_FIXTURE_SETUP_FAILED' }
+          $hashBefore=(Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash
+          $yes=@('ci-password-not-real' | & php 'scripts/pi-r74-verify-entered-password.php' $dbPath 'qa-only.fixture')
+          if ($LASTEXITCODE -ne 0 -or $yes -notcontains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=YES') {
+            throw ('PI_R74_BCRYPT_PARITY_POSITIVE_FAILED: '+($yes -join '|'))
+          }
+          $no=@('wrong-ci-only' | & php 'scripts/pi-r74-verify-entered-password.php' $dbPath 'qa-only.fixture')
+          if ($LASTEXITCODE -ne 0 -or $no -notcontains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=NO') {
+            throw ('PI_R74_BCRYPT_PARITY_NEGATIVE_FAILED: '+($no -join '|'))
+          }
+          $hashAfter=(Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash
+          if ($hashBefore -ne $hashAfter) { throw 'PI_R74_BCRYPT_READONLY_DB_CHANGED' }
+          Write-Host 'PI_R74_BCRYPT_PARITY_POSITIVE=PASS'
+          Write-Host 'PI_R74_BCRYPT_PARITY_NEGATIVE=PASS'
+          Write-Host 'PI_R74_BCRYPT_READONLY_DB_IMMUTABLE=PASS'
