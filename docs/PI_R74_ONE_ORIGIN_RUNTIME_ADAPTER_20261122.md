@@ -51,3 +51,36 @@ If it reports `PI_R74_APP_URL_MISMATCH_HOLD_NO_MUTATION`, do not edit `.env` jus
 - `PRODUCTION_ADMISSION=DENIED`, `MERGE_READINESS=NOT_READY` until owner-machine verified, regardless of GitHub CI.
 
 **Limit:** PHP built-in Laravel dev server is adequate for owner-local click-to-open workflow but not a production-grade Windows service or native binary. An always-on managed service/MSI installer is a subsequent productization milestone only if needed; never create a duplicate application launcher.
+
+## 22 Nov 2026 — owner Windows in-place upgrade receipt and acceptance
+
+**Owner-reported local execution:** the isolated QA worktree was added at `C:\Users\fajar\.codex\worktrees\pi-r74-autostart\PI_GITHUB_BRIDGE_20261108` from immutable source commit `b918e46c7e9111c0259f3e052f37213e3e7d1e20`. `pi-r74-inplace-upgrade.ps1` read-only preflight output `PI_R74_BASELINE=VERIFIED`, `PI_R74_LIVE_PORT_8820_IDENTITY_PREFLIGHT=PASS`, `PI_R74_UPGRADE=READ_ONLY_PREFLIGHT_PASS`, and `PI_R74_APPLY=NOT_REQUESTED`. Owner then invoked `-Apply` and got `PI_R74_UPGRADE=APPLIED_TO_ORIGINAL_FOLDER`, with backup `D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111\backups\R74_BEFORE_ONE_ORIGIN_20261122-061856`, plus `PI_R74_LNK_VBS_APP_DB_ENV=UNCHANGED`. This is **installation evidence** based on owner PowerShell, not yet observed live browser/runtime acceptance.
+
+**New post-install acceptance source:** `scripts/pi-r74-windows-acceptance.ps1`. Default invocation makes no startup changes and validates original three-file backup receipt (full SHA256), retained original VBS/shortcut WScript chain, and byte-for-byte installed versions of both new CMDs and the runtime supervisor. It determines whether a 8820 PHP listener is already present, and when present verifies loopback binding, process identity, and the exact original R74 static asset hash. It never restarts/terminates PHP or changes credentials. Switch `-ExerciseShortcut` opens the **existing** Windows desktop icon and checks expected origin; optional `-SecondClick` confirms server owning PID remains unchanged. If server is not running, the shortcut under test may start it, as intended. Does not claim cold-reboot/logon or authenticated user acceptance.
+
+**Run only from the matching updated PR #78 source in an isolated QA worktree, not old R87:** Fetch branch to a clean worktree and pin the current accepted SHA before running:
+```powershell
+$QA = 'C:\Users\fajar\.codex\worktrees\pi-r74-autostart\PI_GITHUB_BRIDGE_20261108'
+$Repo = 'C:\Users\fajar\.codex\worktrees\pi-r87-lean-runtime\PI_GITHUB_BRIDGE_20261108'
+git -C $Repo fetch --no-tags origin codex/pi-single-runtime-windows-app-20261122
+# Replace <reviewed HEAD SHA> only after verifying source and clean QA worktree
+git -C $QA status --porcelain
+git -C $QA switch --detach <reviewed HEAD SHA>
+$Test = Join-Path $QA 'scripts\pi-r74-windows-acceptance.ps1'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File $Test
+# Only when the read-only test succeeds:
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File $Test -ExerciseShortcut -SecondClick
+```
+
+Expected when original icon installation and runtime match:
+```text
+PI_R74_ORIGINAL_BACKUP_MANIFEST=VERIFIED
+PI_R74_TWO_CMDS_AND_SUPERVISOR=EXACT_SOURCE_MATCH
+PI_R74_DESKTOP_SHORTCUT_AND_VBS=UNCHANGED
+PI_R74_ACCEPTANCE=READ_ONLY_INSTALLED_INTEGRITY_PASS
+...
+PI_R74_AFTER_SECOND_CLICK_SAME_PID=<observed PID>
+PI_R74_EXISTING_DESKTOP_ICON_RUNTIME=PASS
+```
+
+**Acceptance gates still open:** actual owner execution of new integrity/desktop test, authenticated login to existing account, status after a natural Windows reboot, and later guarded R88/R89 release source/data reconciliation. Source CI is not proof of local browser acceptance. Preserve original main 8820 and QA8822/8823. Maintain `PRODUCTION_ADMISSION=DENIED`.
