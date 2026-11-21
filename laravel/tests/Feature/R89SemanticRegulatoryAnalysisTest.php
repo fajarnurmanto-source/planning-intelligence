@@ -203,6 +203,9 @@ final class R89SemanticRegulatoryAnalysisTest extends TestCase
             ->assertJsonPath('semantic_reasoning.gates.equivalence_asserted', false)
             ->assertJsonPath('semantic_reasoning.gates.numeric_comparison', 'BLOCKED');
         Http::assertSentCount(1);
+        Http::assertSent(fn ($request) => $request->url() === 'https://api.openai.com/v1/chat/completions'
+            && ($request->data()['max_completion_tokens'] ?? null) === 400
+            && ! isset($request->data()['temperature'], $request->data()['max_tokens']));
     }
 
     public function test_gemini_cloud_endpoint_preserves_strict_evidence_contract(): void
