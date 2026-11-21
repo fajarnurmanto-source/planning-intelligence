@@ -29,6 +29,11 @@ return [
         // Only this reviewed official host is supported. User input cannot control the URL.
         'jdih_bpk_enabled' => env('PI_JDIH_BPK_SEARCH_ENABLED', true),
     ],
+    // R89 is disabled by default and never sends tenant data to cloud AI.
+    'semantic_local' => [
+        'enabled' => env('PI_R89_SEMANTIC_LOCAL_ENABLED', false),
+        'model' => env('PI_R89_SEMANTIC_LOCAL_MODEL', ''),
+    ],
     'regulatory' => [
         'ledger_path' => env('PI_REGULATORY_LEDGER_PATH'),
         'scope_path' => env('PI_REGULATORY_SCOPE_PATH'),
