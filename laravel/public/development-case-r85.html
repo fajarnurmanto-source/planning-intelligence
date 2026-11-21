@@ -51,11 +51,17 @@
           </form>
           <p id="r88-status" role="status" aria-live="polite">Pilih Telusuri crosswalk untuk memuat bukti.</p>
           <section id="r89-panel" class="r89-panel" aria-labelledby="r89-title">
-            <h3 id="r89-title">R89 · Analisis hubungan makna berbasis bukti</h3>
-            <p>Model Ollama lokal hanya dijalankan jika Anda memilihnya. Sumber yang dianalisis adalah label observasi QA, bukan teks pasal terverifikasi. Usulan AI tidak mengesahkan hukum, indikator, atau anggaran.</p>
-            <label><input id="r89-consent" type="checkbox"> Saya menyetujui analisis dua istilah QA dan penunjuk bukti dengan model lokal di perangkat ini.</label>
-            <button id="r89-run" class="secondary-btn" type="button" disabled>Analisis semantik lokal</button>
-            <p id="r89-status" role="status" aria-live="polite">Muat crosswalk 2026, kemudian pilih persetujuan jika ingin menjalankan model lokal.</p>
+            <h3 id="r89-title">R89 · Analisis semantik dengan AI pilihan institusi</h3>
+            <p>DeepSeek, OpenAI, Gemini, Groq, atau OpenRouter melalui API cloud. Tidak memerlukan model atau GPU lokal. AI hanya menyarankan hubungan makna; hukum dan indikator tetap memerlukan pembuktian dan reviewer.</p>
+            <label for="r89-provider">Penyedia AI
+              <select id="r89-provider"><option value="deepseek">DeepSeek</option><option value="openai">OpenAI</option><option value="gemini">Gemini</option><option value="groq">Groq</option><option value="openrouter">OpenRouter</option></select>
+            </label>
+            <p>Administrator dapat <a href="/ai-settings.html">memasang API key dan memilih model</a>. Setiap provider mempunyai kebijakan data dan kemungkinan biaya API sendiri.</p>
+            <button id="r89-preview" class="secondary-btn" type="button" disabled>Pratinjau data yang dikirim</button>
+            <pre id="r89-data" class="r89-preview-data" aria-label="Pratinjau data semantik" hidden></pre>
+            <label><input id="r89-consent" type="checkbox" disabled> Saya telah memeriksa pratinjau di atas dan menyetujui pengiriman tepat data tersebut ke provider pilihan, termasuk ketentuan privasi dan potensi biaya API.</label>
+            <button id="r89-run" class="secondary-btn" type="button" disabled>Jalankan analisis semantik cloud</button>
+            <p id="r89-status" role="status" aria-live="polite">Muat crosswalk 2026 untuk menyiapkan pratinjau. Tidak ada panggilan AI otomatis.</p>
             <div id="r89-results" class="r85-question-grid"></div>
           </section>
           <a href="/regulatory-trace-r70a.html#r84-review-workspace">Tinjau kandidat melalui reviewer R84</a>
