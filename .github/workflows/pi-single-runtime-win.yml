@@ -351,7 +351,7 @@ jobs:
             if (-not $passwordProbe.Contains($needle)) { throw ('PI_R74_BCRYPT_SOURCE_GUARD_MISSING=' + $needle) }
           }
           foreach ($needle in @('Read-Host','-AsSecureString','ZeroFreeBSTR',
-              'RedirectStandardInput = $true','StandardInput.Write($plain)',
+              'RedirectStandardInput = $true','StandardInput.BaseStream','GetBytes($plain)',
               'PI_R74_CREDENTIAL_PARITY=LOCAL_READ_ONLY')) {
             if (-not $wrapper.Contains($needle)) { throw ('PI_R74_SECURE_PROMPT_GUARD_MISSING=' + $needle) }
           }
@@ -394,13 +394,16 @@ jobs:
             $info.RedirectStandardInput=$true
             $info.RedirectStandardOutput=$true
             $info.RedirectStandardError=$true
-            $info.StandardInputEncoding=[System.Text.UTF8Encoding]::new($false)
             $child=New-Object System.Diagnostics.Process
             $child.StartInfo=$info
             try {
               if (-not $child.Start()) {throw 'PI_R74_FIXTURE_PHP_START_FAILED'}
-              $child.StandardInput.Write($candidate)
-              $child.StandardInput.Close()
+              $payload=[System.Text.UTF8Encoding]::new($false).GetBytes($candidate)
+              $raw=$child.StandardInput.BaseStream
+              $raw.Write($payload,0,$payload.Length)
+              $raw.Flush()
+              $raw.Close()
+              [Array]::Clear($payload,0,$payload.Length)
               $output=$child.StandardOutput.ReadToEnd()
               $null=$child.StandardError.ReadToEnd()
               $child.WaitForExit()
