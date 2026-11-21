@@ -70,6 +70,9 @@ final class R89SemanticRegulatoryAnalysisTest extends TestCase
     {
         parent::setUp();
         Storage::fake('local');
+        // Multiple requests in one test exercise consent/guards, not the rate limiter.
+        // The production route retains throttle:2,1 unchanged.
+        $this->withoutMiddleware(ThrottleRequests::class);
         Http::preventStrayRequests();
     }
 
@@ -89,7 +92,7 @@ final class R89SemanticRegulatoryAnalysisTest extends TestCase
     {
         $this->login();
         $result = $this->getJson(self::PREVIEW.'?'.http_build_query($this->requestBody()))
-            ->assertOk()->assertHeader('Cache-Control', 'private, no-store')
+            ->assertOk()->assertHeader('Cache-Control', 'no-store, private')
             ->assertJsonPath('schema', 'PI_R89_EVIDENCE_BOUND_SEMANTIC_ANALYSIS_V1')
             ->assertJsonPath('preview.status', 'READY_FOR_EXPLICIT_CLOUD_APPROVAL')
             ->assertJsonPath('semantic_reasoning.provider_execution', 'NOT_RUN')
@@ -223,24 +226,26 @@ final class R89SemanticRegulatoryAnalysisTest extends TestCase
         $sha = $this->digest();
         $this->configure('deepseek', 'deepseek-flash');
 
-        Http::fake(['https://api.deepseek.com/*' => Http::response([], 503)]);
+        Http::fake(['https://api.deepseek.com/*' => Http::sequence()
+            ->push([], 503)
+            ->push([
+                'choices' => [['message' => ['content' => $this->reply()], 'finish_reason' => 'length']],
+            ], 200)
+            ->push([
+                'choices' => [['message' => ['content' => $this->reply('LEGAL_COMPLIANCE_APPROVED')], 'finish_reason' => 'stop']],
+            ], 200)]);
         $this->postJson(self::ANALYZE, $this->consent('deepseek', $sha))->assertOk()
             ->assertJsonPath('semantic_reasoning.status', 'ABSTAIN_CLOUD_PROVIDER_UNAVAILABLE')
             ->assertJsonPath('semantic_reasoning.provider_execution', 'CLOUD_PROVIDER_ATTEMPTED');
 
-        Http::fake(['https://api.deepseek.com/*' => Http::response([
-            'choices' => [['message' => ['content' => $this->reply()], 'finish_reason' => 'length']],
-        ], 200)]);
         $this->postJson(self::ANALYZE, $this->consent('deepseek', $sha))->assertOk()
             ->assertJsonPath('semantic_reasoning.status', 'ABSTAIN_CLOUD_PROVIDER_UNAVAILABLE');
 
-        Http::fake(['https://api.deepseek.com/*' => Http::response([
-            'choices' => [['message' => ['content' => $this->reply('LEGAL_COMPLIANCE_APPROVED')], 'finish_reason' => 'stop']],
-        ], 200)]);
         $this->postJson(self::ANALYZE, $this->consent('deepseek', $sha))->assertOk()
             ->assertJsonPath('semantic_reasoning.status', 'ABSTAIN_INVALID_SEMANTIC_PROPOSAL')
             ->assertJsonPath('semantic_reasoning.candidates', [])
             ->assertJsonPath('semantic_reasoning.gates.relation_promotion', 'NOT_PERFORMED');
+        Http::assertSentCount(3);
     }
 
     public function test_admin_can_globally_disable_cloud_calls(): void
