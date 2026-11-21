@@ -50,7 +50,7 @@
       for (const edge of next.relations) {
         const card = add(root, 'article', '')
         add(card, 'h3', `${edge.id} · ${nodes.get(edge.from)} → ${nodes.get(edge.to)}`)
-        add(card, 'p', `${edge.relation} · ${edge.status} · Ketidakpastian ${edge.relation_confidence}`)
+        add(card, 'p', `${edge.relation} · ${edge.status} · Ketidakpastian ${edge.relation_uncertainty}`)
         const source = edge.provenance
         add(card, 'p', `${source.locator} · ${source.version} · ${source.as_of_date} · ${source.verification_status}`)
         add(card, 'p', source.source_sha256 ? `SHA-256 ${source.source_sha256}` : 'Hash sumber belum tersedia')

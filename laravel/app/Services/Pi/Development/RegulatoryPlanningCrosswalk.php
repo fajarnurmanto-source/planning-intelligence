@@ -30,7 +30,7 @@ final class RegulatoryPlanningCrosswalk
             static fn (array $edge): bool => $edge['provenance']['as_of_date'] <= $asOf)) : [];
         $relations = array_map(static fn (array $edge): array => $edge + [
             'legal_applicability' => 'NOT_ASSESSED',
-            'relation_confidence' => $edge['provenance']['uncertainty'],
+            'relation_uncertainty' => $edge['provenance']['uncertainty'],
             'temporal_status' => 'OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY',
         ], $visible);
         $ready = $case !== null && count($visible) > 0;

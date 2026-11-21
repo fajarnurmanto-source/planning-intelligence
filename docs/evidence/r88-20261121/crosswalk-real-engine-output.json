@@ -302,7 +302,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -323,7 +323,7 @@
                 "uncertainty": "HIGH"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "HIGH",
+            "relation_uncertainty": "HIGH",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -344,7 +344,7 @@
                 "uncertainty": "LOW"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "LOW",
+            "relation_uncertainty": "LOW",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -365,7 +365,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -386,7 +386,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -407,7 +407,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -428,7 +428,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -449,7 +449,7 @@
                 "uncertainty": "HIGH"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "HIGH",
+            "relation_uncertainty": "HIGH",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -470,7 +470,7 @@
                 "uncertainty": "HIGH"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "HIGH",
+            "relation_uncertainty": "HIGH",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -491,7 +491,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -512,7 +512,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -533,7 +533,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -554,7 +554,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -575,7 +575,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -596,7 +596,7 @@
                 "uncertainty": "LOW"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "LOW",
+            "relation_uncertainty": "LOW",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -617,7 +617,7 @@
                 "uncertainty": "MEDIUM"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "MEDIUM",
+            "relation_uncertainty": "MEDIUM",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -638,7 +638,7 @@
                 "uncertainty": "LOW"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "LOW",
+            "relation_uncertainty": "LOW",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         },
         {
@@ -659,7 +659,7 @@
                 "uncertainty": "LOW"
             },
             "legal_applicability": "NOT_ASSESSED",
-            "relation_confidence": "LOW",
+            "relation_uncertainty": "LOW",
             "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
         }
     ],
