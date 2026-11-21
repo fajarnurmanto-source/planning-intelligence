@@ -24,8 +24,8 @@ State Capsule rekonsiliasi 18 November mencatat 8820 sebagai endpoint historis R
 ## 3. Implementasi kandidat
 
 - scripts/pi-audit-existing-launcher.ps1: script penemuan **read-only** terhadap shortcut existing; tidak mencetak argumen sensitif, tidak memasang/menghapus shortcut. Bukti target shortcut pada PC pengguna BELUM didapat.
-- scripts/pi-windows-app.ps1: **helper kandidat QA, tidak terpasang dan tidak boleh menggantikan launcher existing dulu.** Open/Start/Status/Stop menggunakan 8820 sebagai fixture CI, tanpa fungsi InstallShortcut. Mekanisme desktop existing harus diaudit dan direuse sebelum menetapkan arah integrasi.
-- .github/workflows/pi-single-runtime-win.yml: CI Windows PS5.1 syntax, siklus launcher fixture start/reuse/stop, no-mutation guards. Fixture bukan akun atau DB main.
+- **Pembatalan:** scripts/pi-windows-app.ps1 (launcher baru 8820) telah dihapus dari branch draft; tidak ada launcher pengganti, Start/Stop baru, atau perubahan shortcut. Pertahankan dan perbaiki WScript R74 yang sudah terinstal setelah file entrypoint divalidasi.
+- .github/workflows/pi-single-runtime-win.yml: CI Windows PS5.1 read-only audit syntax/guard/execution pada runner bersih; tidak menyalakan server atau membuat shortcut. Tidak mengklaim acceptance launcher nyata.
 - Tidak ada perubahan terhadap .env, APP_KEY, DB, migrations, server R88/R89 yang berjalan, PID, atau branch main lokal.
 - Batas hukum, numeric, reviewer dan production tetap ABSTAIN / BLOCKED / DENIED.
 
@@ -45,7 +45,9 @@ PI_EXISTING_DESKTOP_ICON=CONFIRMED_BY_USER_SCREENSHOT
 PI_EXISTING_SHORTCUT_TARGET=NOT_YET_AUDITED
 PI_8820_CANONICAL_URL=PROPOSED_NOT_VERIFIED
 PI_DUPLICATE_SHORTCUT_CREATION=FORBIDDEN
-PI_ONE_CLICK_HELPER=SOURCE_CANDIDATE_NOT_INSTALLED
+PI_DUPLICATE_LAUNCHER_SOURCE=REVERTED
+PI_EXISTING_R74_UNIFIED_LAUNCHER=DISCOVERED_WSCRIPT
+PI_EXISTING_R74_SCRIPT_ENTRYPOINT=NOT_YET_VERIFIED
 PI_8820_MAIN_RUNTIME=NOT_RUNNING_AS_LAST_OBSERVED
 PI_8822_QA=RUNNING_AS_LAST_OBSERVED
 PI_8823_QA=RUNNING_AS_LAST_OBSERVED
