@@ -8,7 +8,13 @@
     return el
   }
   let data = null
+  const resetSemantic = message => {
+    get('r89-run').disabled = true
+    get('r89-results').replaceChildren()
+    get('r89-status').textContent = message
+  }
   const fail = message => {
+    resetSemantic('Crosswalk belum siap; analisis model lokal tidak dijalankan.')
     data = null
     get('r88-export').disabled = true
     get('r88-results').replaceChildren()
@@ -31,6 +37,8 @@
         || gates?.production_admission !== 'DENIED'
         || !Array.isArray(next.relations) || !Array.isArray(next.gaps)) throw new Error('Kontrak atau gate tidak cocok')
       data = next
+      resetSemantic('Crosswalk dimuat. Model lokal tetap opt-in dan default nonaktif.')
+      get('r89-run').disabled = !get('r89-consent').checked || next.result_count !== 1
       get('r88-export').disabled = false
       get('r88-status').textContent = `${next.result_count ? 'Jejak tersedia untuk review' : 'ABSTAIN · Tidak ada jejak sesuai filter'} · ${next.binding.status} · ${next.continuity.status}`
       const root = get('r88-results')
@@ -70,6 +78,70 @@
         add(card, 'p', gap.detail)
       }
     } catch (error) { fail(error.message) }
+  })
+  const approved = get('r89-consent')
+  approved.addEventListener('change', () => {
+    get('r89-run').disabled = !approved.checked || !data || data.result_count !== 1
+    if (!approved.checked) resetSemantic('Persetujuan dimatikan. Tidak ada pemanggilan AI.')
+  })
+  get('r89-run').addEventListener('click', async () => {
+    if (!approved.checked || !data || data.result_count !== 1) return
+    const current = new URLSearchParams(new FormData(get('r88-controls')))
+    if (current.get('year') !== String(data.filters.year) ||
+      current.get('as_of') !== data.filters.as_of || current.get('code') !== data.filters.code) {
+      resetSemantic('Filter berubah. Telusuri ulang crosswalk sebelum analisis AI.')
+      return
+    }
+    get('r89-run').disabled = true
+    get('r89-results').replaceChildren()
+    get('r89-status').textContent = 'Memeriksa bukti dan konfigurasi model lokal…'
+    try {
+      const sessionResponse = await fetch('/api/auth/session', {credentials:'same-origin', cache:'no-store'})
+      if (!sessionResponse.ok) throw new Error('Sesi login sudah berakhir')
+      const session = await sessionResponse.json()
+      if (!session.csrf) throw new Error('Token CSRF sesi tidak tersedia')
+      const response = await fetch('/api/qa-superior-r89/semantic-candidates', {
+        method:'POST', credentials:'same-origin', cache:'no-store',
+        headers:{'Content-Type':'application/json','Accept':'application/json','X-PI-CSRF':session.csrf},
+        body:JSON.stringify({consent:true, year:data.filters.year, as_of:data.filters.as_of, code:data.filters.code})
+      })
+      const output = await response.json()
+      if (!response.ok) throw new Error(output.code || 'HTTP ' + response.status)
+      const gate = output.semantic_reasoning?.gates
+      if (output.schema !== 'PI_R89_EVIDENCE_BOUND_SEMANTIC_ANALYSIS_V1'
+        || output.tenant_id !== data.tenant_id
+        || output.source_registry_sha256 !== data.source_registry_sha256
+        || output.definitions_registry_sha256 !== data.definitions_registry_sha256
+        || gate?.equivalence_asserted !== false
+        || gate?.relation_promotion !== 'NOT_PERFORMED'
+        || gate?.numeric_comparison !== 'BLOCKED'
+        || gate?.production_admission !== 'DENIED'
+        || !Array.isArray(output.semantic_reasoning.candidates)) {
+        throw new Error('Kontrak bukti berubah atau legal gate tidak cocok')
+      }
+      const reasoning = output.semantic_reasoning
+      get('r89-status').textContent = reasoning.status + ' · ' + reasoning.provider_execution + ' · Legal ' + reasoning.legal_validation_status
+      if (reasoning.candidates.length > 0) {
+        const card = add(get('r89-results'),'article','')
+        const candidate = reasoning.candidates[0]
+        add(card,'h3','Hipotesis semantik: ' + candidate.semantic_relation)
+        add(card,'p',candidate.explanation)
+        add(card,'p','Keyakinan model: ' + candidate.semantic_confidence + ' · Bukti: ' + candidate.evidence_confidence)
+        add(card,'p','Jalur bukti: ' + candidate.supporting_relation_ids.join(' → ') + ' · Status: ' + candidate.review_status)
+        add(card,'p','Tidak ada kesetaraan, hukum, angka, atau keputusan reviewer yang dipromosikan.')
+      }
+      // Preserve the full canonical R88 evidence and append only the validated
+      // semantic envelope to the user's optional JSON export (no persistence).
+      data.semantic_reasoning = reasoning
+      data.semantic_analysis = {
+        schema:output.schema, context_class:output.context_class,
+        context_sha256:output.context_sha256, source_rights:output.source_rights
+      }
+    } catch (error) {
+      resetSemantic('ABSTAIN · ' + error.message)
+    } finally {
+      get('r89-run').disabled = !approved.checked || !data || data.result_count !== 1
+    }
   })
   get('r88-export').addEventListener('click', () => {
     if (!data) return
