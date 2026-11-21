@@ -62,7 +62,9 @@ Route::prefix('api')->group(function (): void {
         Route::get('/qa-subscription-r69e/entitlements', EntitlementController::class)
             ->name('pi.entitlements');
         Route::get('/qa-superior-r88/planning-crosswalk', \App\Http\Controllers\Api\RegulatoryPlanningCrosswalkController::class)->name('pi.superior.planning-crosswalk');
-        Route::post('/qa-superior-r89/semantic-candidates', R89SemanticRegulatoryController::class)
+        Route::get('/qa-superior-r89/semantic-preview', [R89SemanticRegulatoryController::class, 'preview'])
+            ->middleware('throttle:10,1')->name('pi.superior.semantic-preview');
+        Route::post('/qa-superior-r89/semantic-candidates', [R89SemanticRegulatoryController::class, 'analyze'])
             ->middleware('throttle:2,1')->name('pi.superior.semantic-candidates');
         Route::get('/qa-superior-r85/development-case', GovernmentDevelopmentCaseController::class)
             ->name('pi.superior.development-case');

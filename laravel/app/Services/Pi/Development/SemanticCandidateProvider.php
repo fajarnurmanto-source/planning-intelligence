@@ -11,5 +11,5 @@ interface SemanticCandidateProvider
     /** @param array<string,mixed> $context
      *  @return array<string,mixed>
      */
-    public function propose(array $context, string $model): array;
+    public function propose(array $context, string $provider, string $model, string $apiKey): array;
 }
