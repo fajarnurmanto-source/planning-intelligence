@@ -1,0 +1,17 @@
+{
+  "schema": "PI_R88_OPERATIONAL_DEFINITIONS_V1",
+  "observed_at": "2026-11-21",
+  "definitions": [
+    {
+      "concept_id": "WASTE-COMMUNITY-PARTICIPATION",
+      "code": "2.11.11.2.01.0004",
+      "planning_year": 2026,
+      "preferred_term": "Peningkatan Peran Serta Masyarakat dalam Pengelolaan Persampahan",
+      "observed_term": "Indikator keluaran pelibatan masyarakat dalam pengelolaan persampahan",
+      "relation": "RELATED_CANDIDATE_NOT_IDENTICAL",
+      "reason": "Subactivity title and output indicator concern participation; units, formula and targets are not verified. Similar wording cannot establish equivalence.",
+      "supporting_edge_ids": ["E05", "E12"],
+      "status": "CANDIDATE_REVIEW_REQUIRED"
+    }
+  ]
+}

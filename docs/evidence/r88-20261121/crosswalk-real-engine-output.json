@@ -1,0 +1,1275 @@
+{
+    "schema": "PI_R88_REGULATORY_PLANNING_CROSSWALK_V1",
+    "tenant_id": "ID-DIY-YOG",
+    "filters": {
+        "year": 2026,
+        "as_of": "2026-11-21",
+        "code": "2.11.11.2.01.0004"
+    },
+    "result_count": 1,
+    "source_registry_sha256": "7F70FC6BF8C9575D4E919E66445171ABBDDE7BE5BC4199A88972930BC80AF657",
+    "backbone_registry_sha256": "A29B263EC8DCA2ADA5E6311B5BE24684250B34EBAA3DF1E4C76823B00B0B2FA4",
+    "classification": {
+        "schema": "PI_AFFAIR_FIRST_CLASSIFICATION_V1",
+        "code": "2.11.11.2.01.0004",
+        "document_year": 2026,
+        "status": "EXACT_LOCAL_OBSERVATION",
+        "match_type": "EXACT",
+        "match": {
+            "code": "2.11.11.2.01.0004",
+            "label": "Peningkatan Peran Serta Masyarakat dalam Pengelolaan Persampahan",
+            "level": "SUB_KEGIATAN",
+            "parent_code": "2.11.11.2.01",
+            "affair_id": "CONC-NON_BASIC-05",
+            "year": 2026,
+            "version": "LOCAL_YOG_2026_OBSERVED",
+            "status": "OBSERVED_LOCAL_DOCUMENT",
+            "source_url": "https:\/\/jdih.jogjakota.go.id\/asset\/naskah\/2026pw3405004.pdf",
+            "locator": "Subactivity .0004 and community participation indicator",
+            "sha256": null,
+            "national_master_verified": false
+        },
+        "sectoral_discovery_candidates": [
+            {
+                "affair_id": "CONC-NON_BASIC-05",
+                "code_prefix": "2.11.11",
+                "topic": "persampahan",
+                "source_candidates": [
+                    {
+                        "title": "UU 18 Tahun 2008",
+                        "url": "https:\/\/peraturan.bpk.go.id\/Download\/28462\/UU%20Nomor%2018%20Tahun%202008.pdf"
+                    },
+                    {
+                        "title": "PP 81 Tahun 2012",
+                        "url": "https:\/\/www.peraturan.go.id\/files\/pp81-2012bt.pdf"
+                    }
+                ],
+                "status": "DISCOVERY_CANDIDATE_NOT_LEGAL_DETERMINATION"
+            }
+        ],
+        "national_master_verified": false,
+        "authority": "NOT_ASSESSED",
+        "legal_applicability": "NOT_ASSESSED",
+        "production_admission": "DENIED"
+    },
+    "binding": {
+        "status": "OBSERVED_LOCAL_CODE_REVIEW_REQUIRED",
+        "reason": "Only the existing R85 .0004 documentary observation is bound; lexical similarity and parent prefixes cannot create a case relation."
+    },
+    "hierarchy": [
+        {
+            "code": "2.11",
+            "label": "Lingkungan Hidup",
+            "level": "BIDANG_URUSAN",
+            "parent_code": null,
+            "affair_id": "CONC-NON_BASIC-05",
+            "year": 2026,
+            "version": "LOCAL_YOG_2026_OBSERVED",
+            "status": "PREFIX_DERIVED_REVIEW_REQUIRED",
+            "source_url": "https:\/\/jdih.jogjakota.go.id\/asset\/naskah\/2026pw3405004.pdf",
+            "locator": "Prefix of the official local program code, not directly verified as national master",
+            "sha256": null,
+            "national_master_verified": false
+        },
+        {
+            "code": "2.11.11",
+            "label": "PROGRAM PENGELOLAAN PERSAMPAHAN",
+            "level": "PROGRAM",
+            "parent_code": "2.11",
+            "affair_id": "CONC-NON_BASIC-05",
+            "year": 2026,
+            "version": "LOCAL_YOG_2026_OBSERVED",
+            "status": "OBSERVED_LOCAL_DOCUMENT",
+            "source_url": "https:\/\/jdih.jogjakota.go.id\/asset\/naskah\/2026pw3405004.pdf",
+            "locator": "Program section in municipal document",
+            "sha256": null,
+            "national_master_verified": false
+        },
+        {
+            "code": "2.11.11.2.01",
+            "label": "Pengelolaan Sampah",
+            "level": "KEGIATAN",
+            "parent_code": "2.11.11",
+            "affair_id": "CONC-NON_BASIC-05",
+            "year": 2026,
+            "version": "LOCAL_YOG_2026_OBSERVED",
+            "status": "OBSERVED_LOCAL_DOCUMENT",
+            "source_url": "https:\/\/jdih.jogjakota.go.id\/asset\/naskah\/2026pw3405004.pdf",
+            "locator": "Activity section in municipal document",
+            "sha256": null,
+            "national_master_verified": false
+        },
+        {
+            "code": "2.11.11.2.01.0004",
+            "label": "Peningkatan Peran Serta Masyarakat dalam Pengelolaan Persampahan",
+            "level": "SUB_KEGIATAN",
+            "parent_code": "2.11.11.2.01",
+            "affair_id": "CONC-NON_BASIC-05",
+            "year": 2026,
+            "version": "LOCAL_YOG_2026_OBSERVED",
+            "status": "OBSERVED_LOCAL_DOCUMENT",
+            "source_url": "https:\/\/jdih.jogjakota.go.id\/asset\/naskah\/2026pw3405004.pdf",
+            "locator": "Subactivity .0004 and community participation indicator",
+            "sha256": null,
+            "national_master_verified": false
+        }
+    ],
+    "definitions_registry_sha256": "6866BBEA28C2F7354B086D72E56244811F461E92577A753C06422EF7B5536E06",
+    "operational_definitions": [
+        {
+            "concept_id": "WASTE-COMMUNITY-PARTICIPATION",
+            "code": "2.11.11.2.01.0004",
+            "planning_year": 2026,
+            "preferred_term": "Peningkatan Peran Serta Masyarakat dalam Pengelolaan Persampahan",
+            "observed_term": "Indikator keluaran pelibatan masyarakat dalam pengelolaan persampahan",
+            "relation": "RELATED_CANDIDATE_NOT_IDENTICAL",
+            "reason": "Subactivity title and output indicator concern participation; units, formula and targets are not verified. Similar wording cannot establish equivalence.",
+            "supporting_edge_ids": [
+                "E05",
+                "E12"
+            ],
+            "status": "CANDIDATE_REVIEW_REQUIRED",
+            "provenance": [
+                {
+                    "source_id": "R69C-OVERVIEW",
+                    "locator": "Observed waste subactivity code ending .0004",
+                    "source_url": ".\/overview-r69c.json",
+                    "source_sha256": null,
+                    "version": "local QA projection R69C",
+                    "as_of_date": "2026-11-18",
+                    "jurisdiction": "ID-DIY-YOG",
+                    "verification_status": "LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED",
+                    "uncertainty": "MEDIUM"
+                },
+                {
+                    "source_id": "R69C-OVERVIEW",
+                    "locator": "Renja\/APBD observed output indicator for community involvement",
+                    "source_url": ".\/overview-r69c.json",
+                    "source_sha256": null,
+                    "version": "local QA projection R69C",
+                    "as_of_date": "2026-11-18",
+                    "jurisdiction": "ID-DIY-YOG",
+                    "verification_status": "LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED",
+                    "uncertainty": "MEDIUM"
+                }
+            ]
+        }
+    ],
+    "continuity": {
+        "status": "ABSTAIN_MISSING_COMPARISON_VERSION",
+        "comparison_year": 2027,
+        "equivalence_asserted": false,
+        "reason": "No verified 2027 code\/version and indicator definition available."
+    },
+    "nodes": [
+        {
+            "id": "REG-PP81-2012",
+            "type": "RegulationVersion",
+            "label": "PP 81\/2012 tentang Sampah Rumah Tangga",
+            "status": "VERIFIED_SOURCE_BYTES"
+        },
+        {
+            "id": "REG-PMD10-2025",
+            "type": "RegulationVersion",
+            "label": "Permendagri 10\/2025 tentang RKPD 2026",
+            "status": "SOURCE_LOCATED_NOT_HASH_PINNED"
+        },
+        {
+            "id": "PROV-UU18-P16",
+            "type": "Provision",
+            "label": "Pasal 16 UU 18\/2008",
+            "status": "REVIEW_CANDIDATE"
+        },
+        {
+            "id": "PROV-PMD10-P12-2",
+            "type": "Provision",
+            "label": "Pasal 12 ayat (2) Permendagri 10\/2025",
+            "status": "SOURCE_LOCATED_NOT_HASH_PINNED"
+        },
+        {
+            "id": "AUTH-PEMKOT",
+            "type": "Authority",
+            "label": "Pemerintah Kota Yogyakarta",
+            "status": "AUTHORITY_CANDIDATE"
+        },
+        {
+            "id": "AUTH-WALIKOTA",
+            "type": "Authority",
+            "label": "Wali Kota Yogyakarta sebagai penerbit RKPD",
+            "status": "OFFICIAL_METADATA_CONFIRMED"
+        },
+        {
+            "id": "AUTH-DLH",
+            "type": "Authority",
+            "label": "Dinas Lingkungan Hidup Kota Yogyakarta",
+            "status": "ADMINISTRATIVE_RESPONSIBILITY_CANDIDATE"
+        },
+        {
+            "id": "AFFAIR-WASTE",
+            "type": "GovernmentAffair",
+            "label": "Urusan lingkungan hidup — persampahan",
+            "status": "MAPPING_CANDIDATE"
+        },
+        {
+            "id": "PLAN-RPJMD",
+            "type": "PlanningArtifactVersion",
+            "label": "RPJMD Kota Yogyakarta 2025–2029",
+            "status": "OFFICIAL_METADATA_LOCATED"
+        },
+        {
+            "id": "PLAN-RKPD",
+            "type": "PlanningArtifactVersion",
+            "label": "RKPD Kota Yogyakarta 2026",
+            "status": "OFFICIAL_METADATA_LOCATED"
+        },
+        {
+            "id": "PLAN-RENSTRA-DLH",
+            "type": "PlanningArtifactVersion",
+            "label": "Renstra DLH Kota Yogyakarta",
+            "status": "LOCAL_QA_OBSERVATION"
+        },
+        {
+            "id": "PLAN-RENJA-DLH",
+            "type": "PlanningArtifactVersion",
+            "label": "Renja DLH Kota Yogyakarta 2026",
+            "status": "LOCAL_QA_OBSERVATION"
+        },
+        {
+            "id": "STAGE-PLANNING",
+            "type": "ProcessStage",
+            "label": "Perencanaan pembangunan tahunan",
+            "status": "DOCUMENTARY_STAGE"
+        },
+        {
+            "id": "STAGE-BUDGET",
+            "type": "ProcessStage",
+            "label": "Penganggaran daerah 2026",
+            "status": "DOCUMENTARY_STAGE"
+        },
+        {
+            "id": "EVENT-RKPD-ISSUED",
+            "type": "ProcessEvent",
+            "label": "Perwali 34\/2025 menetapkan RKPD 2026",
+            "status": "OFFICIAL_METADATA_CONFIRMED"
+        },
+        {
+            "id": "PROGRAM-WASTE-0004",
+            "type": "PlanningProgram",
+            "label": "Subkegiatan pengelolaan persampahan …0004",
+            "status": "LOCAL_QA_MAPPING_CANDIDATE"
+        },
+        {
+            "id": "IND-WASTE-COMMUNITY",
+            "type": "Indicator",
+            "label": "Indikator keluaran pelibatan masyarakat dalam pengelolaan persampahan",
+            "status": "LOCAL_QA_OBSERVATION"
+        },
+        {
+            "id": "BUDGET-APBD-2026",
+            "type": "BudgetArtifact",
+            "label": "APBD\/Penjabaran APBD Kota Yogyakarta 2026",
+            "status": "LOCAL_QA_OBSERVATION"
+        },
+        {
+            "id": "EVID-R81",
+            "type": "EvidenceLocator",
+            "label": "Snapshot R81: UU 18\/2008 dan PP 81\/2012",
+            "status": "TWO_SHA256_PINS_MATCH"
+        },
+        {
+            "id": "DECISION-NONE",
+            "type": "ReviewDecision",
+            "label": "Belum ada keputusan review aktif",
+            "status": "NO_ACTIVE_DECISION"
+        }
+    ],
+    "relations": [
+        {
+            "id": "E01",
+            "from": "REG-PP81-2012",
+            "to": "PROV-UU18-P16",
+            "relation": "IMPLEMENTS_PROVISION_OF_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R81-PP-81-2012",
+                "locator": "Menimbang; rujukan pelaksanaan Pasal 16 UU 18\/2008",
+                "source_url": "https:\/\/www.peraturan.go.id\/files\/pp81-2012bt.pdf",
+                "source_sha256": "542CE23457FE19529887D3B0BD4B14FAAE7F6F1E269CBFC5B840E117B2CDEE53",
+                "version": "PP 81 Tahun 2012",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "VERIFIED_SOURCE_BYTES",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E02",
+            "from": "PROV-UU18-P16",
+            "to": "AUTH-PEMKOT",
+            "relation": "INFORMS_MUNICIPAL_AUTHORITY_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R81-UU-18-2008",
+                "locator": "Pasal 16; applicability and authority require legal review",
+                "source_url": "https:\/\/peraturan.bpk.go.id\/Download\/28462\/UU%20Nomor%2018%20Tahun%202008.pdf",
+                "source_sha256": "DC7735DB65D6DEDC650FF78C36B6C6F076CF931861B005EDAB03F30E513026F4",
+                "version": "UU 18 Tahun 2008",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "VERIFIED_SOURCE_BYTES",
+                "uncertainty": "HIGH"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "HIGH",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E03",
+            "from": "AUTH-WALIKOTA",
+            "to": "PLAN-RKPD",
+            "relation": "ISSUES_ARTIFACT",
+            "status": "SOURCE_LOCATED",
+            "provenance": {
+                "source_id": "R70J-RKPD-2026",
+                "locator": "Metadata Perwali Kota Yogyakarta Nomor 34 Tahun 2025",
+                "source_url": "https:\/\/jdih.jogjakota.go.id\/home\/produk_hukum\/detail\/3758",
+                "source_sha256": null,
+                "version": "Perwali 34 Tahun 2025",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "SOURCE_LOCATED_NOT_HASH_PINNED",
+                "uncertainty": "LOW"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "LOW",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E04",
+            "from": "AUTH-DLH",
+            "to": "AFFAIR-WASTE",
+            "relation": "ADMINISTRATIVE_RESPONSIBILITY_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R69C-OVERVIEW",
+                "locator": "Renstra\/Renja DLH stages for persampahan",
+                "source_url": ".\/overview-r69c.json",
+                "source_sha256": null,
+                "version": "local QA projection R69C",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E05",
+            "from": "AFFAIR-WASTE",
+            "to": "PROGRAM-WASTE-0004",
+            "relation": "CLASSIFIES_PROGRAM_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R69C-OVERVIEW",
+                "locator": "Observed waste subactivity code ending .0004",
+                "source_url": ".\/overview-r69c.json",
+                "source_sha256": null,
+                "version": "local QA projection R69C",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E06",
+            "from": "PLAN-RPJMD",
+            "to": "PLAN-RKPD",
+            "relation": "GUIDES_ANNUAL_PLAN_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R70J-RPJMD-2025-2029",
+                "locator": "Pasal 2 ayat (4) huruf a",
+                "source_url": "https:\/\/jdih.jogjakota.go.id\/home\/produk_hukum\/detail\/3774",
+                "source_sha256": null,
+                "version": "Perda 2 Tahun 2025",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "SOURCE_LOCATED_NOT_HASH_PINNED",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E07",
+            "from": "REG-PMD10-2025",
+            "to": "PROV-PMD10-P12-2",
+            "relation": "CONTAINS_PROVISION",
+            "status": "SOURCE_LOCATED",
+            "provenance": {
+                "source_id": "R70L-PMD10-2025",
+                "locator": "Pasal 12 ayat (2) huruf a–c; halaman cetak -8-",
+                "source_url": "https:\/\/peraturan.go.id\/files\/permendagri-no-10-tahun-2025.pdf",
+                "source_sha256": null,
+                "version": "Permendagri 10 Tahun 2025",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "SOURCE_LOCATED_NOT_HASH_PINNED",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E08",
+            "from": "PLAN-RPJMD",
+            "to": "PLAN-RENSTRA-DLH",
+            "relation": "GUIDES_AGENCY_STRATEGIC_PLAN_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R69C-OVERVIEW",
+                "locator": "RPJMD to Renstra documentary stage",
+                "source_url": ".\/overview-r69c.json",
+                "source_sha256": null,
+                "version": "local QA projection R69C",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED",
+                "uncertainty": "HIGH"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "HIGH",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E09",
+            "from": "PLAN-RKPD",
+            "to": "PLAN-RENJA-DLH",
+            "relation": "GUIDES_AGENCY_ANNUAL_PLAN_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R69C-OVERVIEW",
+                "locator": "RKPD to Renja documentary stage",
+                "source_url": ".\/overview-r69c.json",
+                "source_sha256": null,
+                "version": "local QA projection R69C",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED",
+                "uncertainty": "HIGH"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "HIGH",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E10",
+            "from": "PLAN-RENSTRA-DLH",
+            "to": "PROGRAM-WASTE-0004",
+            "relation": "STRATEGIC_PLAN_CONTAINS_PROGRAM_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R69C-OVERVIEW",
+                "locator": "Renstra stage; waste target and subactivity .0004",
+                "source_url": ".\/overview-r69c.json",
+                "source_sha256": null,
+                "version": "local QA projection R69C",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E11",
+            "from": "PLAN-RENJA-DLH",
+            "to": "PROGRAM-WASTE-0004",
+            "relation": "ANNUAL_PLAN_CONTAINS_PROGRAM_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R69C-OVERVIEW",
+                "locator": "Renja DLH stage; subactivity .0004",
+                "source_url": ".\/overview-r69c.json",
+                "source_sha256": null,
+                "version": "local QA projection R69C",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E12",
+            "from": "PROGRAM-WASTE-0004",
+            "to": "IND-WASTE-COMMUNITY",
+            "relation": "MEASURED_BY_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R69C-OVERVIEW",
+                "locator": "Renja\/APBD observed output indicator for community involvement",
+                "source_url": ".\/overview-r69c.json",
+                "source_sha256": null,
+                "version": "local QA projection R69C",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E13",
+            "from": "PROGRAM-WASTE-0004",
+            "to": "BUDGET-APBD-2026",
+            "relation": "BUDGETED_IN_CANDIDATE",
+            "status": "CANDIDATE",
+            "provenance": {
+                "source_id": "R69C-OVERVIEW",
+                "locator": "APBD and Penjabaran stages; code ending .0004",
+                "source_url": ".\/overview-r69c.json",
+                "source_sha256": null,
+                "version": "local QA projection R69C",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E14",
+            "from": "PROV-PMD10-P12-2",
+            "to": "STAGE-BUDGET",
+            "relation": "RKPD_TO_BUDGET_PROCESS_GUIDANCE",
+            "status": "SOURCE_LOCATED",
+            "provenance": {
+                "source_id": "R70L-PMD10-2025",
+                "locator": "Pasal 12 ayat (2) huruf a–c; halaman cetak -8-",
+                "source_url": "https:\/\/peraturan.go.id\/files\/permendagri-no-10-tahun-2025.pdf",
+                "source_sha256": null,
+                "version": "Permendagri 10 Tahun 2025",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "SOURCE_LOCATED_NOT_HASH_PINNED",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E15",
+            "from": "PLAN-RKPD",
+            "to": "STAGE-PLANNING",
+            "relation": "MATERIALIZES_ANNUAL_PLANNING_STAGE",
+            "status": "SOURCE_LOCATED",
+            "provenance": {
+                "source_id": "R70J-RKPD-2026",
+                "locator": "Perwali 34 Tahun 2025 metadata and RKPD identity",
+                "source_url": "https:\/\/jdih.jogjakota.go.id\/home\/produk_hukum\/detail\/3758",
+                "source_sha256": null,
+                "version": "Perwali 34 Tahun 2025",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "SOURCE_LOCATED_NOT_HASH_PINNED",
+                "uncertainty": "LOW"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "LOW",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E16",
+            "from": "STAGE-PLANNING",
+            "to": "STAGE-BUDGET",
+            "relation": "PRECEDES_DOCUMENTARY_STAGE",
+            "status": "DOCUMENTARY_SEQUENCE",
+            "provenance": {
+                "source_id": "R70L-PMD10-2025",
+                "locator": "Pasal 12 ayat (2) huruf a–c; RKPD as budget guidance",
+                "source_url": "https:\/\/peraturan.go.id\/files\/permendagri-no-10-tahun-2025.pdf",
+                "source_sha256": null,
+                "version": "Permendagri 10 Tahun 2025",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "SOURCE_LOCATED_NOT_HASH_PINNED",
+                "uncertainty": "MEDIUM"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "MEDIUM",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E17",
+            "from": "EVENT-RKPD-ISSUED",
+            "to": "PLAN-RKPD",
+            "relation": "ESTABLISHES_VERSION",
+            "status": "SOURCE_LOCATED",
+            "provenance": {
+                "source_id": "R70J-RKPD-2026",
+                "locator": "Issued 7 July 2025; Perwali 34 Tahun 2025",
+                "source_url": "https:\/\/jdih.jogjakota.go.id\/home\/produk_hukum\/detail\/3758",
+                "source_sha256": null,
+                "version": "Perwali 34 Tahun 2025",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "SOURCE_LOCATED_NOT_HASH_PINNED",
+                "uncertainty": "LOW"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "LOW",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        },
+        {
+            "id": "E18",
+            "from": "EVID-R81",
+            "to": "DECISION-NONE",
+            "relation": "AVAILABLE_FOR_HUMAN_REVIEW_NO_DECISION",
+            "status": "ABSTAIN",
+            "provenance": {
+                "source_id": "R81-UU-18-2008",
+                "locator": "R81\/R82 verified snapshot pair; no active R84 decision asserted",
+                "source_url": "https:\/\/peraturan.bpk.go.id\/Download\/28462\/UU%20Nomor%2018%20Tahun%202008.pdf",
+                "source_sha256": "DC7735DB65D6DEDC650FF78C36B6C6F076CF931861B005EDAB03F30E513026F4",
+                "version": "UU 18 Tahun 2008",
+                "as_of_date": "2026-11-18",
+                "jurisdiction": "ID-DIY-YOG",
+                "verification_status": "VERIFIED_SOURCE_BYTES",
+                "uncertainty": "LOW"
+            },
+            "legal_applicability": "NOT_ASSESSED",
+            "relation_confidence": "LOW",
+            "temporal_status": "OBSERVED_BY_AS_OF_NOT_PROOF_OF_LEGAL_VALIDITY"
+        }
+    ],
+    "lifecycle": {
+        "model": "DEPENDENCY_GRAPH_NOT_SINGLE_LINEAR_TIMELINE",
+        "stage_count": 10,
+        "returned_stage_count": 10,
+        "stages": [
+            {
+                "id": "authority",
+                "label": "Mandat dan kewenangan",
+                "domain": "Regulatory",
+                "actor": "Pemerintah Kota Yogyakarta; penugasan operasional DLH masih kandidat",
+                "required_artifacts": [
+                    "competence assignment",
+                    "responsible organization version"
+                ],
+                "observed_artifacts": [
+                    "R85 authority and government-affair candidate nodes"
+                ],
+                "regulation_version_ids": [
+                    "REG-UU18-2008",
+                    "REG-PP81-2012",
+                    "REG-UU23-2014"
+                ],
+                "evidence_status": "MAPPING_CANDIDATE",
+                "evidence_gaps": [
+                    "Lampiran pembagian suburusan dan kewenangan persampahan belum dipin",
+                    "Penugasan DLH belum dihubungkan ke produk hukum organisasi daerah"
+                ]
+            },
+            {
+                "id": "planning",
+                "label": "Perencanaan",
+                "domain": "Performance",
+                "actor": "Bappeda dan perangkat daerah sesuai tahap; assignment spesifik perlu bukti",
+                "required_artifacts": [
+                    "RPJMD",
+                    "RKPD",
+                    "Renstra Perangkat Daerah",
+                    "Renja Perangkat Daerah"
+                ],
+                "observed_artifacts": [
+                    "RPJMD 2025-2029",
+                    "RKPD 2026",
+                    "Renstra\/Renja DLH pada proyeksi QA"
+                ],
+                "regulation_version_ids": [
+                    "REG-UU25-2004",
+                    "REG-PMD86-2017",
+                    "REG-PMD10-2025"
+                ],
+                "evidence_status": "OBSERVED_SOURCE_LOCATED",
+                "evidence_gaps": [
+                    "Snapshot PDF RPJMD\/RKPD belum seluruhnya hash-pinned",
+                    "Kepatuhan setiap tahap belum dinilai"
+                ]
+            },
+            {
+                "id": "budgeting",
+                "label": "Penganggaran",
+                "domain": "Fiscal",
+                "actor": "Kepala daerah, TAPD, DPRD dan perangkat daerah sesuai kewenangan masing-masing",
+                "required_artifacts": [
+                    "KUA-PPAS",
+                    "RKA",
+                    "APBD",
+                    "DPA"
+                ],
+                "observed_artifacts": [
+                    "APBD\/Penjabaran APBD 2026 pada proyeksi QA"
+                ],
+                "regulation_version_ids": [
+                    "REG-PMD10-2025",
+                    "REG-PMD14-2025",
+                    "REG-PP12-2019"
+                ],
+                "evidence_status": "MAPPING_CANDIDATE",
+                "evidence_gaps": [
+                    "KUA-PPAS, RKA dan DPA kasus belum tersedia",
+                    "RKPD tidak disamakan dengan otorisasi belanja atau uang keluar"
+                ]
+            },
+            {
+                "id": "execution_treasury",
+                "label": "Pelaksanaan dan perbendaharaan",
+                "domain": "Fiscal",
+                "actor": "Pejabat pengelola keuangan dan pelaksana kegiatan sesuai dokumen otorisasi",
+                "required_artifacts": [
+                    "DPA",
+                    "bukti komitmen",
+                    "bukti transaksi",
+                    "bukti keluaran"
+                ],
+                "observed_artifacts": [],
+                "regulation_version_ids": [
+                    "REG-UU1-2004",
+                    "REG-PP12-2019"
+                ],
+                "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+                "evidence_gaps": [
+                    "Tidak ada DPA, transaksi, kontrak, serah terima, atau bukti keluaran dalam kasus"
+                ]
+            },
+            {
+                "id": "monitoring",
+                "label": "Monitoring dan pengendalian",
+                "domain": "Performance",
+                "actor": "Pengelola program dan fungsi pengendalian sesuai dasar kewenangan",
+                "required_artifacts": [
+                    "monitoring observation",
+                    "risk\/control evidence",
+                    "progress record"
+                ],
+                "observed_artifacts": [],
+                "regulation_version_ids": [
+                    "REG-PP39-2006",
+                    "REG-PP60-2008",
+                    "REG-PMD86-2017"
+                ],
+                "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+                "evidence_gaps": [
+                    "Tidak ada observasi monitoring fisik atau outcome",
+                    "Tidak ada bukti pengendalian intern kasus"
+                ]
+            },
+            {
+                "id": "evaluation",
+                "label": "Evaluasi dan pelaporan",
+                "domain": "Evaluation",
+                "actor": "Pemerintah daerah dan evaluator sesuai jenis laporan",
+                "required_artifacts": [
+                    "LKjIP",
+                    "LPPD\/LKPJ\/EPPD",
+                    "evaluation evidence"
+                ],
+                "observed_artifacts": [],
+                "regulation_version_ids": [
+                    "REG-PP39-2006",
+                    "REG-PP13-2019",
+                    "REG-PMD86-2017"
+                ],
+                "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+                "evidence_gaps": [
+                    "Tidak ada hasil evaluasi program persampahan 2026",
+                    "Capaian tidak boleh diturunkan dari serapan anggaran"
+                ]
+            },
+            {
+                "id": "internal_oversight",
+                "label": "Pengawasan intern \/ APIP",
+                "domain": "Evaluation",
+                "actor": "APIP sesuai penugasan dan kewenangan",
+                "required_artifacts": [
+                    "internal review",
+                    "internal audit\/review evidence",
+                    "recommendation"
+                ],
+                "observed_artifacts": [],
+                "regulation_version_ids": [
+                    "REG-PP60-2008",
+                    "REG-PP12-2017"
+                ],
+                "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+                "evidence_gaps": [
+                    "Tidak ada laporan reviu atau pengawasan APIP",
+                    "Tidak boleh menciptakan temuan APIP"
+                ]
+            },
+            {
+                "id": "external_audit",
+                "label": "Pemeriksaan eksternal \/ BPK",
+                "domain": "Evaluation",
+                "actor": "Badan Pemeriksa Keuangan",
+                "required_artifacts": [
+                    "audit report",
+                    "audit finding",
+                    "recommendation"
+                ],
+                "observed_artifacts": [],
+                "regulation_version_ids": [
+                    "REG-UU15-2004",
+                    "REG-PBPK1-2017",
+                    "REG-PBPK1-2026"
+                ],
+                "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+                "evidence_gaps": [
+                    "Tidak ada laporan atau temuan BPK untuk kasus",
+                    "SPKN 2026 belum efektif pada 18 November 2026"
+                ]
+            },
+            {
+                "id": "follow_up",
+                "label": "Tindak lanjut",
+                "domain": "Evaluation",
+                "actor": "Entitas yang diperiksa\/diawasi sesuai rekomendasi yang sah",
+                "required_artifacts": [
+                    "recommendation",
+                    "follow-up action",
+                    "follow-up evidence"
+                ],
+                "observed_artifacts": [],
+                "regulation_version_ids": [
+                    "REG-UU15-2004",
+                    "REG-PP12-2017"
+                ],
+                "evidence_status": "EVIDENCE_NOT_AVAILABLE",
+                "evidence_gaps": [
+                    "Tidak ada rekomendasi sah sehingga tidak ada tindak lanjut yang dapat dinilai"
+                ]
+            },
+            {
+                "id": "feedback_next_planning",
+                "label": "Masukan ke perencanaan berikutnya",
+                "domain": "Superior",
+                "actor": "Pengambil keputusan dan penyusun rencana dengan review manusia",
+                "required_artifacts": [
+                    "validated evaluation",
+                    "validated recommendation",
+                    "next planning decision"
+                ],
+                "observed_artifacts": [],
+                "regulation_version_ids": [
+                    "REG-PMD86-2017",
+                    "REG-PP39-2006",
+                    "REG-PP13-2019"
+                ],
+                "evidence_status": "NOT_ASSESSED",
+                "evidence_gaps": [
+                    "Tidak ada evaluasi atau rekomendasi tervalidasi untuk memberi umpan balik",
+                    "Keputusan tetap pada manusia"
+                ]
+            }
+        ],
+        "relations": [
+            {
+                "id": "R86-E01",
+                "from": "authority",
+                "to": "planning",
+                "type": "AUTHORIZES_ROLE_FOR_STAGE",
+                "status": "MAPPING_CANDIDATE",
+                "basis": "PROV-UU23-2014-P12-2-E"
+            },
+            {
+                "id": "R86-E02",
+                "from": "planning",
+                "to": "budgeting",
+                "type": "REQUIRES_ARTIFACT_FOR_STAGE",
+                "status": "SOURCE_LOCATED_NOT_COMPLIANCE",
+                "basis": "PROV-PMD10-2025-P12-2"
+            },
+            {
+                "id": "R86-E03",
+                "from": "budgeting",
+                "to": "execution_treasury",
+                "type": "AUTHORIZATION_DEPENDENCY",
+                "status": "EVIDENCE_GAP",
+                "basis": "PROV-PMD14-2025-APBD2026"
+            },
+            {
+                "id": "R86-E04",
+                "from": "execution_treasury",
+                "to": "monitoring",
+                "type": "MONITORED_BY",
+                "status": "EVIDENCE_GAP",
+                "basis": "REG-PP39-2006"
+            },
+            {
+                "id": "R86-E05",
+                "from": "monitoring",
+                "to": "evaluation",
+                "type": "EVALUATED_BY",
+                "status": "EVIDENCE_GAP",
+                "basis": "REG-PP13-2019"
+            },
+            {
+                "id": "R86-E06",
+                "from": "execution_treasury",
+                "to": "internal_oversight",
+                "type": "INTERNALLY_REVIEWED_BY",
+                "status": "EVIDENCE_GAP",
+                "basis": "PROV-PP12-2017-APIP"
+            },
+            {
+                "id": "R86-E07",
+                "from": "execution_treasury",
+                "to": "external_audit",
+                "type": "EXTERNALLY_AUDITED_BY",
+                "status": "EVIDENCE_GAP",
+                "basis": "REG-UU15-2004"
+            },
+            {
+                "id": "R86-E08",
+                "from": "internal_oversight",
+                "to": "follow_up",
+                "type": "FOLLOWED_UP_BY",
+                "status": "EVIDENCE_GAP",
+                "basis": "PROV-PP12-2017-APIP"
+            },
+            {
+                "id": "R86-E09",
+                "from": "external_audit",
+                "to": "follow_up",
+                "type": "FOLLOWED_UP_BY",
+                "status": "EVIDENCE_GAP",
+                "basis": "REG-UU15-2004"
+            },
+            {
+                "id": "R86-E10",
+                "from": "evaluation",
+                "to": "feedback_next_planning",
+                "type": "FEEDS_NEXT_PLANNING",
+                "status": "NOT_ASSESSED",
+                "basis": "REG-PMD86-2017"
+            },
+            {
+                "id": "R86-E11",
+                "from": "follow_up",
+                "to": "feedback_next_planning",
+                "type": "FEEDS_NEXT_PLANNING",
+                "status": "NOT_ASSESSED",
+                "basis": "REG-PMD86-2017"
+            }
+        ]
+    },
+    "temporal_rules": [
+        {
+            "regulation_version_id": "REG-UU18-2008",
+            "title": "UU 18 Tahun 2008 tentang Pengelolaan Sampah",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2008-05-07",
+            "status": "CURRENTLY_APPLICABLE",
+            "reason": "EFFECTIVE_DATE_REACHED_FOR_SCOPED_VERSION",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Download\/28462\/UU%20Nomor%2018%20Tahun%202008.pdf",
+            "source_sha256": "DC7735DB65D6DEDC650FF78C36B6C6F076CF931861B005EDAB03F30E513026F4"
+        },
+        {
+            "regulation_version_id": "REG-PP81-2012",
+            "title": "PP 81 Tahun 2012 tentang Pengelolaan Sampah Rumah Tangga",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2012-10-15",
+            "status": "CURRENTLY_APPLICABLE",
+            "reason": "EFFECTIVE_DATE_REACHED_FOR_SCOPED_VERSION",
+            "source_url": "https:\/\/www.peraturan.go.id\/files\/pp81-2012bt.pdf",
+            "source_sha256": "542CE23457FE19529887D3B0BD4B14FAAE7F6F1E269CBFC5B840E117B2CDEE53"
+        },
+        {
+            "regulation_version_id": "REG-UU23-2014",
+            "title": "UU 23 Tahun 2014 tentang Pemerintahan Daerah",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2014-10-02",
+            "status": "REVIEW_REQUIRED",
+            "reason": "TEMPORAL_METADATA_NOT_PROVISION_VERIFIED",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/38685\/uu-no-23-tahun-2014",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-UU25-2004",
+            "title": "UU 25 Tahun 2004 tentang Sistem Perencanaan Pembangunan Nasional",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2004-10-05",
+            "status": "REVIEW_REQUIRED",
+            "reason": "TEMPORAL_METADATA_NOT_PROVISION_VERIFIED",
+            "source_url": "https:\/\/jdih.bpk.go.id\/Dokumen\/Peraturan\/ce3335ad-6f77-4169-a3ba-1bc77529999f",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PMD86-2017",
+            "title": "Permendagri 86 Tahun 2017 tentang Perencanaan, Pengendalian dan Evaluasi Pembangunan Daerah",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2017-09-25",
+            "status": "CURRENTLY_APPLICABLE",
+            "reason": "EFFECTIVE_DATE_REACHED_FOR_SCOPED_VERSION",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/311927\/permendagri-no-86-tahun-2017",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PMD10-2025",
+            "title": "Permendagri 10 Tahun 2025 tentang Pedoman RKPD Tahun 2026",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2025-06-23",
+            "status": "CURRENTLY_APPLICABLE",
+            "reason": "EFFECTIVE_DATE_REACHED_FOR_SCOPED_VERSION",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/321470\/permendagri-no-10-tahun-2025",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PMD14-2026",
+            "title": "Permendagri 14 Tahun 2026 tentang Pedoman RKPD Tahun 2027",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2026-06-11",
+            "status": "OUT_OF_SCOPE_CASE_YEAR",
+            "reason": "ANNUAL_GUIDANCE_TARGETS_DIFFERENT_YEAR",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/357698\/permendagri-no-14-tahun-2026-pedoman-penyusunan-rencana-kerja-pemerintah-daerah",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PMD14-2025",
+            "title": "Permendagri 14 Tahun 2025 tentang Pedoman APBD Tahun Anggaran 2026",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2025-10-08",
+            "status": "REVIEW_REQUIRED",
+            "reason": "TEMPORAL_METADATA_NOT_PROVISION_VERIFIED",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/331189\/permendagri-no-14-tahun-2025",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PMD17-2026",
+            "title": "Permendagri 17 Tahun 2026 tentang Pedoman APBD Tahun Anggaran 2027",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": null,
+            "status": "OUT_OF_SCOPE_CASE_YEAR",
+            "reason": "ANNUAL_GUIDANCE_TARGETS_DIFFERENT_YEAR",
+            "source_url": "https:\/\/jdih.kemendagri.go.id\/",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PP12-2019",
+            "title": "PP 12 Tahun 2019 tentang Pengelolaan Keuangan Daerah",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2019-03-12",
+            "status": "REVIEW_REQUIRED",
+            "reason": "TEMPORAL_METADATA_NOT_PROVISION_VERIFIED",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/103888\/pp-no-12-tahun-2019",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-UU1-2004",
+            "title": "UU 1 Tahun 2004 tentang Perbendaharaan Negara",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2004-01-14",
+            "status": "REVIEW_REQUIRED",
+            "reason": "TEMPORAL_METADATA_NOT_PROVISION_VERIFIED",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/40446",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PP39-2006",
+            "title": "PP 39 Tahun 2006 tentang Pengendalian dan Evaluasi Pelaksanaan Rencana Pembangunan",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2006-12-15",
+            "status": "REVIEW_REQUIRED",
+            "reason": "TEMPORAL_METADATA_NOT_PROVISION_VERIFIED",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/49168\/pp-no-39-tahun-2006",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PP60-2008",
+            "title": "PP 60 Tahun 2008 tentang Sistem Pengendalian Intern Pemerintah",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2008-08-28",
+            "status": "REVIEW_REQUIRED",
+            "reason": "TEMPORAL_METADATA_NOT_PROVISION_VERIFIED",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/4876\/pp-no-60-tahun-2008",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PP13-2019",
+            "title": "PP 13 Tahun 2019 tentang Laporan dan Evaluasi Penyelenggaraan Pemerintahan Daerah",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2019-03-13",
+            "status": "REVIEW_REQUIRED",
+            "reason": "TEMPORAL_METADATA_NOT_PROVISION_VERIFIED",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/103890\/pp-no-13-tahun-2019",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PP12-2017",
+            "title": "PP 12 Tahun 2017 tentang Pembinaan dan Pengawasan Penyelenggaraan Pemerintahan Daerah",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2017-04-07",
+            "status": "REVIEW_REQUIRED",
+            "reason": "TEMPORAL_METADATA_NOT_PROVISION_VERIFIED",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/5832\/pp-no-12-tahun-2017",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-UU15-2004",
+            "title": "UU 15 Tahun 2004 tentang Pemeriksaan Pengelolaan dan Tanggung Jawab Keuangan Negara",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2004-07-19",
+            "status": "REVIEW_REQUIRED",
+            "reason": "TEMPORAL_METADATA_NOT_PROVISION_VERIFIED",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/40509\/uu-no-15-tahun-2004",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PBPK1-2017",
+            "title": "Peraturan BPK 1 Tahun 2017 tentang SPKN",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2017-01-06",
+            "status": "CURRENTLY_APPLICABLE",
+            "reason": "EFFECTIVE_DATE_REACHED_FOR_SCOPED_VERSION",
+            "source_url": "https:\/\/peraturan.bpk.go.id\/Details\/31506\/peraturan-bpk-no-1-tahun-2017",
+            "source_sha256": null
+        },
+        {
+            "regulation_version_id": "REG-PBPK1-2026",
+            "title": "Peraturan BPK 1 Tahun 2026 tentang SPKN",
+            "as_of": "2026-11-21",
+            "case_year": 2026,
+            "effective_from": "2028-04-10",
+            "status": "NOT_YET_EFFECTIVE",
+            "reason": "EFFECTIVE_DATE_IS_IN_FUTURE",
+            "source_url": "https:\/\/www.peraturan.go.id\/files\/peraturan-bpk-no-1-tahun-2026.pdf",
+            "source_sha256": "8D585DA7E9664B64CED5358ECA8D1FBE935F4A6D6680CF5F7C83AA11366C3F8D"
+        }
+    ],
+    "specialized_views": [
+        {
+            "app": "Evidence Intelligence",
+            "stage_ids": [
+                "authority",
+                "planning",
+                "budgeting",
+                "execution_treasury",
+                "monitoring",
+                "evaluation",
+                "internal_oversight",
+                "external_audit",
+                "follow_up"
+            ],
+            "focus": "source, hash, provision, locator, and evidence gap"
+        },
+        {
+            "app": "Regulatory Intelligence",
+            "stage_ids": [
+                "authority",
+                "planning",
+                "budgeting",
+                "internal_oversight",
+                "external_audit"
+            ],
+            "focus": "authority, temporal applicability, amendment, and role separation"
+        },
+        {
+            "app": "Performance Intelligence",
+            "stage_ids": [
+                "planning",
+                "monitoring",
+                "evaluation",
+                "feedback_next_planning"
+            ],
+            "focus": "objective, indicator, output\/outcome, monitoring, and evaluation without invented achievement"
+        },
+        {
+            "app": "Fiscal Intelligence",
+            "stage_ids": [
+                "budgeting",
+                "execution_treasury",
+                "monitoring"
+            ],
+            "focus": "planned, appropriated, authorized, spent, and accounted-for states remain distinct"
+        },
+        {
+            "app": "Evaluation Intelligence",
+            "stage_ids": [
+                "monitoring",
+                "evaluation",
+                "internal_oversight",
+                "external_audit",
+                "follow_up",
+                "feedback_next_planning"
+            ],
+            "focus": "evaluation, APIP, BPK, recommendation, and follow-up evidence remain distinct"
+        }
+    ],
+    "gaps": [
+        {
+            "id": "AUTHORITY",
+            "status": "MISSING_EVIDENCE",
+            "detail": "Provision-level municipal competence and amendments require legal review; a planning document cannot confer authority."
+        },
+        {
+            "id": "INDICATOR",
+            "status": "MISSING_EVIDENCE",
+            "detail": "Indicator formula, unit and comparable target versions are not verified."
+        },
+        {
+            "id": "DPA_REALISATION_AUDIT",
+            "status": "ABSTAIN",
+            "detail": "No verified DPA, realisation or BPK finding is admitted for this case. APIP oversight is separate from external BPK audit."
+        }
+    ],
+    "interpretation": {
+        "verified_meaning": "Sumber byte atau identitas metadata telah diperiksa sesuai status provenance; bukan otomatis verifikasi hubungan hukum.",
+        "candidate_meaning": "Hubungan siap ditelaah manusia dan belum boleh dipromosikan menjadi temuan final.",
+        "abstain_meaning": "Sistem tidak menyimpulkan ketika bukti tingkat ketentuan, versi, atau keputusan reviewer belum tersedia.",
+        "legal_harmonization": "NOT_ASSESSED",
+        "substantive_alignment": "NOT_ASSESSED",
+        "numeric_comparison": "BLOCKED",
+        "review_decision": "NO_ACTIVE_DECISION",
+        "production_admission": "DENIED"
+    },
+    "reviewer_url": "\/regulatory-trace-r70a.html#r84-review-workspace"
+}
