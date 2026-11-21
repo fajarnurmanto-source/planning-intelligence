@@ -7,6 +7,8 @@ on:
       - 'scripts/pi-r74-inplace-upgrade.ps1'
       - 'scripts/pi-r74-windows-acceptance.ps1'
       - 'scripts/pi-r74-verify-backup.ps1'
+      - 'scripts/pi-r74-auth-runtime-diagnostic.ps1'
+      - 'scripts/pi-r74-auth-db-readonly.php'
       - 'scripts/windows/r74/**'
       - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
@@ -70,6 +72,16 @@ jobs:
             throw 'PI_R74_BACKUP_VERIFIER_PARSE_FAILURE'
           }
           Write-Host 'PI_R74_BACKUP_VERIFIER_PARSE=PASS'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-auth-runtime-diagnostic.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_AUTH_DIAGNOSTIC_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R74_AUTH_DIAGNOSTIC_PARSE=PASS'
           Write-Host 'PI_R74_ACCEPTANCE_PARSE=PASS'
       - name: Run read-only inventory on clean runner
         shell: powershell
@@ -235,3 +247,78 @@ jobs:
             throw 'PI_R74_TAMPERED_BACKUP_NOT_REJECTED'
           }
           Write-Host 'PI_R74_TAMPERED_BACKUP_FAIL_CLOSED=PASS'
+
+      - name: R74 recurrent login read-only investigation guards
+        shell: powershell
+        run: |
+          $script = Get-Content 'scripts/pi-r74-auth-runtime-diagnostic.ps1' -Raw
+          $php = Get-Content 'scripts/pi-r74-auth-db-readonly.php' -Raw
+          foreach ($needle in @('PI_R74_8820_PROCESS_USES_RECOVERED_APP_ROOT',
+              'PI_R74_LARAVEL_CONFIG_CACHE_PRESENT',
+              'PI_R74_ENV_DB_URL_OVERRIDE_PRESENT',
+              'PI_R74_NO_ACCOUNT_PASSWORD_OR_DB_MUTATION=YES')) {
+            if (-not $script.Contains($needle)) { throw ('PI_R74_AUTH_DIAG_MISSING: ' + $needle) }
+          }
+          foreach ($needle in @('SQLITE3_OPEN_READONLY','PI_R74_MATCHING_USERNAME_COUNT=',
+              'PI_R74_DB_PROBE_READ_ONLY=YES','PI_R74_ACCOUNT_PASSWORD_SCHEME=')) {
+            if (-not $php.Contains($needle)) { throw ('PI_R74_DB_DIAG_MISSING: ' + $needle) }
+          }
+          foreach ($forbidden in @('Stop-Process','Set-Content','Remove-Item',
+              'Start-Process','artisan migrate','CreateShortcut(','Read-Host')) {
+            if ($script.Contains($forbidden)) { throw ('PI_R74_AUTH_DIAG_MUTATION_FORBIDDEN: ' + $forbidden) }
+          }
+          foreach ($forbidden in @('SQLITE3_OPEN_READWRITE','Hash::make','->save(',
+              'UPDATE users','DELETE FROM users')) {
+            if ($php.Contains($forbidden)) { throw ('PI_R74_DB_PROBE_MUTATION_FORBIDDEN: ' + $forbidden) }
+          }
+          $errText = ''
+          try {
+            & '.\scripts\pi-r74-auth-runtime-diagnostic.ps1' -ErrorAction Stop | Out-Null
+          } catch {
+            $errText = [string]$_.Exception.Message
+          }
+          if ($errText -notmatch 'PI_R74_ORIGINAL_APP_OR_ENV_NOT_FOUND') {
+            throw 'PI_R74_AUTH_DIAG_WRONG_NEGATIVE_GUARD'
+          }
+          Write-Host 'PI_R74_AUTH_DIAG_NO_OWNER_MUTATION=PASS'
+      - name: PHP readonly SQLite user inventory with temporary CI fixture
+        shell: powershell
+        run: |
+          $phpExe = (Get-Command php.exe -ErrorAction SilentlyContinue)
+          if (-not $phpExe) { throw 'PHP_CLI_NOT_PRESENT_ON_WINDOWS_RUNNER' }
+          & $phpExe.Source -l '.\scripts\pi-r74-auth-db-readonly.php'
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R74_AUTH_DB_PHP_LINT_FAILED' }
+          if ((& $phpExe.Source -m) -notcontains 'sqlite3') {
+            throw 'PHP_SQLITE3_EXTENSION_MISSING'
+          }
+          $dir = Join-Path $env:RUNNER_TEMP ('pi-auth-fixture-' + [guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $dir | Out-Null
+          $dbFile = Join-Path $dir 'readonly.sqlite'
+          $fixture = Join-Path $dir 'create-fixture.php'
+          $code = @'
+          <?php
+          $db = new SQLite3($argv[1], SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+          $db->exec("CREATE TABLE users (username TEXT, tenant_id TEXT, role TEXT, password TEXT)");
+          $stmt = $db->prepare("INSERT INTO users VALUES (:u,:t,:r,:p)");
+          $stmt->bindValue(":u", "test.institution", SQLITE3_TEXT);
+          $stmt->bindValue(":t", "ID-DIY-YOG", SQLITE3_TEXT);
+          $stmt->bindValue(":r", "institution_admin", SQLITE3_TEXT);
+          $stmt->bindValue(":p", password_hash("fake-fixture-password-only", PASSWORD_BCRYPT), SQLITE3_TEXT);
+          if (!$stmt->execute()) { exit(3); }
+          $db->close();
+          '@
+          [IO.File]::WriteAllText($fixture, $code)
+          & $phpExe.Source $fixture $dbFile
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R74_AUTH_CI_FIXTURE_SETUP_FAILED' }
+          $before = (Get-FileHash -LiteralPath $dbFile -Algorithm SHA256).Hash
+          $result = @(& $phpExe.Source '.\scripts\pi-r74-auth-db-readonly.php' $dbFile 'test.institution')
+          if ($LASTEXITCODE -ne 0 -or
+              $result -notcontains 'PI_R74_MATCHING_USERNAME_COUNT=1' -or
+              $result -notcontains 'PI_R74_DB_PROBE_READ_ONLY=YES' -or
+              $result -notcontains 'PI_R74_ACCOUNT_TENANT_EXPECTED=YES' -or
+              $result -notcontains 'PI_R74_ACCOUNT_ROLE_EXPECTED=YES') {
+            throw ('PI_R74_AUTH_DB_PROBE_FIXTURE_FAILED: ' + ($result -join ' | '))
+          }
+          $after = (Get-FileHash -LiteralPath $dbFile -Algorithm SHA256).Hash
+          if ($before -ne $after) { throw 'PI_R74_AUTH_DB_PROBE_MUTATED_FIXTURE' }
+          Write-Host 'PI_R74_AUTH_SQLITE_READ_ONLY=PASS'
