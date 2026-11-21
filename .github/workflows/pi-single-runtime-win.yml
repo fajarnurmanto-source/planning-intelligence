@@ -82,6 +82,15 @@ jobs:
             Write-Host 'PI_RUNTIME_HTTP_8820=PASS'
           } catch {
             Write-Host ('PI_FIXTURE_FAILURE=' + $_.Exception.Message)
+            $listener = Get-NetTCPConnection -LocalAddress 127.0.0.1 -LocalPort 8820 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($listener) {
+              Write-Host ('PI_FIXTURE_LISTENER_PID=' + $listener.OwningProcess)
+              $p = Get-CimInstance Win32_Process -Filter ('ProcessId=' + $listener.OwningProcess)
+              Write-Host ('PI_FIXTURE_EXECUTABLE=' + $p.Name)
+              Write-Host ('PI_FIXTURE_CMDLINE=' + $p.CommandLine)
+              try { $probe=Invoke-WebRequest 'http://127.0.0.1:8820/api/auth/setup-status' -UseBasicParsing -TimeoutSec 3; Write-Host ('PI_FIXTURE_API=' + $probe.StatusCode) } catch { Write-Host ('PI_FIXTURE_API_FAILED=' + $_.Exception.Message) }
+              try { $page=Invoke-WebRequest 'http://127.0.0.1:8820/index.html' -UseBasicParsing -TimeoutSec 3; Write-Host ('PI_FIXTURE_INDEX=' + $page.StatusCode + ':' + $page.Content.Length) } catch { Write-Host ('PI_FIXTURE_INDEX_FAILED=' + $_.Exception.Message) }
+            }
             Get-ChildItem (Join-Path $root 'storage\logs') -Filter 'pi-main-*.err.log' |
               ForEach-Object { Write-Host ('PI_FIXTURE_PHP_LOG=' + $_.Name); Get-Content $_.FullName -Tail 30 }
             throw
