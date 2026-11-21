@@ -281,6 +281,11 @@ jobs:
             throw 'PI_R74_AUTH_DIAG_WRONG_NEGATIVE_GUARD'
           }
           Write-Host 'PI_R74_AUTH_DIAG_NO_OWNER_MUTATION=PASS'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: sqlite3
+          coverage: none
       - name: PHP readonly SQLite user inventory with temporary CI fixture
         shell: powershell
         run: |
