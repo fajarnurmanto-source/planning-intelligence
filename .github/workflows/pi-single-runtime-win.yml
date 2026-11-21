@@ -351,6 +351,7 @@ jobs:
             if (-not $passwordProbe.Contains($needle)) { throw ('PI_R74_BCRYPT_SOURCE_GUARD_MISSING=' + $needle) }
           }
           foreach ($needle in @('Read-Host','-AsSecureString','ZeroFreeBSTR',
+              'RedirectStandardInput = $true','StandardInput.Write($plain)',
               'PI_R74_CREDENTIAL_PARITY=LOCAL_READ_ONLY')) {
             if (-not $wrapper.Contains($needle)) { throw ('PI_R74_SECURE_PROMPT_GUARD_MISSING=' + $needle) }
           }
@@ -384,12 +385,35 @@ jobs:
           & php $fixturePhp $dbPath
           if ($LASTEXITCODE -ne 0) { throw 'PI_R74_BCRYPT_FIXTURE_SETUP_FAILED' }
           $hashBefore=(Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash
-          $yes=@('ci-password-not-real' | & php 'scripts/pi-r74-verify-entered-password.php' $dbPath 'qa-only.fixture')
-          if ($LASTEXITCODE -ne 0 -or $yes -notcontains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=YES') {
+          function Invoke-FixturePassword([string]$candidate) {
+            $info=New-Object System.Diagnostics.ProcessStartInfo
+            $info.FileName=(Get-Command php.exe).Source
+            $info.Arguments=('"scripts/pi-r74-verify-entered-password.php" "{0}" "qa-only.fixture"' -f $dbPath)
+            $info.UseShellExecute=$false
+            $info.CreateNoWindow=$true
+            $info.RedirectStandardInput=$true
+            $info.RedirectStandardOutput=$true
+            $info.RedirectStandardError=$true
+            $info.StandardInputEncoding=[System.Text.UTF8Encoding]::new($false)
+            $child=New-Object System.Diagnostics.Process
+            $child.StartInfo=$info
+            try {
+              if (-not $child.Start()) {throw 'PI_R74_FIXTURE_PHP_START_FAILED'}
+              $child.StandardInput.Write($candidate)
+              $child.StandardInput.Close()
+              $output=$child.StandardOutput.ReadToEnd()
+              $null=$child.StandardError.ReadToEnd()
+              $child.WaitForExit()
+              if ($child.ExitCode -ne 0) {throw 'PI_R74_FIXTURE_PHP_EXIT_ERROR'}
+              return @($output -split '\r?\n' | Where-Object { $_ -ne '' })
+            } finally { $child.Dispose() }
+          }
+          $yes=@(Invoke-FixturePassword 'ci-password-not-real')
+          if ($yes -notcontains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=YES') {
             throw ('PI_R74_BCRYPT_PARITY_POSITIVE_FAILED: '+($yes -join '|'))
           }
-          $no=@('wrong-ci-only' | & php 'scripts/pi-r74-verify-entered-password.php' $dbPath 'qa-only.fixture')
-          if ($LASTEXITCODE -ne 0 -or $no -notcontains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=NO') {
+          $no=@(Invoke-FixturePassword 'wrong-ci-only')
+          if ($no -notcontains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=NO') {
             throw ('PI_R74_BCRYPT_PARITY_NEGATIVE_FAILED: '+($no -join '|'))
           }
           $hashAfter=(Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash
