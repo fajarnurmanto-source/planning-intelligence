@@ -110,3 +110,22 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File $Verifier -BackupRoot $B
 If `PI_R74_ORIGINAL_BACKUP_MANIFEST=VERIFIED`, run `pi-r74-windows-acceptance.ps1` **without switches**; only if that succeeds, run `-ExerciseShortcut -SecondClick`. If any backup mismatch remains, keep the original backup immutable; return the nonsecret error classification. Do not rewrite the manifest, refresh backups, reinstall or perform shortcut/app/database changes to force a green result.
 
 `R74_INSTALLED=OWNER_REPORTED`, `BACKUP_LOCAL_REVERIFICATION=PENDING`, `DESKTOP_ICON_E2E=NOT_RUN`, `PRODUCTION_ADMISSION=DENIED`.
+
+## 22 Nov 2026 — recurring authentication regression (post-install)
+
+Owner screenshot shows `http://127.0.0.1:8820/login.html` with visible static `INSTITUTIONAL ACCESS · R69E QA` and UI `Nama pengguna atau kata sandi tidak sesuai.`. **The R69E label is not proof of old code:** `laravel/public/login.html` on the latest draft branch still hardcodes that label. `laravel/public/login.js` sends `POST /api/auth/login`, and `app/Http/Controllers/Auth/SessionController.php` looks up normalized `users.username` and verifies its stored hash before issuing `INVALID_CREDENTIALS` (401). The screenshot does not, by itself, establish which database that running PHP process used, the accuracy of browser-autofilled credentials, or whether the account was changed.
+
+Owner subsequent detailed Windows file `Pasted text(20261121-233423).txt` proves:
+- Backup manifest validation recovered: `PI_R74_ORIGINAL_BACKUP_MANIFEST=VERIFIED`, three backed-up launchers valid;
+- Installed scripts match exact GitHub source and shortcut/VBS unchanged;
+- Read-only acceptance saw `PI_R74_BEFORE_LAUNCH=NO_SERVER`;
+- After explicit original shortcut exercise, `PI_R74_LAUNCH_DID_NOT_REACH_VERIFIED_ORIGIN`, so **the cold-start and same-PID test have NOT passed**.
+These are independent of the screenshot authentication refusal; one should not presume the server is consistently running on 8820.
+
+**Previous R87 account recovery on 21 Nov 2026 must be preserved:** user logs in `Pasted text(20261121-044825).txt` show account username `fajar.nurmanto` unique, tenant `ID-DIY-YOG`, role `institution_admin`, original app `D:\Research\PlanningIntelligence\planning-intelligence-v0.0-starter\planning-intelligence-v0.0\laravel\database\database.sqlite`, `ACCOUNT_VERIFIED=YES`, `BACKUP=VERIFIED`, `PASSWORD_CHECK=MATCH`, and `ACCOUNT_RECOVERY=COMPLETE`. A different older bridge DB `PI_DEVELOPMENT_ARTIFACTS\PI_LARAVEL_REUSE_FOUNDATION_QA_20261105\laravel_pi_bridge\database\database.sqlite` had the same username with `HASH_RELATION=DIFFERENT_FROM_ACTIVE`. This is evidence of historical database fork, **not proof that the current 8820 process is pointing to that historical DB**.
+
+New read-only diagnostics staged:
+- `scripts/pi-r74-auth-runtime-diagnostic.ps1`: checks the real PHP owner (or absence) on 8820, whether process command line roots to protected original Laravel, redacted `.env` DB driver, DB_URL override, APP_URL, config cache presence, expected database path and no-login SQLite account inventory. It prints only safe counts, role/tenant match, hash **algorithm name** (never hash/password), and safe PI_* launcher error codes. No HTTP login, reset, session write, migrations, or server start/stop.
+- `scripts/pi-r74-auth-db-readonly.php`: uses `SQLite3(SQLITE3_OPEN_READONLY)`, `PRAGMA quick_check`, a bound username selector; no writes.
+
+**Next gate:** owner runs read-only diagnostics on existing D: machine, shares statuses *without passwords*, then root-cause analysis differentiates inactive server/startup bug, wrong PHP source/process, cached Laravel DB config drift, historical DB branch, and genuine password mismatch. Do not reset or overwrite current recovered account just because the UI shows `INVALID_CREDENTIALS`. `R74_BACKUP_INTEGRITY=PASS`, `R74_COLD_START_ACCEPTANCE=FAIL`, `R74_LOGIN_E2E=FAIL`, `ACCOUNT_RECOVERY_PRIOR=PASS`, `ROOT_CAUSE=UNDER_INVESTIGATION`, `PRODUCTION_ADMISSION=DENIED`.
