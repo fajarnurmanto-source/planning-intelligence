@@ -1,12 +1,15 @@
 #requires -Version 5.1
 <#
-PI Single Runtime Windows launcher (local QA/development).
+PI Single Runtime Windows process helper (local QA/development).
+Existing desktop launcher must be audited and reused. This file MUST NOT
+create or replace a desktop / Start Menu shortcut, nor assume 8820 is the
+actual desktop shortcut target before its provenance is verified.
 One source, one http://127.0.0.1:8820. Never touches main DB, .env, Git,
 QA servers 8822/8823, or production admission.
 #>
 [CmdletBinding()]
 param(
-    [ValidateSet('Open','Start','Status','Stop','InstallShortcut')]
+    [ValidateSet('Open','Start','Status','Stop')]
     [string]$Action = 'Open',
     [string]$AppRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'laravel')
 )
@@ -153,35 +156,6 @@ function Open-Window {
     }
 }
 
-function Install-Shortcut {
-    Assert-ReleaseReady
-    $expected = Join-Path (Split-Path $AppRoot -Parent) 'scripts\pi-windows-app.ps1'
-    if (-not [IO.Path]::GetFullPath($expected).Equals(
-        [IO.Path]::GetFullPath($PSCommandPath),[StringComparison]::OrdinalIgnoreCase)) {
-        throw 'PI_SHORTCUT_NOT_IN_CANONICAL_RELEASE'
-    }
-    $dirs = @([Environment]::GetFolderPath('Desktop'),
-        (Join-Path ([Environment]::GetFolderPath('StartMenu')) 'Programs'))
-    foreach ($dir in $dirs) {
-        if (-not (Test-Path -LiteralPath $dir -PathType Container)) { throw 'PI_SHORTCUT_DIR_MISSING' }
-        if (Test-Path -LiteralPath (Join-Path $dir 'Planning Intelligence.lnk')) {
-            throw 'PI_SHORTCUT_ALREADY_EXISTS_REFUSE_OVERWRITE'
-        }
-    }
-    $shell = New-Object -ComObject WScript.Shell
-    $powershell = Join-Path $env:WINDIR 'System32\WindowsPowerShell\v1.0\powershell.exe'
-    foreach ($dir in $dirs) {
-        $shortcut = $shell.CreateShortcut((Join-Path $dir 'Planning Intelligence.lnk'))
-        $shortcut.TargetPath = $powershell
-        $shortcut.Arguments = ('-NoProfile -WindowStyle Hidden -ExecutionPolicy RemoteSigned -File "' +
-            $PSCommandPath + '" -Action Open')
-        $shortcut.WorkingDirectory = $AppRoot
-        $shortcut.Description = 'Planning Intelligence, satu aplikasi di 127.0.0.1:8820'
-        $shortcut.Save()
-    }
-    Write-Host 'PI_SHORTCUTS=DESKTOP_AND_START_MENU_INSTALLED'
-}
-
 $mutex = [System.Threading.Mutex]::new($false,'Local\PI_Single_Runtime_8820')
 $lock = $false
 try {
@@ -201,8 +175,6 @@ try {
             Stop-Process -Id $owner.ProcessId -ErrorAction Stop
             Write-Host 'PI_RUNTIME=STOP_REQUESTED'
         }
-    } elseif ($Action -eq 'InstallShortcut') {
-        Install-Shortcut
     } else {
         Start-Canonical
         if ($Action -eq 'Open') { Open-Window }
