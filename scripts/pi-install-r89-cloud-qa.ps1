@@ -183,7 +183,7 @@ $envContent = @(
     'PI_TENANT_ID=ID-DIY-YOG',
     ('PI_REGULATORY_LEDGER_PATH=' + $Ledger.Replace('\','/')),
     ('PI_REGULATORY_SCOPE_PATH=' + $Scope.Replace('\','/')),
-    'PI_R89_CLOUD_ENABLED=false'
+    'PI_R89_CLOUD_ENABLED=true'
 ) -join [Environment]::NewLine
 
 $NewEnv = Join-Path $TargetApp '.env'
@@ -193,7 +193,7 @@ foreach ($relative in @('bootstrap\cache','storage\framework\cache','storage\fra
     New-Item -ItemType Directory -Path (Join-Path $TargetApp $relative) -Force | Out-Null
 }
 Write-Host 'R89_NEW_ENV=NO_CLOUD_KEY_COPIED'
-Write-Host 'R89_CLOUD_INFERENCE=DISABLED_BY_DEFAULT'
+Write-Host 'R89_CLOUD_CAPABILITY=ENABLED_CONSENT_AND_KEY_REQUIRED'
 
 # Composer install only. NEVER run composer setup or php artisan migrate.
 Write-Host 'R89_INSTALL_STAGE=COMPOSER_DEPENDENCIES' -ForegroundColor Cyan
