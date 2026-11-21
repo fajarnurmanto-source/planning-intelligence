@@ -93,6 +93,7 @@ final class HybridSemanticReasoner
             || ($proposal['code'] ?? null) !== $filters['code']
             || ! is_array($edgeIds) || ! array_is_list($edgeIds)
             || count($edgeIds) < 1 || count($edgeIds) > 8
+            || count(array_filter($edgeIds, 'is_string')) !== count($edgeIds)
             || count(array_unique($edgeIds)) !== count($edgeIds)) {
             $result['status'] = 'ABSTAIN_INVALID_SEMANTIC_PROPOSAL';
 
