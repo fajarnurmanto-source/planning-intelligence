@@ -172,7 +172,7 @@ jobs:
             }
           }
           foreach ($bad in @('Stop-Process','artisan migrate','db:wipe',
-              'Register-ScheduledTask','New-Service','CreateShortcut(')) {
+              'Register-ScheduledTask','New-Service','.Save()','Save()')) {
             if ($code.Contains($bad)) { throw ('PI_R74_ACCEPTANCE_FORBIDDEN: ' + $bad) }
           }
           $errText = ''
@@ -183,5 +183,8 @@ jobs:
           }
           if ($errText -notmatch 'PI_R74_EXISTING_LAUNCHER_FOLDER_MISSING') {
             throw 'PI_R74_ACCEPTANCE_UNEXPECTED_MUTATION_OR_STATE'
+          }
+          if (-not $code.Contains('CreateShortcut($ShortcutPath)')) {
+            throw 'PI_R74_ORIGINAL_SHORTCUT_INSPECTION_MISSING'
           }
           Write-Host 'PI_R74_ACCEPTANCE_READ_ONLY_GUARDS=PASS'
