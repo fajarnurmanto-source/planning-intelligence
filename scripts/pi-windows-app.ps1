@@ -121,7 +121,9 @@ function Start-Canonical {
         Start-Sleep -Milliseconds 500
         if ($started.HasExited) { break }
         $owner = Get-CanonicalOwner
-        if ($owner -and $owner.ProcessId -eq $started.Id) {
+        # Start-Process can return a wrapper PID on Windows. The authoritative
+        # check is the owning php.exe command line and pinned router path.
+        if ($owner) {
             try {
                 Assert-Http
                 $ready = $true
