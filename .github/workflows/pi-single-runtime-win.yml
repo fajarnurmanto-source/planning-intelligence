@@ -5,6 +5,7 @@ on:
       - 'scripts/pi-audit-existing-launcher.ps1'
       - 'scripts/pi-r74-ensure-runtime.ps1'
       - 'scripts/pi-r74-inplace-upgrade.ps1'
+      - 'scripts/pi-r74-windows-acceptance.ps1'
       - 'scripts/windows/r74/**'
       - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
@@ -48,7 +49,17 @@ jobs:
             throw 'PI_R74_INPLACE_UPGRADE_PARSE_FAILURE'
           }
           Write-Host 'PI_EXISTING_LAUNCHER_AUDIT_PARSE=PASS'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-windows-acceptance.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_ACCEPTANCE_PARSE_FAILURE'
+          }
           Write-Host 'PI_R74_INPLACE_UPGRADE_PARSE=PASS'
+          Write-Host 'PI_R74_ACCEPTANCE_PARSE=PASS'
       - name: Run read-only inventory on clean runner
         shell: powershell
         run: |
@@ -144,3 +155,33 @@ jobs:
             throw 'PI_R74_MISSING_REAL_APP_DID_NOT_FAIL_CLOSED'
           }
           Write-Host 'PI_R74_NO_WINDOWS_OWNER_MUTATION=PASS'
+
+      - name: R74 acceptance defaults to read-only and requires observed owner machine
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-r74-windows-acceptance.ps1' -Raw
+          foreach ($guard in @('PI_R74_ORIGINAL_BACKUP_MANIFEST=VERIFIED',
+              'PI_R74_TWO_CMDS_AND_SUPERVISOR=EXACT_SOURCE_MATCH',
+              'PI_R74_ACCEPTANCE=READ_ONLY_INSTALLED_INTEGRITY_PASS',
+              'if (-not $ExerciseShortcut)',
+              'PI_R74_DESKTOP_SHORTCUT_AND_VBS=UNCHANGED',
+              'PI_R74_AFTER_SECOND_CLICK_SAME_PID=',
+              'PI_R74_LOGIN_AND_RESTART_E2E=REQUIRES_USER_OBSERVATION')) {
+            if (-not $code.Contains($guard)) {
+              throw ('PI_R74_ACCEPTANCE_GUARD_MISSING: '+$guard)
+            }
+          }
+          foreach ($bad in @('Stop-Process','artisan migrate','db:wipe',
+              'Register-ScheduledTask','New-Service','CreateShortcut(')) {
+            if ($code.Contains($bad)) { throw ('PI_R74_ACCEPTANCE_FORBIDDEN: ' + $bad) }
+          }
+          $errText = ''
+          try {
+            & '.\scripts\pi-r74-windows-acceptance.ps1' -ErrorAction Stop | Out-Null
+          } catch {
+            $errText = [string]$_.Exception.Message
+          }
+          if ($errText -notmatch 'PI_R74_EXISTING_LAUNCHER_FOLDER_MISSING') {
+            throw 'PI_R74_ACCEPTANCE_UNEXPECTED_MUTATION_OR_STATE'
+          }
+          Write-Host 'PI_R74_ACCEPTANCE_READ_ONLY_GUARDS=PASS'
