@@ -1,0 +1,68 @@
+name: PI R89 isolated Windows installer guard
+on:
+  pull_request:
+    paths:
+      - 'scripts/pi-install-r89-cloud-qa.ps1'
+      - 'scripts/pi-r89-backup-sqlite.php'
+      - '.github/workflows/pi-r89-installer-win-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows-powershell-51-parser:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check PowerShell 5.1 installer syntax without executing it
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tokens = $null
+          $parseErrors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-install-r89-cloud-qa.ps1',
+            [ref]$tokens,
+            [ref]$parseErrors
+          ) | Out-Null
+          if ($null -ne $parseErrors -and $parseErrors.Count -gt 0) {
+            $parseErrors | Format-List
+            throw 'R89_PS51_INSTALLER_PARSE_FAILED'
+          }
+          Write-Host 'R89_PS51_INSTALLER_PARSE=PASS'
+      - name: Guard against dangerous installation commands
+        shell: powershell
+        run: |
+          $content = Get-Content 'scripts/pi-install-r89-cloud-qa.ps1' -Raw
+          $lines = $content -split "\r?\n"
+          foreach ($line in $lines) {
+            if ($line.TrimStart().StartsWith('#')) { continue }
+            if ($line -match '^\s*(&\s*\$Php\s+artisan\s+migrate|&\s*git\b.*\b(?:reset|clean|checkout|merge)\b|&\s*composer\s+(?:run\s+)?setup\b)') {
+              throw 'R89_INSTALLER_CONTAINS_DESTRUCTIVE_ACTION'
+            }
+          }
+          Write-Host 'R89_INSTALLER_DESTRUCTIVE_OPS=NONE'
+  sqlite-online-backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: sqlite3
+          coverage: none
+      - name: Assert online backup is consistent, read-only and non-overwriting
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/pi-r89-qa-ci
+          php -r '$db=new SQLite3("/tmp/pi-r89-qa-ci/source.sqlite"); $db->exec("CREATE TABLE sample (id INTEGER PRIMARY KEY, label TEXT)"); $db->exec("INSERT INTO sample (label) VALUES (\"read-only\")"); $db->close();'
+          before=$(sha256sum /tmp/pi-r89-qa-ci/source.sqlite | cut -d' ' -f1)
+          php scripts/pi-r89-backup-sqlite.php /tmp/pi-r89-qa-ci/source.sqlite /tmp/pi-r89-qa-ci/snapshot.sqlite
+          after=$(sha256sum /tmp/pi-r89-qa-ci/source.sqlite | cut -d' ' -f1)
+          test "$before" = "$after"
+          php -r '$db=new SQLite3("/tmp/pi-r89-qa-ci/snapshot.sqlite", SQLITE3_OPEN_READONLY); if ($db->querySingle("PRAGMA integrity_check") !== "ok" || $db->querySingle("SELECT label FROM sample WHERE id=1") !== "read-only") exit(1);'
+          if php scripts/pi-r89-backup-sqlite.php /tmp/pi-r89-qa-ci/source.sqlite /tmp/pi-r89-qa-ci/snapshot.sqlite; then
+            echo "R89_OVERWRITE_GUARD=FAILED"
+            exit 1
+          fi
+          echo "R89_SQLITE_READONLY_BACKUP=PASS"
