@@ -34,7 +34,7 @@ final class AffairFirstNomenclature
     /** @return array<string, mixed> */
     public function classify(string $code, int $year): array
     {
-        if (! preg_match('/\A\d{1,2}(?:\.\d{1,4}){1,4}\z/', $code)
+        if (! preg_match('/\A\d{1,2}(?:\.\d{1,4}){1,5}\z/', $code)
             || $year < 2000 || $year > 2100) {
             throw new RuntimeException('INVALID_CODE_OR_YEAR');
         }
@@ -94,7 +94,7 @@ final class AffairFirstNomenclature
         foreach ($batch as $candidate) {
             if (! is_array($candidate)
                 || ! is_string($candidate['code'] ?? null)
-                || ! preg_match('/\A\d{1,2}(?:\.\d{1,4}){1,4}\z/', $candidate['code'])
+                || ! preg_match('/\A\d{1,2}(?:\.\d{1,4}){1,5}\z/', $candidate['code'])
                 || ! is_string($candidate['label'] ?? null) || trim($candidate['label']) === ''
                 || ! is_string($candidate['version'] ?? null) || trim($candidate['version']) === ''
                 || ! is_int($candidate['year'] ?? null) || $candidate['year'] < 2000 || $candidate['year'] > 2100

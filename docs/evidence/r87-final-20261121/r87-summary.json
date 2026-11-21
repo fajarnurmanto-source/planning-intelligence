@@ -1,0 +1,347 @@
+{
+  "generated": "2026-11-21T08:37:14.777Z",
+  "headless": true,
+  "iterations": 10,
+  "scope": "Real Chromium/Edge authenticated page load. Cold=isolated browser HTTP cache context; warm=reload. Not OS cold. Auth API setup/login excluded from page request totals.",
+  "variants": {
+    "BEFORE": "http://127.0.0.1:8819",
+    "AFTER": "http://127.0.0.1:8821"
+  },
+  "direct_refs": {
+    "BEFORE": 21,
+    "AFTER": 6
+  },
+  "scenarios": {
+    "BEFORE_cold": {
+      "count": 10,
+      "metrics": {
+        "ready_ms": {
+          "samples": 10,
+          "median": 320.23,
+          "p95": 414.09,
+          "min": 294.38,
+          "max": 464.15
+        },
+        "dcl_ms": {
+          "samples": 10,
+          "median": 167.65,
+          "p95": 183.32,
+          "min": 61,
+          "max": 184.9
+        },
+        "load_ms": {
+          "samples": 10,
+          "median": 189.8,
+          "p95": 204.99,
+          "min": 173.3,
+          "max": 206.3
+        },
+        "fcp_ms": {
+          "samples": 10,
+          "median": 212,
+          "p95": 232.4,
+          "min": 180,
+          "max": 236
+        },
+        "lcp_ms": {
+          "samples": 10,
+          "median": 212,
+          "p95": 232.4,
+          "min": 180,
+          "max": 236
+        },
+        "network_requests": {
+          "samples": 10,
+          "median": 34,
+          "p95": 34,
+          "min": 34,
+          "max": 34
+        },
+        "encoded_transfer_bytes": {
+          "samples": 10,
+          "median": 278933,
+          "p95": 278933,
+          "min": 278933,
+          "max": 278933
+        },
+        "js_heap_used_bytes": {
+          "samples": 10,
+          "median": 1626472,
+          "p95": 1627710.8,
+          "min": 1625996,
+          "max": 1628060
+        },
+        "task_duration_ms": {
+          "samples": 10,
+          "median": 326.3,
+          "p95": 336.13,
+          "min": 298.5,
+          "max": 339.25
+        }
+      },
+      "http_statuses": [
+        200
+      ],
+      "ui_ready_pass": 10,
+      "resource_error_samples": 0
+    },
+    "BEFORE_warm": {
+      "count": 10,
+      "metrics": {
+        "ready_ms": {
+          "samples": 10,
+          "median": 245.04,
+          "p95": 363.69,
+          "min": 224.83,
+          "max": 395.01
+        },
+        "dcl_ms": {
+          "samples": 10,
+          "median": 80.15,
+          "p95": 108.79,
+          "min": 69.5,
+          "max": 112.3
+        },
+        "load_ms": {
+          "samples": 10,
+          "median": 92.3,
+          "p95": 112.85,
+          "min": 81.4,
+          "max": 117.3
+        },
+        "fcp_ms": {
+          "samples": 10,
+          "median": 108,
+          "p95": 120,
+          "min": 84,
+          "max": 120
+        },
+        "lcp_ms": {
+          "samples": 10,
+          "median": 108,
+          "p95": 120,
+          "min": 84,
+          "max": 120
+        },
+        "network_requests": {
+          "samples": 10,
+          "median": 34,
+          "p95": 34,
+          "min": 34,
+          "max": 34
+        },
+        "encoded_transfer_bytes": {
+          "samples": 10,
+          "median": 278933,
+          "p95": 278933,
+          "min": 278931,
+          "max": 278933
+        },
+        "js_heap_used_bytes": {
+          "samples": 10,
+          "median": 3128216,
+          "p95": 3128674.2,
+          "min": 3127556,
+          "max": 3128784
+        },
+        "task_duration_ms": {
+          "samples": 10,
+          "median": 130.77,
+          "p95": 159.65,
+          "min": 112.95,
+          "max": 169.17
+        }
+      },
+      "http_statuses": [
+        200
+      ],
+      "ui_ready_pass": 10,
+      "resource_error_samples": 0
+    },
+    "AFTER_cold": {
+      "count": 10,
+      "metrics": {
+        "ready_ms": {
+          "samples": 10,
+          "median": 285.85,
+          "p95": 313.59,
+          "min": 281.06,
+          "max": 319.63
+        },
+        "dcl_ms": {
+          "samples": 10,
+          "median": 131.65,
+          "p95": 139.81,
+          "min": 47.5,
+          "max": 141.2
+        },
+        "load_ms": {
+          "samples": 10,
+          "median": 157.75,
+          "p95": 168.4,
+          "min": 140.6,
+          "max": 171.6
+        },
+        "fcp_ms": {
+          "samples": 10,
+          "median": 154,
+          "p95": 189.2,
+          "min": 144,
+          "max": 200
+        },
+        "lcp_ms": {
+          "samples": 10,
+          "median": 154,
+          "p95": 189.2,
+          "min": 144,
+          "max": 200
+        },
+        "network_requests": {
+          "samples": 10,
+          "median": 18,
+          "p95": 18,
+          "min": 18,
+          "max": 18
+        },
+        "encoded_transfer_bytes": {
+          "samples": 10,
+          "median": 267456,
+          "p95": 267456,
+          "min": 267456,
+          "max": 267456
+        },
+        "js_heap_used_bytes": {
+          "samples": 10,
+          "median": 1603160,
+          "p95": 1604811.2,
+          "min": 1603160,
+          "max": 1605020
+        },
+        "task_duration_ms": {
+          "samples": 10,
+          "median": 304.59,
+          "p95": 319.42,
+          "min": 289.99,
+          "max": 325.45
+        }
+      },
+      "http_statuses": [
+        200
+      ],
+      "ui_ready_pass": 10,
+      "resource_error_samples": 0
+    },
+    "AFTER_warm": {
+      "count": 10,
+      "metrics": {
+        "ready_ms": {
+          "samples": 10,
+          "median": 194.88,
+          "p95": 218.43,
+          "min": 174.9,
+          "max": 229.09
+        },
+        "dcl_ms": {
+          "samples": 10,
+          "median": 52.55,
+          "p95": 58.92,
+          "min": 48.7,
+          "max": 59.1
+        },
+        "load_ms": {
+          "samples": 10,
+          "median": 60.8,
+          "p95": 70.8,
+          "min": 56.7,
+          "max": 72.2
+        },
+        "fcp_ms": {
+          "samples": 10,
+          "median": 70,
+          "p95": 72,
+          "min": 60,
+          "max": 72
+        },
+        "lcp_ms": {
+          "samples": 10,
+          "median": 70,
+          "p95": 72,
+          "min": 60,
+          "max": 72
+        },
+        "network_requests": {
+          "samples": 10,
+          "median": 18,
+          "p95": 18,
+          "min": 18,
+          "max": 18
+        },
+        "encoded_transfer_bytes": {
+          "samples": 10,
+          "median": 267456,
+          "p95": 267456,
+          "min": 267456,
+          "max": 267456
+        },
+        "js_heap_used_bytes": {
+          "samples": 10,
+          "median": 3078992,
+          "p95": 3079237,
+          "min": 3078436,
+          "max": 3079408
+        },
+        "task_duration_ms": {
+          "samples": 10,
+          "median": 118.68,
+          "p95": 126.22,
+          "min": 109.85,
+          "max": 128.06
+        }
+      },
+      "http_statuses": [
+        200
+      ],
+      "ui_ready_pass": 10,
+      "resource_error_samples": 0
+    }
+  },
+  "failures": 0,
+  "authenticated_apis": {
+    "R70F": {
+      "BEFORE": {
+        "http_statuses": [
+          200
+        ],
+        "timing_ms": {
+          "samples": 10,
+          "median": 75.68,
+          "p95": 111.22,
+          "min": 25.89,
+          "max": 117.91
+        },
+        "pass": true
+      },
+      "AFTER": {
+        "http_statuses": [
+          200
+        ],
+        "timing_ms": {
+          "samples": 10,
+          "median": 77.55,
+          "p95": 113.49,
+          "min": 49.57,
+          "max": 115.32
+        },
+        "pass": true
+      }
+    }
+  },
+  "comparability": {
+    "expected_before_refs": 21,
+    "observed_before_refs": 21,
+    "expected_after_refs": 6,
+    "observed_after_refs": 6,
+    "comparable_asset_layout": true,
+    "note": "URLs and source snapshots must be independently verified by the operator. R70G readiness and corresponding data/tenant must match. No legal validation or production admission."
+  }
+}

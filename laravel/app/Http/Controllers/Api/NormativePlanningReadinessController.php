@@ -17,6 +17,7 @@ final class NormativePlanningReadinessController extends Controller
 {
     public function __invoke(): JsonResponse
     {
+        $dependency = 'planning_lineage';
         try {
             $lineageResponse = app(PlanningLineageController::class)->__invoke();
             if ($lineageResponse->getStatusCode() !== 200) {
@@ -24,6 +25,7 @@ final class NormativePlanningReadinessController extends Controller
             }
 
             $lineage = json_decode($lineageResponse->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $dependency = 'normative_ancestry_cache';
             $graph = Cache::store((string) config('pi.regulatory_auto_ancestry.cache_store', 'file'))
                 ->get(OfficialNormativeAncestry::CACHE_KEY);
 
@@ -38,6 +40,7 @@ final class NormativePlanningReadinessController extends Controller
                 throw new RuntimeException('Normative evidence cache is unavailable or incompatible.');
             }
 
+            $dependency = 'evidence_contract';
             $unresolved = count(array_filter($graph['nodes'], static fn (mixed $node): bool =>
                 is_array($node)
                 && in_array($node['official_resolution'] ?? null, [
@@ -159,6 +162,10 @@ final class NormativePlanningReadinessController extends Controller
             return response()->json([
                 'status' => 'ABSTAIN',
                 'code' => 'NORMATIVE_PLANNING_EVIDENCE_UNAVAILABLE',
+                'dependency' => $dependency,
+                'recovery' => $dependency === 'normative_ancestry_cache'
+                    ? 'RUN_USER_TRIGGERED_ANCESTRY_THEN_RELOAD_REVIEW'
+                    : 'CHECK_SOURCE_OR_CONTRACT_BEFORE_RETRY',
             ], 503)->header('Cache-Control', 'private, no-store');
         }
     }

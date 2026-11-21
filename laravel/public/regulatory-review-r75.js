@@ -149,6 +149,14 @@
         credentials: 'same-origin', cache: 'no-store', headers: {Accept: 'application/json'}
       })
       if (response.status === 401) { location.replace('./login.html'); return }
+      if (response.status === 503) {
+        const failure = await response.json()
+        throw Error(failure.dependency === 'normative_ancestry_cache'
+          ? 'Cache bukti ancestry belum tersedia atau tidak kompatibel. Tekan “Telusuri dasar hukum resmi”, lalu “Muat ulang bukti”. Kegagalan sumber tetap menghasilkan ABSTAIN; ini bukan penolakan hubungan hukum.'
+          : failure.dependency === 'planning_lineage'
+            ? 'Sumber lineage perencanaan belum tersedia. Periksa panel RPJMD/RKPD dan sumbernya sebelum mencoba kembali.'
+            : 'Kontrak bukti belum dapat diverifikasi. Hasil ditahan; periksa sumber dan versi sebelum mencoba kembali.')
+      }
       if (!response.ok) throw Error(response.status === 403
         ? 'Akses institusi ditolak.'
         : 'Cache ancestry atau lineage belum siap (HTTP ' + response.status + ').')

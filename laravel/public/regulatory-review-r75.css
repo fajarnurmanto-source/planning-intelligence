@@ -15,3 +15,5 @@
 .r75-hash{overflow-wrap:anywhere}
 .r75-tag{font-size:.73rem;letter-spacing:.035em;font-weight:800;color:#765018}
 .r75-caveat{grid-column:1/-1;padding:12px;border-left:4px solid #a65936;background:#fff7f1}
+.r75-item h3,.r75-item p,.r75-caveat { color:#263e43; }
+.r75-item a { color:#176d58; }
