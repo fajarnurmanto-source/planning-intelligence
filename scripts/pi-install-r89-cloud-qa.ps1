@@ -228,6 +228,22 @@ if ($StartServer) {
     if ($Process.HasExited) {
         throw ("R89_SERVER_EXITED_LOG_{0}" -f $Err)
     }
+    $HttpHealthy = $false
+    foreach ($attempt in 1..6) {
+        try {
+            $probe = Invoke-WebRequest -Uri ('http://127.0.0.1:' + $Port + '/api/auth/setup-status') -UseBasicParsing -TimeoutSec 3
+            if ($probe.StatusCode -eq 200) {
+                $HttpHealthy = $true
+                break
+            }
+        } catch {
+            Start-Sleep -Milliseconds 500
+        }
+    }
+    if (-not $HttpHealthy) {
+        throw ("R89_LOCAL_HTTP_SETUP_NOT_READY_LOG_{0}" -f $Err)
+    }
+    Write-Host 'R89_LOCAL_HTTP_SETUP=200'
     Write-Host ('R89_LOCAL_SERVER_PID=' + $Process.Id)
     Write-Host ('R89_LOCAL_URL=http://127.0.0.1:' + $Port + '/development-case-r85.html')
 }
