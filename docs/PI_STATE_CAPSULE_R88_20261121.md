@@ -1,6 +1,6 @@
 # R88 acceptance and handoff — 21 November 2026
 
-Starting HEAD bc8db22; accepted baseline ebbada1341389dff462b737a5738e66e7781266e. Final candidate HEAD is recorded by the PR and commit containing this report. No production sync performed.
+Starting HEAD bc8db22; accepted baseline ebbada1341389dff462b737a5738e66e7781266e. Implementation HEAD a822aeccd09db1d8e36e0595f271b02323cb6f9f passed 17/17 GitHub checks, including the R88 crosswalk job. Draft PR #74. Subsequent documentation receipt commits do not change implementation. Final candidate HEAD is recorded by the PR. No production sync performed.
 
 Implemented: authenticated tenant-scoped R88 crosswalk endpoint; composition of R85 graph, R86 lifecycle and R87 classifier; versioned operational definitions with E05/E12 provenance; code/year/as-of filtering; explicit missing 2027 equivalence and competence/indicator/DPA/audit gaps; user-triggered panel in existing PI Superior workspace; full-fidelity JSON export; R84 review handoff. Pinned CSV is forced LF to avoid Windows checkout hash drift, without changing catalogue data or expected hash.
 
@@ -26,7 +26,7 @@ R88_END_TO_END_ACCEPTANCE=BLOCKED
 BACKEND_REGRESSION=PASS
 FRONTEND_REGRESSION=PASS
 TENANT_ISOLATION=PASS
-CI=NOT_RUN
+CI=PASS
 MERGE_READINESS=NOT_READY
 PRODUCTION_DATABASE=UNTOUCHED
 BRIDGE_MARKER=UNCHANGED
