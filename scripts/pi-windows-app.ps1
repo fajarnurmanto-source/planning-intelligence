@@ -91,9 +91,9 @@ function Get-CanonicalOwner {
 
 function Assert-Http {
     $setup = Invoke-WebRequest -Uri ($Url + '/api/auth/setup-status') -UseBasicParsing -TimeoutSec 4 -ErrorAction Stop
-    $home = Invoke-WebRequest -Uri ($Url + '/index.html') -UseBasicParsing -TimeoutSec 4 -ErrorAction Stop
-    if ($setup.StatusCode -ne 200 -or $home.StatusCode -ne 200 -or
-        $home.Content -notmatch 'Planning') { throw 'PI_RUNTIME_HEALTH_FAILED' }
+    $landingResponse = Invoke-WebRequest -Uri ($Url + '/index.html') -UseBasicParsing -TimeoutSec 4 -ErrorAction Stop
+    if ($setup.StatusCode -ne 200 -or $landingResponse.StatusCode -ne 200 -or
+        $landingResponse.Content -notmatch 'Planning') { throw 'PI_RUNTIME_HEALTH_FAILED' }
     Write-Host 'PI_HTTP_SETUP=200'
     Write-Host 'PI_HTTP_LANDING=200'
 }
