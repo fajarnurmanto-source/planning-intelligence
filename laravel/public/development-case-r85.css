@@ -1,0 +1,37 @@
+.r85-hero { margin-bottom: 18px; }
+.r85-filters { display:grid; grid-template-columns:repeat(4,minmax(130px,1fr)) auto; gap:12px; align-items:end; padding:18px; margin-bottom:20px; border:1px solid #dce5e1; border-radius:14px; background:#fff; box-shadow:0 8px 24px rgba(27,52,45,.06); }
+.r85-filters label { display:grid; gap:6px; color:#52635e; font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+.r85-filters select { min-height:42px; border:1px solid #cbd8d3; border-radius:9px; padding:0 10px; background:#fff; color:#173a31; font:inherit; text-transform:none; letter-spacing:normal; }
+.r85-question-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.r85-question { border:1px solid #dce5e1; border-radius:12px; padding:17px; background:#fbfdfc; }
+.r85-question:first-child { grid-column:1 / -1; }
+.r85-question h3 { margin:8px 0; color:#153e33; font-size:1rem; }
+.r85-question p { margin:0; color:#51635d; line-height:1.6; }
+.r85-status { display:inline-flex; padding:5px 8px; border-radius:999px; background:#fff1c9; color:#765510; font-size:.65rem; font-weight:800; letter-spacing:.04em; }
+.r85-edge-ref { display:block; margin-top:12px; color:#71807b; font:600 .7rem ui-monospace,SFMono-Regular,Consolas,monospace; }
+.r85-graph-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.r85-graph { border:1px solid #d7e2de; border-radius:13px; overflow:hidden; background:#fff; }
+.r85-graph h3 { margin:0; padding:15px 17px; background:#143d33; color:#fff; font-size:.95rem; }
+.r85-flow { display:grid; gap:0; padding:8px 16px 16px; }
+.r85-flow-row { display:grid; grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr); align-items:center; gap:8px; padding:11px 0; border-bottom:1px solid #edf2f0; }
+.r85-flow-row:last-child { border-bottom:0; }
+.r85-node { padding:9px 10px; border-radius:9px; background:#f2f7f5; color:#27483f; font-size:.78rem; line-height:1.35; }
+.r85-node small { display:block; margin-bottom:3px; color:#75857f; font-size:.62rem; text-transform:uppercase; }
+.r85-arrow { color:#b07d18; text-align:center; font-weight:900; }
+.r85-relation { grid-column:1 / -1; color:#6c7c77; font:600 .65rem ui-monospace,SFMono-Regular,Consolas,monospace; text-align:center; }
+.r85-evidence-list { display:grid; gap:10px; min-width:0; }
+.r85-evidence-item { display:grid; grid-template-columns:55px minmax(170px,.8fr) minmax(260px,1.6fr) auto; gap:14px; align-items:center; min-width:0; max-width:100%; border:1px solid #e0e8e5; border-radius:10px; padding:13px; }
+.r85-evidence-item > * { min-width:0; overflow-wrap:anywhere; }
+.r85-evidence-item code { color:#174c3d; font-weight:800; }
+.r85-evidence-item p { margin:2px 0; color:#5d6d68; font-size:.78rem; }
+.r85-evidence-item a { color:#176d58; font-weight:700; text-decoration:none; }
+.r85-hash { overflow-wrap:anywhere; font:600 .65rem ui-monospace,SFMono-Regular,Consolas,monospace; color:#60726c; }
+.r85-verification { display:grid; gap:5px; justify-items:end; }
+.r85-verification span { padding:4px 7px; border-radius:999px; background:#eaf4f0; color:#23644f; font-size:.62rem; font-weight:800; }
+.r85-verification .high { background:#fff0d5; color:#7c5611; }
+.r85-guards { display:flex; flex-wrap:wrap; gap:9px; }
+.r85-guards span { padding:8px 11px; border:1px solid #e4c98e; border-radius:999px; background:#fff8e8; color:#6a501b; font-size:.75rem; font-weight:800; }
+.r85-error { padding:18px; border:1px solid #e2a5a5; border-radius:10px; background:#fff1f1; color:#852f2f; }
+@media (max-width:1050px) { .r85-filters { grid-template-columns:repeat(2,1fr); } .r85-graph-grid,.r85-question-grid { grid-template-columns:1fr; } .r85-question:first-child { grid-column:auto; } .r85-evidence-item { grid-template-columns:48px 1fr; } .r85-verification { justify-items:start; } }
+@media (max-width:680px) { .r85-filters { grid-template-columns:1fr; } .r85-flow-row { grid-template-columns:1fr; } .r85-arrow { transform:rotate(90deg); } .r85-evidence-item { grid-template-columns:minmax(0,1fr); } }
+

@@ -1,0 +1,150 @@
+{
+  "schema": "PI_R70L_NORMATIVE_ROOT_EVIDENCE_V1",
+  "jurisdiction_id": "ID-DIY-YOG",
+  "review_year": 2026,
+  "observed_on": "2026-11-08",
+  "access_policy": "PUBLIC_OFFICIAL_NORMATIVE_METADATA_NO_PDF_REPUBLICATION",
+  "source_integrity": "OFFICIAL_LIVE_PDF_LINKS_NOT_HASH_PINNED",
+  "instruments": [
+    {
+      "id": "IDN-PERMENDAGRI-86-2017",
+      "kind": "PERMENDAGRI",
+      "number": "86",
+      "year": 2017,
+      "title": "Tata Cara Perencanaan, Pengendalian dan Evaluasi Pembangunan Daerah",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/311927/permendagri-no-86-tahun-2017",
+      "official_pdf_url": "https://peraturan.go.id/files/bn1312-2017bt.pdf",
+      "effective_date": "2017-09-25",
+      "pdf_sha256": null,
+      "pdf_snapshot_status": "NOT_CAPTURED_NO_HASH",
+      "amendment_census": "NOT_EXHAUSTIVELY_VERIFIED"
+    },
+    {
+      "id": "IDN-PERMENDAGRI-10-2025",
+      "kind": "PERMENDAGRI",
+      "number": "10",
+      "year": 2025,
+      "title": "Pedoman Penyusunan Rencana Kerja Pemerintah Daerah Tahun 2026",
+      "official_metadata_url": "https://peraturan.bpk.go.id/Details/321470/permendagri-no-10-tahun-2025",
+      "official_pdf_url": "https://peraturan.go.id/files/permendagri-no-10-tahun-2025.pdf",
+      "effective_date": "2025-06-23",
+      "pdf_sha256": null,
+      "pdf_snapshot_status": "NOT_CAPTURED_NO_HASH",
+      "amendment_census": "NOT_EXHAUSTIVELY_VERIFIED"
+    }
+  ],
+  "provisions": [
+    {
+      "id": "ROOT-86-2017-ART76",
+      "instrument_id": "IDN-PERMENDAGRI-86-2017",
+      "locator": "Pasal 76; halaman cetak -40-",
+      "role": "DELEGATION_FOR_ANNUAL_RKPD_GUIDELINE",
+      "summary": "Pedoman penyusunan RKPD yang dirujuk Pasal 75 ditetapkan dengan Peraturan Menteri."
+    },
+    {
+      "id": "ROOT-10-2025-PREAMBLE-B",
+      "instrument_id": "IDN-PERMENDAGRI-10-2025",
+      "locator": "Menimbang huruf b; halaman cetak 1",
+      "role": "EXPLICIT_LEGAL_BASIS_REFERENCE",
+      "summary": "Konsiderans Permendagri 10/2025 menyatakan pelaksanaan Pasal 76 Permendagri 86/2017."
+    },
+    {
+      "id": "ROOT-10-2025-ART2-3",
+      "instrument_id": "IDN-PERMENDAGRI-10-2025",
+      "locator": "Pasal 2 ayat (3); halaman cetak -4-",
+      "role": "SIMULTANEOUS_DRAFTING_REQUIREMENT",
+      "summary": "Penyusunan RKPD 2026 dilakukan simultan dan terkoordinasi dengan penyusunan RPJMD 2025–2029."
+    },
+    {
+      "id": "ROOT-10-2025-ART3-5",
+      "instrument_id": "IDN-PERMENDAGRI-10-2025",
+      "locator": "Pasal 3 ayat (5); halaman cetak -5-",
+      "role": "MUNICIPAL_RKPD_NATIONAL_AND_PROVINCIAL_REFERENCE",
+      "summary": "RKPD kabupaten/kota 2026 berpedoman pada RKP 2026, program strategis nasional, serta RKPD provinsi 2026."
+    },
+    {
+      "id": "ROOT-10-2025-ART2-6",
+      "instrument_id": "IDN-PERMENDAGRI-10-2025",
+      "locator": "Pasal 2 ayat (6); halaman cetak -5-",
+      "role": "PROVINCIAL_DIY_EXCEPTION",
+      "summary": "Ketentuan RPJMD DIY 2022–2027 secara khusus menyebut Provinsi Daerah Istimewa Yogyakarta, bukan otomatis Kota Yogyakarta."
+    },
+    {
+      "id": "ROOT-10-2025-ART12-2",
+      "instrument_id": "IDN-PERMENDAGRI-10-2025",
+      "locator": "Pasal 12 ayat (2) huruf a–c; halaman cetak -8-",
+      "role": "MUNICIPAL_RKPD_TO_BUDGET_PROCESS",
+      "summary": "RKPD kabupaten/kota 2026 menjadi pedoman rancangan KUA–PPAS, sinkronisasi rancangan APBD 2026, dan evaluasi pembangunan daerah."
+    }
+  ],
+  "delegation": {
+    "from_provision_id": "ROOT-86-2017-ART76",
+    "to_instrument_id": "IDN-PERMENDAGRI-10-2025",
+    "support_provision_id": "ROOT-10-2025-PREAMBLE-B",
+    "type": "EXPLICIT_NORMATIVE_DELEGATION_REFERENCE",
+    "evidence_status": "SOURCE_CONFIRMED_FOR_TEXTUAL_REFERENCE",
+    "legal_validation": "REVIEW_REQUIRED"
+  },
+  "case": {
+    "planning_document_id": "ID-DIY-YOG-RKPD-2026-PERWALI-34-2025",
+    "planning_document_kind": "RKPD",
+    "planning_document_source": "https://jdih.jogjakota.go.id/asset/naskah/2025pw3405034.pdf",
+    "planning_year": 2026,
+    "municipal_relevance_provision_id": "ROOT-10-2025-ART3-5",
+    "simultaneous_drafting_provision_id": "ROOT-10-2025-ART2-3",
+    "regional_exception_provision_id": "ROOT-10-2025-ART2-6",
+    "regional_exception_applicability": "PROVINCE_DIY_ONLY_NOT_CITY_YOGYAKARTA",
+    "normative_applicability": "SOURCE_BOUND_RELEVANCE_CANDIDATE",
+    "actual_compliance": "NOT_ASSESSED",
+    "admitted_alignment": null
+  },
+  "gates": {
+    "normative_root_trace": "PARTIAL_PRIMARY_PROVISIONS_FOUND",
+    "regulatory_version": "AMENDMENT_CHAIN_INCOMPLETE",
+    "planning_constraint_crosswalk": "MAPPING_CANDIDATE",
+    "fiscal_legal_basis": "NOT_ASSESSED",
+    "source_pdf_hash": "NOT_CAPTURED",
+    "legal_harmonization": "NOT_ASSESSED",
+    "substantive_alignment": "NOT_ASSESSED",
+    "numeric_comparison": "BLOCKED",
+    "review_status": "REVIEW_REQUIRED",
+    "production_admission": "DENIED",
+    "result": "ABSTAIN"
+  },
+  "version_events": [],
+  "census_snapshot": {
+    "schema": "PI_R70N_OFFICIAL_RELATION_METADATA_CENSUS_V1",
+    "as_of_date": "2026-11-08",
+    "scope": "TWO_SCOPED_PARENT_PERMENDAGRI_ONLY",
+    "method": "OFFICIAL_JDIH_BPK_METADATA_AND_NATIONAL_REGULATION_TEXT",
+    "exhaustiveness": "NOT_EXHAUSTIVELY_VERIFIED",
+    "observations": [
+      {
+        "instrument_id": "IDN-PERMENDAGRI-86-2017",
+        "official_current_status": "BERLAKU",
+        "official_effective_date": "2017-09-25",
+        "official_metadata_url": "https://peraturan.bpk.go.id/Details/311927/permendagri-no-86-tahun-2017",
+        "relation_catalogue": "MENCABUT_PERMENDAGRI_54_2010",
+        "relation_provision": "Ketentuan penutup; periksa naskah sumber",
+        "related_instrument_id": "IDN-PERMENDAGRI-54-2010",
+        "related_source_url": "https://peraturan.go.id/files/bn517-2010.pdf",
+        "direct_amendment_record": "NONE_LISTED_NOT_PROOF_OF_NONE"
+      },
+      {
+        "instrument_id": "IDN-PERMENDAGRI-10-2025",
+        "official_current_status": "BERLAKU",
+        "official_effective_date": "2025-06-23",
+        "official_metadata_url": "https://peraturan.bpk.go.id/Details/321470/permendagri-no-10-tahun-2025",
+        "relation_catalogue": "BELUM_TERSEDIA",
+        "relation_provision": null,
+        "related_instrument_id": null,
+        "related_source_url": null,
+        "direct_amendment_record": "UNDETERMINED"
+      }
+    ],
+    "admitted_direct_amendment_events": [],
+    "empty_event_list_is_not_no_amendment_claim": true,
+    "official_pdf_bytes_sha256": "NOT_CAPTURED",
+    "result": "AMENDMENT_CHAIN_INCOMPLETE"
+  }
+}

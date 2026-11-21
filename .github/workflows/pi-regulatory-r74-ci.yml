@@ -1,0 +1,69 @@
+name: PI Regulatory R74 taxonomy and genealogy
+
+on:
+  push:
+    branches:
+      - feature/pi-regulatory-genealogy-r74-20261111
+    paths:
+      - 'laravel/resources/pi/regulatory-genealogy-r74.json'
+      - 'laravel/app/Services/Pi/Regulatory/RegulatoryTaxonomyRegistry.php'
+      - 'laravel/app/Services/Pi/Regulatory/RegulatoryGenealogyGraph.php'
+      - 'laravel/app/Http/Controllers/Api/RegulatoryGenealogyController.php'
+      - 'laravel/tests/Feature/RegulatoryGenealogyTest.php'
+      - 'laravel/public/regulatory-genealogy-r74.*'
+      - 'laravel/public/regulatory-laravel-r70g.html'
+      - 'laravel/routes/web.php'
+      - '.github/workflows/pi-regulatory-r74-ci.yml'
+  pull_request:
+    paths:
+      - 'laravel/resources/pi/regulatory-genealogy-r74.json'
+      - 'laravel/app/Services/Pi/Regulatory/RegulatoryTaxonomyRegistry.php'
+      - 'laravel/app/Services/Pi/Regulatory/RegulatoryGenealogyGraph.php'
+      - 'laravel/app/Http/Controllers/Api/RegulatoryGenealogyController.php'
+      - 'laravel/tests/Feature/RegulatoryGenealogyTest.php'
+      - 'laravel/public/regulatory-genealogy-r74.*'
+      - 'laravel/public/regulatory-laravel-r70g.html'
+      - 'laravel/routes/web.php'
+      - '.github/workflows/pi-regulatory-r74-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  r74-source-and-graph:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate R74 JSON and client JavaScript
+        run: |
+          node -e "const d=require('./resources/pi/regulatory-genealogy-r74.json');if(d.schema!=='PI_R74_REGULATORY_GENEALOGY_SEED_V1')process.exit(1)"
+          node --check public/regulatory-genealogy-r74.js
+      - name: PHP syntax
+        run: |
+          php -l app/Services/Pi/Regulatory/RegulatoryTaxonomyRegistry.php
+          php -l app/Services/Pi/Regulatory/RegulatoryGenealogyGraph.php
+          php -l app/Http/Controllers/Api/RegulatoryGenealogyController.php
+          php -l tests/Feature/RegulatoryGenealogyTest.php
+          php -l routes/web.php
+      - name: Ephemeral Laravel runtime
+        run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+      - name: Locked Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: R74 source-independent feature regression
+        run: php vendor/bin/phpunit --filter RegulatoryGenealogyTest
+      - name: Declare legal-evidence boundary
+        run: echo 'PI_R74_REAL_DATA_FULL_CENSUS=NOT_PERFORMED; SOURCE_HASH_AND_LEGAL_APPLICABILITY=REVIEW_REQUIRED; PRODUCTION_ADMISSION=DENIED'

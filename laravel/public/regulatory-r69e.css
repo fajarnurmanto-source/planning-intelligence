@@ -1,0 +1,14 @@
+.reg-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:12px 0 16px}
+.reg-kpi{background:#103340;border:1px solid #255865;border-radius:9px;padding:17px;display:flex;flex-direction:column;gap:5px}
+.reg-kpi span{font-size:10px;color:#9ac8c1;font-weight:800}.reg-kpi strong{font-size:27px;line-height:1.35;color:#e6fff1}
+.reg-kpi small{font-size:10px;color:#9cbdb9}
+.reg-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.reg-columns .panel{margin:0}.reg-list{display:flex;flex-direction:column;gap:10px}
+.reg-card{border:1px solid #2c5b5e;background:#143945;border-radius:10px;padding:13px;display:flex;flex-direction:column;gap:8px}
+.reg-card .reg-label{color:#9ce9c5;font-size:10px;font-weight:900;letter-spacing:.9px}
+.reg-card strong{font-size:13px;color:#f2fff5;line-height:1.5}.reg-card small{font-size:10px;line-height:1.6;color:#b5d1d1}
+.reg-card .reg-links{display:flex;flex-wrap:wrap;gap:8px}.reg-card a{color:#b0f0cd;text-decoration:underline;text-underline-offset:3px;font-size:10px;font-weight:800}
+.reg-warning{padding:12px;margin-top:12px;border-left:3px solid #d5a965;background:#3b342a;color:#ffe4b2;border-radius:4px;font-size:11px;line-height:1.6}
+.reg-guard{color:#bcdbd7;font-size:12px;line-height:1.7;padding-left:22px}.reg-guard li{margin-bottom:8px}
+@media(max-width:1100px){.reg-columns{grid-template-columns:1fr}}
+@media(max-width:670px){.reg-kpis{grid-template-columns:1fr}.reg-kpi{padding:12px}}

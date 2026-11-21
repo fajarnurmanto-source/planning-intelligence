@@ -1,0 +1,18 @@
+/* QA institutional sidebar. Applies only when the R69B script marks the sidebar. */
+.shell aside.pi-institutional-nav{display:flex;flex-direction:column;gap:4px;overflow-y:auto;overflow-x:hidden;height:100vh;box-sizing:border-box;padding-bottom:22px}
+.pi-institutional-nav>h1{order:0;margin-bottom:0!important}
+.pi-institutional-nav>.version{order:1;color:#a2cfc0!important;font-size:9px!important;letter-spacing:.65px}
+.pi-institutional-nav>.pi-tenant-card{order:2;background:linear-gradient(138deg,#133b40,#184d44);border:1px solid #36796e;padding:13px 11px;border-radius:9px;margin:14px 0}
+.pi-tenant-label{font-size:9px;letter-spacing:1px;color:#9dd6c5;font-weight:800}
+.pi-tenant-name{font-size:13px;line-height:1.3;font-weight:800;color:#eefbf2;margin-top:5px}
+.pi-tenant-disclaimer{font-size:9px;line-height:1.4;color:#a8c9c6;margin-top:7px}
+.pi-institutional-nav>.pi-menu-label{order:5;color:#8eafae;letter-spacing:1.1px;font-size:9px;font-weight:800;margin:5px 8px 6px}
+.pi-institutional-nav>button{display:block;flex:none!important;margin:0!important;white-space:normal;line-height:1.3;padding:12px 10px!important;text-align:left}
+.pi-institutional-nav>button[data-pi-hidden="true"]{display:none!important}
+.pi-institutional-nav>button.active{background:#1e4147!important;color:#ddf9e7!important;border-left:3px solid #7ce0b1!important}
+.pi-institutional-nav>a.pi-institutional-ai{order:55;display:block;text-decoration:none;background:#205746;color:#e4faec;border:1px solid #5dbb91;border-radius:8px;font-size:12px;font-weight:800;padding:12px 10px;margin:6px 0 8px}
+.pi-institutional-nav>a.pi-institutional-ai:hover,.pi-institutional-nav>a.pi-institutional-ai:focus-visible{background:#2b785d}
+.pi-institutional-nav>.pi-ux-caveat{order:99;border-top:1px solid #314854;margin-top:9px;padding:12px 5px;font-size:9px;line-height:1.4;color:#819b9c}
+.pi68-hero button[data-pi-institution-hidden="true"]{display:none!important}
+.pi69-shortcut{display:none!important}
+@media(max-width:760px){.shell aside.pi-institutional-nav{height:auto;min-height:100vh}.pi-institutional-nav>.pi-tenant-card{margin:8px 0}}

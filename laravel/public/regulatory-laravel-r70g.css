@@ -1,0 +1,39 @@
+.r70g-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+.r70g-stats article{display:flex;flex-direction:column;gap:6px;background:#103440;border:1px solid #285662;border-radius:9px;padding:17px}
+.r70g-stats small,.r70g-stats span{color:#a0c6c4;font-size:11px}.r70g-stats strong{font-size:28px;color:#e8fff5}
+.r70g-panel{margin-top:12px}.r70g-status{font-size:12px;color:#a4dfca;min-height:20px}.r70g-status[data-error="true"]{color:#ffd3a1}
+.r70g-stack{display:grid;grid-template-columns:1fr;gap:12px}.r70g-card{border:1px solid #2b5960;border-radius:9px;background:#143944;padding:16px}
+.r70g-top{display:flex;justify-content:space-between;gap:16px;align-items:start}.r70g-top h3{font-size:16px;color:#eafff4;margin:6px 0 12px}.r70g-top small{color:#9be8c6;font-weight:800;letter-spacing:.07em}
+.r70g-pill{background:#0f5445;color:#aff6cf;font-size:10px;font-weight:900;padding:5px 8px;border-radius:7px;white-space:nowrap}
+.r70g-note{color:#b9d9d4;font-size:11px;line-height:1.6}.r70g-warning{color:#ffd4a1;border-left:3px solid #d59c49;padding:9px 11px;background:#3a3529;border-radius:4px;font-size:11px}
+.r70g-targets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.r70g-target{background:#0c303b;border:1px solid #255862;border-radius:7px;padding:11px}
+.r70g-target h4{margin:5px 0 8px;font-size:12px;color:#e6fff4}.r70g-target small{font-size:10px;font-weight:800;color:#8cdec2}.r70g-target p{font-size:11px;color:#b8dad0;margin:6px 0}
+.r70g-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}.r70g-actions a,.r70g-target a{color:#9fe9c1;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+.r70g-digests{display:grid;gap:8px;font-size:11px}.r70g-digests dt{color:#a4dacd;font-weight:800}.r70g-digests dd{margin:0;overflow-wrap:anywhere;color:#dbf4f0;font-family:ui-monospace,monospace}
+.r70g-explain{font-size:11px;color:#b4d1cc;line-height:1.6}
+@media(max-width:1050px){.r70g-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.r70g-stats,.r70g-targets{grid-template-columns:1fr}.r70g-top{flex-direction:column}.r70g-top h3{margin-bottom:0}}
+
+/* R70H: on-demand, hash-pinned evidence inspection inside R70G cards. */
+.r70h-instruction{color:#b3d7d1;font-size:11px;line-height:1.6;margin:2px 0 14px}
+.r70h-evidence{margin:10px 0;border:1px solid #2a6564;border-radius:8px;background:#0b3039;overflow:hidden}
+.r70h-evidence summary{cursor:pointer;padding:10px 12px;font-size:11px;font-weight:750;color:#a7f3d2}
+.r70h-evidence summary:hover{background:#14434a}.r70h-evidence summary:focus-visible,.r70h-evidence-button:focus-visible{outline:2px solid #e7c882;outline-offset:2px}
+.r70h-evidence-list{display:grid;gap:9px;padding:0 11px 11px}.r70h-evidence-row{padding:9px;background:#123a44;border:1px solid #275d63;border-radius:7px;min-width:0}
+.r70h-evidence-meta{display:block;font-size:10px;color:#b9dbd3;overflow-wrap:anywhere;margin-bottom:8px}
+.r70h-evidence-button{color:#092d2f;background:#b4f4cf;border:0;border-radius:6px;padding:8px 11px;font-size:11px;font-weight:750;cursor:pointer}
+.r70h-evidence-button:hover{background:#d6ffe6}.r70h-evidence-button:disabled{opacity:.65;cursor:wait}
+.r70h-evidence-output{margin-top:9px;color:#d5ece5;font-size:11px;line-height:1.6}.r70h-evidence-output:empty{display:none}
+.r70h-proof{padding:10px 0;border-top:1px solid #2d5960}.r70h-proof small{color:#a6d5c8}.r70h-proof blockquote{margin:9px 0;padding:10px 12px;background:#092b35;border-left:3px solid #89cfb7;color:#effff6;white-space:pre-wrap;overflow-wrap:anywhere}
+.r70h-proof a{color:#a6f0cb}.r70h-state{font-size:10px;color:#a7f6cb;font-weight:850}.r70h-caveat{color:#e9c889;font-size:10px}
+.r70h-digests{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 10px;font-size:10px}.r70h-digests dt{color:#a8d8ca;font-weight:750}.r70h-digests dd{margin:0;color:#effcf7;overflow-wrap:anywhere;font-family:ui-monospace,monospace}
+.r70h-error{color:#ffd0a4;border-left:3px solid #d99d54;padding-left:9px}.r70h-loading{color:#b3dcd3}
+@media(max-width:600px){.r70h-digests{grid-template-columns:1fr}.r70h-evidence-button{width:100%;text-align:left}}
+
+/* R70I candidate crosswalk handoff uses the existing verified R70F/R70H source. */
+.r70i-panel{margin:14px 0;border:1px solid #32686c}
+.r70i-panel .panel-heading p{max-width:72ch}
+.r70i-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:10px}
+.r70i-badge{font-size:10px;font-weight:800;letter-spacing:.04em;color:#f6d9a0;border:1px solid #765f38;border-radius:5px;padding:6px 10px;margin:0}
+.r70i-panel .r70g-status[data-error="true"]{color:#ffd3a1}
+@media(max-width:600px){.r70i-controls{align-items:stretch;flex-direction:column}.r70i-badge{align-self:flex-start}}

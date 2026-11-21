@@ -1,0 +1,77 @@
+name: PI R84 Reviewer Workspace and Migration Guard QA
+
+on:
+  pull_request:
+    branches: [pilot/pi-laravel-github-bridge-20261108]
+    paths:
+      - 'laravel/app/Services/Pi/Regulatory/R84EvidenceFingerprint.php'
+      - 'laravel/app/Http/Controllers/Api/R84EvidenceReviewController.php'
+      - 'laravel/app/Http/Controllers/Api/R82NationalPassageReviewController.php'
+      - 'laravel/tests/Feature/R84ReviewerReadinessTest.php'
+      - 'laravel/tests/frontend/pi_r84_reviewer_workspace.test.cjs'
+      - 'laravel/public/regulatory-evidence-review-r84.js'
+      - 'laravel/public/regulatory-trace-r70a.html'
+      - 'laravel/public/regulatory-trace-r70a.css'
+      - '.github/workflows/pi-r84-reviewer-workspace.yml'
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+      - feature/pi-r84-reviewer-ui-preflight-20261116
+    paths:
+      - 'laravel/app/Services/Pi/Regulatory/R84EvidenceFingerprint.php'
+      - 'laravel/app/Http/Controllers/Api/R84EvidenceReviewController.php'
+      - 'laravel/app/Http/Controllers/Api/R82NationalPassageReviewController.php'
+      - 'laravel/tests/Feature/R84ReviewerReadinessTest.php'
+      - 'laravel/tests/frontend/pi_r84_reviewer_workspace.test.cjs'
+      - 'laravel/public/regulatory-evidence-review-r84.js'
+      - 'laravel/public/regulatory-trace-r70a.html'
+      - 'laravel/public/regulatory-trace-r70a.css'
+      - '.github/workflows/pi-r84-reviewer-workspace.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  reviewer-backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - name: Prepare isolated Laravel test storage
+        run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+      - name: Install locked dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: PHP syntax
+        run: |
+          php -l app/Services/Pi/Regulatory/R84EvidenceFingerprint.php
+          php -l app/Http/Controllers/Api/R84EvidenceReviewController.php
+          php -l app/Http/Controllers/Api/R82NationalPassageReviewController.php
+          php -l tests/Feature/R84ReviewerReadinessTest.php
+      - name: R84 read/write guards and R82/R83 regression
+        run: php vendor/bin/phpunit --filter 'R84ReviewerReadinessTest|R84EvidenceReviewTest|R83NationalPdfReviewTest|R82NationalPassageTest|RegulatoryDelegationCoverageTest'
+      - name: Immutable data and route sanity
+        run: |
+          php artisan route:list --path=api/qa-regulatory-r84
+          php artisan route:list --path=api/qa-regulatory-r82
+
+  reviewer-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JS syntax
+        run: node --check laravel/public/regulatory-evidence-review-r84.js
+      - name: Reviewer UI plus accepted trace regressions
+        run: node --test laravel/tests/frontend/pi_r84_reviewer_workspace.test.cjs laravel/tests/frontend/pi_r83_pdf_review.test.cjs laravel/tests/frontend/pi_r82_review_smoke.test.cjs laravel/tests/frontend/pi_r79_browser_acceptance.test.cjs laravel/tests/frontend/pi_r74_navigation_smoke.test.cjs

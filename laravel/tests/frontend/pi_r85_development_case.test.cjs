@@ -1,0 +1,33 @@
+const test = require('node:test')
+const assert = require('node:assert/strict')
+const fs = require('node:fs')
+const path = require('node:path')
+
+const root = path.resolve(__dirname, '../..')
+const html = fs.readFileSync(path.join(root, 'public/development-case-r85.html'), 'utf8')
+const script = fs.readFileSync(path.join(root, 'public/development-case-r85.js'), 'utf8')
+const navigation = fs.readFileSync(path.join(root, 'public/pi-ia-r69e.js'), 'utf8')
+
+test('R85 is one integrated PI Superior workspace with four graphs and five answers', () => {
+  assert.match(html, /id="r85-filters"/)
+  assert.match(html, /id="r85-questions"/)
+  assert.match(html, /id="r85-graphs"/)
+  assert.match(html, /id="r85-evidence"/)
+  assert.match(html, /id="r85-guards"/)
+  assert.match(navigation, /Kasus pembangunan terpadu/)
+  assert.match(navigation, /key:'development-case'/)
+  assert.match(navigation, /item\.key==="home"\|\|item\.key==="development-case"/)
+  assert.doesNotMatch(navigation, /label:'[^']*Intelligence'[^\n]*development-case/)
+})
+
+test('R85 fetches only its authenticated same-origin endpoint and renders safely', () => {
+  assert.match(script, /fetch\(`\/api\/qa-superior-r85\/development-case/)
+  assert.match(script, /credentials:'same-origin'/)
+  assert.match(script, /caseData\.questions\?\.length !== 5/)
+  assert.match(script, /caseData\.graphs\?\.length !== 4/)
+  assert.match(script, /legal_harmonization !== 'NOT_ASSESSED'/)
+  assert.match(script, /review_decision !== 'NO_ACTIVE_DECISION'/)
+  assert.match(script, /allowedSource/)
+  assert.doesNotMatch(script, /innerHTML|insertAdjacentHTML|document\.write/)
+  assert.doesNotMatch(script, /fetch\(['"]https?:/)
+})

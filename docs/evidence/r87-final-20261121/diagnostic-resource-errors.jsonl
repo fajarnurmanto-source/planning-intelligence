@@ -1,0 +1,4 @@
+{"version":"BEFORE","scenario":"cold","iteration":1,"pathname":"/favicon.ico","type":"Other","http_status":404,"event":"http_error"}
+{"version":"AFTER","scenario":"cold","iteration":1,"pathname":"/api/qa-planning-r71/normative-readiness","type":"Fetch","http_status":503,"event":"http_error"}
+{"version":"AFTER","scenario":"cold","iteration":1,"pathname":"/favicon.ico","type":"Other","http_status":404,"event":"http_error"}
+{"version":"AFTER","scenario":"warm","iteration":1,"pathname":"/api/qa-planning-r71/normative-readiness","type":"Fetch","http_status":503,"event":"http_error"}

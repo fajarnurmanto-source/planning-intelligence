@@ -1,0 +1,96 @@
+name: PI Laravel regulatory excerpt R73
+
+on:
+  push:
+    branches:
+      - pilot/pi-laravel-github-bridge-20261108
+    paths:
+      - 'laravel/public/regulatory-change-trace-r72.*'
+      - 'laravel/public/regulatory-laravel-r70g.html'
+      - 'laravel/public/regulatory-workbench-r87.bundle.*'
+      - 'laravel/tests/frontend/pi_r87_regulatory_asset_bundle.test.cjs'
+      - 'scripts/pi-build-regulatory-assets.mjs'
+      - 'laravel/tests/js/regulatory-r73.test.cjs'
+      - 'laravel/tests/Feature/RegulatoryChangeTraceTest.php'
+      - 'laravel/tests/Feature/AiEvidenceContextTest.php'
+      - 'laravel/tests/Feature/AiProviderSettingsTest.php'
+      - 'laravel/app/Services/PlanningIntelligence/**'
+      - 'laravel/app/Http/Controllers/Api/**'
+      - 'laravel/routes/web.php'
+      - 'laravel/composer.json'
+      - 'laravel/composer.lock'
+      - 'laravel/phpunit.xml'
+      - '.github/workflows/pi-laravel-r73-ci.yml'
+  pull_request:
+    paths:
+      - 'laravel/public/regulatory-change-trace-r72.*'
+      - 'laravel/public/regulatory-laravel-r70g.html'
+      - 'laravel/public/regulatory-workbench-r87.bundle.*'
+      - 'laravel/tests/frontend/pi_r87_regulatory_asset_bundle.test.cjs'
+      - 'scripts/pi-build-regulatory-assets.mjs'
+      - 'laravel/tests/js/regulatory-r73.test.cjs'
+      - 'laravel/tests/Feature/RegulatoryChangeTraceTest.php'
+      - 'laravel/tests/Feature/AiEvidenceContextTest.php'
+      - 'laravel/tests/Feature/AiProviderSettingsTest.php'
+      - 'laravel/app/Services/PlanningIntelligence/**'
+      - 'laravel/app/Http/Controllers/Api/**'
+      - 'laravel/routes/web.php'
+      - 'laravel/composer.json'
+      - 'laravel/composer.lock'
+      - 'laravel/phpunit.xml'
+      - '.github/workflows/pi-laravel-r73-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pi-r73-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  excerpt-ui-contract:
+    name: R73 on-demand browser contract (Node 22)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax
+        run: node --check laravel/public/regulatory-change-trace-r72.js
+      - name: Secure opt-in / hash / denial behavior
+        run: node --test laravel/tests/js/regulatory-r73.test.cjs
+      - name: R87 reproducible asset and full frontend smoke suite
+        run: |
+          node scripts/pi-build-regulatory-assets.mjs --check
+          node --check laravel/public/regulatory-workbench-r87.bundle.js
+          node --test laravel/tests/frontend/*.test.cjs laravel/tests/js/*.test.cjs
+          node scripts/pi-build-regulatory-assets.mjs --metrics
+
+  laravel-regression:
+    name: Laravel source-independent guard regression (PHP 8.5)
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - name: Prepare ephemeral Laravel runtime directories
+        run: mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+      - name: Install locked Laravel dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: PHP guards that do not need local regulatory source snapshots
+        run: >-
+          php vendor/bin/phpunit --filter
+          'test_only_tenant_administrators_can_view_provider_settings|test_admin_can_save_encrypted_credentials_without_exposing_secrets|test_password_is_required_to_modify_or_delete_credentials|test_evidence_context_requires_authenticated_tenant|test_change_trace_requires_authenticated_tenant|test_tampered_or_unapproved_source_is_rejected'
+      - name: Declare real-data test boundary
+        run: echo 'PI_GITHUB_REAL_DATA_E2E=NOT_RUN_PRIVATE_PINNED_SOURCE_UNAVAILABLE; full 13-test suite requires local Windows evidence snapshots'

@@ -1,0 +1,33 @@
+/* Shared hierarchical 1+5 product menu for R69E QA. */
+.sidebar{scrollbar-color:#4c7777 transparent}
+.sidebar .pi-app-menu{display:flex;flex-direction:column;gap:5px}
+.pi-app-group-label{color:#88afa8;font-size:9px;font-weight:900;letter-spacing:1.25px;margin:13px 8px 6px}
+.pi-app-group{border:1px solid #254c54;border-radius:9px;overflow:hidden;background:#112a35}
+.pi-app-group[open]{border-color:#3d7569;background:#113a40}
+.pi-app-group-summary{display:flex;align-items:center;justify-content:space-between;padding:12px 10px;cursor:pointer;gap:8px;list-style:none}
+.pi-app-group-summary::-webkit-details-marker{display:none}
+.pi-app-group-name{font-size:11px;font-weight:850;color:#e2f6ed;line-height:1.3}
+.pi-app-group-chevron{font-size:15px;flex-shrink:0;color:#90c9b5;transition:transform .15s}
+.pi-app-group[open] .pi-app-group-chevron{transform:rotate(180deg)}
+.pi-app-subtitle{display:block;font-size:9px;color:#96b5b1;line-height:1.45;padding:0 11px 9px}
+.pi-app-submenu{padding:4px 5px 8px;border-top:1px solid #2b5357}
+.pi-app-submenu>.pi-app-item{display:block;width:100%;font-size:10px;padding:9px 8px;margin:2px 0;color:#b1d0c6;line-height:1.4;border-radius:6px}
+.pi-app-submenu>a.pi-app-item:hover,.pi-app-submenu>a.pi-app-item:focus-visible{background:#28584d;color:#eaffee}
+.pi-app-submenu>a.pi-app-item.active{background:#28654f;color:#caffdf;font-weight:900;border-left:3px solid #a2efc6}
+.pi-app-unavailable{opacity:.63;cursor:not-allowed;display:flex!important;align-items:flex-start;gap:4px;flex-direction:column}
+.pi-app-unavailable small{font-size:8px;color:#d5b786}
+.pi-app-route{border-left:2px solid #438c74;margin:13px 4px 5px;padding:3px 8px 4px;display:flex;flex-direction:column;gap:6px;line-height:1.55;color:#a3c7be;font-size:9px}
+.pi-app-route strong{font-size:8px;color:#a3e0c1;letter-spacing:.8px}
+.pi-institutional-nav.pi-r69e-grouped-sidebar{display:flex;flex-direction:column;gap:4px}
+.pi-r69e-grouped-sidebar>button,.pi-r69e-grouped-sidebar>.pi-menu-label,.pi-r69e-grouped-sidebar>.pi-institutional-ai{display:none!important}
+.pi-r69e-grouped-sidebar>nav[data-pi-app-nav]{order:6;margin-top:8px;flex:none}
+.pi-r69e-grouped-sidebar>.pi-ux-caveat{order:99}
+.pi-r69e-grouped-sidebar>.pi-tenant-card{flex:none}
+.sidebar .menu{display:none!important}
+.pi-user-bar{display:flex;gap:9px;align-items:center;flex-shrink:0;border:1px solid #3c8c74;border-radius:8px;padding:5px 7px;background:#123c3a;color:#dcf8e7;font:700 10px system-ui,sans-serif;margin-left:auto;white-space:nowrap;z-index:1}
+.pi-user-bar button{background:#287c59;border:1px solid #83cc9e;color:#f6fff8;padding:6px 8px;border-radius:6px;cursor:pointer;font:800 10px system-ui,sans-serif;margin:0}
+.pi-user-bar button:hover{background:#35966c}
+.topbar>.local-badge{display:none}
+@media(min-width:851px){.sidebar{padding-bottom:16px}.sidebar .pi-app-subtitle{display:block}}
+@media(max-width:850px){.sidebar .pi-app-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.sidebar .pi-app-group-label{grid-column:1/-1}}
+@media(max-width:500px){.sidebar .pi-app-menu{display:flex}}
