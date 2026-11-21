@@ -117,23 +117,23 @@ function Start-Canonical {
     $arguments = @('-S','127.0.0.1:8820','-t',('"' + $Public + '"'),('"' + $Router + '"'))
     $started = Start-Process -FilePath $php -ArgumentList $arguments -WorkingDirectory $AppRoot -WindowStyle Hidden -RedirectStandardOutput $out -RedirectStandardError $err -PassThru
     $ready = $false
-    foreach ($attempt in 1..12) {
+    $lastHealth = 'WAITING_FOR_OWNED_LISTENER'
+    foreach ($attempt in 1..30) {
         Start-Sleep -Milliseconds 500
-        if ($started.HasExited) { break }
+        if ($started.HasExited) { $lastHealth = 'PHP_EXITED'; break }
         $owner = Get-CanonicalOwner
-        # Start-Process can return a wrapper PID on Windows. The authoritative
-        # check is the owning php.exe command line and pinned router path.
+        # Start-Process may return a wrapper PID; verify actual listener and router.
         if ($owner) {
             try {
                 Assert-Http
                 $ready = $true
                 break
             } catch {
-                # Laravel may still be booting. Keep retrying.
+                $lastHealth = 'HTTP_BOOTING'
             }
         }
     }
-    if (-not $ready) { throw ('PI_START_FAILED_LOG_' + $err) }
+    if (-not $ready) { throw ('PI_START_FAILED_' + $lastHealth + '_LOG_' + $err) }
     Write-Host ('PI_RUNTIME=STARTED_PID_' + $started.Id)
 }
 
