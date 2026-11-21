@@ -1,3 +1,5 @@
+> **SUPERSEDED 21 NOVEMBER 2026:** Owner changed R89 from local Ollama to institution-configured hosted APIs (DeepSeek, OpenAI, Gemini, Groq, OpenRouter) with SHA-pinned user-approved metadata preview. This historical document is NOT the active architecture. See [R89 Cloud BYOK mandate](PI_R89_CLOUD_BYOK_SEMANTIC_MANDATE_20261121.md).
+
 # R89 — Semantic Regulatory Reasoning: evidence-bound local pilot
 
 **Date:** 21 November 2026 · **Governing mandate:** PI-HYBRID-001 · **Base:** R88.1 draft PR #75 · **Production admission:** DENIED
