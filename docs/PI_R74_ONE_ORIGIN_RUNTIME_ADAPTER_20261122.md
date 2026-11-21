@@ -84,3 +84,29 @@ PI_R74_EXISTING_DESKTOP_ICON_RUNTIME=PASS
 ```
 
 **Acceptance gates still open:** actual owner execution of new integrity/desktop test, authenticated login to existing account, status after a natural Windows reboot, and later guarded R88/R89 release source/data reconciliation. Source CI is not proof of local browser acceptance. Preserve original main 8820 and QA8822/8823. Maintain `PRODUCTION_ADMISSION=DENIED`.
+
+## 22 Nov 2026 — receipt acceptance blocker and safe recovery
+
+Owner ran post-install `pi-r74-windows-acceptance.ps1` at `ea45cecd1ae516b23f13e7b84467de3df7dca87f`. The script stopped immediately at `PI_R74_BACKUP_RECEIPT_INVALID=BUKA-PI-HIDDEN.vbs`, both in default read-only mode and with `-ExerciseShortcut -SecondClick`. Consequently **no click/open test occurred from that test script**; it failed before launching the Windows shortcut. This does **not** prove that the actual original backup was corrupted: the previous checker grouped three independent conditions (JSON entry lookup, stored full SHA, original pinned 12-character SHA) under one generic exception. The installer itself had previously completed `-Apply` with backup receipt and unchanged original shortcut/VBS.
+
+Added `scripts/pi-r74-verify-backup.ps1` (read-only, PS5.1 JSON array normalization, strict exactly 3 expected records, unique names, 64-character hash form, actual full file hashes and original baseline 12-char prefixes). Updated acceptance to call this helper first and display classification `PI_R74_BACKUP_MANIFEST_...`, `PI_R74_BACKUP_FILE_FULL_HASH_MISMATCH=...`, or `PI_R74_BACKUP_BASELINE_HASH_MISMATCH=...`. Reproduce installer's exact serializer on Windows runner plus tampered-file negative test: **CI PASS at d95359c4a2b08836ee071e7988f024b2bd24b188**. This is source/fixture acceptance, not verification of owner D: backup contents.
+
+**Owner recovery (never run `-Apply` again):**
+
+```powershell
+$Repo = 'C:\Users\fajar\.codex\worktrees\pi-r87-lean-runtime\PI_GITHUB_BRIDGE_20261108'
+$QA = 'C:\Users\fajar\.codex\worktrees\pi-r74-autostart\PI_GITHUB_BRIDGE_20261108'
+$Pin = 'd95359c4a2b08836ee071e7988f024b2bd24b188'
+if (@(git -C $QA status --porcelain).Count -ne 0) { throw 'PI_R74_QA_NOT_CLEAN' }
+git -C $Repo fetch --no-tags origin codex/pi-single-runtime-windows-app-20261122
+if ($LASTEXITCODE -ne 0) { throw 'PI_R74_FETCH_FAILED' }
+git -C $QA switch --detach $Pin
+if ($LASTEXITCODE -ne 0) { throw 'PI_R74_SOURCE_PIN_FAILED' }
+$Backup = 'D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111\backups\R74_BEFORE_ONE_ORIGIN_20261122-061856'
+$Verifier = Join-Path $QA 'scripts\pi-r74-verify-backup.ps1'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File $Verifier -BackupRoot $Backup
+```
+
+If `PI_R74_ORIGINAL_BACKUP_MANIFEST=VERIFIED`, run `pi-r74-windows-acceptance.ps1` **without switches**; only if that succeeds, run `-ExerciseShortcut -SecondClick`. If any backup mismatch remains, keep the original backup immutable; return the nonsecret error classification. Do not rewrite the manifest, refresh backups, reinstall or perform shortcut/app/database changes to force a green result.
+
+`R74_INSTALLED=OWNER_REPORTED`, `BACKUP_LOCAL_REVERIFICATION=PENDING`, `DESKTOP_ICON_E2E=NOT_RUN`, `PRODUCTION_ADMISSION=DENIED`.
