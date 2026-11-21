@@ -50,67 +50,13 @@ foreach ($folder in $folders) {
                 $working = [string]$link.WorkingDirectory
                 $arguments = [string]$link.Arguments
                 $origin = Sanitized-LoopbackAddress $arguments
-                if ($target -match '(?i)[\\/](wscript|cscript)\.exe
-                    'POWERSHELL'
-                } elseif ($link.Arguments -match '(?i)--app=') {
-                    'BROWSER_APP_MODE'
-                } elseif ($link.Arguments -match '(?i)https?://') {
-                    'URL_ARGUMENT'
-                } elseif ($link.Arguments) {
-                    'OTHER_ARGUMENTS_REDACTED'
-                } else { 'NONE' }
-                $targetExists = Test-Path -LiteralPath $target -PathType Leaf
-            } elseif ($kind -eq '.url') {
-                $line = Get-Content -LiteralPath $file.FullName |
-                    Where-Object { $_ -match '^URL=' } | Select-Object -First 1
-                $origin = Sanitized-LoopbackAddress ([string]$line)
-                $target = 'INTERNET_SHORTCUT'
-                $targetExists = $true
-            } else {
-                $target = 'APPREF_MS_NOT_EXECUTED'
-                $targetExists = $true
-            }
-        } catch {
-            $target = 'UNREADABLE_SHORTCUT'
-        }
-        $results.Add([pscustomobject]@{
-            Shortcut      = $file.FullName
-            Kind          = $kind
-            Target        = $target
-            TargetExists  = $targetExists
-            WorkingDir    = $working
-            ArgsKind      = $argumentHint
-            ScriptRef     = $referencedScript
-            ScriptExists  = $referencedScriptExists
-            LocalOrigin   = $origin
-            ShortcutSHA256 = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash
-        })
-    }
-}
-if ($results.Count -eq 0) {
-    Write-Host 'PI_EXISTING_SHORTCUT=NOT_FOUND_IN_STANDARD_DIRECTORIES'
-    Write-Host 'PI_NEXT=OPEN_SHORTCUT_PROPERTIES_READ_ONLY'
-} else {
-    Write-Host ('PI_EXISTING_SHORTCUT_COUNT=' + $results.Count)
-    $results | Format-List
-}
-# PowerShell 5.1 does not pipe a foreach block; collect into variable.
-$status = foreach ($port in @(8080,8101,8820,8822,8823)) {
-    $listener = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue |
-        Select-Object -First 1
-    [pscustomobject]@{
-        Port = $port
-        Listening = [bool]$listener
-        PID = if ($listener) { $listener.OwningProcess } else { '-' }
-    }
-}
-Write-Host 'PI_PORT_INVENTORY=READ_ONLY'
-$status | Format-Table -AutoSize
-Write-Host 'PI_DISCOVERY_MUTATION=NONE'
-) {
+                $isWscript = $target.EndsWith('\wscript.exe', [StringComparison]::OrdinalIgnoreCase) -or
+                    $target.EndsWith('\cscript.exe', [StringComparison]::OrdinalIgnoreCase)
+                if ($isWscript) {
+                    # Only capture a script path, NEVER print the full arguments.
                     $match = [regex]::Match($arguments, '(?i)"([^"]+\.(?:vbs|vbe|wsf|js|jse))"')
                     if (-not $match.Success) {
-                        $match = [regex]::Match($arguments, '(?i)(?:^|\s)([^\s]+\.(?:vbs|vbe|wsf|js|jse))(?=\s|$)')
+                        $match = [regex]::Match($arguments, '(?i)(?:^|\s)([^\s"]+\.(?:vbs|vbe|wsf|js|jse))(?=\s|$)')
                     }
                     if ($match.Success) {
                         $scriptRef = $match.Groups[1].Value
@@ -118,68 +64,13 @@ Write-Host 'PI_DISCOVERY_MUTATION=NONE'
                             $referencedScript = [IO.Path]::GetFullPath($scriptRef)
                         } elseif ($working -and (Test-Path -LiteralPath $working -PathType Container)) {
                             $referencedScript = [IO.Path]::GetFullPath((Join-Path $working $scriptRef))
-                        } else {
-                            $referencedScript = [IO.Path]::GetFileName($scriptRef)
                         }
-                        $referencedScriptExists = Test-Path -LiteralPath $referencedScript -PathType Leaf
+                        if ($referencedScript -ne '(not resolved)') {
+                            $referencedScriptExists = Test-Path -LiteralPath $referencedScript -PathType Leaf
+                        }
                     }
                 }
-                $argumentHint = if ($target -match '(?i)[\\/](wscript|cscript)\.exe
-                    'POWERSHELL'
-                } elseif ($link.Arguments -match '(?i)--app=') {
-                    'BROWSER_APP_MODE'
-                } elseif ($link.Arguments -match '(?i)https?://') {
-                    'URL_ARGUMENT'
-                } elseif ($link.Arguments) {
-                    'OTHER_ARGUMENTS_REDACTED'
-                } else { 'NONE' }
-                $targetExists = Test-Path -LiteralPath $target -PathType Leaf
-            } elseif ($kind -eq '.url') {
-                $line = Get-Content -LiteralPath $file.FullName |
-                    Where-Object { $_ -match '^URL=' } | Select-Object -First 1
-                $origin = Sanitized-LoopbackAddress ([string]$line)
-                $target = 'INTERNET_SHORTCUT'
-                $targetExists = $true
-            } else {
-                $target = 'APPREF_MS_NOT_EXECUTED'
-                $targetExists = $true
-            }
-        } catch {
-            $target = 'UNREADABLE_SHORTCUT'
-        }
-        $results.Add([pscustomobject]@{
-            Shortcut      = $file.FullName
-            Kind          = $kind
-            Target        = $target
-            TargetExists  = $targetExists
-            WorkingDir    = $working
-            ArgsKind      = $argumentHint
-            LocalOrigin   = $origin
-            ShortcutSHA256 = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash
-        })
-    }
-}
-if ($results.Count -eq 0) {
-    Write-Host 'PI_EXISTING_SHORTCUT=NOT_FOUND_IN_STANDARD_DIRECTORIES'
-    Write-Host 'PI_NEXT=OPEN_SHORTCUT_PROPERTIES_READ_ONLY'
-} else {
-    Write-Host ('PI_EXISTING_SHORTCUT_COUNT=' + $results.Count)
-    $results | Format-List
-}
-# PowerShell 5.1 does not pipe a foreach block; collect into variable.
-$status = foreach ($port in @(8080,8101,8820,8822,8823)) {
-    $listener = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue |
-        Select-Object -First 1
-    [pscustomobject]@{
-        Port = $port
-        Listening = [bool]$listener
-        PID = if ($listener) { $listener.OwningProcess } else { '-' }
-    }
-}
-Write-Host 'PI_PORT_INVENTORY=READ_ONLY'
-$status | Format-Table -AutoSize
-Write-Host 'PI_DISCOVERY_MUTATION=NONE'
-) {
+                $argumentHint = if ($isWscript) {
                     'WINDOWS_SCRIPT_HOST'
                 } elseif ($link.Arguments -match '(?i)(-File|-ExecutionPolicy|powershell)') {
                     'POWERSHELL'
@@ -211,6 +102,8 @@ Write-Host 'PI_DISCOVERY_MUTATION=NONE'
             TargetExists  = $targetExists
             WorkingDir    = $working
             ArgsKind      = $argumentHint
+            ScriptRef     = $referencedScript
+            ScriptExists  = $referencedScriptExists
             LocalOrigin   = $origin
             ShortcutSHA256 = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash
         })
