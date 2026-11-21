@@ -60,6 +60,7 @@ Route::prefix('api')->group(function (): void {
         Route::post('/auth/logout', [SessionController::class, 'destroy'])->name('auth.logout');
         Route::get('/qa-subscription-r69e/entitlements', EntitlementController::class)
             ->name('pi.entitlements');
+        Route::get('/qa-superior-r88/planning-crosswalk', \App\Http\Controllers\Api\RegulatoryPlanningCrosswalkController::class)->name('pi.superior.planning-crosswalk');
         Route::get('/qa-superior-r85/development-case', GovernmentDevelopmentCaseController::class)
             ->name('pi.superior.development-case');
         Route::get('/qa-superior-r86/regulatory-lifecycle', RegulatoryLifecycleController::class)

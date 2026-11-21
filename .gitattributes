@@ -1,2 +1,6 @@
 # WSL/Linux scripts must not be converted to CRLF by Windows Git checkout.
 *.sh text eol=lf
+laravel/resources/pi/regulatory-backbone-catalogue-r86.csv text eol=lf
+# Preserve pre-existing committed CRLF source bytes in these historical files.
+docs/PI_MASTER_ROADMAP_CANONICAL_20261108.md -text
+laravel/public/development-case-r85.css -text

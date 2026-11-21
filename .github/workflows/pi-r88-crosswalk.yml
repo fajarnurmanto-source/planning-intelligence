@@ -1,0 +1,26 @@
+name: PI R88 crosswalk guards
+on:
+  pull_request:
+    paths: ['laravel/**', '.gitattributes', '.github/workflows/pi-r88-crosswalk.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  crosswalk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: mkdir -p laravel/bootstrap/cache laravel/storage/framework/{cache,sessions,views} laravel/storage/logs
+      - run: composer install --working-dir=laravel --prefer-dist --no-interaction --no-progress
+      - run: cd laravel && php vendor/bin/phpunit --filter 'RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest'
+      - run: node --test laravel/tests/frontend/*.test.cjs laravel/tests/js/*.test.cjs
+      - run: node scripts/pi-build-regulatory-assets.mjs --check

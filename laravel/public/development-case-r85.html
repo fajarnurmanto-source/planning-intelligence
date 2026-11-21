@@ -13,6 +13,7 @@
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./development-case-r85.js"></script>
   <script defer src="./regulatory-lifecycle-r86.js"></script>
+  <script defer src="./regulatory-planning-r88.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -39,6 +40,19 @@
           <button class="primary-btn" type="submit">Tampilkan jejak</button>
         </form>
 
+        <section id="r88-crosswalk" class="panel" aria-labelledby="r88-title">
+          <div class="panel-heading"><div><span class="section-number">R88 · REGULASI KE PERENCANAAN</span><h2 id="r88-title">Telusuri kewenangan, nomenklatur dan anggaran</h2><p>Hubungan berasal dari bukti kasus R85 dan aturan waktu R86. Istilah terkait bukan bukti kesetaraan; perubahan lintas tahun tetap ABSTAIN tanpa versi pembanding.</p></div></div>
+          <form id="r88-controls" class="r85-filters">
+            <label>Kode subkegiatan<input name="code" value="2.11.11.2.01.0004" required maxlength="40"></label>
+            <label>Tahun<select name="year"><option>2026</option><option>2027</option></select></label>
+            <label>Tanggal acuan<input name="as_of" type="date" value="2026-11-21" required></label>
+            <button type="submit" class="primary-btn">Telusuri crosswalk</button>
+            <button id="r88-export" type="button" class="secondary-btn" disabled>Ekspor bukti JSON</button>
+          </form>
+          <p id="r88-status" role="status" aria-live="polite">Pilih Telusuri crosswalk untuk memuat bukti.</p>
+          <a href="/regulatory-trace-r70a.html#r84-review-workspace">Tinjau kandidat melalui reviewer R84</a>
+          <div id="r88-results" class="r85-question-grid"></div>
+        </section>
         <section id="r86-lifecycle" class="panel r86-panel" aria-labelledby="r86-title">
           <div class="panel-heading"><div><span class="section-number">R86 · SIKLUS PEMERINTAHAN &amp; DASAR REGULASI</span><h2 id="r86-title">Dari kewenangan sampai perbaikan perencanaan</h2><p>Satu registry bersama untuk PI Superior dan lima aplikasi spesialis. Tahapan adalah graf dependensi, bukan garis waktu tunggal; bukti yang tidak tersedia tetap ditampilkan sebagai gap.</p></div><span class="small-tag amber">REVIEW MANUSIA</span></div>
           <form id="r86-controls" class="r86-controls" aria-label="Filter siklus pemerintahan">

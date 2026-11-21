@@ -1,0 +1,7 @@
+{
+  "main_runtime": "NO_LISTENER_OBSERVED_ON_8820",
+  "production_database": "UNTOUCHED",
+  "bridge_marker": "UNCHANGED",
+  "main_configuration": "UNTOUCHED",
+  "verification": "Read-only local receipt retained outside tracked delivery; no local configuration/database hashes or account data published. No pre-R87 production hash available for comparison."
+}

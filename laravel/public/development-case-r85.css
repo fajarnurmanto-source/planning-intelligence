@@ -35,3 +35,8 @@
 @media (max-width:1050px) { .r85-filters { grid-template-columns:repeat(2,1fr); } .r85-graph-grid,.r85-question-grid { grid-template-columns:1fr; } .r85-question:first-child { grid-column:auto; } .r85-evidence-item { grid-template-columns:48px 1fr; } .r85-verification { justify-items:start; } }
 @media (max-width:680px) { .r85-filters { grid-template-columns:1fr; } .r85-flow-row { grid-template-columns:1fr; } .r85-arrow { transform:rotate(90deg); } .r85-evidence-item { grid-template-columns:minmax(0,1fr); } }
 
+
+#r88-crosswalk,#r88-crosswalk article,#r88-crosswalk form > * { min-width:0; overflow-wrap:anywhere; }
+#r88-crosswalk input { box-sizing:border-box; width:100%; min-width:0; padding:10px; border:1px solid #b5c9bf; border-radius:6px; }
+#r88-results article { padding:16px; border:1px solid #d7e2de; border-radius:10px; margin-top:12px; }
+#r88-results p { font-size:.85rem; line-height:1.6; }

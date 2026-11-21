@@ -28,3 +28,9 @@ Thumbs.db
 *.log
 # Real-document benchmark corpus
 data/benchmark_corpus/
+# Isolated Laravel dependency/test products (never source or evidence).
+laravel/vendor/
+laravel/bootstrap/cache/
+laravel/.phpunit.result.cache
+laravel/storage/framework/
+laravel/storage/logs/
