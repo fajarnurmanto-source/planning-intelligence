@@ -91,19 +91,18 @@ $backupManifest = Join-Path $BackupRoot 'ORIGINAL_SHA256.json'
 if (-not (Test-Path -LiteralPath $backupManifest -PathType Leaf)) {
     throw 'PI_R74_BACKUP_MANIFEST_MISSING'
 }
-$receipt = @(Get-Content -LiteralPath $backupManifest -Raw | ConvertFrom-Json)
-foreach ($name in $expected.Keys) {
-    $old = Join-Path $BackupRoot $name
-    if (-not (Test-Path -LiteralPath $old -PathType Leaf)) {
-        throw ('PI_R74_BACKUP_FILE_MISSING=' + $name)
-    }
-    $found = @($receipt | Where-Object { $_.File -eq $name })
-    if ($found.Count -ne 1 -or (Get-FileHash -LiteralPath $old -Algorithm SHA256).Hash -ne $found[0].SHA256 -or
-        (Sha12 $old) -ne $expected[$name]) {
-        throw ('PI_R74_BACKUP_RECEIPT_INVALID=' + $name)
-    }
+# Validate with a dedicated strict JSON-normalized helper. A failed backup
+# remains a HOLD; never silently ignore a manifest mismatch.
+$verifier = Join-Path $PSScriptRoot 'pi-r74-verify-backup.ps1'
+if (-not (Test-Path -LiteralPath $verifier -PathType Leaf)) {
+    throw 'PI_R74_RECEIPT_VERIFIER_MISSING'
 }
-Write-Output 'PI_R74_ORIGINAL_BACKUP_MANIFEST=VERIFIED'
+$verifiedReceipt = @(& $verifier -BackupRoot $BackupRoot -ExpectedSha12 $expected)
+foreach ($line in $verifiedReceipt) { Write-Output $line }
+if ($verifiedReceipt -notcontains 'PI_R74_ORIGINAL_BACKUP_MANIFEST=VERIFIED') {
+    throw 'PI_R74_BACKUP_RECEIPT_VERIFICATION_INCOMPLETE'
+}
+
 $vbs = Join-Path $LauncherRoot 'BUKA-PI-HIDDEN.vbs'
 if ((Sha12 $vbs) -ne $expected['BUKA-PI-HIDDEN.vbs']) {
     throw 'PI_R74_ORIGINAL_VBS_CHANGED'
