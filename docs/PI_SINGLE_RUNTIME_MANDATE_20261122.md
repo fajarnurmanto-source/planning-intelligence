@@ -58,3 +58,7 @@ PI_MERGE=NOT_APPROVED
 PRODUCTION_ADMISSION=DENIED
 
 Never claim production installation or Windows restart PASS without observed owner-machine evidence.
+
+## 6. Owner desktop shortcut forensic receipt — 22 November 2026
+
+Windows PowerShell inspection (provided by owner) confirms actual shortcut: `C:\Users\fajar\OneDrive\Desktop\Planning Intelligence.lnk`, target `C:\Windows\System32\wscript.exe`, working directory `D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111`, arguments hidden for safety, launch type Windows Script Host. **Thus an existing R74 unified launcher is operationally installed on the desktop.** The script filename, chained bootstrap, target URL, Windows service/scheduler behavior, and main database authority are NOT_YET_AUDITED; do not substitute historical Docker localhost:8080, R84 localhost:8820, or R88/R89 QA ports for the actual launcher destination without evidence. Preserve the .lnk file byte-for-byte, WorkingDirectory, icon, and existing launch flow. No new .lnk, second launcher, or new listener while assessing existing unified mechanism. Target next: read-only enumerate existing R74 directory script entrypoints and match redacted .lnk arguments to an exact script file, then trace its lifecycle and existing app origin before proposing updates.
