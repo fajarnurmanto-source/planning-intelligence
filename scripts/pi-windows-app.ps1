@@ -120,7 +120,8 @@ function Start-Canonical {
     $lastHealth = 'WAITING_FOR_OWNED_LISTENER'
     foreach ($attempt in 1..30) {
         Start-Sleep -Milliseconds 500
-        if ($started.HasExited) { $lastHealth = 'PHP_EXITED'; break }
+        # A Windows shim/wrapper may exit while its php.exe child continues.
+        # Trust the verified listener, not the wrapper lifecycle.
         $owner = Get-CanonicalOwner
         # Start-Process may return a wrapper PID; verify actual listener and router.
         if ($owner) {
