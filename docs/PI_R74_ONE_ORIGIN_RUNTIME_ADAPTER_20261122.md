@@ -1,52 +1,53 @@
-# PI R74 — Existing-icon single-origin runtime adapter (staged 22 Nov 2026)
+# PI R74 — Existing Windows icon, one port and automatic Laravel startup
 
-**State: SOURCE_ONLY / NOT_INSTALLED / R74 ENTRY VBS AND TWO CMD FILES CONFIRMED; CONTENT/PORT CHAIN NOT YET AUDITED.**
+**Status 22 Nov 2026: implementation source in PR #78; no owner's Windows files have been modified from chat. Original launcher chain and origin now confirmed.**
 
-The existing Windows shortcut is protected. The guarded PowerShell helper `scripts/pi-r74-ensure-runtime.ps1` is not a second launcher, icon, service, or installer. No default port is selected. The old Docker 8080 origin, historical R84 8820, and QA 8822/8823 must not be presumed to be the R74 shortcut origin.
+## Actual existing R74 chain — owner PowerShell confirmed
 
-The adapter defaults to read-only `-Mode Audit`. `-Mode Ensure` is opt-in, to be wired **only** into the inspected existing R74 WScript chain. It requires explicit Laravel `-AppRoot`, `-Port`, and `-PhpExe`; verifies `artisan`, vendor, original `.env` existence, configured APP_KEY/SESSION_COOKIE, APP_URL equal to chosen origin, and a static release identity marker. Before reusing any listener it checks loopback-only binding, exact Laravel root in the PHP process command line and marker HTTP response. A mutex prevents double-start; when the correct server is absent it starts only that Laravel instance (hidden PHP artisan server) and waits for identity before reporting ready. It never edits, migrates, resets, backs up or deletes the DB, credentials, shortcut, or files. It never stops processes, installs services, or enables provider egress.
+- OneDrive desktop shortcut `Planning Intelligence.lnk` runs WScript with `D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111\BUKA-PI-HIDDEN.vbs` (SHA256-12 `9FC0BF471E18`).
+- VBS line 2 invokes `BUKA-PI-LARAVEL-HIDDEN.cmd` with window hidden. That original CMD SHA256-12 is `D59A6681D3A0`.
+- The manual CMD `BUKA-PI-LARAVEL.cmd` has SHA256-12 `A0238A4B33E5`. It is not linked directly by the shortcut.
+- Both CMDs use **127.0.0.1:8820**, probe `/regulatory-genealogy-r74.js`, and target the historical Laravel app at `D:\Research\PlanningIntelligence\planning-intelligence-v0.0-starter\planning-intelligence-v0.0\laravel`. Both start `php artisan serve` if the port is free. No Docker or 8080 is in this current chain.
+- This is the existing *legacy/local* main Laravel directory, **not necessarily** the later R87/R88/R89 GitHub bridge source. Launcher reliability and current-code deployment are separate milestones.
 
-**Confirmed by owner PowerShell on 22 Nov 2026:** `PI_R74_ENTRY_SCRIPT=D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111\BUKA-PI-HIDDEN.vbs` and `PI_R74_ENTRY_EXISTS=True`; the `.lnk` references this file. Snapshot SHA256-12: `BUKA-PI-HIDDEN.vbs=9FC0BF471E18` (`UsedByShortcut=True`), `BUKA-PI-LARAVEL-HIDDEN.cmd=D59A6681D3A0`, `BUKA-PI-LARAVEL.cmd=A0238A4B33E5` (`UsedByShortcut=False` for both, but they may be chained by VBS). **These files exist on the owner D: drive and are not tracked in the PI GitHub repository.**
+## Problem in actual original CMD
 
-**Required operator evidence before actual integration:** contents of all three R74 scripts (with sensitive lines redacted), including the real process, relative paths, browser launch and port. Shortcut identity is no longer a blocker. Read the actual entrypoint and identify its existing origin, process owner, DB and startup semantics. If the existing R74 chain is Docker, PHP service, or an alternate managed runtime, adapt *that same mechanism*, not this assumed PHP candidate.
+The original CMD checks only HTTP 200 for a static R74 JavaScript file, with no HTTP asset hash/process identity comparison; it has no double-click startup lock and separate hidden/manual launch logic. A hidden `pause` makes failures difficult to diagnose; per-directory logs may be missing. The script already autostarts Laravel on an unused port, but its reliability and provenance need improvement.
 
-**Release and acceptance:** prepare source-only R88/R89 stack in a reconciled candidate, preserve main APP_KEY/DB/tenant/user/ledger/PDF and backup receipt, verify session-cookie separation from temporary QA, then run test on original desktop icon: first click cold start; second click reuse with same origin/PID; Windows logon/restart recovery; authenticated PI Superior R85-R89, existing AI Settings, reviewer/export/390px and privacy/ABSTAIN; unrelated port owner fails closed. Do not claim Windows E2E or production readiness until actually observed on owner machine.
+## Source-only prepared repair
 
-The built-in PHP server here is a **local desktop development/QA mechanism**, not an enterprise production service. For an always-on Windows deployment, reuse a verified managed local HTTP service and health supervision after acceptance, not duplicated app servers.
+1. `scripts/pi-r74-ensure-runtime.ps1`: defaults to **read-only** `-Mode Audit`; `-Mode Ensure` guards the original 8820 process with named mutex, loopback-only listen check, Win32 PHP process command line under the precise Laravel root, and SHA-256 equality between local original `public/regulatory-genealogy-r74.js` and the HTTP response. Reuses the correct live Laravel process; starts it hidden only if absent; waits for validated health. It neither stops any existing process nor touches account/DB/APP_KEY. Inspect `%LOCALAPPDATA%\PlanningIntelligence\Runtime` logs for PHP errors.
+2. `scripts/windows/r74/BUKA-PI-LARAVEL-HIDDEN.cmd`: replacement for **same-named existing CMD**, with one invocation of `PI-R74-RUNTIME.ps1` in original launcher folder, port 8820 only. Opens the same browser URL after successful startup.
+3. `scripts/windows/r74/BUKA-PI-LARAVEL.cmd`: manual diagnostic delegates to the same hidden CMD. No independent server.
+4. `scripts/pi-r74-inplace-upgrade.ps1`: read-only preflight by default. Checks the exact three original hashes, original VBS chain, installed Laravel files, PHP availability and `.env` APP_KEY + APP_URL=127.0.0.1:8820 without displaying secrets. Explicit `-Apply` creates timestamped SHA256 backups of the three original launcher files and then replaces only two CMDs + adds the helper **inside original R74 folder**. Keeps original `.lnk` and `.vbs`, Laravel source, DB, APP_KEY, QA8822/8823 and user accounts intact. If source hashes or app configuration drift, refuse and do **not** modify files.
 
-`PRODUCTION_ADMISSION=DENIED`, `MERGE_READINESS=NOT_READY`.
+### Owner-side next step: read-only preflight first
 
-
-## Exact next chain inspection (READ-ONLY)
-
-Run in PowerShell on owner PC. It reads only the three verified files, checks the observed hashes, and outputs nonsecret command lines with their line numbers. Sensitive lines are **fully omitted**, not partially masked. Inspect all output before sharing.
+Use a checked-out branch of PR #78, not the original R87 worktree. For example, clone/fetch this draft branch into a separate QA checkout and run:
 
 ```powershell
-$R74 = 'D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111'
-$expected = @{
-    'BUKA-PI-HIDDEN.vbs'='9FC0BF471E18'
-    'BUKA-PI-LARAVEL-HIDDEN.cmd'='D59A6681D3A0'
-    'BUKA-PI-LARAVEL.cmd'='A0238A4B33E5'
-}
-foreach ($name in @('BUKA-PI-HIDDEN.vbs','BUKA-PI-LARAVEL-HIDDEN.cmd','BUKA-PI-LARAVEL.cmd')) {
-    $file = Join-Path $R74 $name
-    if (-not (Test-Path -LiteralPath $file -PathType Leaf)) { Write-Host "PI_R74_MISSING=$name"; continue }
-    $hash = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.Substring(0,12)
-    Write-Host "---- $name SHA256_12=$hash EXPECTED=$($expected[$name]) ----"
-    $number = 0
-    Get-Content -LiteralPath $file | ForEach-Object {
-        $number++
-        $line = [string]$_
-        if ($line -match '(?i)(password|passwd|secret|token|credential|authorization|bearer|api.?key|APP_KEY|DB_|DATABASE_URL|SESSION_|PRIVATE.KEY|[?&]key=)') {
-            Write-Host ('{0,3}: [SENSITIVE LINE REDACTED]' -f $number)
-        } elseif ($line -match '(?i)https?://' -and $line -notmatch '(?i)https?://(127\.0\.0\.1|localhost)([:/]|$)') {
-            Write-Host ('{0,3}: [NON-LOOPBACK URL REDACTED]' -f $number)
-        } else {
-            Write-Host ('{0,3}: {1}' -f $number,$line)
-        }
-    }
-}
-Write-Host 'PI_R74_CHAIN_INSPECTION=READ_ONLY'
+Set-Location 'PATH_TO_CHECKOUT_OF_PR_78'
+powershell.exe -NoProfile -File '.\scripts\pi-r74-inplace-upgrade.ps1'
 ```
 
-If a sensitive line is essential for understanding the chain, share the command shape only and redact its actual value manually. Never paste API keys, APP_KEY or DB credentials. This run does not start/stop servers or change shortcuts.
+Expected only when all actual current prerequisites match:
+```text
+PI_R74_BASELINE=VERIFIED
+PI_R74_ONE_MAIN_ORIGIN=http://127.0.0.1:8820
+PI_R74_UPGRADE=READ_ONLY_PREFLIGHT_PASS
+PI_R74_APPLY=NOT_REQUESTED
+```
+
+If it reports `PI_R74_APP_URL_MISMATCH_HOLD_NO_MUTATION`, do not edit `.env` just to pass: audit original authenticated sessions, other QA cookies and release identity before any main cutover. If preflight succeeds, explicitly agree to apply the change after checking backups/QA; the installer accepts `-Apply`. **Do not run `-Apply` until acceptance**.
+
+### Acceptance after in-place upgrade
+
+- Original desktop icon opens existing 8820 even when no PHP process is running; click twice does not produce a second service.
+- Existing main 8820 listener is reused only if tied to expected PHP root and exact static asset hash; port occupied by another service fails closed without stopping it.
+- Existing login/session/account/reviewer evidence works; browser opens `http://127.0.0.1:8820/`, no command prompt needed.
+- On reboot/logon, one click recovers; no manual `php artisan serve`.
+- Original shortcut/VBS SHA unchanged, original CMD backup SHA receipt valid; main DB, .env, APP_KEY, tenant/session and evidence unchanged.
+- Full R85-R89 product cutover is **a separate guarded deployment**. Current local Laravel may not contain those later code branches. Don't claim R89 production based on launch behavior.
+- `PRODUCTION_ADMISSION=DENIED`, `MERGE_READINESS=NOT_READY` until owner-machine verified, regardless of GitHub CI.
+
+**Limit:** PHP built-in Laravel dev server is adequate for owner-local click-to-open workflow but not a production-grade Windows service or native binary. An always-on managed service/MSI installer is a subsequent productization milestone only if needed; never create a duplicate application launcher.
