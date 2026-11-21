@@ -45,14 +45,19 @@ try {
     $start.RedirectStandardInput = $true
     $start.RedirectStandardOutput = $true
     $start.RedirectStandardError = $true
-    $start.StandardInputEncoding = [System.Text.UTF8Encoding]::new($false)
     $process = New-Object System.Diagnostics.Process
     $process.StartInfo = $start
+    $secretBytes = $null
     try {
         if (-not $process.Start()) { throw 'PI_R74_PHP_STDIN_PROCESS_START_FAILED' }
-        # No WriteLine: the submitted password is not suffixed with CR/LF.
-        $process.StandardInput.Write($plain)
-        $process.StandardInput.Close()
+        # Windows PowerShell 5.1 (.NET Framework) has no ProcessStartInfo
+        # StandardInputEncoding property. Write exact bytes to BaseStream.
+        # No newline, BOM, transcoding, CLI argument or temporary file.
+        $secretBytes = [System.Text.UTF8Encoding]::new($false).GetBytes($plain)
+        $rawInput = $process.StandardInput.BaseStream
+        $rawInput.Write($secretBytes,0,$secretBytes.Length)
+        $rawInput.Flush()
+        $rawInput.Close()
         $stdout = $process.StandardOutput.ReadToEnd()
         $null = $process.StandardError.ReadToEnd()
         $process.WaitForExit()
@@ -61,6 +66,7 @@ try {
         }
         $result = @($stdout -split '\r?\n' | Where-Object { $_ -ne '' })
     } finally {
+        if ($null -ne $secretBytes) { [Array]::Clear($secretBytes,0,$secretBytes.Length) }
         $process.Dispose()
     }
     foreach ($item in $result) { Write-Output $item }
