@@ -120,7 +120,7 @@ foreach ($name in @($knownHashes.Keys)) {
 Stop-On-CommandError 'PHP_8_3_SQLITE3_REQUIRED'
 
 if ($StartServer) {
-    $listener = New-Object System.Net.Sockets.TcpListener([Net.IPAddress]::Loopback, $Port)
+    $listener = [System.Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback, $Port)
     try {
         $listener.Start()
     } catch {
