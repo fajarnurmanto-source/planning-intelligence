@@ -116,158 +116,19 @@ foreach ($name in @($knownHashes.Keys)) {
         throw ("OFFICIAL_PDF_HASH_MISMATCH: {0}" -f $name)
     }
 }
-# Windows PowerShell 5.1 strips nested quotes in native executable arguments.
-# Query the numeric PHP version without quoted PHP string literals, then
-# detect sqlite3 using php -m (also used by the actual SQLite3::backup helper).
+# PowerShell 5.1 can strip nested PHP quoted string arguments.
+# Check version via PHP_VERSION_ID (no quoted PHP string) and extension via -m.
 $PhpVersionRaw = [string](& $Php -r 'echo PHP_VERSION_ID;')
 Stop-On-CommandError 'R89_PHP_VERSION_PROBE_FAILED'
 $PhpVersionRaw = $PhpVersionRaw.Trim()
-if ($PhpVersionRaw -notmatch '^\\d{5,6}
-
-if ($StartServer) {
-    $listener = [System.Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback, $Port)
-    try {
-        $listener.Start()
-    } catch {
-        throw 'R89_QA_PORT_ALREADY_IN_USE'
-    } finally {
-        $listener.Stop()
-    }
-}
-
-# Fetch exact GitHub revision without resetting any checked-out branch.
-Write-Host 'R89_INSTALL_STAGE=FETCH_PINNED_SOURCE' -ForegroundColor Cyan
-& git -C $ResolvedRepoRoot fetch --no-tags origin ("refs/heads/" + $Branch)
-Stop-On-CommandError 'R89_GIT_FETCH_FAILED'
-$Fetched = ([string](& git -C $ResolvedRepoRoot rev-parse FETCH_HEAD)).Trim()
-Stop-On-CommandError 'R89_GIT_FETCH_HEAD_UNAVAILABLE'
-if (-not $Fetched.Equals($ExpectedCommit, [StringComparison]::OrdinalIgnoreCase)) {
-    throw ("R89_COMMIT_MISMATCH_EXPECTED_{0}_GOT_{1}" -f $ExpectedCommit, $Fetched)
-}
-Write-Host 'R89_SOURCE_PIN=VERIFIED'
-
-New-Item -ItemType Directory -Path (Split-Path -Path $TargetWorktree -Parent) -Force | Out-Null
-& git -C $ResolvedRepoRoot worktree add --detach $TargetWorktree $Fetched
-Stop-On-CommandError 'R89_WORKTREE_ADD_FAILED'
-$Actual = ([string](& git -C $TargetWorktree rev-parse HEAD)).Trim()
-Stop-On-CommandError 'R89_WORKTREE_HEAD_UNAVAILABLE'
-if (-not $Actual.Equals($ExpectedCommit, [StringComparison]::OrdinalIgnoreCase)) {
-    throw 'R89_WORKTREE_SHA_DRIFT'
-}
-Write-Host 'R89_ISOLATED_WORKTREE=VERIFIED'
-
-# Consistent SQLite3::backup from the running R88 QA; original opened READONLY.
-New-Item -ItemType Directory -Path $QaRuntime -Force | Out-Null
-$BackupTool = Join-Path $TargetWorktree 'scripts\pi-r89-backup-sqlite.php'
-Require-File $BackupTool 'R89_BACKUP_TOOL_MISSING'
-& $Php $BackupTool $OldQaDb $NewQaDb
-Stop-On-CommandError 'R89_SQLITE_CLONE_FAILED'
-
-# Fresh secret, fresh env; NO copying of source .env, API keys or cloud vault.
-$random = [Security.Cryptography.RandomNumberGenerator]::Create()
-try {
-    $bytes = New-Object byte[] 32
-    $random.GetBytes($bytes)
-    $key = [Convert]::ToBase64String($bytes)
-} finally {
-    $random.Dispose()
-}
-$envContent = @(
-    'APP_NAME="Planning Intelligence R89 Cloud QA"',
-    'APP_ENV=local',
-    ('APP_KEY=base64:' + $key),
-    'APP_DEBUG=false',
-    ('APP_URL=http://127.0.0.1:' + $Port),
-    'LOG_CHANNEL=stack',
-    'LOG_LEVEL=warning',
-    'DB_CONNECTION=sqlite',
-    ('DB_DATABASE=' + $NewQaDb.Replace('\','/')),
-    'SESSION_DRIVER=file',
-    'CACHE_STORE=file',
-    'QUEUE_CONNECTION=sync',
-    'PI_TENANT_ID=ID-DIY-YOG',
-    ('PI_REGULATORY_LEDGER_PATH=' + $Ledger.Replace('\','/')),
-    ('PI_REGULATORY_SCOPE_PATH=' + $Scope.Replace('\','/')),
-    'PI_R89_CLOUD_ENABLED=true'
-) -join [Environment]::NewLine
-
-$NewEnv = Join-Path $TargetApp '.env'
-if (Test-Path -LiteralPath $NewEnv) { throw 'NEW_WORKTREE_ENV_ALREADY_PRESENT' }
-[IO.File]::WriteAllText($NewEnv, $envContent + [Environment]::NewLine, ([Text.UTF8Encoding]::new($false)))
-foreach ($relative in @('bootstrap\cache','storage\framework\cache','storage\framework\sessions','storage\framework\views','storage\logs')) {
-    New-Item -ItemType Directory -Path (Join-Path $TargetApp $relative) -Force | Out-Null
-}
-Write-Host 'R89_NEW_ENV=NO_CLOUD_KEY_COPIED'
-Write-Host 'R89_CLOUD_CAPABILITY=ENABLED_CONSENT_AND_KEY_REQUIRED'
-
-# Composer install only. NEVER run composer setup or php artisan migrate.
-Write-Host 'R89_INSTALL_STAGE=COMPOSER_DEPENDENCIES' -ForegroundColor Cyan
-& composer install ("--working-dir=" + $TargetApp) --prefer-dist --no-interaction --no-progress
-Stop-On-CommandError 'R89_COMPOSER_INSTALL_FAILED'
-
-Push-Location $TargetApp
-try {
-    $routes = & $Php artisan route:list --path=qa-superior-r89 --json
-    Stop-On-CommandError 'R89_ROUTE_LIST_FAILED'
-    $routesJson = @($routes | ConvertFrom-Json)
-    $uris = @($routesJson | ForEach-Object { $_.uri })
-    if (-not ($uris -contains 'api/qa-superior-r89/semantic-preview') -or
-        -not ($uris -contains 'api/qa-superior-r89/semantic-candidates')) {
-        throw 'R89_SEMANTIC_API_ROUTES_MISSING'
-    }
-    Write-Host 'R89_PREVIEW_AND_INFERENCE_ROUTES=VERIFIED'
-
-    # phpunit.xml uses in-memory SQLite; never tests against copied QA DB.
-    & $Php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest'
-    Stop-On-CommandError 'R89_FOCUSED_PHPUNIT_FAILED'
-    Write-Host 'R89_FOCUSED_TESTS=PASS'
-} finally {
-    Pop-Location
-}
-
-if ($StartServer) {
-    $Log = Join-Path $QaRuntime 'server-8823.log'
-    $Err = Join-Path $QaRuntime 'server-8823-error.log'
-    $Process = Start-Process -FilePath $Php -ArgumentList @('artisan','serve','--host=127.0.0.1',('--port=' + $Port)) -WorkingDirectory $TargetApp -RedirectStandardOutput $Log -RedirectStandardError $Err -PassThru
-    Start-Sleep -Seconds 2
-    if ($Process.HasExited) {
-        throw ("R89_SERVER_EXITED_LOG_{0}" -f $Err)
-    }
-    $HttpHealthy = $false
-    foreach ($attempt in 1..6) {
-        try {
-            $probe = Invoke-WebRequest -Uri ('http://127.0.0.1:' + $Port + '/api/auth/setup-status') -UseBasicParsing -TimeoutSec 3
-            if ($probe.StatusCode -eq 200) {
-                $HttpHealthy = $true
-                break
-            }
-        } catch {
-            Start-Sleep -Milliseconds 500
-        }
-    }
-    if (-not $HttpHealthy) {
-        throw ("R89_LOCAL_HTTP_SETUP_NOT_READY_LOG_{0}" -f $Err)
-    }
-    Write-Host 'R89_LOCAL_HTTP_SETUP=200'
-    Write-Host ('R89_LOCAL_SERVER_PID=' + $Process.Id)
-    Write-Host ('R89_LOCAL_URL=http://127.0.0.1:' + $Port + '/development-case-r85.html')
-}
-
-Write-Host 'R89_WINDOWS_ISOLATED_QA_INSTALL=PASS' -ForegroundColor Green
-Write-Host 'R88_EXISTING_WORKTREE=UNTOUCHED'
-Write-Host 'R88_QA_SQLITE=READ_ONLY'
-Write-Host 'MAIN_PRODUCTION_DATABASE=UNTOUCHED'
-Write-Host 'R89_PROVIDER_KEYS=NOT_INSTALLED'
-Write-Host 'R89_LIVE_AI=NOT_RUN'
-Write-Host 'R89_PRODUCTION_ADMISSION=DENIED'
- -or [int]$PhpVersionRaw -lt 80300) {
+if ($PhpVersionRaw -notmatch '^[0-9]{5,6}$' -or [int]$PhpVersionRaw -lt 80300) {
     throw ('R89_PHP_VERSION_UNSUPPORTED: ' + $PhpVersionRaw)
 }
 $PhpModules = @(& $Php -m)
 Stop-On-CommandError 'R89_PHP_MODULE_PROBE_FAILED'
 $HasSqlite3 = @($PhpModules | Where-Object { $_.Trim() -ieq 'sqlite3' }).Count -gt 0
 if (-not $HasSqlite3) {
-    throw 'R89_SQLITE3_EXTENSION_MISSING: enable ext=sqlite3 in the active CLI php.ini'
+    throw 'R89_SQLITE3_EXTENSION_MISSING: enable ext=sqlite3 in active CLI php.ini'
 }
 Write-Host ('R89_PHP_VERSION_ID=' + $PhpVersionRaw)
 Write-Host 'R89_PHP_SQLITE3_EXTENSION=VERIFIED'
@@ -341,7 +202,7 @@ $envContent = @(
 
 $NewEnv = Join-Path $TargetApp '.env'
 if (Test-Path -LiteralPath $NewEnv) { throw 'NEW_WORKTREE_ENV_ALREADY_PRESENT' }
-[IO.File]::WriteAllText($NewEnv, $envContent + [Environment]::NewLine, (New-Object Text.UTF8Encoding($false)))
+[IO.File]::WriteAllText($NewEnv, $envContent + [Environment]::NewLine, ([Text.UTF8Encoding]::new($false)))
 foreach ($relative in @('bootstrap\cache','storage\framework\cache','storage\framework\sessions','storage\framework\views','storage\logs')) {
     New-Item -ItemType Directory -Path (Join-Path $TargetApp $relative) -Force | Out-Null
 }
