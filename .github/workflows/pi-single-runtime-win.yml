@@ -6,6 +6,7 @@ on:
       - 'scripts/pi-r74-ensure-runtime.ps1'
       - 'scripts/pi-r74-inplace-upgrade.ps1'
       - 'scripts/pi-r74-windows-acceptance.ps1'
+      - 'scripts/pi-r74-verify-backup.ps1'
       - 'scripts/windows/r74/**'
       - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
@@ -59,6 +60,16 @@ jobs:
             throw 'PI_R74_ACCEPTANCE_PARSE_FAILURE'
           }
           Write-Host 'PI_R74_INPLACE_UPGRADE_PARSE=PASS'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-verify-backup.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_BACKUP_VERIFIER_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R74_BACKUP_VERIFIER_PARSE=PASS'
           Write-Host 'PI_R74_ACCEPTANCE_PARSE=PASS'
       - name: Run read-only inventory on clean runner
         shell: powershell
@@ -188,3 +199,39 @@ jobs:
             throw 'PI_R74_ORIGINAL_SHORTCUT_INSPECTION_MISSING'
           }
           Write-Host 'PI_R74_ACCEPTANCE_READ_ONLY_GUARDS=PASS'
+
+      - name: PS5.1 original backup manifest roundtrip and tamper detection
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $temp = Join-Path $env:RUNNER_TEMP ('pi-r74-receipt-' + [guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $temp -Force | Out-Null
+          $names = @('BUKA-PI-HIDDEN.vbs','BUKA-PI-LARAVEL-HIDDEN.cmd','BUKA-PI-LARAVEL.cmd')
+          $expected = @{}
+          $receipt = foreach ($name in $names) {
+            $target = Join-Path $temp $name
+            [IO.File]::WriteAllText($target, ('original-r74-fixture-' + $name))
+            $hash = (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash
+            $expected[$name] = $hash.Substring(0,12)
+            [pscustomobject]@{ File=$name; SHA256=$hash }
+          }
+          # Reproduce production installer's exact PS5.1 serialization.
+          $receipt | ConvertTo-Json | Out-File -LiteralPath (Join-Path $temp 'ORIGINAL_SHA256.json') -Encoding UTF8
+          $verified = @(& '.\scripts\pi-r74-verify-backup.ps1' -BackupRoot $temp -ExpectedSha12 $expected)
+          if ($verified -notcontains 'PI_R74_ORIGINAL_BACKUP_MANIFEST=VERIFIED' -or
+              @($verified | Where-Object { $_ -like 'PI_R74_BACKUP_FILE_VERIFIED=*' }).Count -ne 3) {
+            throw 'PI_R74_RECEIPT_JSON_ROUNDTRIP_FAILED'
+          }
+          Write-Host 'PI_R74_RECEIPT_PS51_ROUNDTRIP=PASS'
+          $tampered = Join-Path $temp $names[0]
+          [IO.File]::AppendAllText($tampered, '-altered')
+          $failure = ''
+          try {
+            & '.\scripts\pi-r74-verify-backup.ps1' -BackupRoot $temp -ExpectedSha12 $expected | Out-Null
+          } catch {
+            $failure = [string]$_.Exception.Message
+          }
+          if ($failure -notmatch 'PI_R74_BACKUP_FILE_FULL_HASH_MISMATCH') {
+            throw 'PI_R74_TAMPERED_BACKUP_NOT_REJECTED'
+          }
+          Write-Host 'PI_R74_TAMPERED_BACKUP_FAIL_CLOSED=PASS'
