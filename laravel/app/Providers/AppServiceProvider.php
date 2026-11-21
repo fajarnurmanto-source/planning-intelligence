@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Services\Pi\Development\SemanticCandidateProvider;
+use App\Services\Pi\Development\OllamaLocalSemanticCandidateProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(SemanticCandidateProvider::class, OllamaLocalSemanticCandidateProvider::class);
     }
 
     /**
