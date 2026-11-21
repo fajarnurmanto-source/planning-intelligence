@@ -29,6 +29,26 @@ jobs:
             throw 'R89_PS51_INSTALLER_PARSE_FAILED'
           }
           Write-Host 'R89_PS51_INSTALLER_PARSE=PASS'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: sqlite3
+          coverage: none
+      - name: Execute PHP CLI version and SQLite3 detection in Windows PowerShell 5.1
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $raw = [string](& php -r 'echo PHP_VERSION_ID;')
+          if ($LASTEXITCODE -ne 0) { throw 'R89_PHP_VERSION_PROBE_FAILED' }
+          $raw = $raw.Trim()
+          if ($raw -notmatch '^[0-9]{5,6}$' -or [int]$raw -lt 80300) {
+            throw ('R89_PHP_VERSION_UNSUPPORTED: ' + $raw)
+          }
+          $modules = @(& php -m)
+          if ($LASTEXITCODE -ne 0) { throw 'R89_PHP_MODULE_PROBE_FAILED' }
+          $hasSqlite3 = @($modules | Where-Object { $_.Trim() -ieq 'sqlite3' }).Count -gt 0
+          if (-not $hasSqlite3) { throw 'R89_SQLITE3_EXTENSION_MISSING' }
+          Write-Host 'R89_WINDOWS_PHP_SQLITE3_PREFLIGHT=PASS'
       - name: Guard against dangerous installation commands
         shell: powershell
         run: |
