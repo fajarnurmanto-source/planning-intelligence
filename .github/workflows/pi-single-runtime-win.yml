@@ -385,10 +385,10 @@ jobs:
           & php $fixturePhp $dbPath
           if ($LASTEXITCODE -ne 0) { throw 'PI_R74_BCRYPT_FIXTURE_SETUP_FAILED' }
           $hashBefore=(Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash
-          function Invoke-FixturePassword([string]$candidate) {
+          function Invoke-FixturePassword([string]$candidate,[string]$targetScript='scripts/pi-r74-verify-entered-password.php') {
             $info=New-Object System.Diagnostics.ProcessStartInfo
             $info.FileName=(Get-Command php.exe).Source
-            $info.Arguments=('"scripts/pi-r74-verify-entered-password.php" "{0}" "qa-only.fixture"' -f $dbPath)
+            $info.Arguments=('"{0}" "{1}" "qa-only.fixture"' -f $targetScript,$dbPath)
             $info.UseShellExecute=$false
             $info.CreateNoWindow=$true
             $info.RedirectStandardInput=$true
@@ -411,6 +411,21 @@ jobs:
               return @($output -split '\r?\n' | Where-Object { $_ -ne '' })
             } finally { $child.Dispose() }
           }
+          # Test fixture-only transport bytes without touching any real secret.
+          $peek=Join-Path $tempDir 'stdin-inspect-ci-only.php'
+          [IO.File]::WriteAllText($peek,'<?php echo bin2hex(stream_get_contents(STDIN));')
+          $actualHex=((@(Invoke-FixturePassword 'ci-password-not-real' $peek)) -join '').Trim()
+          $expectedHex=[BitConverter]::ToString([Text.Encoding]::UTF8.GetBytes('ci-password-not-real')).Replace('-','').ToLowerInvariant()
+          if ($actualHex -cne $expectedHex) {
+            throw ('PI_R74_CI_STDIN_BYTES_MISMATCH_EXPECTED='+$expectedHex.Length+',ACTUAL='+$actualHex.Length+',HEX='+$actualHex)
+          }
+          Write-Host 'PI_R74_CI_EXACT_STDIN_BYTES=PASS'
+          # Verify the fixture hash directly without using transport code.
+          $direct=Join-Path $tempDir 'direct-check-ci-only.php'
+          [IO.File]::WriteAllText($direct,'<?php $db=new SQLite3($argv[1],SQLITE3_OPEN_READONLY);$hash=$db->querySingle("SELECT password FROM users LIMIT 1");echo password_verify("ci-password-not-real",$hash) ? "MATCH" : "NO_MATCH";')
+          $fixtureParity=(& php $direct $dbPath)
+          if ($fixtureParity -ne 'MATCH') {throw 'PI_R74_TEST_FIXTURE_BCRYPT_HASH_MISMATCH'}
+          Write-Host 'PI_R74_CI_DIRECT_BCRYPT_FIXTURE=PASS'
           $yes=@(Invoke-FixturePassword 'ci-password-not-real')
           if ($yes -notcontains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=YES') {
             throw ('PI_R74_BCRYPT_PARITY_POSITIVE_FAILED: '+($yes -join '|'))
