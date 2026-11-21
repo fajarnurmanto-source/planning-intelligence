@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - 'scripts/pi-audit-existing-launcher.ps1'
+      - 'scripts/pi-r74-ensure-runtime.ps1'
+      - 'laravel/public/pi-r74-runtime-identity.txt'
+      - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
       - '.github/workflows/pi-single-runtime-win.yml'
   workflow_dispatch:
@@ -24,6 +27,15 @@ jobs:
           if ($errors.Count -ne 0) {
             $errors | Format-List
             throw 'PI_EXISTING_LAUNCHER_AUDIT_PARSE_FAILURE'
+          }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-ensure-runtime.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_RUNTIME_ADAPTER_PARSE_FAILURE'
           }
           Write-Host 'PI_EXISTING_LAUNCHER_AUDIT_PARSE=PASS'
       - name: Run read-only inventory on clean runner
@@ -52,3 +64,35 @@ jobs:
           }
           Write-Host 'PI_EXISTING_ICON_PRESERVED=PASS'
           Write-Host 'PI_NO_DUPLICATE_LAUNCHER=PASS'
+
+      - name: Validate read-only R74 adapter audit against no listener
+        shell: powershell
+        run: |
+          $candidate = 49397
+          $occupied = Get-NetTCPConnection -LocalPort $candidate -State Listen -ErrorAction SilentlyContinue
+          if ($occupied) { throw 'PI_CI_AUDIT_PORT_UNEXPECTEDLY_OCCUPIED' }
+          $actual = & '.\scripts\pi-r74-ensure-runtime.ps1' -AppRoot $PWD.Path -Port $candidate -Mode Audit
+          if ($actual -notcontains 'PI_R74_AUDIT_MUTATION=NONE' -or
+              $actual -notcontains 'PI_R74_ORIGIN_NOT_RUNNING=YES') {
+            throw 'PI_R74_READ_ONLY_AUDIT_FAILED'
+          }
+          Write-Host 'PI_R74_READ_ONLY_AUDIT=PASS'
+      - name: Single origin and no destructive operator actions
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-r74-ensure-runtime.ps1' -Raw
+          $marker = (Get-Content 'laravel/public/pi-r74-runtime-identity.txt' -Raw).Trim()
+          if ($marker -ne 'PI_R74_LARAVEL_SINGLE_RUNTIME_20261122_V1') {
+            throw 'PI_R74_MARKER_MISMATCH'
+          }
+          foreach ($needle in @('Assert-PortOwnership','PI_R74_APP_URL_DOES_NOT_MATCH_EXPLICIT_PORT',
+              'PI_R74_LISTENER_APP_IDENTITY_MISMATCH','PI_R74_STARTUP_MUTEX_TIMEOUT',
+              'PI_R74_AUDIT_MUTATION=NONE','--host=127.0.0.1')) {
+            if (-not $code.Contains($needle)) { throw ('PI_R74_GUARD_MISSING: ' + $needle) }
+          }
+          foreach ($forbidden in @('migrate:fresh','migrate --force','db:wipe',
+              'Remove-Item','Stop-Process','New-Service','Register-ScheduledTask',
+              'CreateShortcut(', 'docker compose')) {
+            if ($code.Contains($forbidden)) { throw ('PI_R74_UNSAFE_ACTION: ' + $forbidden) }
+          }
+          Write-Host 'PI_R74_SOURCE_ONLY_GUARDS=PASS'
