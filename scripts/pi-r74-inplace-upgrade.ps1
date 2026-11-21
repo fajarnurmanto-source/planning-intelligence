@@ -74,6 +74,14 @@ if ($configuredUrl -ne 'http://127.0.0.1:8820') {
 if (-not (Get-Command php.exe -ErrorAction SilentlyContinue)) {
     throw 'PI_R74_PHP_NOT_AVAILABLE'
 }
+# If an old PHP server already owns 8820, verify both its exact release
+# fingerprint and its process ancestry BEFORE replacing original CMD files.
+# This audit is read-only and refuses ambiguous/foreign listeners.
+$healthAudit = & $templates['PI-R74-RUNTIME.ps1'] -AppRoot $AppRoot -Port 8820 -Mode Audit
+if ($healthAudit -notcontains 'PI_R74_AUDIT_MUTATION=NONE') {
+    throw 'PI_R74_LIVE_ORIGIN_PREFLIGHT_INCOMPLETE'
+}
+Write-Output 'PI_R74_LIVE_PORT_8820_IDENTITY_PREFLIGHT=PASS'
 Write-Output 'PI_R74_BASELINE=VERIFIED'
 Write-Output 'PI_R74_ONE_MAIN_ORIGIN=http://127.0.0.1:8820'
 Write-Output 'PI_R74_LEGACY_APP_ROOT=PRESERVED'
