@@ -1,8 +1,7 @@
-name: PI single-runtime Windows launcher
+name: PI existing unified launcher audit safety
 on:
   pull_request:
     paths:
-      - 'scripts/pi-windows-app.ps1'
       - 'scripts/pi-audit-existing-launcher.ps1'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
       - '.github/workflows/pi-single-runtime-win.yml'
@@ -10,121 +9,46 @@ on:
 permissions:
   contents: read
 jobs:
-  windows-qa:
+  audit-safety:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.5'
-          extensions: sqlite3
-          coverage: none
-      - name: Validate Windows PowerShell 5.1 syntax
+      - name: Validate PowerShell 5.1 syntax
         shell: powershell
         run: |
-          $t = $null
+          $tokens = $null
           $errors = $null
-          foreach ($filename in @('scripts/pi-windows-app.ps1','scripts/pi-audit-existing-launcher.ps1')) {
-            $t = $null
-            $errors = $null
-            [System.Management.Automation.Language.Parser]::ParseFile(
-              $filename,[ref]$t,[ref]$errors
-            ) | Out-Null
-            if ($errors.Count -ne 0) {
-              $errors | Format-List
-              throw ('PI_PS51_PARSE_FAILURE: ' + $filename)
-            }
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-audit-existing-launcher.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_EXISTING_LAUNCHER_AUDIT_PARSE_FAILURE'
           }
-          Write-Host 'PI_WINDOWS_LAUNCHER_PARSE=PASS'
-          Write-Host 'PI_EXISTING_ICON_AUDIT_PARSE=PASS'
-      - name: Run local fixture with one canonical port; test restart, ownership and stop
+          Write-Host 'PI_EXISTING_LAUNCHER_AUDIT_PARSE=PASS'
+      - name: Run read-only inventory on clean runner
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
-          $root = Join-Path $env:TEMP 'pi-single-runtime-fixture'
-          $routerDir = Join-Path $root 'vendor\laravel\framework\src\Illuminate\Foundation\resources'
-          foreach ($d in @($routerDir,(Join-Path $root 'public'),(Join-Path $root 'storage\logs'))) {
-            New-Item -ItemType Directory -Path $d -Force | Out-Null
+          & '.\scripts\pi-audit-existing-launcher.ps1'
+          if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) {
+            throw 'PI_AUDITOR_EXECUTION_FAILED'
           }
-          Set-Content -LiteralPath (Join-Path $root 'artisan') -Value 'fixture only'
-          Set-Content -LiteralPath (Join-Path $root 'vendor\autoload.php') -Value '<?php'
-          Set-Content -LiteralPath (Join-Path $root 'public\index.php') -Value '<?php'
-          $router = @'
-          <?php
-          $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-          if ($path === '/api/auth/setup-status') {
-              header('Content-Type: application/json');
-              echo '{"setup":"ready"}';
-          } elseif ($path === '/index.html') {
-              header('Content-Type: text/html');
-              echo '<title>Planning Intelligence</title>';
-          } else {
-              http_response_code(404);
-          }
-          '@
-          Set-Content -LiteralPath (Join-Path $routerDir 'server.php') -Value $router
-          $database = Join-Path $root 'main-fixture.sqlite'
-          Set-Content -LiteralPath $database -Value 'not-real-db-fixture'
-          $envLines = @(
-            'APP_ENV=local',
-            'APP_URL=http://127.0.0.1:8820',
-            'APP_DEBUG=false',
-            ('APP_KEY=base64:' + ('A' * 44)),
-            'DB_CONNECTION=sqlite',
-            ('DB_DATABASE=' + $database.Replace('\','/')),
-            'SESSION_DRIVER=file',
-            'SESSION_COOKIE=pi_main_session'
-          )
-          Set-Content -LiteralPath (Join-Path $root '.env') -Value $envLines
-          $script = Join-Path (Get-Location) 'scripts\pi-windows-app.ps1'
-          try {
-            & $script -Action Status -AppRoot $root
-            & $script -Action Start -AppRoot $root
-            & $script -Action Start -AppRoot $root
-            & $script -Action Status -AppRoot $root
-            $response = Invoke-WebRequest 'http://127.0.0.1:8820/api/auth/setup-status' -UseBasicParsing
-            if ($response.StatusCode -ne 200) { throw 'PI_HTTP_FIXTURE_NOT_200' }
-            Write-Host 'PI_RUNTIME_SINGLE_INSTANCE=PASS'
-            Write-Host 'PI_RUNTIME_HTTP_8820=PASS'
-          } catch {
-            Write-Host ('PI_FIXTURE_FAILURE=' + $_.Exception.Message)
-            $listener = Get-NetTCPConnection -LocalAddress 127.0.0.1 -LocalPort 8820 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($listener) {
-              Write-Host ('PI_FIXTURE_LISTENER_PID=' + $listener.OwningProcess)
-              $p = Get-CimInstance Win32_Process -Filter ('ProcessId=' + $listener.OwningProcess)
-              Write-Host ('PI_FIXTURE_EXECUTABLE=' + $p.Name)
-              Write-Host ('PI_FIXTURE_CMDLINE=' + $p.CommandLine)
-              try { $probe=Invoke-WebRequest 'http://127.0.0.1:8820/api/auth/setup-status' -UseBasicParsing -TimeoutSec 3; Write-Host ('PI_FIXTURE_API=' + $probe.StatusCode) } catch { Write-Host ('PI_FIXTURE_API_FAILED=' + $_.Exception.Message) }
-              try { $page=Invoke-WebRequest 'http://127.0.0.1:8820/index.html' -UseBasicParsing -TimeoutSec 3; Write-Host ('PI_FIXTURE_INDEX=' + $page.StatusCode + ':' + $page.Content.Length) } catch { Write-Host ('PI_FIXTURE_INDEX_FAILED=' + $_.Exception.Message) }
-            }
-            Get-ChildItem (Join-Path $root 'storage\logs') -Filter 'pi-main-*.err.log' |
-              ForEach-Object { Write-Host ('PI_FIXTURE_PHP_LOG=' + $_.Name); Get-Content $_.FullName -Tail 30 }
-            throw
-          } finally {
-            & $script -Action Stop -AppRoot $root
-          }
-          if (Get-NetTCPConnection -LocalAddress 127.0.0.1 -LocalPort 8820 -State Listen -ErrorAction SilentlyContinue) {
-            throw 'PI_PORT_8820_STILL_IN_USE'
-          }
-          Write-Host 'PI_RUNTIME_STOP_CLEAN=PASS'
-      - name: Require protected resources and no destructive operations
+          Write-Host 'PI_EXISTING_LAUNCHER_AUDIT_EXECUTION=PASS'
+      - name: No duplicate shortcut or service manipulation
         shell: powershell
         run: |
-          $code = Get-Content 'scripts/pi-windows-app.ps1' -Raw
-          foreach ($phrase in @('PI_PORT_8820_FOREIGN_LISTENER','PI_MAIN_SQLITE_NOT_FOUND',
-            'PI_APP_KEY=REUSED_NOT_EXPOSED','PI_MAIN_SESSION_COOKIE_NOT_CONFIGURED')) {
-            if (-not $code.Contains($phrase)) { throw "GUARD_MISSING: $phrase" }
+          $code = Get-Content 'scripts/pi-audit-existing-launcher.ps1' -Raw
+          foreach ($needle in @('PI_DISCOVERY_MUTATION=NONE','CreateShortcut($file.FullName)',
+            'Get-NetTCPConnection','Get-FileHash')) {
+            if (-not $code.Contains($needle)) { throw ('PI_AUDITOR_REQUIRED_GUARD_MISSING: '+$needle) }
           }
-          foreach ($prohibited in @('artisan migrate', 'composer install', 'git reset',
-            'git clean', 'Set-Content -LiteralPath $EnvPath', 'DB_DATABASE=:memory:')) {
-            if ($code.Contains($prohibited)) { throw "PROHIBITED_ACTION: $prohibited" }
+          foreach ($forbidden in @('Start-Process','Stop-Process','Set-Content',
+            'New-Item','Remove-Item','Save()','artisan migrate','composer install')) {
+            if ($code.Contains($forbidden)) { throw ('PI_AUDITOR_MUTATION_FORBIDDEN: '+$forbidden) }
           }
-          if ($code -match 'InstallShortcut|Install-Shortcut|CreateShortcut') {
-            throw 'DUPLICATE_SHORTCUT_INSTALLER_FORBIDDEN'
+          if (Test-Path 'scripts/pi-windows-app.ps1') {
+            throw 'PI_DUPLICATE_WINDOWS_LAUNCHER_REINTRODUCED'
           }
-          $audit = Get-Content 'scripts/pi-audit-existing-launcher.ps1' -Raw
-          if (-not $audit.Contains('PI_DISCOVERY_MUTATION=NONE')) {
-            throw 'PI_EXISTING_LAUNCHER_AUDIT_GUARD_MISSING'
-          }
-          Write-Host 'PI_EXISTING_DESKTOP_SHORTCUT=PRESERVED_NO_DUPLICATE'
-          Write-Host 'PI_PROTECTED_RESOURCES=NO_MUTATION'
+          Write-Host 'PI_EXISTING_ICON_PRESERVED=PASS'
+          Write-Host 'PI_NO_DUPLICATE_LAUNCHER=PASS'
