@@ -72,6 +72,8 @@ try {
     foreach ($item in $result) { Write-Output $item }
     if ($result -contains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=YES') {
         Write-Output 'PI_R74_NEXT=CHECK_BROWSER_AUTOFILL_AND_LARAVEL_AUTH'
+    } elseif ($result -contains 'PI_R74_R87_RECOVERY_BOM_PREFIX_MATCH=YES') {
+        Write-Output 'PI_R74_NEXT=R87_RECOVERY_STORED_BOM_PREFIX_REQUIRES_GUARDED_REPAIR'
     } elseif ($result -contains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=NO') {
         Write-Output 'PI_R74_NEXT=PASSWORD_DIFFERS_FROM_R87_RECOVERED_HASH'
     } else {
