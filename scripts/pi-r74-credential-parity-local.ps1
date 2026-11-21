@@ -25,7 +25,6 @@ $php=Get-Command php.exe -ErrorAction Stop
 $secure=$null
 $bstr=[IntPtr]::Zero
 $plain=$null
-$originalEncoding=$OutputEncoding
 try {
     Write-Output 'PI_R74_CREDENTIAL_PARITY=LOCAL_READ_ONLY'
     Write-Output 'PI_R74_PASSWORD_INPUT=SECURE_CONSOLE_ONLY'
@@ -35,11 +34,34 @@ try {
     if ([string]::IsNullOrEmpty($plain)) {
         throw 'PI_R74_LOCAL_PASSWORD_INPUT_EMPTY'
     }
-    # Preserve non-ASCII passwords when PowerShell 5.1 pipes to php.exe.
-    $OutputEncoding=New-Object System.Text.UTF8Encoding($false)
-    $result=@($plain | & $php.Source $probe $db $Username)
-    if ($LASTEXITCODE -ne 0) {
-        throw 'PI_R74_BCRYPT_READONLY_VERIFICATION_FAILED'
+    # Send UTF-8 bytes to PHP through a private redirected STDIN stream.
+    # PowerShell 5.1 native-command pipelines may add line endings or
+    # transcode input; neither is acceptable in password comparison.
+    $start = New-Object System.Diagnostics.ProcessStartInfo
+    $start.FileName = $php.Source
+    $start.Arguments = ('"{0}" "{1}" "{2}"' -f $probe,$db,$Username)
+    $start.UseShellExecute = $false
+    $start.CreateNoWindow = $true
+    $start.RedirectStandardInput = $true
+    $start.RedirectStandardOutput = $true
+    $start.RedirectStandardError = $true
+    $start.StandardInputEncoding = New-Object System.Text.UTF8Encoding($false)
+    $process = New-Object System.Diagnostics.Process
+    $process.StartInfo = $start
+    try {
+        if (-not $process.Start()) { throw 'PI_R74_PHP_STDIN_PROCESS_START_FAILED' }
+        # No WriteLine: the submitted password is not suffixed with CR/LF.
+        $process.StandardInput.Write($plain)
+        $process.StandardInput.Close()
+        $stdout = $process.StandardOutput.ReadToEnd()
+        $null = $process.StandardError.ReadToEnd()
+        $process.WaitForExit()
+        if ($process.ExitCode -ne 0) {
+            throw 'PI_R74_BCRYPT_READONLY_VERIFICATION_FAILED'
+        }
+        $result = @($stdout -split '\r?\n' | Where-Object { $_ -ne '' })
+    } finally {
+        $process.Dispose()
     }
     foreach ($item in $result) { Write-Output $item }
     if ($result -contains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=YES') {
@@ -50,7 +72,6 @@ try {
         throw 'PI_R74_LOCAL_PASSWORD_RESULT_INCOMPLETE'
     }
 } finally {
-    $OutputEncoding=$originalEncoding
     $plain=$null
     if ($bstr -ne [IntPtr]::Zero) {
         [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
