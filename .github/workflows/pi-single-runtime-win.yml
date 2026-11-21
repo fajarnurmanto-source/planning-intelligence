@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'scripts/pi-windows-app.ps1'
+      - 'scripts/pi-audit-existing-launcher.ps1'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
       - '.github/workflows/pi-single-runtime-win.yml'
   workflow_dispatch:
@@ -23,14 +24,19 @@ jobs:
         run: |
           $t = $null
           $errors = $null
-          [System.Management.Automation.Language.Parser]::ParseFile(
-            'scripts/pi-windows-app.ps1',[ref]$t,[ref]$errors
-          ) | Out-Null
-          if ($errors.Count -ne 0) {
-            $errors | Format-List
-            throw 'PI_WINDOWS_LAUNCHER_PARSE_FAILURE'
+          foreach ($filename in @('scripts/pi-windows-app.ps1','scripts/pi-audit-existing-launcher.ps1')) {
+            $t = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile(
+              $filename,[ref]$t,[ref]$errors
+            ) | Out-Null
+            if ($errors.Count -ne 0) {
+              $errors | Format-List
+              throw ('PI_PS51_PARSE_FAILURE: ' + $filename)
+            }
           }
           Write-Host 'PI_WINDOWS_LAUNCHER_PARSE=PASS'
+          Write-Host 'PI_EXISTING_ICON_AUDIT_PARSE=PASS'
       - name: Run local fixture with one canonical port; test restart, ownership and stop
         shell: powershell
         run: |
@@ -106,11 +112,19 @@ jobs:
         run: |
           $code = Get-Content 'scripts/pi-windows-app.ps1' -Raw
           foreach ($phrase in @('PI_PORT_8820_FOREIGN_LISTENER','PI_MAIN_SQLITE_NOT_FOUND',
-            'PI_APP_KEY=REUSED_NOT_EXPOSED','PI_SHORTCUT_NOT_IN_CANONICAL_RELEASE')) {
+            'PI_APP_KEY=REUSED_NOT_EXPOSED','PI_MAIN_SESSION_COOKIE_NOT_CONFIGURED')) {
             if (-not $code.Contains($phrase)) { throw "GUARD_MISSING: $phrase" }
           }
           foreach ($prohibited in @('artisan migrate', 'composer install', 'git reset',
             'git clean', 'Set-Content -LiteralPath $EnvPath', 'DB_DATABASE=:memory:')) {
             if ($code.Contains($prohibited)) { throw "PROHIBITED_ACTION: $prohibited" }
           }
+          if ($code -match 'InstallShortcut|Install-Shortcut|CreateShortcut') {
+            throw 'DUPLICATE_SHORTCUT_INSTALLER_FORBIDDEN'
+          }
+          $audit = Get-Content 'scripts/pi-audit-existing-launcher.ps1' -Raw
+          if (-not $audit.Contains('PI_DISCOVERY_MUTATION=NONE')) {
+            throw 'PI_EXISTING_LAUNCHER_AUDIT_GUARD_MISSING'
+          }
+          Write-Host 'PI_EXISTING_DESKTOP_SHORTCUT=PRESERVED_NO_DUPLICATE'
           Write-Host 'PI_PROTECTED_RESOURCES=NO_MUTATION'
