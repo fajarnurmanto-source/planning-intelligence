@@ -60,9 +60,6 @@ function Test-OwnedOrigin {
             ($line -notmatch '(?i)(artisan|server\.php| -S )')) {
             throw 'PI_R74_UNRECOGNIZED_PORT_OWNER'
         }
-        if ($line.IndexOf((': ' + $Port),[StringComparison]::OrdinalIgnoreCase) -ge 0) {
-            throw 'PI_R74_UNEXPECTED_PHP_COMMAND_FORMAT'
-        }
     }
     if (-not (Test-ExactAsset)) {
         throw 'PI_R74_PROBE_HASH_OR_HEALTH_MISMATCH'
@@ -107,7 +104,7 @@ if ($Mode -eq 'Audit') {
     Write-Output 'PI_R74_AUDIT_MUTATION=NONE'
     return
 }
-$mutex = New-Object System.Threading.Mutex($false,('Local\PI_R74_ORIGIN_' + $Port))
+$mutex = [System.Threading.Mutex]::new($false,('Local\PI_R74_ORIGIN_' + $Port))
 $locked = $false
 try {
     $locked = $mutex.WaitOne(15000)
