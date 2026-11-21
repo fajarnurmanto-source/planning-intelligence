@@ -1,0 +1,102 @@
+name: PI single-runtime Windows launcher
+on:
+  pull_request:
+    paths:
+      - 'scripts/pi-windows-app.ps1'
+      - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
+      - '.github/workflows/pi-single-runtime-win.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows-qa:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: sqlite3
+          coverage: none
+      - name: Validate Windows PowerShell 5.1 syntax
+        shell: powershell
+        run: |
+          $t = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-windows-app.ps1',[ref]$t,[ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_WINDOWS_LAUNCHER_PARSE_FAILURE'
+          }
+          Write-Host 'PI_WINDOWS_LAUNCHER_PARSE=PASS'
+      - name: Run local fixture with one canonical port; test restart, ownership and stop
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:TEMP 'pi-single-runtime-fixture'
+          $routerDir = Join-Path $root 'vendor\laravel\framework\src\Illuminate\Foundation\resources'
+          foreach ($d in @($routerDir,(Join-Path $root 'public'),(Join-Path $root 'storage\logs'))) {
+            New-Item -ItemType Directory -Path $d -Force | Out-Null
+          }
+          Set-Content -LiteralPath (Join-Path $root 'artisan') -Value 'fixture only'
+          Set-Content -LiteralPath (Join-Path $root 'vendor\autoload.php') -Value '<?php'
+          Set-Content -LiteralPath (Join-Path $root 'public\index.php') -Value '<?php'
+          $router = @'
+          <?php
+          $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+          if ($path === '/api/auth/setup-status') {
+              header('Content-Type: application/json');
+              echo '{"setup":"ready"}';
+          } elseif ($path === '/index.html') {
+              header('Content-Type: text/html');
+              echo '<title>Planning Intelligence</title>';
+          } else {
+              http_response_code(404);
+          }
+          '@
+          Set-Content -LiteralPath (Join-Path $routerDir 'server.php') -Value $router
+          $database = Join-Path $root 'main-fixture.sqlite'
+          Set-Content -LiteralPath $database -Value 'not-real-db-fixture'
+          $envLines = @(
+            'APP_ENV=local',
+            'APP_URL=http://127.0.0.1:8820',
+            'APP_DEBUG=false',
+            ('APP_KEY=base64:' + ('A' * 44)),
+            'DB_CONNECTION=sqlite',
+            ('DB_DATABASE=' + $database.Replace('\','/')),
+            'SESSION_DRIVER=file',
+            'SESSION_COOKIE=pi_main_session'
+          )
+          Set-Content -LiteralPath (Join-Path $root '.env') -Value $envLines
+          $script = Join-Path (Get-Location) 'scripts\pi-windows-app.ps1'
+          try {
+            & $script -Action Status -AppRoot $root
+            & $script -Action Start -AppRoot $root
+            & $script -Action Start -AppRoot $root
+            & $script -Action Status -AppRoot $root
+            $response = Invoke-WebRequest 'http://127.0.0.1:8820/api/auth/setup-status' -UseBasicParsing
+            if ($response.StatusCode -ne 200) { throw 'PI_HTTP_FIXTURE_NOT_200' }
+            Write-Host 'PI_RUNTIME_SINGLE_INSTANCE=PASS'
+            Write-Host 'PI_RUNTIME_HTTP_8820=PASS'
+          } finally {
+            & $script -Action Stop -AppRoot $root
+          }
+          if (Get-NetTCPConnection -LocalAddress 127.0.0.1 -LocalPort 8820 -State Listen -ErrorAction SilentlyContinue) {
+            throw 'PI_PORT_8820_STILL_IN_USE'
+          }
+          Write-Host 'PI_RUNTIME_STOP_CLEAN=PASS'
+      - name: Require protected resources and no destructive operations
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-windows-app.ps1' -Raw
+          foreach ($phrase in @('PI_PORT_8820_FOREIGN_LISTENER','PI_MAIN_SQLITE_NOT_FOUND',
+            'PI_APP_KEY=REUSED_NOT_EXPOSED','PI_SHORTCUT_NOT_IN_CANONICAL_RELEASE')) {
+            if (-not $code.Contains($phrase)) { throw "GUARD_MISSING: $phrase" }
+          }
+          foreach ($prohibited in @('artisan migrate', 'composer install', 'git reset',
+            'git clean', 'Set-Content -LiteralPath $EnvPath', 'DB_DATABASE=:memory:')) {
+            if ($code.Contains($prohibited)) { throw "PROHIBITED_ACTION: $prohibited" }
+          }
+          Write-Host 'PI_PROTECTED_RESOURCES=NO_MUTATION'
