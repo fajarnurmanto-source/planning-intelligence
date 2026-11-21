@@ -22,7 +22,13 @@ final class RegulatoryPlanningCrosswalkTest extends TestCase
             ->assertJsonPath('classification.status', 'EXACT_LOCAL_OBSERVATION')
             ->assertJsonPath('continuity.status', 'ABSTAIN_MISSING_COMPARISON_VERSION')
             ->assertJsonPath('interpretation.numeric_comparison', 'BLOCKED')
-            ->assertJsonPath('interpretation.review_decision', 'NO_ACTIVE_DECISION');
+            ->assertJsonPath('interpretation.review_decision', 'NO_ACTIVE_DECISION')
+            ->assertJsonPath('semantic_reasoning.schema', 'PI_HYBRID_SEMANTIC_BOUNDARY_V1')
+            ->assertJsonPath('semantic_reasoning.status', 'ABSTAIN_PROVIDER_NOT_CONFIGURED')
+            ->assertJsonPath('semantic_reasoning.provider_execution', 'NOT_RUN')
+            ->assertJsonPath('semantic_reasoning.gates.equivalence_asserted', false)
+            ->assertJsonPath('semantic_reasoning.gates.relation_promotion', 'NOT_PERFORMED')
+            ->assertJsonCount(0, 'semantic_reasoning.candidates');
         $this->assertNotEmpty($r->json('relations'));
         foreach ($r->json('relations') as $edge) {
             $this->assertNotEmpty($edge['provenance']['locator']);
@@ -31,7 +37,8 @@ final class RegulatoryPlanningCrosswalkTest extends TestCase
         $this->assertCount(10, $r->json('lifecycle.stages'));
         $this->assertCount(5, $r->json('specialized_views'));
         $this->getJson(self::URL.'?year=2027')->assertOk()
-            ->assertJsonPath('result_count', 0)->assertJsonCount(0, 'relations');
+            ->assertJsonPath('result_count', 0)->assertJsonCount(0, 'relations')
+            ->assertJsonPath('semantic_reasoning.status', 'ABSTAIN_NO_VERSIONED_CASE');
         $this->getJson(self::URL.'?as_of=2020-01-01')->assertOk()
             ->assertJsonPath('result_count', 0)->assertJsonCount(0, 'relations')->assertJsonCount(0, 'operational_definitions')->assertJsonCount(0, 'hierarchy');
         $this->getJson(self::URL.'?code=2.11.99')->assertOk()
