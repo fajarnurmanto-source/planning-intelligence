@@ -64,17 +64,24 @@ final class CloudSemanticCandidateProvider implements SemanticCandidateProvider
                 'openrouter' => 'https://openrouter.ai/api/v1/chat/completions',
                 default => throw new RuntimeException('R89_PROVIDER_NOT_ALLOWED'),
             };
-            $response = $request->withToken($apiKey)->post($url, [
+            $body = [
                 'model' => $model,
                 'messages' => [
                     ['role' => 'system', 'content' => $instruction],
                     ['role' => 'user', 'content' => $payload],
                 ],
-                'temperature' => 0,
                 'stream' => false,
-                'max_tokens' => 400,
                 // Never grant browsing, tools, file access or agentic actions.
-            ]);
+            ];
+            if ($provider === 'openai') {
+                // Current Chat Completions models use max_completion_tokens;
+                // avoid optional temperature for reasoning-model compatibility.
+                $body['max_completion_tokens'] = 400;
+            } else {
+                $body['max_tokens'] = 400;
+                $body['temperature'] = 0;
+            }
+            $response = $request->withToken($apiKey)->post($url, $body);
             $raw = $response->json('choices.0.message.content');
             $finish = $response->json('choices.0.finish_reason');
         }
