@@ -19,6 +19,9 @@ on:
       - 'scripts/pi-r74-login-frontend-rollout.ps1'
       - 'laravel/public/login.html'
       - 'laravel/public/login.js'
+      - 'laravel/public/pi-auth-shell.js'
+      - 'laravel/public/regulatory-planning-r88.js'
+      - 'laravel/tests/frontend/csrf-session-controls-r92.test.cjs'
       - 'scripts/windows/r74/**'
       - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
@@ -1047,3 +1050,20 @@ jobs:
           Write-Host 'PI_R91_SQLITE_METADATA_POSITIVE=PASS'
           Write-Host 'PI_R91_SQLITE_MISSING_MIGRATION_FAIL_CLOSED=PASS'
           Write-Host 'PI_R91_SQLITE_METADATA_NO_MUTATIONS=PASS'
+
+      - name: R92 Laravel CSRF cookie continuity and semantic consent control
+        shell: powershell
+        run: |
+          & node --check 'laravel/public/pi-auth-shell.js'
+          if ($LASTEXITCODE -ne 0) {
+            throw 'PI_R92_AUTH_SHELL_JS_PARSE_FAILED'
+          }
+          & node --check 'laravel/public/regulatory-planning-r88.js'
+          if ($LASTEXITCODE -ne 0) {
+            throw 'PI_R92_R88_JS_PARSE_FAILED'
+          }
+          & node --test 'laravel/tests/frontend/csrf-session-controls-r92.test.cjs'
+          if ($LASTEXITCODE -ne 0) {
+            throw 'PI_R92_CSRF_CONSENT_BEHAVIOR_TEST_FAILED'
+          }
+          Write-Host 'PI_R92_LOGOUT_AND_R89_POST_CSRF_CONTRACT=PASS'
