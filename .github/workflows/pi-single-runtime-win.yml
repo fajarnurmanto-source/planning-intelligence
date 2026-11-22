@@ -17,6 +17,7 @@ on:
       - 'scripts/pi-r74-credential-parity-local.ps1'
       - 'scripts/pi-r74-http-auth-parity.ps1'
       - 'scripts/pi-r74-login-frontend-rollout.ps1'
+      - 'scripts/pi-r94-one-origin-code-cutover.ps1'
       - 'laravel/public/login.html'
       - 'laravel/public/login.js'
       - 'laravel/public/pi-auth-shell.js'
@@ -101,6 +102,16 @@ jobs:
             $errors | Format-List
             throw 'PI_R90_DRIFT_CLASSIFIER_PS51_PARSE_FAILURE'
           }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r94-one-origin-code-cutover.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R94_CODE_CUTOVER_PS51_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R94_CODE_CUTOVER_PS51_PARSE=PASS'
           Write-Host 'PI_R90_DRIFT_CLASSIFIER_PS51_PARSE=PASS'
           Write-Host 'PI_R90_CUTOVER_RISK_PS51_PARSE=PASS'
           Write-Host 'PI_R74_RELEASE_PARITY_PS51_PARSE=PASS'
@@ -1071,3 +1082,112 @@ jobs:
             throw 'PI_R92_CSRF_CONSENT_BEHAVIOR_TEST_FAILED'
           }
           Write-Host 'PI_R92_LOGOUT_AND_R89_POST_CSRF_CONTRACT=PASS'
+
+      - name: R94 actual guarded code-only deploy and rollback on Windows temporary fixture
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $script='.\scripts\pi-r94-one-origin-code-cutover.ps1'
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if ($LASTEXITCODE -ne 0 -or $pin -notmatch '^[0-9a-f]{40}$') {
+            throw 'PI_R94_FIXTURE_BAD_PIN'
+          }
+          $sourceRoot=$PWD.Path
+          $allow=@(
+            'app\Providers\AppServiceProvider.php',
+            'config\pi.php',
+            'routes\web.php',
+            'public\development-case-r85.css',
+            'public\development-case-r85.html',
+            'public\regulatory-laravel-r70g.html',
+            'public\regulatory-lifecycle-r86.css',
+            'public\regulatory-lifecycle-r86.js',
+            'public\pi-auth-shell.js',
+            'app\Http\Controllers\Api\R89SemanticRegulatoryController.php',
+            'app\Http\Controllers\Api\RegulatoryPlanningCrosswalkController.php',
+            'app\Services\Pi\Development\CloudSemanticCandidateProvider.php',
+            'app\Services\Pi\Development\HybridSemanticReasoner.php',
+            'app\Services\Pi\Development\R89SemanticRegulatoryAnalysis.php',
+            'app\Services\Pi\Development\RegulatoryPlanningCrosswalk.php',
+            'app\Services\Pi\Development\SemanticCandidateProvider.php',
+            'public\regulatory-planning-r88.js'
+          )
+          $existing=@($allow | Select-Object -First 9)
+          $protected=@(
+            'artisan','.env','database\database.sqlite',
+            'public\favicon.ico','public\overview-r69c.json',
+            'public\robots.txt','public\uu12-2011-r70a.pdf'
+          )
+          function New-R94Fixture([string]$kind) {
+            $base=Join-Path $env:RUNNER_TEMP ($kind+'-'+[guid]::NewGuid().ToString('N'))
+            $root=Join-Path $base 'laravel'
+            $launcher=Join-Path $base 'launcher'
+            New-Item -ItemType Directory -Path $root -Force | Out-Null
+            New-Item -ItemType Directory -Path $launcher -Force | Out-Null
+            [IO.File]::WriteAllText((Join-Path $launcher 'BUKA-PI-HIDDEN.vbs'),'CI disposable launcher')
+            $hashes=@{}
+            foreach($rel in @($protected)+@($existing)){
+              $dest=Join-Path $root $rel
+              New-Item -ItemType Directory -Path (Split-Path $dest -Parent) -Force | Out-Null
+              [IO.File]::WriteAllText($dest,'CI original baseline only: '+$rel)
+              $hashes[$rel]=(Get-FileHash $dest -Algorithm SHA256).Hash
+            }
+            return [pscustomobject]@{Base=$base;Root=$root;Launcher=$launcher;Hashes=$hashes}
+          }
+          $fixture=New-R94Fixture 'r94-success'
+          $before=@(& $script -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fixture.Base)
+          if($before -notcontains 'PI_R94_CODE_CUTOVER=READ_ONLY_PREFLIGHT_PASS' -or
+             $before -notcontains 'PI_R94_CHANGED_OR_ADDED_COUNT=17') {
+            throw 'PI_R94_CI_READ_ONLY_PREFLIGHT_FAILED'
+          }
+          foreach($rel in $fixture.Hashes.Keys) {
+            if((Get-FileHash (Join-Path $fixture.Root $rel) -Algorithm SHA256).Hash -ne $fixture.Hashes[$rel]) {
+              throw ('PI_R94_CI_PREFLIGHT_MUTATED='+$rel)
+            }
+          }
+          $applied=@(& $script -Apply -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fixture.Base)
+          if($applied -notcontains 'PI_R94_CODE_CUTOVER=APPLIED_VERIFIED' -or
+             $applied -notcontains 'PI_R94_HTTP_VERIFICATION=SKIPPED_IN_DISPOSABLE_CI_FIXTURE' -or
+             $applied -notcontains 'PI_R94_PROTECTED_DATA_ASSET_SHA=UNCHANGED') {
+            throw 'PI_R94_CI_REAL_APPLY_NOT_ACCEPTED'
+          }
+          foreach($rel in $allow) {
+            $live=Join-Path $fixture.Root $rel
+            $candidate=Join-Path (Join-Path $sourceRoot 'laravel') $rel
+            if((Get-FileHash $live -Algorithm SHA256).Hash -ne
+               (Get-FileHash $candidate -Algorithm SHA256).Hash) {
+              throw ('PI_R94_CI_APPLIED_WRONG_SOURCE='+$rel)
+            }
+          }
+          foreach($rel in $protected) {
+            if((Get-FileHash (Join-Path $fixture.Root $rel) -Algorithm SHA256).Hash -ne $fixture.Hashes[$rel]) {
+              throw ('PI_R94_CI_PROTECTED_DATA_MUTATED='+$rel)
+            }
+          }
+          $dirs=@(Get-ChildItem (Join-Path $fixture.Launcher 'backups') -Directory)
+          if($dirs.Count -ne 1 -or
+             -not (Test-Path (Join-Path $dirs[0].FullName 'CODE_MANIFEST.json'))) {
+            throw 'PI_R94_CI_CODE_MANIFEST_BACKUP_MISSING'
+          }
+          Write-Host 'PI_R94_WINDOWS_REAL_CODE_ONLY_APPLY=PASS'
+          Write-Host 'PI_R94_WINDOWS_28_MAIN_ONLY_ASSETS_PRESERVE_SCOPE=PASS'
+          $fault=New-R94Fixture 'r94-rollback'
+          $err=''
+          try {
+            & $script -Apply -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fault.Base -CiFailAfterFirstSwap | Out-Null
+          } catch { $err=[string]$_.Exception.Message }
+          if($err -notmatch 'PI_R94_CI_INJECTED_FIRST_SWAP_FAILURE'){
+            throw 'PI_R94_CI_INJECTED_FAILURE_NOT_CAUGHT'
+          }
+          foreach($rel in $fault.Hashes.Keys) {
+            if((Get-FileHash (Join-Path $fault.Root $rel) -Algorithm SHA256).Hash -ne $fault.Hashes[$rel]) {
+              throw ('PI_R94_CI_ROLLBACK_HASH_MISMATCH='+$rel)
+            }
+          }
+          foreach($rel in @($allow | Select-Object -Skip 9)){
+            if(Test-Path -LiteralPath (Join-Path $fault.Root $rel)){
+              throw ('PI_R94_CI_FAILED_ROLLBACK_NEW_FILE_EXISTS='+$rel)
+            }
+          }
+          Write-Host 'PI_R94_WINDOWS_INJECTED_FAILURE_ROLLBACK=PASS'
+          Write-Host 'PI_R94_WINDOWS_PROTECTED_ORIGINAL_HASHES=PASS'
