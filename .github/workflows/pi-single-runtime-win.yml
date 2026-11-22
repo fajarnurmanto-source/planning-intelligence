@@ -903,9 +903,10 @@ jobs:
           Copy-Item 'laravel/composer.lock' $lock
           [IO.File]::AppendAllText($lock,[Environment]::NewLine)
           $sourceRuntime='laravel/app/Models/User.php'
+          $sourceHtaccess='laravel/public/.htaccess'
           $sourceMig='laravel/database/migrations/0001_01_01_000000_create_users_table.php'
           $sourceMig2='laravel/database/migrations/0001_01_01_000001_create_cache_table.php'
-          foreach($p in @($sourceRuntime,$sourceMig,$sourceMig2)){
+          foreach($p in @($sourceRuntime,$sourceMig,$sourceMig2,$sourceHtaccess)){
             if(-not (Test-Path -LiteralPath $p -PathType Leaf)){
               throw ('PI_R90_DRIFT_FIXTURE_SOURCE_MISSING='+$p)
             }
@@ -922,7 +923,7 @@ jobs:
             }
             [IO.File]::WriteAllText($destination,$text,[System.Text.UTF8Encoding]::new($false))
           }
-          $guarded=@('artisan','composer.lock','app\Models\User.php',
+          $guarded=@('artisan','composer.lock','app\Models\User.php','public\.htaccess',
             'database\migrations\0001_01_01_000000_create_users_table.php',
             'database\migrations\0001_01_01_000001_create_cache_table.php')
           $originals=@{}
@@ -935,6 +936,9 @@ jobs:
              $audit -notcontains 'PI_R90_CODE_CUTOVER=HOLD_PENDING_ISOLATED_ACCEPTANCE' -or
              $audit -notcontains 'PI_R90_LOCK_BYTE_DRIFT_WITH_SAME_PACKAGE_IDENTITIES=YES') {
             throw 'PI_R90_DRIFT_FIXTURE_NOT_COMPLETE'
+          }
+          if($audit -notcontains 'PI_R90_HTACCESS_CLASSIFICATION=LINE_ENDING_ONLY') {
+            throw 'PI_R90_HTACCESS_TEXT_CRLF_NOT_CLASSIFIED'
           }
           foreach($needle in @('PI_R90_DRIFT_RUNTIME_LINE_ENDING_ONLY=',
               'PI_R90_DRIFT_MIGRATION_LINE_ENDING_ONLY=',
