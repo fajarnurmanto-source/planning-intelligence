@@ -1,7 +1,7 @@
 name: PI R88 crosswalk guards
 on:
   pull_request:
-    paths: ['laravel/**', '.gitattributes', '.github/workflows/pi-r88-crosswalk.yml']
+    paths: ['laravel/**', '.gitattributes', 'scripts/pi-r93-*', 'scripts/pi-r95-*', '.github/workflows/pi-r88-crosswalk.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -67,5 +67,6 @@ jobs:
             if [[ "$ready" != 1 ]]; then echo PI_R93_DISPOSABLE_SERVER_NOT_READY >&2; exit 2; fi
             echo PI_R93_DISPOSABLE_SERVER=READY
             node ../scripts/pi-r93-isolated-http-smoke.mjs
+            node ../scripts/pi-r95-isolated-chrome-browser-qa.mjs
           )
           echo PI_R93_ORIGINAL_WINDOWS_8820_AND_DB=NOT_ACCESSED
