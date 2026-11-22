@@ -9,11 +9,13 @@
   <link rel="stylesheet" href="./pi-ia-r69e.css">
   <link rel="stylesheet" href="./development-case-r85.css">
   <link rel="stylesheet" href="./regulatory-lifecycle-r86.css">
+  <link rel="stylesheet" href="./official-sources-r100.css">
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./development-case-r85.js"></script>
   <script defer src="./regulatory-lifecycle-r86.js"></script>
   <script defer src="./regulatory-planning-r88.js"></script>
+  <script defer src="./official-sources-r100.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -104,6 +106,34 @@
         <section class="panel r85-guard-panel" aria-labelledby="r85-guard-title">
           <span class="section-number">04 · GERBANG KEAMANAN</span><h2 id="r85-guard-title">Apa yang tetap tidak boleh disimpulkan?</h2>
           <div id="r85-guards" class="r85-guards"><p class="loading">Memeriksa gerbang…</p></div>
+        </section>
+        <section id="r100-official-sources" class="panel r100-panel" aria-labelledby="r100-title">
+          <div class="panel-heading"><div>
+            <span class="section-number">05 · R100 · SUMBER DATA NYATA</span>
+            <h2 id="r100-title">Katalog dokumen resmi Kota Yogyakarta</h2>
+            <p class="r100-intro">Telusuri metadata dokumen perencanaan, penganggaran dan kebijakan persampahan dari JDIH resmi. <strong>Dokumen terindeks bukan berarti berkasnya sudah diunduh, diperiksa hash, atau disahkan sebagai bukti angka.</strong></p>
+          </div></div>
+          <div class="r100-overview" aria-label="Cakupan sumber dan status verifikasi">
+            <div class="r100-metric"><strong id="r100-count-metadata">—</strong><span>metadata dokumen resmi terindeks</span></div>
+            <div class="r100-metric"><strong id="r100-count-hash">—</strong><span>berkas baru R100 terverifikasi SHA-256</span></div>
+            <div class="r100-metric"><strong id="r100-count-amount">—</strong><span>angka subkegiatan 2026 diterima</span></div>
+          </div>
+          <div class="r100-controls">
+            <label for="r100-lane">Kelompok dokumen
+              <select id="r100-lane">
+                <option value="ALL">Seluruh sumber resmi</option>
+                <option value="PLANNING">Perencanaan</option>
+                <option value="FISCAL">Penganggaran</option>
+                <option value="SECTOR">Kebijakan persampahan</option>
+                <option value="ACCOUNTABILITY">Pertanggungjawaban tahun sebelumnya</option>
+              </select>
+            </label>
+          </div>
+          <p id="r100-state" class="r100-state" role="status" aria-live="polite">Memeriksa registry sumber resmi...</p>
+          <div id="r100-list" class="r100-list" aria-live="polite"></div>
+          <button id="r100-more" class="r100-more" type="button" hidden>Lihat semua sumber</button>
+          <div id="r100-gaps" class="r100-gaps"><strong>Celah bukti belum diperiksa</strong></div>
+          <p class="r100-guard">R100 hanya mengindeks metadata yang ditemukan pada JDIH. Keterkaitan dengan subkegiatan .0004, keabsahan ketentuan, versi perubahan APBD, angka keluaran dan kesetaraan 2026–2027 tetap memerlukan naskah, lampiran, hash, dan review manusia. Tidak ada pemanggilan API cloud atau pengambilan berkas otomatis.</p>
         </section>
         <footer class="page-footer">Planning Intelligence · PI Superior R85<span>Kota Yogyakarta 2026 · Bukti publik dan QA lokal; keputusan manusia tetap wajib.</span></footer>
       </div>
