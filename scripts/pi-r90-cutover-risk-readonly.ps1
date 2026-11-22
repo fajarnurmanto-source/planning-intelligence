@@ -9,12 +9,31 @@ Never open .env, SQLite contents, APP_KEY, provider keys or session data.
 param(
     [Parameter(Mandatory=$true)][string]$CandidateRepo,
     [Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-fA-F]{40}$')][string]$ExpectedCommit,
-    [string]$AppRoot='D:\Research\PlanningIntelligence\planning-intelligence-v0.0-starter\planning-intelligence-v0.0\laravel'
+    [string]$AppRoot='D:\Research\PlanningIntelligence\planning-intelligence-v0.0-starter\planning-intelligence-v0.0\laravel',
+    [string]$CiFixtureRoot
 )
 Set-StrictMode -Version 2
 $ErrorActionPreference='Stop'
 $original='D:\Research\PlanningIntelligence\planning-intelligence-v0.0-starter\planning-intelligence-v0.0\laravel'
-if ($AppRoot -ne $original) {throw 'PI_R90_MAIN_ROOT_NOT_PROTECTED_ORIGINAL'}
+if (-not [string]::IsNullOrWhiteSpace($CiFixtureRoot)) {
+    # Explicitly limit temporary integration fixtures to GitHub Actions on
+    # its own ephemeral Windows runner. This cannot redirect the user installer.
+    if ($env:GITHUB_ACTIONS -ne 'true' -or [string]::IsNullOrWhiteSpace($env:RUNNER_TEMP)) {
+        throw 'PI_R90_CI_FIXTURE_ONLY_ON_GITHUB_WINDOWS'
+    }
+    $tempRoot=[IO.Path]::GetFullPath($env:RUNNER_TEMP).TrimEnd([char]92,[char]47)
+    $fixtureRoot=[IO.Path]::GetFullPath($CiFixtureRoot).TrimEnd([char]92,[char]47)
+    if (-not $fixtureRoot.StartsWith(($tempRoot+[IO.Path]::DirectorySeparatorChar),
+        [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'PI_R90_CI_FIXTURE_OUTSIDE_RUNNER_TEMP'
+    }
+    $AppRoot=Join-Path $fixtureRoot 'laravel'
+    Write-Output 'PI_R90_AUDIT_TARGET=ISOLATED_WINDOWS_CI_FIXTURE'
+} elseif ($AppRoot -ne $original) {
+    throw 'PI_R90_MAIN_ROOT_NOT_PROTECTED_ORIGINAL'
+} else {
+    Write-Output 'PI_R90_AUDIT_TARGET=PROTECTED_ORIGINAL_WINDOWS_8820'
+}
 if (-not (Test-Path -LiteralPath (Join-Path $AppRoot 'artisan') -PathType Leaf) -or
     -not (Test-Path -LiteralPath (Join-Path $CandidateRepo 'laravel\artisan') -PathType Leaf)) {
     throw 'PI_R90_LARAVEL_CANDIDATE_OR_MAIN_MISSING'
