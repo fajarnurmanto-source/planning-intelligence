@@ -54,6 +54,7 @@ const routes=[
   '/api/qa-superior-r86/regulatory-lifecycle',
   '/api/qa-superior-r88/planning-crosswalk',
   '/api/qa-superior-r89/semantic-preview',
+  '/api/qa-superior-r100/official-sources',
   '/api/qa-regulatory-r84/evidence-reviews',
 ]
 const setup=await request('/api/auth/setup-status')
@@ -111,6 +112,16 @@ assert.equal(r89.data.schema,'PI_R89_EVIDENCE_BOUND_SEMANTIC_ANALYSIS_V1')
 assert.equal(r89.data.semantic_reasoning.provider_execution,'NOT_RUN')
 assert.equal(r89.data.semantic_reasoning.gates.production_admission,'DENIED')
 console.log('PI_R93_LIVE_HTTP_R85_R86_R88_R89_GET=PASS')
+
+const r100=await request('/api/qa-superior-r100/official-sources')
+status(r100,200,'R100 source catalog')
+assert.equal(r100.data.schema,'PI_R100_OFFICIAL_SOURCE_METADATA_READ_MODEL_V1')
+assert.equal(r100.data.documents.length,18)
+assert.equal(r100.data.counts.new_document_bytes_hash_verified,0)
+assert.equal(r100.data.counts.new_subactivity_budget_amounts_verified,0)
+assert.equal(r100.data.interpretation.production_admission,'DENIED')
+console.log('PI_R100_REAL_HTTP_AUTHENTICATED_SOURCE_CATALOG=PASS')
+
 
 const forbiddenCloud=await request('/api/qa-superior-r89/semantic-candidates',{
   method:'POST', csrf:session.data.csrf,
