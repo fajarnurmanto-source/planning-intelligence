@@ -162,10 +162,13 @@ if(-not $ciMode) {
     if($null -eq $process -or $process.Name -notmatch '^(php|php-cgi)\.exe$') {
         throw 'PI_R94_8820_NOT_OWNED_BY_PHP'
     }
-    foreach($cache in @('bootstrap\cache\routes-v7.php','bootstrap\cache\config.php')) {
-        if(Test-Path -LiteralPath (Join-Path $root $cache)) {
-            throw ('PI_R94_ORIGINAL_CACHED_ROUTE_OR_CONFIG_HOLD='+$cache)
-        }
+    # Any Laravel cached route version or cached config can hide new R88/R89
+    # registrations. Hold rather than clearing production caches in-place.
+    $cacheDir=Join-Path $root 'bootstrap\cache'
+    $cached=@(Get-ChildItem -LiteralPath $cacheDir -File -ErrorAction SilentlyContinue |
+      Where-Object { $_.Name -eq 'config.php' -or $_.Name -like 'routes-*.php' })
+    if($cached.Count -gt 0) {
+        throw ('PI_R94_ORIGINAL_CACHED_ROUTE_OR_CONFIG_HOLD='+$cached[0].Name)
     }
 }
 $time=Get-Date -Format 'yyyyMMdd-HHmmss'
