@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\AiReviewBriefController;
 use App\Http\Controllers\Api\AutomatedAncestryController;
 use App\Http\Controllers\Api\EntitlementController;
 use App\Http\Controllers\Api\GovernmentDevelopmentCaseController;
+use App\Http\Controllers\Api\OfficialSourceMetadataController;
 use App\Http\Controllers\Api\NormativePlanningReadinessController;
 use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\PlanningLineageController;
@@ -66,6 +67,8 @@ Route::prefix('api')->group(function (): void {
             ->middleware('throttle:10,1')->name('pi.superior.semantic-preview');
         Route::post('/qa-superior-r89/semantic-candidates', [R89SemanticRegulatoryController::class, 'analyze'])
             ->middleware('throttle:2,1')->name('pi.superior.semantic-candidates');
+        Route::get('/qa-superior-r100/official-sources', OfficialSourceMetadataController::class)
+            ->middleware('throttle:20,1')->name('pi.superior.official-source-metadata');
         Route::get('/qa-superior-r85/development-case', GovernmentDevelopmentCaseController::class)
             ->name('pi.superior.development-case');
         Route::get('/qa-superior-r86/regulatory-lifecycle', RegulatoryLifecycleController::class)
