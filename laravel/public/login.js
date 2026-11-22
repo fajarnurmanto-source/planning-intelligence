@@ -13,7 +13,7 @@
       el('heading').textContent = needsSetup ? 'Buat akun administrator QA' : 'Masuk ke ruang kerja'
       el('description').textContent = needsSetup
         ? 'Buat satu akun khusus pratinjau Kota Yogyakarta. Data akun tidak dikirim ke penyedia AI.'
-        : 'Masukkan nama pengguna dan kata sandi lokal yang dibuat saat pemasangan R69E pertama.'
+        : 'Masukkan nama pengguna dan kata sandi akun lokal Planning Intelligence.'
       el('password-hint').textContent = needsSetup ? '· minimal 12 karakter' : ''
       el('password').autocomplete = needsSetup ? 'new-password' : 'current-password'
       el('confirm-label').hidden = !needsSetup
@@ -36,7 +36,27 @@
         body:JSON.stringify({username,password}),
       })
       const result = await response.json()
-      if (!response.ok) throw new Error(result.code === 'INVALID_CREDENTIALS' ? 'Nama pengguna atau kata sandi tidak sesuai.' : (result.code || 'Autentikasi ditolak'))
+      if (!response.ok) {
+        if (result.code === 'INVALID_CREDENTIALS') {
+          // Do not permit a potentially stale browser-autofilled password to
+          // be submitted repeatedly. Never log or display entered credentials.
+          el('password').value = ''
+          el('password').focus()
+          throw new Error('Login ditolak. Ketik ulang kata sandi secara manual; periksa sandi yang tersimpan di browser.')
+        }
+        throw new Error(result.code || 'Autentikasi ditolak')
+      }
+      // A successful POST alone is not enough. Verify that the browser sent
+      // back its new authenticated cookie before navigating to the workspace.
+      const check = await fetch('/api/auth/session', {
+        credentials: 'same-origin', cache: 'no-store',
+        headers: {'Accept': 'application/json'},
+      })
+      const verified = check.ok ? await check.json() : null
+      if (!verified || verified.status !== 'AUTHENTICATED'
+          || verified.username !== username.toLowerCase()) {
+        throw new Error('Login diterima, tetapi sesi browser belum aktif. Periksa cookie situs lokal lalu coba lagi.')
+      }
       location.replace('./index.html')
     } catch (error) { el('feedback').textContent = String(error.message || error) }
     finally { submitButton.disabled = false }
