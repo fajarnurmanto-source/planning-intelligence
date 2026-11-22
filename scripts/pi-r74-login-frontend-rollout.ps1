@@ -143,6 +143,29 @@ try {
             throw 'PI_R74_CI_SIMULATED_SECOND_FILE_FAILURE'
         }
     }
+    # Production success means the SAME 8820 HTTP origin serves both exact
+    # new file bytes, not merely that writes to D:\ succeeded. Fail and
+    # restore originals if the verified main server serves anything else.
+    if ([string]::IsNullOrWhiteSpace($CiFixtureRoot)) {
+        $digest=[Security.Cryptography.SHA256]::Create()
+        try {
+            foreach ($name in @('login.html','login.js')) {
+                $url='http://127.0.0.1:8820/'+$name+'?r74-asset-check='+[guid]::NewGuid().ToString('N')
+                $reply=Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 8 -Headers @{'Cache-Control'='no-cache'} -ErrorAction Stop
+                if ($reply.StatusCode -ne 200) {
+                    throw ('PI_R74_LOGIN_ORIGINAL_HTTP_NOT_200='+$name)
+                }
+                $bytes=$reply.RawContentStream.ToArray()
+                $actual=[BitConverter]::ToString($digest.ComputeHash($bytes)).Replace('-','')
+                if ($actual -ne $files[$name].CandidateSha256) {
+                    throw ('PI_R74_LOGIN_ORIGINAL_HTTP_HASH_MISMATCH='+$name)
+                }
+            }
+        } finally { $digest.Dispose() }
+        Write-Output 'PI_R74_LOGIN_FRONTEND_HTTP=UPDATED_AND_VERIFIED'
+    } else {
+        Write-Output 'PI_R74_LOGIN_FRONTEND_HTTP=NOT_RUN_IN_CI_FIXTURE'
+    }
     Write-Output 'PI_R74_LOGIN_FRONTEND_ROLLOUT=APPLIED'
     Write-Output 'PI_R74_LOGIN_ALL_TWO_FILES_SHA256=VERIFIED'
     Write-Output ('PI_R74_LOGIN_FRONTEND_BACKUP='+$backup)
