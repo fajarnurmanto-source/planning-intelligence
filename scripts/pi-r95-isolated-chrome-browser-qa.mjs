@@ -1,0 +1,201 @@
+#!/usr/bin/env node
+// PI R95: dependency-free Chrome DevTools browser acceptance.
+// Only GitHub Actions Linux runner, synthetic R93 user and localhost:19893.
+// Real browser desktop 1440px + mobile 390px; clicks R88 crosswalk and
+// R89 *preview only*, never provider-run/consent/reviewer POST.
+// Requires Chrome preinstalled on hosted runner, zero npm packages.
+import assert from 'node:assert/strict'
+import {spawn, spawnSync} from 'node:child_process'
+import {existsSync, mkdtempSync, readFileSync, rmSync} from 'node:fs'
+import {join} from 'node:path'
+import {setTimeout as delay} from 'node:timers/promises'
+
+assert.equal(process.env.GITHUB_ACTIONS,'true','R95 only runs on CI')
+assert.equal(process.env.APP_ENV,'testing','R95 requires testing environment')
+assert.equal(process.env.PI_R93_CI_ORIGIN,'http://127.0.0.1:19893','no owner 8820 access')
+assert.ok(process.env.RUNNER_TEMP,'R95 runner temporary home required')
+let chrome=''
+for(const executable of ['google-chrome','google-chrome-stable','chromium','chromium-browser']){
+  const result=spawnSync('which',[executable],{encoding:'utf8'})
+  if(result.status===0){chrome=result.stdout.trim();break}
+}
+assert.ok(chrome,'PI_R95_CHROME_NOT_INSTALLED_ON_RUNNER')
+const profile=mkdtempSync(join(process.env.RUNNER_TEMP,'pi-r95-cdp-'))
+const spawned=spawn(chrome,[
+  '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
+  '--no-first-run','--disable-background-networking','--disable-extensions',
+  '--remote-allow-origins=*','--remote-debugging-port=0',
+  '--user-data-dir='+profile,'--window-size=1440,900','about:blank',
+],{stdio:'ignore'})
+let ws
+let send
+try{
+  let contents
+  for(let i=0;i<90;i++){
+    const file=join(profile,'DevToolsActivePort')
+    if(existsSync(file)){contents=readFileSync(file,'utf8');break}
+    if(spawned.exitCode!==null)throw new Error('PI_R95_CHROME_EXITED_BEFORE_DEBUGGER')
+    await delay(200)
+  }
+  assert.ok(contents,'PI_R95_CHROME_DEBUG_PORT_TIMEOUT')
+  const port=Number(contents.split(/\r?\n/)[0])
+  assert.ok(port>0&&port<=65535,'invalid ephemeral debugger port')
+  let targets=await (await fetch('http://127.0.0.1:'+port+'/json')).json()
+  let tab=targets.find(t=>t.type==='page')
+  if(!tab){
+    tab=await (await fetch('http://127.0.0.1:'+port+'/json/new?about:blank',{method:'PUT'})).json()
+  }
+  assert.ok(tab.webSocketDebuggerUrl,'PI_R95_DEVTOOLS_PAGE_TARGET_NOT_FOUND')
+  ws=new WebSocket(tab.webSocketDebuggerUrl)
+  await new Promise((resolve,reject)=>{
+    ws.addEventListener('open',resolve,{once:true})
+    ws.addEventListener('error',reject,{once:true})
+  })
+  let seq=0
+  const pending=new Map()
+  let externalRequests=0
+  ws.addEventListener('message',event=>{
+    const data=JSON.parse(event.data)
+    if(data.method==='Network.requestWillBeSent'){
+      const url=data.params?.request?.url||''
+      if(/^https?:\/\//i.test(url)&&!url.startsWith('http://127.0.0.1:19893/')){
+        externalRequests++
+      }
+    }
+    if(typeof data.id!=='number')return
+    const p=pending.get(data.id)
+    if(!p)return
+    pending.delete(data.id)
+    if(data.error)p.reject(new Error(data.error.message||'CDP error'))
+    else p.resolve(data.result||{})
+  })
+  send=(method,params={})=>{
+    const id=++seq
+    return Promise.race([
+      new Promise((resolve,reject)=>{
+        pending.set(id,{resolve,reject})
+        ws.send(JSON.stringify({id,method,params}))
+      }),
+      delay(12000).then(()=>{throw new Error('PI_R95_CDP_TIMEOUT_'+method)})
+    ])
+  }
+  async function evalPage(expression){
+    const data=await send('Runtime.evaluate',{
+      expression,awaitPromise:true,returnByValue:true,
+    })
+    if(data.exceptionDetails)throw new Error('PI_R95_PAGE_JAVASCRIPT_EXCEPTION')
+    return data.result?.value
+  }
+  async function until(expression,label){
+    for(let i=0;i<90;i++){
+      try{
+        if(await evalPage(expression))return
+      }catch{ /* page navigation or DOM not yet ready */ }
+      await delay(200)
+    }
+    throw new Error('PI_R95_BROWSER_WAIT_FAILED_'+label)
+  }
+  async function navigate(path){
+    await send('Page.navigate',{url:'http://127.0.0.1:19893'+path})
+    await until("document.readyState === 'complete'",'PAGE_LOADED')
+  }
+  await send('Page.enable')
+  await send('Runtime.enable')
+  await send('Network.enable')
+  await send('Emulation.setDeviceMetricsOverride',{
+    width:1440,height:900,deviceScaleFactor:1,mobile:false,
+  })
+  await navigate('/login.html')
+  const logged=await evalPage("(async function(){"+
+    "const s=await fetch('/api/auth/setup-status',{credentials:'same-origin'});"+
+    "const d=await s.json();"+
+    "const r=await fetch('/api/auth/login',{method:'POST',credentials:'same-origin',"+
+    "headers:{Accept:'application/json','Content-Type':'application/json','X-CSRF-TOKEN':d.csrf},"+
+    "body:JSON.stringify({username:'r93_ci_operator',password:'R93-CI-Only-Password-Not-A-User-Secret!'})});"+
+    "return {status:r.status,setup:s.status,needs_setup:d.needs_setup};})()")
+  assert.equal(logged.setup,200)
+  assert.equal(logged.needs_setup,false)
+  assert.equal(logged.status,200)
+  await navigate('/development-case-r85.html')
+  await until("document.querySelector('#r86-status')?.textContent?.includes('Registry R86 siap')","R86_CATALOGUE")
+  await until("document.querySelector('#r85-questions')?.querySelectorAll('article').length > 0","R85_CASE")
+  const loaded=await evalPage("({"+
+    "caseCount:document.querySelector('#r85-questions')?.children.length,"+
+    "r86Text:document.querySelector('#r86-status')?.textContent,"+
+    "signedIn:document.body?.textContent?.includes('r93_ci_operator'),"+
+    "cloudInitiallyDisabled:document.querySelector('#r89-run')?.disabled,"+
+    "r88NeedsClick:document.querySelector('#r88-status')?.textContent?.includes('Pilih Telusuri')" +
+    "})")
+  assert.ok(loaded.caseCount>0,'R85 evidence questions must render')
+  assert.match(loaded.r86Text,/10\/10/)
+  assert.equal(loaded.signedIn,true)
+  assert.equal(loaded.cloudInitiallyDisabled,true)
+  assert.equal(loaded.r88NeedsClick,true)
+  console.log('PI_R95_CHROME_R85_R86_AUTHENTICATED_RENDER=PASS')
+
+  await evalPage("document.querySelector('#r88-controls').requestSubmit()")
+  await until("document.querySelector('#r88-status')?.textContent?.includes('Jejak tersedia')","R88_CROSSWALK")
+  const crosswalk=await evalPage("({"+
+    "status:document.querySelector('#r88-status')?.textContent,"+
+    "count:document.querySelector('#r88-results')?.children.length,"+
+    "previewEnabled:!document.querySelector('#r89-preview')?.disabled})")
+  assert.ok(crosswalk.count>0,'R88 must render at least one crosswalk card')
+  assert.equal(crosswalk.previewEnabled,true)
+  console.log('PI_R95_CHROME_R88_REAL_DOM_INTERACTION=PASS')
+
+  await evalPage("document.querySelector('#r89-preview').click()")
+  await until("document.querySelector('#r89-status')?.textContent?.includes('Pratinjau siap')","R89_PREVIEW")
+  const preview=await evalPage("({"+
+    "visible:!document.querySelector('#r89-data')?.hidden,"+
+    "length:document.querySelector('#r89-data')?.textContent?.length,"+
+    "runDisabled:document.querySelector('#r89-run')?.disabled,"+
+    "consentChecked:document.querySelector('#r89-consent')?.checked})")
+  assert.equal(preview.visible,true)
+  assert.ok(preview.length>20)
+  assert.equal(preview.runDisabled,true)
+  assert.equal(preview.consentChecked,false)
+  console.log('PI_R95_CHROME_R89_PREVIEW_WITHOUT_PAID_PROVIDER=PASS')
+
+  async function viewport(width,height,mobile){
+    await send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile})
+    await delay(500)
+    return evalPage("({"+
+      "viewport:window.innerWidth,"+
+      "docWidth:document.documentElement.scrollWidth,"+
+      "bodyWidth:document.body.scrollWidth,"+
+      "r85Visible:document.querySelector('#r85-filters')?.getBoundingClientRect().width>0,"+
+      "r86Visible:document.querySelector('#r86-lifecycle')?.getBoundingClientRect().width>0,"+
+      "r88Visible:document.querySelector('#r88-crosswalk')?.getBoundingClientRect().width>0,"+
+      "r89Visible:document.querySelector('#r89-panel')?.getBoundingClientRect().width>0})")
+  }
+  const desktop=await viewport(1440,900,false)
+  assert.ok(desktop.viewport>=1300&&desktop.viewport<=1440)
+  assert.ok(desktop.docWidth<=desktop.viewport+3,'PI_R95_DESKTOP_HORIZONTAL_OVERFLOW_'+JSON.stringify(desktop))
+  assert.ok(desktop.r85Visible&&desktop.r86Visible&&desktop.r88Visible&&desktop.r89Visible)
+  console.log('PI_R95_CHROME_DESKTOP_1440PX_NO_OVERFLOW=PASS')
+  const phone=await viewport(390,844,true)
+  assert.ok(phone.viewport>=385&&phone.viewport<=400,'PI_R95_MOBILE_VIEWPORT_NOT_390')
+  assert.ok(phone.docWidth<=phone.viewport+3,'PI_R95_MOBILE_390PX_HORIZONTAL_OVERFLOW_'+JSON.stringify(phone))
+  assert.ok(phone.r85Visible&&phone.r86Visible&&phone.r88Visible&&phone.r89Visible)
+  console.log('PI_R95_CHROME_MOBILE_390PX_NO_OVERFLOW=PASS')
+
+  // Re-select 2027 and observe ABSTAIN; do not consent or call paid provider.
+  await evalPage("(()=>{const y=document.querySelector('#r88-controls select[name=year]');"+
+    "y.value='2027';y.dispatchEvent(new Event('change',{bubbles:true}));"+
+    "document.querySelector('#r88-controls').requestSubmit()})()")
+  await until("document.querySelector('#r88-status')?.textContent?.includes('ABSTAIN')","R88_2027_ABSTAIN")
+  const abstain=await evalPage("({"+
+    "runDisabled:document.querySelector('#r89-run')?.disabled,"+
+    "previewDisabled:document.querySelector('#r89-preview')?.disabled,"+
+    "consentChecked:document.querySelector('#r89-consent')?.checked})")
+  assert.equal(abstain.runDisabled,true)
+  assert.equal(abstain.previewDisabled,true)
+  assert.equal(abstain.consentChecked,false)
+  assert.equal(externalRequests,0,'no external HTTP / provider egress during browser QA')
+  console.log('PI_R95_CHROME_2027_ABSTAIN_AND_CLOUD_OFF=PASS')
+  console.log('PI_R95_CHROME_RESPONSIVE_AUTHENTICATED_ACCEPTANCE=PASS')
+} finally {
+  try{ws?.close()}catch{}
+  try{spawned.kill('SIGTERM')}catch{}
+  try{rmSync(profile,{recursive:true,force:true})}catch{}
+}
