@@ -103,6 +103,13 @@ foreach($entry in $tracked) {
     } else {
         $seen++
         $counts[$class]++
+        # Emit all actionable code/binary differences even if 20 early CRLF
+        # examples have consumed the bounded sample budget.
+        if ($class -in @('TEXT_CONTENT_DIFFERENT',
+            'BINARY_OR_UNSUPPORTED_DIFFERENT','LARGE_TEXT_DIFFERENT',
+            'NON_UTF8_DIFFERENT')) {
+            Write-Output ('PI_R90_ACTIONABLE_RUNTIME_DIFF='+$relative+':'+$class)
+        }
         if ($examples -lt 20 -and $class -notin @('BYTE_IDENTICAL','MISSING_ON_MAIN')) {
             Write-Output ('PI_R90_DRIFT_SAMPLE='+$relative+':'+$class)
             $examples++
