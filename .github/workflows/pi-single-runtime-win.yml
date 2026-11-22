@@ -12,6 +12,8 @@ on:
       - 'scripts/pi-r74-verify-entered-password.php'
       - 'scripts/pi-r74-credential-parity-local.ps1'
       - 'scripts/pi-r74-http-auth-parity.ps1'
+      - 'laravel/public/login.html'
+      - 'laravel/public/login.js'
       - 'scripts/windows/r74/**'
       - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
@@ -517,3 +519,37 @@ jobs:
           }
           Write-Host 'PI_R74_HTTP_AUTH_DEFAULT_NO_LOGIN=PASS'
           Write-Host 'PI_R74_HTTP_AUTH_SOURCE_GUARDS=PASS'
+
+      - name: R74 login browser autofill and session continuity regression
+        shell: powershell
+        run: |
+          $html = Get-Content 'laravel/public/login.html' -Raw
+          $js = Get-Content 'laravel/public/login.js' -Raw
+          if ($html -notmatch 'id="password"[^>]*autocomplete="current-password"' -or
+              $html -match 'INSTITUTIONAL ACCESS · R69E QA') {
+            throw 'PI_R74_INITIAL_EXISTING_LOGIN_AUTOFILL_METADATA_INVALID'
+          }
+          foreach ($needle in @("needsSetup ? 'new-password' : 'current-password'",
+              "result.code === 'INVALID_CREDENTIALS'",
+              "el('password').value = ''",
+              "fetch('/api/auth/session'",
+              "credentials: 'same-origin'",
+              "verified.status !== 'AUTHENTICATED'",
+              "location.replace('./index.html')")) {
+            if (-not $js.Contains($needle)) {
+              throw ('PI_R74_LOGIN_FLOW_REQUIRED_GUARD_MISSING: '+$needle)
+            }
+          }
+          foreach ($forbidden in @('console.log(password)', 'localStorage.setItem',
+              'sessionStorage.setItem', 'document.cookie =')) {
+            if ($js.Contains($forbidden)) {
+              throw ('PI_R74_LOGIN_FLOW_UNSAFE_SECRET_STORAGE: '+$forbidden)
+            }
+          }
+          & node --check 'laravel/public/login.js'
+          if ($LASTEXITCODE -ne 0) {
+            throw 'PI_R74_LOGIN_JS_SYNTAX_FAILED'
+          }
+          Write-Host 'PI_R74_LOGIN_INITIAL_AUTOFILL=EXISTING_PASSWORD'
+          Write-Host 'PI_R74_LOGIN_STALE_AUTOFILL_CLEARED=PASS'
+          Write-Host 'PI_R74_LOGIN_SESSION_CONTINUITY_GUARD=PASS'
