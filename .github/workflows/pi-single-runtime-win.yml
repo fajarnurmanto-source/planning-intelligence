@@ -577,6 +577,95 @@ jobs:
           }
           Write-Host 'PI_R74_LOGIN_SESSION_CONTINUITY_GUARD=PASS'
 
+      - name: Exercise real R74 frontend installer on Windows temp fixture (apply and rollback)
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $installer='.\scripts\pi-r74-login-frontend-rollout.ps1'
+          $utf8=[System.Text.UTF8Encoding]::new($false)
+          function New-R74Fixture([string]$prefix) {
+            $base=Join-Path $env:RUNNER_TEMP ($prefix+'-'+[guid]::NewGuid().ToString('N'))
+            $app=Join-Path $base 'laravel'
+            $pub=Join-Path $app 'public'
+            $launch=Join-Path $base 'launcher'
+            New-Item -ItemType Directory -Path $pub -Force | Out-Null
+            New-Item -ItemType Directory -Path $launch -Force | Out-Null
+            [IO.File]::WriteAllText((Join-Path $app 'artisan'),'fixture only',$utf8)
+            [IO.File]::WriteAllText((Join-Path $launch 'BUKA-PI-HIDDEN.vbs'),'fixture only',$utf8)
+            $html=Join-Path $pub 'login.html'
+            $js=Join-Path $pub 'login.js'
+            [IO.File]::WriteAllText($html,'<html>original login fixture</html>',$utf8)
+            [IO.File]::WriteAllText($js,'// original login fixture',$utf8)
+            $htmlBlob=([string](& git.exe hash-object --no-filters $html)).Trim()
+            $jsBlob=([string](& git.exe hash-object --no-filters $js)).Trim()
+            if ($htmlBlob -notmatch '^[0-9a-f]{40}$' -or $jsBlob -notmatch '^[0-9a-f]{40}$') {
+              throw 'PI_R74_CI_GIT_BLOB_HASH_FAILED'
+            }
+            return [pscustomobject]@{
+              Base=$base; App=$app; Launcher=$launch; Html=$html; Js=$js;
+              HtmlBlob=$htmlBlob; JsBlob=$jsBlob;
+              HtmlBefore=(Get-FileHash -LiteralPath $html -Algorithm SHA256).Hash;
+              JsBefore=(Get-FileHash -LiteralPath $js -Algorithm SHA256).Hash;
+            }
+          }
+          $fixture=New-R74Fixture 'pi-r74-success'
+          $before=@(& $installer -CiFixtureRoot $fixture.Base -CiHtmlBaselineBlob $fixture.HtmlBlob -CiJsBaselineBlob $fixture.JsBlob)
+          if ($before -notcontains 'PI_R74_LOGIN_FRONTEND_ROLLOUT=READ_ONLY_PREFLIGHT_PASS') {
+            throw 'PI_R74_REAL_INSTALLER_CI_PREFLIGHT_FAILED'
+          }
+          if ((Get-FileHash $fixture.Html -Algorithm SHA256).Hash -ne $fixture.HtmlBefore -or
+              (Get-FileHash $fixture.Js -Algorithm SHA256).Hash -ne $fixture.JsBefore) {
+            throw 'PI_R74_CI_PREFLIGHT_MUTATED_FILES'
+          }
+          $applied=@(& $installer -Apply -CiFixtureRoot $fixture.Base -CiHtmlBaselineBlob $fixture.HtmlBlob -CiJsBaselineBlob $fixture.JsBlob)
+          if ($applied -notcontains 'PI_R74_LOGIN_FRONTEND_ROLLOUT=APPLIED' -or
+              $applied -notcontains 'PI_R74_LOGIN_ALL_TWO_FILES_SHA256=VERIFIED') {
+            throw 'PI_R74_REAL_INSTALLER_CI_APPLY_NOT_CONFIRMED'
+          }
+          foreach($name in @('login.html','login.js')) {
+            $actual=Join-Path (Join-Path $fixture.App 'public') $name
+            $candidate=Join-Path 'laravel/public' $name
+            if ((Get-FileHash $actual -Algorithm SHA256).Hash -ne
+                (Get-FileHash $candidate -Algorithm SHA256).Hash) {
+              throw ('PI_R74_REAL_INSTALLER_CI_APPLIED_WRONG_FILE='+$name)
+            }
+          }
+          $dirs=@(Get-ChildItem (Join-Path $fixture.Launcher 'backups') -Directory)
+          if ($dirs.Count -ne 1) {throw 'PI_R74_REAL_INSTALLER_CI_BACKUP_COUNT_BAD'}
+          $backup=$dirs[0].FullName
+          if ((Get-FileHash (Join-Path $backup 'login.html') -Algorithm SHA256).Hash -ne $fixture.HtmlBefore -or
+              (Get-FileHash (Join-Path $backup 'login.js') -Algorithm SHA256).Hash -ne $fixture.JsBefore -or
+              -not (Test-Path (Join-Path $backup 'ORIGINAL_SHA256.json'))) {
+            throw 'PI_R74_REAL_INSTALLER_CI_ORIGINAL_BACKUP_BAD'
+          }
+          Write-Host 'PI_R74_REAL_INSTALLER_WINDOWS_APPLY=PASS'
+          Write-Host 'PI_R74_REAL_INSTALLER_WINDOWS_BACKUP=PASS'
+          $fault=New-R74Fixture 'pi-r74-rollback'
+          $failure=''
+          try {
+            & $installer -Apply -CiFixtureRoot $fault.Base -CiHtmlBaselineBlob $fault.HtmlBlob -CiJsBaselineBlob $fault.JsBlob -CiSimulateFailureAfterFirstSwap | Out-Null
+          } catch { $failure=[string]$_.Exception.Message }
+          if ($failure -notmatch 'PI_R74_CI_SIMULATED_SECOND_FILE_FAILURE') {
+            throw 'PI_R74_CI_INJECTED_FAULT_NOT_CAUGHT'
+          }
+          if ((Get-FileHash $fault.Html -Algorithm SHA256).Hash -ne $fault.HtmlBefore -or
+              (Get-FileHash $fault.Js -Algorithm SHA256).Hash -ne $fault.JsBefore) {
+            throw 'PI_R74_CI_ROLLBACK_DID_NOT_RESTORE_BOTH'
+          }
+          Write-Host 'PI_R74_REAL_INSTALLER_WINDOWS_ROLLBACK=PASS'
+          $drift=New-R74Fixture 'pi-r74-drift'
+          [IO.File]::AppendAllText($drift.Html,'tamper')
+          $driftHash=(Get-FileHash $drift.Html -Algorithm SHA256).Hash
+          $driftFail=''
+          try {
+            & $installer -Apply -CiFixtureRoot $drift.Base -CiHtmlBaselineBlob $drift.HtmlBlob -CiJsBaselineBlob $drift.JsBlob | Out-Null
+          } catch { $driftFail=[string]$_.Exception.Message }
+          if ($driftFail -notmatch 'PI_R74_LOGIN_ORIGINAL_SOURCE_DRIFT=login.html_STOP' -or
+              (Get-FileHash $drift.Html -Algorithm SHA256).Hash -ne $driftHash -or
+              (Test-Path (Join-Path $drift.Launcher 'backups'))) {
+            throw 'PI_R74_REAL_INSTALLER_CI_DRIFT_DID_NOT_FAIL_CLOSED'
+          }
+          Write-Host 'PI_R74_REAL_INSTALLER_WINDOWS_DRIFT_HOLD=PASS'
       - name: Protect existing R74 login source during guarded frontend rollout
         shell: powershell
         run: |
