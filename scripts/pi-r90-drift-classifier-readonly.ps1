@@ -101,6 +101,9 @@ foreach($entry in $tracked) {
         throw ('PI_R90_DRIFT_CANDIDATE_FILE_MISSING='+$relative)
     }
     $class=Get-Classification $source $dest
+    if ($relative -ceq 'public/.htaccess') {
+        Write-Output ('PI_R90_HTACCESS_CLASSIFICATION='+$class)
+    }
     if ($isMigration) {
         $migrationSeen++
         $migrationCounts[$class]++
