@@ -11,6 +11,7 @@ on:
       - 'scripts/pi-r74-auth-db-readonly.php'
       - 'scripts/pi-r74-verify-entered-password.php'
       - 'scripts/pi-r74-credential-parity-local.ps1'
+      - 'scripts/pi-r74-http-auth-parity.ps1'
       - 'scripts/windows/r74/**'
       - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
       - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
@@ -92,6 +93,16 @@ jobs:
             $errors | Format-List
             throw 'PI_R74_CREDENTIAL_PARITY_PS51_PARSE_FAILURE'
           }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-http-auth-parity.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_HTTP_AUTH_PARITY_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R74_HTTP_AUTH_PARITY_PARSE=PASS'
           Write-Host 'PI_R74_CREDENTIAL_PARITY_PS51_PARSE=PASS'
           Write-Host 'PI_R74_AUTH_DIAGNOSTIC_PARSE=PASS'
           Write-Host 'PI_R74_ACCEPTANCE_PARSE=PASS'
@@ -468,3 +479,41 @@ jobs:
           Write-Host 'PI_R74_BCRYPT_PARITY_POSITIVE=PASS'
           Write-Host 'PI_R74_BCRYPT_PARITY_NEGATIVE=PASS'
           Write-Host 'PI_R74_BCRYPT_READONLY_DB_IMMUTABLE=PASS'
+
+      - name: HTTP auth probe original-root and no-credential-exposure source guards
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-r74-http-auth-parity.ps1' -Raw
+          foreach ($needle in @('http://127.0.0.1:8820',
+              'PI_R74_ORIGINAL_SUPERVISOR_MISSING',
+              'PI_R74_HTTP_RUNTIME_IDENTITY=VERIFIED',
+              'PI_R74_HTTP_NEEDS_SETUP=',
+              'PI_R74_HTTP_CSRF_AND_COOKIE_SESSION=AVAILABLE',
+              'if (-not $ExerciseHttpLogin)',
+              'Read-Host', '-AsSecureString',
+              'PI_R74_HTTP_LOGIN_SESSION=AUTHENTICATED',
+              'PI_R74_HTTP_LOGIN_RESULT=INVALID_CREDENTIALS_401',
+              'ZeroFreeBSTR')) {
+            if (-not $code.Contains($needle)) {
+              throw ('PI_R74_HTTP_AUTH_MISSING_GUARD=' + $needle)
+            }
+          }
+          foreach ($danger in @('Stop-Process','Start-Process',
+              'Remove-Item','Set-Content','ReadAllBytes',
+              'migrate','CreateShortcut(', 'api/auth/bootstrap',
+              'Out-File','Add-Content')) {
+            if ($code.Contains($danger)) {
+              throw ('PI_R74_HTTP_AUTH_FORBIDDEN_MUTATION=' + $danger)
+            }
+          }
+          $fail = ''
+          try {
+            & '.\scripts\pi-r74-http-auth-parity.ps1' -ErrorAction Stop | Out-Null
+          } catch {
+            $fail=[string]$_.Exception.Message
+          }
+          if ($fail -notmatch 'PI_R74_ORIGINAL_SUPERVISOR_MISSING') {
+            throw 'PI_R74_HTTP_AUTH_MISSING_OWNER_ROOT_FAIL_CLOSED'
+          }
+          Write-Host 'PI_R74_HTTP_AUTH_DEFAULT_NO_LOGIN=PASS'
+          Write-Host 'PI_R74_HTTP_AUTH_SOURCE_GUARDS=PASS'
