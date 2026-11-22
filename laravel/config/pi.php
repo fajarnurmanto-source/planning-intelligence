@@ -32,7 +32,7 @@ return [
     // Admin can globally disable R89. Cloud requests additionally require
     // tenant-scoped credentials, exact preview approval and explicit consent.
     'semantic_cloud' => [
-        'enabled' => env('PI_R89_CLOUD_ENABLED', true),
+        'enabled' => env('PI_R89_CLOUD_ENABLED', false),
     ],
     'regulatory' => [
         'ledger_path' => env('PI_REGULATORY_LEDGER_PATH'),
