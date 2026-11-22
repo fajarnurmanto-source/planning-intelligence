@@ -18,6 +18,7 @@ on:
       - 'scripts/pi-r74-http-auth-parity.ps1'
       - 'scripts/pi-r74-login-frontend-rollout.ps1'
       - 'scripts/pi-r94-one-origin-code-cutover.ps1'
+      - 'scripts/pi-r98-r88-registry-repair.ps1'
       - 'laravel/public/login.html'
       - 'laravel/public/login.js'
       - 'laravel/public/pi-auth-shell.js'
@@ -111,6 +112,16 @@ jobs:
             $errors | Format-List
             throw 'PI_R94_CODE_CUTOVER_PS51_PARSE_FAILURE'
           }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r98-r88-registry-repair.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R98_PS51_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R98_PS51_PARSE=PASS'
           Write-Host 'PI_R94_CODE_CUTOVER_PS51_PARSE=PASS'
           Write-Host 'PI_R90_DRIFT_CLASSIFIER_PS51_PARSE=PASS'
           Write-Host 'PI_R90_CUTOVER_RISK_PS51_PARSE=PASS'
@@ -1224,3 +1235,105 @@ jobs:
           }
           Write-Host 'PI_R94_WINDOWS_INJECTED_FAILURE_ROLLBACK=PASS'
           Write-Host 'PI_R94_WINDOWS_PROTECTED_ORIGINAL_HASHES=PASS'
+
+
+      - name: R98 missing-only registry resource repair and rollback on Windows fixture
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if($LASTEXITCODE -ne 0 -or $pin -notmatch '^[0-9a-f]{40}$') {throw 'PI_R98_PIN_MISSING'}
+          $repo=$PWD.Path
+          $script='.\scripts\pi-r98-r88-registry-repair.ps1'
+          $protected=@('artisan','.env','database\database.sqlite',
+            'public\overview-r69c.json','public\uu12-2011-r70a.pdf')
+          $resources=@('resources\pi\affairs-nomenclature-seed-r87.json',
+            'resources\pi\operational-definitions-r88.json')
+          function New-Fixture([string]$name){
+            $base=Join-Path $env:RUNNER_TEMP ($name+'-'+[guid]::NewGuid().ToString('N'))
+            $app=Join-Path $base 'laravel'
+            $launch=Join-Path $base 'launcher'
+            New-Item -ItemType Directory -Path $app -Force | Out-Null
+            New-Item -ItemType Directory -Path $launch -Force | Out-Null
+            [IO.File]::WriteAllText((Join-Path $launch 'BUKA-PI-HIDDEN.vbs'),'synthetic launcher')
+            $before=@{}
+            foreach($file in $protected){
+              $dest=Join-Path $app $file
+              New-Item -ItemType Directory -Path (Split-Path $dest -Parent) -Force | Out-Null
+              [IO.File]::WriteAllText($dest,'CI fixture protected original '+$file)
+              $before[$file]=(Get-FileHash $dest -Algorithm SHA256).Hash
+            }
+            return [pscustomobject]@{Base=$base;App=$app;Before=$before}
+          }
+          $good=New-Fixture 'pi-r98-success'
+          $pre=@(& $script -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $good.Base)
+          if($pre -notcontains 'PI_R98_MISSING_COUNT=2' -or
+             $pre -notcontains 'PI_R98_DIFFERENT_COUNT=0' -or
+             $pre -notcontains 'PI_R98_REGISTRY_PREFLIGHT=COMPLETE_READ_ONLY') {
+            throw 'PI_R98_BOTH_RESOURCES_MISSING_PREFLIGHT_FAILED'
+          }
+          foreach($file in $resources) {
+            if(Test-Path -LiteralPath (Join-Path $good.App $file)) {
+              throw ('PI_R98_PREFLIGHT_CREATED_SOURCE='+$file)
+            }
+          }
+          $out=@(& $script -Apply -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $good.Base)
+          if($out -notcontains 'PI_R98_REGISTRY_FILES_ADDED=2' -or
+             $out -notcontains 'PI_R98_R88_REGISTRY_FIX=APPLIED_VERIFIED') {
+            throw 'PI_R98_CI_MISSING_REGISTRY_APPLY_FAILED'
+          }
+          foreach($file in $resources) {
+            $original=Join-Path $good.App $file
+            $candidate=Join-Path (Join-Path $repo 'laravel') $file
+            if((Get-FileHash $original -Algorithm SHA256).Hash -ne
+               (Get-FileHash $candidate -Algorithm SHA256).Hash) {
+              throw ('PI_R98_CI_NEW_REGISTRY_HASH_MISMATCH='+$file)
+            }
+          }
+          foreach($file in $protected) {
+            if((Get-FileHash (Join-Path $good.App $file) -Algorithm SHA256).Hash -ne $good.Before[$file]) {
+              throw ('PI_R98_CI_PROTECTED_ORIGINAL_CHANGED='+$file)
+            }
+          }
+          $again=@(& $script -Apply -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $good.Base)
+          if($again -notcontains 'PI_R98_RESOURCE_FIX=NO_CHANGE_ALL_MATCH') {
+            throw 'PI_R98_REPEATED_APPLY_NOT_NOOP'
+          }
+          Write-Host 'PI_R98_CI_TWO_MISSING_REGISTRIES_APPLY=PASS'
+          Write-Host 'PI_R98_CI_PROTECTED_DB_ENV_LAUNCHER_PRESERVED=PASS'
+          Write-Host 'PI_R98_CI_IDEMPOTENT_MATCHING_REGISTRIES=PASS'
+
+          $different=New-Fixture 'pi-r98-different-hold'
+          $regDest=Join-Path $different.App $resources[0]
+          New-Item -ItemType Directory -Path (Split-Path $regDest -Parent) -Force | Out-Null
+          [IO.File]::WriteAllText($regDest,'DIFFERENT original resource must never overwrite')
+          $old=(Get-FileHash $regDest -Algorithm SHA256).Hash
+          $err=''
+          try { & $script -Apply -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $different.Base | Out-Null }
+          catch {$err=[string]$_.Exception.Message}
+          if($err -notmatch 'PI_R98_EXISTING_RESOURCE_DRIFT_HOLD_NO_OVERWRITE' -or
+             (Get-FileHash $regDest -Algorithm SHA256).Hash -ne $old -or
+             (Test-Path -LiteralPath (Join-Path $different.App $resources[1]))) {
+            throw 'PI_R98_DIFFERENT_RESOURCE_OVERWRITTEN_OR_FAIL_OPEN'
+          }
+          Write-Host 'PI_R98_CI_EXISTING_DIFFERENT_SOURCE_HOLD=PASS'
+
+          $fault=New-Fixture 'pi-r98-rollback'
+          $errorText=''
+          try {
+            & $script -Apply -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $fault.Base -CiFailAfterFirstAdd | Out-Null
+          } catch {$errorText=[string]$_.Exception.Message}
+          if($errorText -notmatch 'PI_R98_CI_INJECTED_FIRST_ADD_FAILURE') {
+            throw 'PI_R98_FAULT_INJECTION_NOT_CAUGHT'
+          }
+          foreach($file in $resources){
+            if(Test-Path -LiteralPath (Join-Path $fault.App $file)){
+              throw ('PI_R98_CI_FAILED_ROLLBACK_LEFT_SOURCE='+$file)
+            }
+          }
+          foreach($file in $protected) {
+            if((Get-FileHash (Join-Path $fault.App $file) -Algorithm SHA256).Hash -ne $fault.Before[$file]) {
+              throw ('PI_R98_CI_ROLLBACK_MODIFIED_PROTECTED='+$file)
+            }
+          }
+          Write-Host 'PI_R98_CI_INJECTED_REGISTRY_ADD_ROLLBACK=PASS'
