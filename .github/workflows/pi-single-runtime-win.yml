@@ -771,7 +771,9 @@ jobs:
               'PI_R90_ONE_ORIGIN_CUTOVER=HOLD_PENDING_ISOLATED_ACCEPTANCE',
               'PI_R90_NO_COPY_NO_MIGRATION_NO_SECRET_ACCESS=VERIFIED',
               'PI_R90_RUNTIME_FILES_MISSING_ON_MAIN_TOTAL=',
-              'PI_R90_MAIN_ONLY_RUNTIME_FILES=')) {
+              'PI_R90_MAIN_ONLY_RUNTIME_FILES=',
+              'TrimStart([char]92,[char]47).Replace([char]92,[char]47)',
+              'PI_R90_CI_FIXTURE_ONLY_ON_GITHUB_WINDOWS')) {
             if (-not $code.Contains($needle)) {
               throw ('PI_R90_READONLY_CUTOVER_GUARD_MISSING='+$needle)
             }
@@ -794,3 +796,61 @@ jobs:
             throw 'PI_R90_READ_ONLY_CUTOVER_MISSING_MAIN_FAIL_OPEN'
           }
           Write-Host 'PI_R90_CUTOVER_READ_ONLY_GUARDS=PASS'
+
+      - name: R90 full cutover audit on isolated Windows fixture including backslash paths
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $repo=$PWD.Path
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if ($LASTEXITCODE -ne 0 -or $pin -notmatch '^[0-9a-f]{40}$') {
+            throw 'PI_R90_CI_CANDIDATE_PIN_MISSING'
+          }
+          $root=Join-Path $env:RUNNER_TEMP ('pi-r90-real-audit-'+[guid]::NewGuid().ToString('N'))
+          $main=Join-Path $root 'laravel'
+          $dirs=@('database','app\Http\Controllers\Auth','routes','config','public')
+          foreach ($dir in $dirs) {
+            New-Item -ItemType Directory -Path (Join-Path $main $dir) -Force | Out-Null
+          }
+          # QA-only synthetic files, no production data or secrets.
+          [IO.File]::WriteAllText((Join-Path $main 'artisan'),'ci-only')
+          [IO.File]::WriteAllText((Join-Path $main '.env'),'ci-only-placeholder')
+          [IO.File]::WriteAllText((Join-Path $main 'database\database.sqlite'),'ci-only-placeholder')
+          [IO.File]::WriteAllText((Join-Path $main 'public\ci-main-only.txt'),'ci-only')
+          [IO.File]::WriteAllText((Join-Path $main 'app\Http\Controllers\Auth\SessionController.php'),'<?php // ci-only main variant')
+          Copy-Item -LiteralPath 'laravel/composer.json' -Destination (Join-Path $main 'composer.json')
+          if (Test-Path -LiteralPath 'laravel/composer.lock') {
+            Copy-Item -LiteralPath 'laravel/composer.lock' -Destination (Join-Path $main 'composer.lock')
+          }
+          $watched=@('artisan','.env','database\database.sqlite','public\ci-main-only.txt','composer.json')
+          $before=@{}
+          foreach($name in $watched) {
+            $before[$name]=(Get-FileHash -LiteralPath (Join-Path $main $name) -Algorithm SHA256).Hash
+          }
+          $audit=@(& '.\scripts\pi-r90-cutover-risk-readonly.ps1' -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $root)
+          foreach($needed in @('PI_R90_AUDIT_TARGET=ISOLATED_WINDOWS_CI_FIXTURE',
+              'PI_R90_MODE=READ_ONLY','PI_R90_ONE_ORIGIN_CUTOVER=HOLD_PENDING_ISOLATED_ACCEPTANCE',
+              'PI_R90_NO_COPY_NO_MIGRATION_NO_SECRET_ACCESS=VERIFIED')) {
+            if ($audit -notcontains $needed) {
+              throw ('PI_R90_WINDOWS_FULL_FIXTURE_MISSING='+$needed)
+            }
+          }
+          $missing=@($audit | Where-Object {$_ -match '^PI_R90_RUNTIME_FILES_MISSING_ON_MAIN_TOTAL=\d+$'})
+          if ($missing.Count -ne 1 -or [int]($missing[0].Split('=')[1]) -lt 1) {
+            throw 'PI_R90_WINDOWS_FULL_FIXTURE_MISSING_CENSUS_NOT_EXECUTED'
+          }
+          $mainOnly=@($audit | Where-Object {$_ -match '^PI_R90_MAIN_ONLY_RUNTIME_FILES=\d+$'})
+          if ($mainOnly.Count -ne 1 -or [int]($mainOnly[0].Split('=')[1]) -lt 1 -or
+              $audit -notcontains 'PI_R90_MAIN_ONLY_RUNTIME_SAMPLE=public/ci-main-only.txt') {
+            throw 'PI_R90_WINDOWS_PATH_NORMALIZATION_MAIN_ONLY_NOT_EXECUTED'
+          }
+          $mig=@($audit | Where-Object {$_ -match '^PI_R90_MIGRATION_FILES_TRACKED=\d+$'})
+          if ($mig.Count -ne 1) {throw 'PI_R90_WINDOWS_MIGRATION_CENSUS_NOT_EXECUTED'}
+          foreach($name in $watched) {
+            $after=(Get-FileHash -LiteralPath (Join-Path $main $name) -Algorithm SHA256).Hash
+            if ($after -ne $before[$name]) {throw ('PI_R90_CI_READ_ONLY_FIXTURE_MUTATED='+$name)}
+          }
+          Write-Host 'PI_R90_WINDOWS_FULL_READ_ONLY_CENSUS=PASS'
+          Write-Host 'PI_R90_WINDOWS_PATH_BACKSLASH_NORMALIZATION=PASS'
+          Write-Host 'PI_R90_WINDOWS_MIGRATION_FILENAME_CENSUS=PASS'
+          Write-Host 'PI_R90_CI_FIXTURE_SHA_UNCHANGED=PASS'
