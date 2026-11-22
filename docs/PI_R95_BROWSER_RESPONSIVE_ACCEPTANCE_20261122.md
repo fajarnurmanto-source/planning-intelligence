@@ -29,3 +29,7 @@ R95_ORIGINAL_CSS_HOTFIX=NOT_YET_APPLIED
 R95_ORIGINAL_MOBILE_VISUAL=NOT_YET_CONFIRMED
 R74_ORIGINAL_ICON_COLD_BOOT=NOT_YET_TESTED
 PRODUCTION_ADMISSION=DENIED
+
+
+## CD-20261122-07D — Owner Windows CSS-only hotfix accepted
+Actual owner PowerShell confirmed clean pinned source `e2ca5fe22312ab39e1639b759901d0dd26691021`, R94 read-only preflight exactly 1 change: `public\development-case-r85.css:REPLACE`, not the 17-file module deploy again. Explicit -Apply returned account and CSRF HTTP verified, R88/R89 anonymous protected route and static HTML/JS hashes verified, `PI_R94_ORIGINAL_PHP_PID_PRESERVED=12460`, protected data/asset SHA unchanged and `PI_R94_CODE_CUTOVER=APPLIED_VERIFIED`. Independent read-back of HTTP CSS SHA returned `PI_R95_MOBILE_CSS_PATCH=APPLIED_AND_HTTP_VERIFIED`. Exact second R94 backup: `D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111\backups\R94_CODE_BEFORE_ONE_ORIGIN_20261122-132001`. New source is installed on original 8820. Chrome CI automated 1440/390, R88 button and R89 preview remains PASS, but original Windows Edge 390 screenshot and R88/R89 click are separate manual browser acceptance NOT YET VERIFIED; one-click cold start after a natural Windows reboot remains NOT YET TESTED. Never claim release approved from CSS/hash acceptance alone.
