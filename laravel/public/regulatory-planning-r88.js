@@ -145,7 +145,7 @@
       if (typeof session.csrf !== 'string' || !session.csrf) throw new Error('Token CSRF tidak tersedia')
       const response = await fetch('/api/qa-superior-r89/semantic-candidates', {
         method:'POST', credentials:'same-origin', cache:'no-store',
-        headers:{'Content-Type':'application/json',Accept:'application/json','X-PI-CSRF':session.csrf},
+        headers:{'Content-Type':'application/json',Accept:'application/json','X-CSRF-TOKEN':session.csrf},
         body:JSON.stringify({
           provider:get('r89-provider').value, consent:true,
           approved_cloud_metadata:true, approved_provider_charges:true,
