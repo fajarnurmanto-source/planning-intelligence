@@ -24,3 +24,48 @@ jobs:
       - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest'
       - run: node --test laravel/tests/frontend/*.test.cjs laravel/tests/js/*.test.cjs
       - run: node scripts/pi-build-regulatory-assets.mjs --check
+      - name: R93 real Laravel routes and in-memory auth/module acceptance
+        run: cd laravel && php vendor/bin/phpunit --filter R93IntegratedAuthModuleAcceptanceTest
+      - name: R93 isolated real HTTP cookies CSRF and zero-spend module checks
+        shell: bash
+        env:
+          APP_ENV: testing
+          APP_DEBUG: 'false'
+          APP_KEY: 'base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
+          APP_URL: 'http://127.0.0.1:19893'
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ${{ runner.temp }}/pi-r93-isolated.sqlite
+          DB_URL: ''
+          SESSION_DRIVER: file
+          CACHE_STORE: array
+          QUEUE_CONNECTION: sync
+          LOG_CHANNEL: stderr
+          PI_R89_CLOUD_ENABLED: 'false'
+          PI_JDIH_BPK_SEARCH_ENABLED: 'false'
+          PI_REGULATORY_AUTO_ANCESTRY_ENABLED: 'false'
+          PI_R93_CI_ORIGIN: 'http://127.0.0.1:19893'
+        run: |
+          set -euo pipefail
+          case "$DB_DATABASE" in
+            "$RUNNER_TEMP/"*.sqlite) ;;
+            *) echo "PI_R93_ISOLATED_DB_PATH_INVALID" >&2; exit 2;;
+          esac
+          if [[ -e "$DB_DATABASE" ]]; then echo PI_R93_TEMP_DB_DIRTY >&2; exit 2; fi
+          touch "$DB_DATABASE"
+          (cd laravel && php artisan migrate --force --no-interaction)
+          php scripts/pi-r93-ci-seed.php
+          (
+            cd laravel
+            php artisan serve --host=127.0.0.1 --port=19893 > "$RUNNER_TEMP/pi-r93-ci-http.log" 2>&1 &
+            server_pid=$!
+            trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+            ready=0
+            for attempt in $(seq 1 60); do
+              if curl --silent --fail --output /dev/null http://127.0.0.1:19893/api/auth/setup-status; then ready=1; break; fi
+              sleep 0.4
+            done
+            if [[ "$ready" != 1 ]]; then echo PI_R93_DISPOSABLE_SERVER_NOT_READY >&2; exit 2; fi
+            echo PI_R93_DISPOSABLE_SERVER=READY
+            node ../scripts/pi-r93-isolated-http-smoke.mjs
+          )
+          echo PI_R93_ORIGINAL_WINDOWS_8820_AND_DB=NOT_ACCESSED
