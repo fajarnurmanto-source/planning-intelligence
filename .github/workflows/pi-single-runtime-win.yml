@@ -12,6 +12,7 @@ on:
       - 'scripts/pi-r74-verify-entered-password.php'
       - 'scripts/pi-r74-credential-parity-local.ps1'
       - 'scripts/pi-r74-http-auth-parity.ps1'
+      - 'scripts/pi-r74-login-frontend-rollout.ps1'
       - 'laravel/public/login.html'
       - 'laravel/public/login.js'
       - 'scripts/windows/r74/**'
@@ -104,6 +105,16 @@ jobs:
             $errors | Format-List
             throw 'PI_R74_HTTP_AUTH_PARITY_PARSE_FAILURE'
           }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-login-frontend-rollout.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_FRONTEND_ROLLOUT_PS51_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R74_FRONTEND_ROLLOUT_PS51_PARSE=PASS'
           Write-Host 'PI_R74_HTTP_AUTH_PARITY_PARSE=PASS'
           Write-Host 'PI_R74_CREDENTIAL_PARITY_PS51_PARSE=PASS'
           Write-Host 'PI_R74_AUTH_DIAGNOSTIC_PARSE=PASS'
@@ -552,4 +563,51 @@ jobs:
           }
           Write-Host 'PI_R74_LOGIN_INITIAL_AUTOFILL=EXISTING_PASSWORD'
           Write-Host 'PI_R74_LOGIN_STALE_AUTOFILL_CLEARED=PASS'
+          if ($html -notmatch 'id="toggle-password"' -or
+              $html -notmatch 'id="submit"[^>]*disabled') {
+            throw 'PI_R74_LOGIN_MANUAL_VISIBILITY_OR_READY_GUARD_MISSING'
+          }
+          foreach ($needle in @("if (!initialized) return",
+              "el('toggle-password').addEventListener",
+              "password.type = showing ? 'text' : 'password'",
+              "initialized = true")) {
+            if (-not $js.Contains($needle)) {
+              throw ('PI_R74_LOGIN_INPUT_OBSERVABILITY_GUARD_MISSING=' + $needle)
+            }
+          }
           Write-Host 'PI_R74_LOGIN_SESSION_CONTINUITY_GUARD=PASS'
+
+      - name: Protect existing R74 login source during guarded frontend rollout
+        shell: powershell
+        run: |
+          $script=Get-Content 'scripts/pi-r74-login-frontend-rollout.ps1' -Raw
+          foreach ($needle in @('70cac498ee5033d28a1f12898d11975a7379077d',
+              'bd687917ef6274e5099089040535e88b4b4757cb',
+              'PI_R74_LOGIN_ORIGINAL_SOURCE_DRIFT=',
+              'PI_R74_LOGIN_FRONTEND_ROLLOUT=READ_ONLY_PREFLIGHT_PASS',
+              'if (-not $Apply)',
+              'ORIGINAL_SHA256.json',
+              'PI_R74_AUTH_ACCOUNT_DB_APPKEY_SHORTCUT_LAUNCHER=PROTECTED',
+              '[IO.File]::Replace')) {
+            if (-not $script.Contains($needle)) {
+              throw ('PI_R74_FRONTEND_ROLLOUT_GUARD_MISSING=' + $needle)
+            }
+          }
+          foreach($bad in @('Stop-Process','Start-Process',
+              'artisan migrate','db:wipe','CreateShortcut(','Set-Content',
+              'Remove-Item -Recurse')) {
+            if ($script.Contains($bad)) {
+              throw ('PI_R74_FRONTEND_ROLLOUT_FORBIDDEN=' + $bad)
+            }
+          }
+          $failure=''
+          try {
+            & '.\scripts\pi-r74-login-frontend-rollout.ps1' -ErrorAction Stop | Out-Null
+          } catch {
+            $failure=[string]$_.Exception.Message
+          }
+          if ($failure -notmatch 'PI_R74_LOGIN_MAIN_LARAVEL_MISSING') {
+            throw 'PI_R74_FRONTEND_ROLLOUT_DID_NOT_FAIL_CLOSED_ON_CI'
+          }
+          Write-Host 'PI_R74_FRONTEND_ROLLOUT_SOURCE_GUARDS=PASS'
+          Write-Host 'PI_R74_FRONTEND_ROLLOUT_NO_LOCAL_MUTATION=PASS'
