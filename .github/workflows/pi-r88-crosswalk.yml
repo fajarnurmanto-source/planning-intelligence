@@ -1,7 +1,7 @@
 name: PI R88 crosswalk guards
 on:
   pull_request:
-    paths: ['laravel/**', '.gitattributes', 'scripts/pi-r93-*', 'scripts/pi-r95-*', '.github/workflows/pi-r88-crosswalk.yml']
+    paths: ['laravel/**', '.gitattributes', 'scripts/pi-r93-*', 'scripts/pi-r95-*', 'scripts/pi-r97-*', '.github/workflows/pi-r88-crosswalk.yml']
   workflow_dispatch:
 permissions:
   contents: read
