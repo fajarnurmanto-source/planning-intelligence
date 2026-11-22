@@ -73,6 +73,8 @@ final class R89SemanticRegulatoryAnalysisTest extends TestCase
         // Multiple requests in one test exercise consent/guards, not the rate limiter.
         // The production route retains throttle:2,1 unchanged.
         $this->withoutMiddleware(ThrottleRequests::class);
+        // Fake-provider tests explicitly enable cloud; product default is OFF.
+        config()->set('pi.semantic_cloud.enabled', true);
         Http::preventStrayRequests();
     }
 
