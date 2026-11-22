@@ -124,6 +124,47 @@ Write-Output ('PI_R90_PRIORITY_FEATURES_IDENTICAL='+$identical)
 Write-Output ('PI_R90_PRIORITY_FEATURES_DIFFERENT='+$different)
 Write-Output ('PI_R90_PRIORITY_FEATURES_MISSING_ON_MAIN='+$missing)
 Write-Output ('PI_R90_PRIORITY_FEATURES_NOT_IN_CANDIDATE='+$candidateMissing)
+# Enumerate ALL files missing from the protected original, not just priority
+# samples. The earlier parity script bounded differences to 24 and could hide
+# 7/8 missing entries behind other DIF copies.
+$trackedRuntime=@(& $git -C $CandidateRepo ls-files -- laravel/app laravel/routes laravel/config laravel/public laravel/bootstrap/app.php)
+if ($LASTEXITCODE -ne 0) {throw 'PI_R90_ALL_RUNTIME_CENSUS_FAILED'}
+$allMissing=0
+$candidateIndex=@{}
+foreach ($entry in $trackedRuntime) {
+    $p=[string]$entry
+    if (-not $p.StartsWith('laravel/',[StringComparison]::Ordinal)) {continue}
+    $relative=$p.Substring(8)
+    if ($relative -match '(?i)(^|/)(database|storage|vendor|node_modules|secrets|private)(/|$)') {continue}
+    $candidateIndex[$relative.ToLowerInvariant()]=$true
+    $live=Join-Path $AppRoot ($relative -replace '/','\')
+    if (-not (Test-Path -LiteralPath $live -PathType Leaf)) {
+        $allMissing++
+        Write-Output ('PI_R90_RUNTIME_FILE_MISSING_ON_MAIN='+$relative)
+    }
+}
+Write-Output ('PI_R90_RUNTIME_FILES_MISSING_ON_MAIN_TOTAL='+$allMissing)
+# Protect original-only code/files: a wholesale source overwrite could erase
+# features not represented by the candidate branch. Count names only.
+$mainOnlyCount=0
+$mainOnlySamples=0
+foreach ($section in @('app','routes','config','public')) {
+    $folder=Join-Path $AppRoot $section
+    if (-not (Test-Path -LiteralPath $folder -PathType Container)) {continue}
+    foreach($file in @(Get-ChildItem -LiteralPath $folder -File -Recurse -ErrorAction Stop)) {
+        $rel=$file.FullName.Substring($AppRoot.Length).TrimStart('\','/') -replace '\','/'
+        if ($rel -match '(?i)(^|/)(database|storage|vendor|node_modules|secrets|private)(/|$)') {continue}
+        if (-not $candidateIndex.ContainsKey($rel.ToLowerInvariant())) {
+            $mainOnlyCount++
+            if ($mainOnlySamples -lt 12) {
+                Write-Output ('PI_R90_MAIN_ONLY_RUNTIME_SAMPLE='+$rel)
+                $mainOnlySamples++
+            }
+        }
+    }
+}
+Write-Output ('PI_R90_MAIN_ONLY_RUNTIME_FILES='+$mainOnlyCount)
+
 # Inspect migration filenames and hashes, never connect or migrate the main DB.
 $migrationDir=Join-Path $CandidateRepo 'laravel\database\migrations'
 $migrations=@(& $git -C $CandidateRepo ls-files -- laravel/database/migrations)
