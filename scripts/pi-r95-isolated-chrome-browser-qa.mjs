@@ -156,6 +156,34 @@ try{
   assert.equal(preview.consentChecked,false)
   console.log('PI_R95_CHROME_R89_PREVIEW_WITHOUT_PAID_PROVIDER=PASS')
 
+  await until("document.querySelector('#r100-count-metadata')?.textContent === '18'",'R100_INDEX_READY')
+  const sourceState=await evalPage("({"+
+    "cards:document.querySelector('#r100-list')?.children.length,"+
+    "bytes:document.querySelector('#r100-count-hash')?.textContent,"+
+    "amounts:document.querySelector('#r100-count-amount')?.textContent,"+
+    "detail:document.querySelector('#r100-state')?.textContent,"+
+    "firstLink:document.querySelector('#r100-list a')?.href})")
+  assert.equal(sourceState.cards,6)
+  assert.equal(sourceState.bytes,'0')
+  assert.equal(sourceState.amounts,'0')
+  assert.match(sourceState.detail,/18 rekaman metadata JDIH/)
+  assert.ok(sourceState.firstLink.startsWith('https://jdih.jogjakota.go.id/'))
+  console.log('PI_R100_CHROME_REAL_OFFICIAL_METADATA_AND_EVIDENCE_GATES=PASS')
+  const filtering=await evalPage("(()=>{"+
+    "const selector=document.querySelector('#r100-lane');"+
+    "selector.value='SECTOR';selector.dispatchEvent(new Event('change',{bubbles:true}));"+
+    "const sector=document.querySelector('#r100-list').children.length;"+
+    "selector.value='FISCAL';selector.dispatchEvent(new Event('change',{bubbles:true}));"+
+    "const fiscalFirst=document.querySelector('#r100-list').children.length;"+
+    "document.querySelector('#r100-more').click();"+
+    "const fiscalAll=document.querySelector('#r100-list').children.length;"+
+    "selector.value='ALL';selector.dispatchEvent(new Event('change',{bubbles:true}));"+
+    "return {sector,fiscalFirst,fiscalAll,reset:document.querySelector('#r100-list').children.length};"+
+    "})()")
+  assert.deepEqual(filtering,{sector:1,fiscalFirst:6,fiscalAll:7,reset:6})
+  console.log('PI_R100_CHROME_CATEGORY_FILTER_AND_EXPAND=PASS')
+
+
   async function viewport(width,height,mobile){
     await send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile})
     await delay(500)
@@ -169,7 +197,8 @@ try{
       "r85Visible:document.querySelector('#r85-filters')?.getBoundingClientRect().width>0,"+
       "r86Visible:document.querySelector('#r86-lifecycle')?.getBoundingClientRect().width>0,"+
       "r88Visible:document.querySelector('#r88-crosswalk')?.getBoundingClientRect().width>0,"+
-      "r89Visible:document.querySelector('#r89-panel')?.getBoundingClientRect().width>0})")
+      "r89Visible:document.querySelector('#r89-panel')?.getBoundingClientRect().width>0,"+
+      "r100Visible:document.querySelector('#r100-official-sources')?.getBoundingClientRect().width>0})")
   }
   const desktop=await viewport(1440,900,false)
   assert.ok(desktop.viewport>=1300&&desktop.viewport<=1440)
@@ -185,7 +214,7 @@ try{
   console.log('PI_R95_MOBILE_METRICS='+JSON.stringify(phone))
   assert.ok(phone.viewport>=385&&phone.viewport<=400,'PI_R95_MOBILE_VIEWPORT_NOT_390_'+JSON.stringify(phone))
   assert.ok(phone.docWidth<=phone.viewport+3,'PI_R95_MOBILE_390PX_HORIZONTAL_OVERFLOW_'+JSON.stringify(phone))
-  assert.ok(phone.r85Visible&&phone.r86Visible&&phone.r88Visible&&phone.r89Visible)
+  assert.ok(phone.r85Visible&&phone.r86Visible&&phone.r88Visible&&phone.r89Visible&&phone.r100Visible)
   console.log('PI_R95_CHROME_MOBILE_390PX_NO_OVERFLOW=PASS')
 
   // Re-select 2027 and observe ABSTAIN; do not consent or call paid provider.
