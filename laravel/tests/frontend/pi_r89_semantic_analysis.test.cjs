@@ -34,7 +34,8 @@ test('GET preview is read-only and visible before any consented cloud request', 
 test('cloud inference requires selected provider, exact context hash, consent and authenticated CSRF', () => {
   assert.match(app,/method:'POST'/)
   assert.match(app,/\/api\/auth\/session/)
-  assert.match(app,/'X-PI-CSRF':session\.csrf/)
+  assert.match(app,/'X-CSRF-TOKEN':session\.csrf/)
+  assert.doesNotMatch(app,/X-PI-CSRF/)
   assert.match(app,/provider:get\('r89-provider'\)\.value/)
   assert.match(app,/approved_cloud_metadata:true/)
   assert.match(app,/approved_provider_charges:true/)
