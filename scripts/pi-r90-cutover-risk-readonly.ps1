@@ -152,7 +152,7 @@ foreach ($section in @('app','routes','config','public')) {
     $folder=Join-Path $AppRoot $section
     if (-not (Test-Path -LiteralPath $folder -PathType Container)) {continue}
     foreach($file in @(Get-ChildItem -LiteralPath $folder -File -Recurse -ErrorAction Stop)) {
-        $rel=$file.FullName.Substring($AppRoot.Length).TrimStart('\','/') -replace '\','/'
+        $rel=$file.FullName.Substring($AppRoot.Length).TrimStart([char]92,[char]47).Replace([char]92,[char]47)
         if ($rel -match '(?i)(^|/)(database|storage|vendor|node_modules|secrets|private)(/|$)') {continue}
         if (-not $candidateIndex.ContainsKey($rel.ToLowerInvariant())) {
             $mainOnlyCount++
