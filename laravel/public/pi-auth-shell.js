@@ -13,7 +13,7 @@
     button.onclick = async () => {
       button.disabled = true
       try {
-        const end = await fetch('/api/auth/logout', {method:'POST',credentials:'same-origin',headers:{'X-PI-CSRF':user.csrf}})
+        const end = await fetch('/api/auth/logout', {method:'POST',credentials:'same-origin',headers:{'X-CSRF-TOKEN':user.csrf}})
         if (!end.ok) throw new Error('Gagal keluar')
         location.replace('./login.html')
       } catch {button.textContent='Coba lagi';button.disabled=false}
