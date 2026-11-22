@@ -171,7 +171,7 @@ if(-not $ciMode) {
         throw ('PI_R94_ORIGINAL_CACHED_ROUTE_OR_CONFIG_HOLD='+$cached[0].Name)
     }
 }
-$time=Get-Date -Format 'yyyyMMdd-HHmmss'
+$time=(Get-Date -Format 'yyyyMMdd-HHmmss-fff') + '-' + ([guid]::NewGuid().ToString('N').Substring(0,8))
 $backup=Join-Path $launcher ('backups\R94_CODE_BEFORE_ONE_ORIGIN_'+$time)
 if(Test-Path -LiteralPath $backup){throw 'PI_R94_BACKUP_COLLISION'}
 New-Item -ItemType Directory -Path (Join-Path $backup 'before') -Force -ErrorAction Stop | Out-Null
