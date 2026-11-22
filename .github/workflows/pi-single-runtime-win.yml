@@ -19,6 +19,10 @@ on:
       - 'scripts/pi-r74-login-frontend-rollout.ps1'
       - 'scripts/pi-r94-one-origin-code-cutover.ps1'
       - 'scripts/pi-r98-r88-registry-repair.ps1'
+      - 'scripts/pi-r100-official-source-cutover.ps1'
+      - 'laravel/resources/pi/official-source-metadata-r100.json'
+      - 'laravel/public/official-sources-r100.js'
+      - 'laravel/public/official-sources-r100.css'
       - 'laravel/public/login.html'
       - 'laravel/public/login.js'
       - 'laravel/public/pi-auth-shell.js'
@@ -1337,3 +1341,137 @@ jobs:
             }
           }
           Write-Host 'PI_R98_CI_INJECTED_REGISTRY_ADD_ROLLBACK=PASS'
+
+      - name: R100 official source catalogue actual code-only Windows fixture and rollback
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $sourceRoot=$PWD.Path
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if($LASTEXITCODE -ne 0 -or $pin -notmatch '^[0-9a-f]{40}$') {throw 'PI_R100_CI_BAD_PIN'}
+          $sourceScript='.\scripts\pi-r100-official-source-cutover.ps1'
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            $sourceScript,[ref]$tokens,[ref]$errors
+          ) | Out-Null
+          if($errors.Count -gt 0){
+            $errors|Format-List
+            throw 'PI_R100_PS51_PARSE_FAILED'
+          }
+          Write-Host 'PI_R100_PS51_PARSER=PASS'
+          $base='1046b339ccc432795b1b2fd659cbcd77ffa65e21'
+          $replace=@('config\pi.php','routes\web.php','public\development-case-r85.html')
+          $adds=@(
+            'app\Http\Controllers\Api\OfficialSourceMetadataController.php',
+            'app\Services\Pi\Development\OfficialSourceMetadataCatalogue.php',
+            'resources\pi\official-source-metadata-r100.json',
+            'public\official-sources-r100.css',
+            'public\official-sources-r100.js'
+          )
+          $guard=@('artisan','.env','database\database.sqlite','public\overview-r69c.json',
+            'public\uu12-2011-r70a.pdf','public\development-case-r85.css',
+            'public\regulatory-planning-r88.js',
+            'resources\pi\affairs-nomenclature-seed-r87.json',
+            'resources\pi\operational-definitions-r88.json')
+          function New-R100Fixture([string]$name) {
+            $basePath=Join-Path $env:RUNNER_TEMP ($name+'-'+[guid]::NewGuid().ToString('N'))
+            $app=Join-Path $basePath 'laravel'
+            $launch=Join-Path $basePath 'launcher'
+            New-Item -ItemType Directory -Path $app -Force | Out-Null
+            New-Item -ItemType Directory -Path $launch -Force | Out-Null
+            [IO.File]::WriteAllText((Join-Path $launch 'BUKA-PI-HIDDEN.vbs'),'CI-only launcher')
+            $hashes=@{}
+            foreach($rel in $guard) {
+              $target=Join-Path $app $rel
+              New-Item -ItemType Directory -Path (Split-Path $target -Parent) -Force|Out-Null
+              [IO.File]::WriteAllText($target,'PROTECTED ORIGINAL CI FILE '+$rel)
+              $hashes[$rel]=(Get-FileHash $target -Algorithm SHA256).Hash
+            }
+            foreach($rel in $replace) {
+              $target=Join-Path $app $rel
+              New-Item -ItemType Directory -Path (Split-Path $target -Parent) -Force|Out-Null
+              $gitPath='laravel/'+$rel.Replace([char]92,[char]47)
+              $lines=@(& git -C $sourceRoot show ($base+':'+$gitPath))
+              if($LASTEXITCODE -ne 0 -or $lines.Count -eq 0){
+                throw ('PI_R100_CI_BASE_FILE_NOT_FOUND='+$rel)
+              }
+              [IO.File]::WriteAllText($target,($lines -join [string][char]10)+[string][char]10,
+                [Text.UTF8Encoding]::new($false))
+              $hashes[$rel]=(Get-FileHash $target -Algorithm SHA256).Hash
+            }
+            return [pscustomobject]@{Base=$basePath;Root=$app;Hash=$hashes}
+          }
+          $good=New-R100Fixture 'r100-good'
+          $pre=@(& $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $good.Base)
+          $diff=@($pre|Where-Object {$_ -like 'PI_R100_CHANGE=*'})
+          if($pre -notcontains 'PI_R100_READ_ONLY_PREFLIGHT=PASS' -or
+             $pre -notcontains 'PI_R100_FILES_TO_CHANGE=8' -or $diff.Count -ne 8){
+            throw 'PI_R100_CI_PREFLIGHT_EXPECTED_EIGHT'
+          }
+          foreach($rel in $good.Hash.Keys) {
+            if((Get-FileHash (Join-Path $good.Root $rel) -Algorithm SHA256).Hash -ne $good.Hash[$rel]){
+              throw ('PI_R100_CI_PREFLIGHT_MUTATED_ORIGINAL='+$rel)
+            }
+          }
+          $done=@(& $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $good.Base -Apply)
+          if($done -notcontains 'PI_R100_OFFICIAL_SOURCE_CUTOVER=APPLIED_VERIFIED' -or
+             $done -notcontains 'PI_R100_SQLITE_ENV_APPKEY_LAUNCHER_R88=UNCHANGED'){
+            throw 'PI_R100_CI_EIGHT_FILES_NOT_APPLIED'
+          }
+          foreach($rel in @($replace)+@($adds)) {
+            $live=Join-Path $good.Root $rel
+            $source=Join-Path (Join-Path $sourceRoot 'laravel') $rel
+            if((Get-FileHash $live -Algorithm SHA256).Hash -ne
+               (Get-FileHash $source -Algorithm SHA256).Hash) {
+              throw ('PI_R100_CI_SOURCE_SHA_DIFFERENT='+$rel)
+            }
+          }
+          foreach($rel in $guard) {
+            if((Get-FileHash (Join-Path $good.Root $rel) -Algorithm SHA256).Hash -ne $good.Hash[$rel]) {
+              throw ('PI_R100_CI_PROTECTED_FILE_CHANGED='+$rel)
+            }
+          }
+          $noop=@(& $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $good.Base -Apply)
+          if($noop -notcontains 'PI_R100_CODE_RELEASE=NO_CHANGE'){
+            throw 'PI_R100_CI_SAME_PIN_NOT_IDEMPOTENT'
+          }
+          Write-Host 'PI_R100_WINDOWS_EIGHT_FILES_ACTUAL_APPLY=PASS'
+          Write-Host 'PI_R100_WINDOWS_PROTECTED_DB_AND_R88_SHA=PASS'
+          Write-Host 'PI_R100_WINDOWS_SECOND_APPLY_NOOP=PASS'
+
+          $drift=New-R100Fixture 'r100-drift'
+          $driftPath=Join-Path $drift.Root 'routes\web.php'
+          [IO.File]::AppendAllText($driftPath,([string][char]10)+'UNREVIEWED_LOCAL_ROUTE')
+          $reason=''
+          try { & $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $drift.Base -Apply|Out-Null }
+          catch {$reason=[string]$_.Exception.Message}
+          if($reason -notmatch 'PI_R100_ORIGINAL_CODE_DRIFT_HOLD'){
+            throw 'PI_R100_CI_DRIFT_DID_NOT_HOLD'
+          }
+          foreach($rel in $adds) {
+            if(Test-Path -LiteralPath (Join-Path $drift.Root $rel)) {
+              throw ('PI_R100_CI_DRIFT_CREATED_NEW_SOURCE='+$rel)
+            }
+          }
+          Write-Host 'PI_R100_WINDOWS_UNREVIEWED_ORIGINAL_CHANGE=HOLD'
+
+          $fault=New-R100Fixture 'r100-fault'
+          $failure=''
+          try {
+            & $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fault.Base -CiFailAfterFirstSwap -Apply | Out-Null
+          } catch {$failure=[string]$_.Exception.Message}
+          if($failure -notmatch 'PI_R100_CI_INJECTED_FIRST_SWAP_FAILURE'){
+            throw 'PI_R100_CI_INJECTED_FAILURE_NOT_CAUGHT'
+          }
+          foreach($rel in $fault.Hash.Keys){
+            if((Get-FileHash (Join-Path $fault.Root $rel) -Algorithm SHA256).Hash -ne $fault.Hash[$rel]){
+              throw ('PI_R100_CI_ROLLBACK_ORIGINAL_SHA_MISMATCH='+$rel)
+            }
+          }
+          foreach($rel in $adds) {
+            if(Test-Path -LiteralPath (Join-Path $fault.Root $rel)){
+              throw ('PI_R100_CI_ROLLBACK_LEFT_NEW_FILE='+$rel)
+            }
+          }
+          Write-Host 'PI_R100_WINDOWS_INJECTED_FIRST_SWAP_ROLLBACK=PASS'
