@@ -80,9 +80,7 @@ $categories=@('BYTE_IDENTICAL','LINE_ENDING_ONLY','BOM_OR_LINE_ENDING_ONLY',
 $counts=@{}
 $migrationCounts=@{}
 foreach($c in $categories){$counts[$c]=0;$migrationCounts[$c]=0}
-$tracked=@(& $git -C $CandidateRepo ls-files --
-    laravel/app laravel/routes laravel/config laravel/public
-    laravel/bootstrap/app.php laravel/database/migrations)
+$tracked=@(& $git -C $CandidateRepo ls-files -- laravel/app laravel/routes laravel/config laravel/public laravel/bootstrap/app.php laravel/database/migrations)
 if ($LASTEXITCODE -ne 0) {throw 'PI_R90_DRIFT_TRACKED_SCAN_FAILED'}
 $seen=0;$migrationSeen=0;$examples=0
 foreach($entry in $tracked) {
