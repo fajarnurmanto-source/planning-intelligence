@@ -1022,7 +1022,17 @@ jobs:
           }
           $negative=Join-Path $dir 'missing-migration-ci-only.sqlite'
           Copy-Item -LiteralPath $dbPath -Destination $negative
-          & php -r '$db=new SQLite3($argv[1]);$db->exec("DELETE FROM migrations WHERE migration = ''2026_11_15_150000_create_regulatory_evidence_reviews_table''");$db->close();' $negative
+          $negativeScript=Join-Path $dir 'remove-ci-only-migration.php'
+          $negativePhp=@'
+          <?php
+          $db=new SQLite3($argv[1], SQLITE3_OPEN_READWRITE);
+          $stmt=$db->prepare("DELETE FROM migrations WHERE migration=:migration");
+          $stmt->bindValue(":migration", "2026_11_15_150000_create_regulatory_evidence_reviews_table", SQLITE3_TEXT);
+          if (!$stmt->execute()) {exit(2);}
+          $db->close();
+          '@
+          [IO.File]::WriteAllText($negativeScript,$negativePhp)
+          & php $negativeScript $negative
           if ($LASTEXITCODE -ne 0) {throw 'PI_R91_NEGATIVE_FIXTURE_CREATION_FAILED'}
           $badHash=(Get-FileHash -LiteralPath $negative -Algorithm SHA256).Hash
           $bad=@(& php scripts/pi-r91-sqlite-schema-readonly.php --ci-db $negative)
