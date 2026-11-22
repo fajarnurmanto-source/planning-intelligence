@@ -8,6 +8,7 @@ on:
       - 'scripts/pi-r74-windows-acceptance.ps1'
       - 'scripts/pi-r74-release-parity-readonly.ps1'
       - 'scripts/pi-r90-cutover-risk-readonly.ps1'
+      - 'scripts/pi-r90-drift-classifier-readonly.ps1'
       - 'scripts/pi-r74-verify-backup.ps1'
       - 'scripts/pi-r74-auth-runtime-diagnostic.ps1'
       - 'scripts/pi-r74-auth-db-readonly.php'
@@ -87,6 +88,16 @@ jobs:
             $errors | Format-List
             throw 'PI_R90_CUTOVER_RISK_PS51_PARSE_FAILURE'
           }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r90-drift-classifier-readonly.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R90_DRIFT_CLASSIFIER_PS51_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R90_DRIFT_CLASSIFIER_PS51_PARSE=PASS'
           Write-Host 'PI_R90_CUTOVER_RISK_PS51_PARSE=PASS'
           Write-Host 'PI_R74_RELEASE_PARITY_PS51_PARSE=PASS'
           Write-Host 'PI_R74_INPLACE_UPGRADE_PARSE=PASS'
@@ -854,3 +865,91 @@ jobs:
           Write-Host 'PI_R90_WINDOWS_PATH_BACKSLASH_NORMALIZATION=PASS'
           Write-Host 'PI_R90_WINDOWS_MIGRATION_FILENAME_CENSUS=PASS'
           Write-Host 'PI_R90_CI_FIXTURE_SHA_UNCHANGED=PASS'
+
+      - name: R90 CRLF migration classification and Composer lock package identity fixture
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $script=Get-Content 'scripts/pi-r90-drift-classifier-readonly.ps1' -Raw
+          foreach($needed in @('PI_R90_DRIFT_CANDIDATE_HEAD_MISMATCH',
+              'PI_R90_DRIFT_CANDIDATE_DIRTY',
+              'PI_R90_DRIFT_CI_FIXTURE_NOT_AUTHORIZED',
+              'PI_R90_DRIFT_MIGRATION_LINE_ENDING_ONLY=',
+              'PI_R90_DRIFT_MIGRATION_TEXT_CONTENT_DIFFERENT=',
+              'PI_R90_LOCK_VERSION_CHANGED_COUNT=',
+              'PI_R90_DRIFT_CLASSIFIER_READ_ONLY=COMPLETE',
+              'PI_R90_CODE_CUTOVER=HOLD_PENDING_ISOLATED_ACCEPTANCE')) {
+            if(-not $script.Contains($needed)) {throw ('PI_R90_DRIFT_SOURCE_GUARD_MISSING='+$needed)}
+          }
+          foreach($forbidden in @('Stop-Process','Start-Process','Copy-Item',
+              'Remove-Item','Move-Item','Set-Content','Invoke-WebRequest',
+              'artisan migrate','artisan key:generate','composer install')) {
+            if($script.Contains($forbidden)) {throw ('PI_R90_DRIFT_MUTATION_FORBIDDEN='+$forbidden)}
+          }
+          $repo=$PWD.Path
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if($LASTEXITCODE -ne 0 -or $pin -notmatch '^[0-9a-f]{40}$') {
+            throw 'PI_R90_DRIFT_FIXTURE_INVALID_SOURCE_PIN'
+          }
+          $root=Join-Path $env:RUNNER_TEMP ('pi-r90-classifier-'+[guid]::NewGuid().ToString('N'))
+          $app=Join-Path $root 'laravel'
+          New-Item -ItemType Directory -Path $app -Force | Out-Null
+          [IO.File]::WriteAllText((Join-Path $app 'artisan'),'ci-only-artisan')
+          $lock=Join-Path $app 'composer.lock'
+          Copy-Item 'laravel/composer.lock' $lock
+          [IO.File]::AppendAllText($lock,[Environment]::NewLine)
+          $sourceRuntime='laravel/app/Models/User.php'
+          $sourceMig='laravel/database/migrations/0001_01_01_000000_create_users_table.php'
+          $sourceMig2='laravel/database/migrations/0001_01_01_000001_create_cache_table.php'
+          foreach($p in @($sourceRuntime,$sourceMig,$sourceMig2)){
+            if(-not (Test-Path -LiteralPath $p -PathType Leaf)){
+              throw ('PI_R90_DRIFT_FIXTURE_SOURCE_MISSING='+$p)
+            }
+            $relative=$p.Substring(8).Replace([char]47,[char]92)
+            $destination=Join-Path $app $relative
+            New-Item -ItemType Directory -Path (Split-Path $destination -Parent) -Force | Out-Null
+            $text=[IO.File]::ReadAllText((Resolve-Path $p))
+            if($p -eq $sourceMig2) {
+              $text=$text+[Environment]::NewLine+'// CI synthetic migration source difference'
+            } elseif($text.Contains([string][char]13+[string][char]10)) {
+              $text=$text.Replace(([string][char]13+[string][char]10),([string][char]10))
+            } else {
+              $text=$text.Replace(([string][char]10),([string][char]13+[string][char]10))
+            }
+            [IO.File]::WriteAllText($destination,$text,[System.Text.UTF8Encoding]::new($false))
+          }
+          $guarded=@('artisan','composer.lock','app\Models\User.php',
+            'database\migrations\0001_01_01_000000_create_users_table.php',
+            'database\migrations\0001_01_01_000001_create_cache_table.php')
+          $originals=@{}
+          foreach($rel in $guarded) {
+            $originals[$rel]=(Get-FileHash (Join-Path $app $rel) -Algorithm SHA256).Hash
+          }
+          $audit=@(& '.\scripts\pi-r90-drift-classifier-readonly.ps1' -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $root)
+          if($audit -notcontains 'PI_R90_DRIFT_TARGET=ISOLATED_CI' -or
+             $audit -notcontains 'PI_R90_DRIFT_CLASSIFIER_READ_ONLY=COMPLETE' -or
+             $audit -notcontains 'PI_R90_CODE_CUTOVER=HOLD_PENDING_ISOLATED_ACCEPTANCE' -or
+             $audit -notcontains 'PI_R90_LOCK_BYTE_DRIFT_WITH_SAME_PACKAGE_IDENTITIES=YES') {
+            throw 'PI_R90_DRIFT_FIXTURE_NOT_COMPLETE'
+          }
+          foreach($needle in @('PI_R90_DRIFT_RUNTIME_LINE_ENDING_ONLY=',
+              'PI_R90_DRIFT_MIGRATION_LINE_ENDING_ONLY=',
+              'PI_R90_DRIFT_MIGRATION_TEXT_CONTENT_DIFFERENT=')) {
+            $values=@($audit | Where-Object {$_ -like ($needle+'*')})
+            if($values.Count -ne 1 -or [int]($values[0].Split('=')[1]) -lt 1) {
+              throw ('PI_R90_DRIFT_FIXTURE_CLASSIFICATION_NOT_PROVEN='+$needle)
+            }
+          }
+          if($audit -notcontains 'PI_R90_LOCK_VERSION_CHANGED_COUNT=0' -or
+             $audit -notcontains 'PI_R90_LOCK_ADDED=0' -or
+             $audit -notcontains 'PI_R90_LOCK_REMOVED=0') {
+            throw 'PI_R90_DRIFT_FIXTURE_LOCK_PACKAGE_IDS_CHANGED'
+          }
+          foreach($rel in $guarded) {
+            if((Get-FileHash (Join-Path $app $rel) -Algorithm SHA256).Hash -ne $originals[$rel]) {
+              throw ('PI_R90_DRIFT_FIXTURE_MUTATED='+$rel)
+            }
+          }
+          Write-Host 'PI_R90_CRLF_VS_SEMANTIC_MIGRATION_FIXTURE=PASS'
+          Write-Host 'PI_R90_COMPOSER_PACKAGE_IDENTITY_FIXTURE=PASS'
+          Write-Host 'PI_R90_DRIFT_READ_ONLY_SHA256_FIXTURE=PASS'
