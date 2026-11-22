@@ -3,6 +3,7 @@
   const el = id => document.getElementById(id)
   let needsSetup = false
   let csrf = ''
+  let initialized = false
   async function initialize() {
     try {
       const response = await fetch('/api/auth/setup-status', {cache:'no-store'})
@@ -10,6 +11,7 @@
       const status = await response.json()
       needsSetup = Boolean(status.needs_setup)
       csrf = String(status.csrf || '')
+      if (!csrf || typeof status.needs_setup !== 'boolean') throw new Error('Status sesi login tidak lengkap')
       el('heading').textContent = needsSetup ? 'Buat akun administrator QA' : 'Masuk ke ruang kerja'
       el('description').textContent = needsSetup
         ? 'Buat satu akun khusus pratinjau Kota Yogyakarta. Data akun tidak dikirim ke penyedia AI.'
@@ -20,10 +22,13 @@
       el('confirm-password').hidden = !needsSetup
       el('confirm-password').required = needsSetup
       el('submit').textContent = needsSetup ? 'Buat akun dan masuk' : 'Masuk'
+      initialized = true
+      el('submit').disabled = false
     } catch (error) { el('feedback').textContent = String(error.message || error) }
   }
   async function submit(event) {
     event.preventDefault()
+    if (!initialized) return
     el('feedback').textContent = ''
     const username = el('username').value.trim(), password = el('password').value
     if (needsSetup && password !== el('confirm-password').value) {
@@ -61,5 +66,15 @@
     } catch (error) { el('feedback').textContent = String(error.message || error) }
     finally { submitButton.disabled = false }
   }
-  document.addEventListener('DOMContentLoaded', () => {el('login-form').addEventListener('submit', submit);initialize()})
+  document.addEventListener('DOMContentLoaded', () => {
+    el('login-form').addEventListener('submit', submit)
+    el('toggle-password').addEventListener('click', () => {
+      const password = el('password')
+      const showing = password.type === 'password'
+      password.type = showing ? 'text' : 'password'
+      el('toggle-password').textContent = showing ? 'Sembunyikan sandi' : 'Lihat sandi'
+      el('toggle-password').setAttribute('aria-pressed', String(showing))
+    })
+    initialize()
+  })
 })()
