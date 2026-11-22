@@ -256,7 +256,8 @@ try {
         try {
             foreach($rel in @('public\development-case-r85.html',
                 'public\regulatory-planning-r88.js','public\pi-auth-shell.js')) {
-                $url='http://127.0.0.1:8820/'+($rel.Replace([char]92,[char]47))+'?r94='+[guid]::NewGuid().ToString('N')
+                $publicRelative=$rel.Substring('public\'.Length).Replace([char]92,[char]47)
+                $url='http://127.0.0.1:8820/'+$publicRelative+'?r94='+[guid]::NewGuid().ToString('N')
                 $http=Invoke-WebRequest -Uri $url -UseBasicParsing -Headers @{'Cache-Control'='no-cache'} -TimeoutSec 10
                 if($http.StatusCode -ne 200){throw ('PI_R94_HTTP_ASSET_NOT_200='+$rel)}
                 $hash=[BitConverter]::ToString($hasher.ComputeHash($http.RawContentStream.ToArray())).Replace('-','')
