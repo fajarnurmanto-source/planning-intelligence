@@ -173,8 +173,14 @@ try{
   assert.ok(desktop.docWidth<=desktop.viewport+3,'PI_R95_DESKTOP_HORIZONTAL_OVERFLOW_'+JSON.stringify(desktop))
   assert.ok(desktop.r85Visible&&desktop.r86Visible&&desktop.r88Visible&&desktop.r89Visible)
   console.log('PI_R95_CHROME_DESKTOP_1440PX_NO_OVERFLOW=PASS')
+  // Chrome needs a reload to apply the document viewport meta to a
+  // desktop->mobile emulation switch (without it innerWidth may remain 980).
+  await send('Page.reload',{ignoreCache:true})
+  await until("document.readyState === 'complete'",'MOBILE_PAGE_RELOAD')
+  await until("document.querySelector('#r86-status')?.textContent?.includes('Registry R86 siap')",'MOBILE_R86_RELOADED')
   const phone=await viewport(390,844,true)
-  assert.ok(phone.viewport>=385&&phone.viewport<=400,'PI_R95_MOBILE_VIEWPORT_NOT_390')
+  console.log('PI_R95_MOBILE_METRICS='+JSON.stringify(phone))
+  assert.ok(phone.viewport>=385&&phone.viewport<=400,'PI_R95_MOBILE_VIEWPORT_NOT_390_'+JSON.stringify(phone))
   assert.ok(phone.docWidth<=phone.viewport+3,'PI_R95_MOBILE_390PX_HORIZONTAL_OVERFLOW_'+JSON.stringify(phone))
   assert.ok(phone.r85Visible&&phone.r86Visible&&phone.r88Visible&&phone.r89Visible)
   console.log('PI_R95_CHROME_MOBILE_390PX_NO_OVERFLOW=PASS')
