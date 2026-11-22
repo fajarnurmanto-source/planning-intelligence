@@ -85,3 +85,7 @@ R94_OWNER_ORIGINAL_8820_APPLY=NOT_YET_RUN
 R94_BROWSER_MODULE_E2E_ON_ORIGINAL=NOT_YET_RUN
 R74_ONE_ICON_COLD_REBOOT=NOT_YET_TESTED
 PRODUCTION_ADMISSION=DENIED
+
+
+## R94 final validated source pin: 1046b339
+Owner-deployment source pin 1046b339ccc432795b1b2fd659cbcd77ffa65e21. Both Windows audit safety and R88 crosswalk GitHub workflows SUCCESS at this exact source commit. Installer now additionally requires the original HTTP /api/auth/setup-status on 8820 to respond needs_setup=false and with a valid nonempty CSRF token, before APPLIED_VERIFIED. No R94 code copied onto original D: by GitHub; owner must execute guarded script from a clean QA worktree and report real original success. Existing account, 28 original-only files, DB/APP_KEY and shortcut remain protected. PR #78 stays draft; no production admission.
