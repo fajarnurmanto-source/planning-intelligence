@@ -6,6 +6,7 @@ on:
       - 'scripts/pi-r74-ensure-runtime.ps1'
       - 'scripts/pi-r74-inplace-upgrade.ps1'
       - 'scripts/pi-r74-windows-acceptance.ps1'
+      - 'scripts/pi-r74-release-parity-readonly.ps1'
       - 'scripts/pi-r74-verify-backup.ps1'
       - 'scripts/pi-r74-auth-runtime-diagnostic.ps1'
       - 'scripts/pi-r74-auth-db-readonly.php'
@@ -67,6 +68,16 @@ jobs:
             $errors | Format-List
             throw 'PI_R74_ACCEPTANCE_PARSE_FAILURE'
           }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-release-parity-readonly.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_RELEASE_PARITY_PS51_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R74_RELEASE_PARITY_PS51_PARSE=PASS'
           Write-Host 'PI_R74_INPLACE_UPGRADE_PARSE=PASS'
           $tokens = $null
           $errors = $null
@@ -703,3 +714,36 @@ jobs:
           }
           Write-Host 'PI_R74_FRONTEND_ROLLOUT_SOURCE_GUARDS=PASS'
           Write-Host 'PI_R74_FRONTEND_ROLLOUT_NO_LOCAL_MUTATION=PASS'
+
+      - name: R74 one-port release source parity is read only and pinned
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-r74-release-parity-readonly.ps1' -Raw
+          foreach ($needle in @('ExpectedCommit',
+              'PI_R74_PARITY_CANDIDATE_HEAD_MISMATCH',
+              'PI_R74_PARITY_CANDIDATE_UNCOMMITTED_CHANGES',
+              'PI_R74_RUNTIME_SOURCE_PARITY=NOT_YET_CONSOLIDATED',
+              'PI_R74_PARITY_DB_ENV_APPKEY_SHORTCUT_PROCESSES=UNTOUCHED',
+              'PI_R74_PARITY_MODE=READ_ONLY_CENSUS_COMPLETE')) {
+            if (-not $code.Contains($needle)) {
+              throw ('PI_R74_CENSUS_GUARD_MISSING='+$needle)
+            }
+          }
+          foreach ($unsafe in @('Start-Process','Stop-Process','Copy-Item',
+              'Remove-Item','Move-Item','Set-Content',
+              'migrate','CreateShortcut(','New-Service',
+              'Register-ScheduledTask')) {
+            if ($code.Contains($unsafe)) {
+              throw ('PI_R74_CENSUS_MUTATION_FORBIDDEN='+$unsafe)
+            }
+          }
+          $failure=''
+          try {
+            & '.\scripts\pi-r74-release-parity-readonly.ps1' -CandidateRepo $PWD.Path -ExpectedCommit '0000000000000000000000000000000000000000' -ErrorAction Stop | Out-Null
+          } catch {
+            $failure = [string]$_.Exception.Message
+          }
+          if ($failure -notmatch 'PI_R74_PARITY_ORIGINAL_LARAVEL_MISSING') {
+            throw 'PI_R74_CENSUS_DID_NOT_HOLD_ON_MISSING_ORIGINAL'
+          }
+          Write-Host 'PI_R74_RELEASE_SOURCE_PARITY_READ_ONLY_GUARDS=PASS'
