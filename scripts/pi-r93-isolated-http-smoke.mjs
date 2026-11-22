@@ -60,7 +60,7 @@ const setup=await request('/api/auth/setup-status')
 status(setup,200,'setup status')
 assert.equal(setup.data.needs_setup,false)
 assert.ok(typeof setup.data.csrf==='string' && setup.data.csrf.length>24)
-assert.ok(bag.has('laravel_session'),'Laravel cookie is present')
+assert.ok([...bag.keys()].some(name=>/session/i.test(name)), 'Laravel session cookie is present under configured name')
 for(const path of routes){
   const res=await request(path)
   status(res,401,'anonymous protected route '+path)
