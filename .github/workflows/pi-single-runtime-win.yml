@@ -677,7 +677,10 @@ jobs:
               'if (-not $Apply)',
               'ORIGINAL_SHA256.json',
               'PI_R74_AUTH_ACCOUNT_DB_APPKEY_SHORTCUT_LAUNCHER=PROTECTED',
-              '[IO.File]::Replace')) {
+              '[IO.File]::Replace',
+              'PI_R74_LOGIN_FRONTEND_HTTP=UPDATED_AND_VERIFIED',
+              'PI_R74_LOGIN_ORIGINAL_HTTP_HASH_MISMATCH',
+              'PI_R74_LOGIN_ROLLBACK_BOTH_FILES=VERIFIED')) {
             if (-not $script.Contains($needle)) {
               throw ('PI_R74_FRONTEND_ROLLOUT_GUARD_MISSING=' + $needle)
             }
