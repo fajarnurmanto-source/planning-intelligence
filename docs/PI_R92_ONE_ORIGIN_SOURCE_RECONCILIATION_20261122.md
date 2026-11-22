@@ -52,3 +52,7 @@ R92_CSRF_SOURCE_PATCH=STAGED_ONLY
 R92_ISOLATED_R88_R89_E2E=NOT_RUN
 R74_ICON_COLD_REBOOT=NOT_TESTED
 PRODUCTION_ADMISSION=DENIED
+
+
+## CD-20261122-06Y — Actual source CI acceptance result
+Windows CI + R88 crosswalk regression both SUCCESS on tested commit 17744661c2bb98df97c4aaead170a421ca2a0de8 after source-only CSRF header correction, older R89 test expectation update, real Node VM logout simulation and Apache .htaccess text classification fixture. This proves source-level regression, NOT deployment to original protected D: port 8820. Keep R92 isolated app HTTP acceptance and cold-reboot acceptance open. Preserve all original credentials/data/reviewer decisions.
