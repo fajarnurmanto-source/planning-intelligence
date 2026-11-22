@@ -202,6 +202,23 @@ try{
   assert.equal(abstain.consentChecked,false)
   assert.equal(externalRequests,0,'no external HTTP / provider egress during browser QA')
   console.log('PI_R95_CHROME_2027_ABSTAIN_AND_CLOUD_OFF=PASS')
+  // Run the EXACT browser acceptance file that the owner can paste into
+  // their existing Edge tab. Same code, real authenticated Chrome DOM.
+  const r97=readFileSync(new URL('./pi-r97-owner-browser-readonly.js',import.meta.url),'utf8')
+  const r97result=await evalPage(r97)
+  assert.equal(r97result?.status,'PASS','PI_R97_OWNER_SCRIPT_CI_HOLD_'+JSON.stringify(r97result))
+  for (const expected of [
+    'PI_R97_ORIGINAL_AUTH_TENANT_ROLE=PASS',
+    'PI_R97_R88_CROSSWALK_BROWSER_CLICK=PASS',
+    'PI_R97_R89_PREVIEW_NO_PROVIDER_CALL=PASS',
+    'PI_R97_R88_2027_ABSTAIN_CLOUD_BLOCK=PASS',
+    'PI_R97_EDGE_MOBILE_390_NO_OVERFLOW=PASS',
+    'PI_R97_BROWSER_READ_ONLY_ACCEPTANCE=PASS',
+  ]) {
+    assert.ok(r97result.checks.includes(expected),'PI_R97_CI_BROWSER_MISSING_'+expected)
+  }
+  assert.equal(externalRequests,0,'PI_R97_BROWSER_NETWORK_EGRESS_DETECTED')
+  console.log('PI_R97_OWNER_EDGE_SNIPPET_REAL_CHROME_CI=PASS')
   console.log('PI_R95_CHROME_RESPONSIVE_AUTHENTICATED_ACCEPTANCE=PASS')
 } finally {
   try{ws?.close()}catch{}
