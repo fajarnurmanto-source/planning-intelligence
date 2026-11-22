@@ -21,7 +21,7 @@ jobs:
           node-version: '22'
       - run: mkdir -p laravel/bootstrap/cache laravel/storage/framework/{cache,sessions,views} laravel/storage/logs
       - run: composer install --working-dir=laravel --prefer-dist --no-interaction --no-progress
-      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest'
+      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest|R100OfficialSourceMetadataTest'
       - run: node --test laravel/tests/frontend/*.test.cjs laravel/tests/js/*.test.cjs
       - run: node scripts/pi-build-regulatory-assets.mjs --check
       - name: R93 real Laravel routes and in-memory auth/module acceptance
