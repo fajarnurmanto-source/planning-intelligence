@@ -241,6 +241,14 @@ try {
         if($after.Count -ne 1 -or [int]$after[0].OwningProcess -ne $ownedPid) {
             throw 'PI_R94_ORIGINAL_SERVER_PID_CHANGED'
         }
+        # Ensure original account setup is still recognized before accepting
+        # the new code. A first-install prompt would be a failed cutover.
+        $setup=Invoke-RestMethod -Uri 'http://127.0.0.1:8820/api/auth/setup-status' -Headers @{Accept='application/json'} -TimeoutSec 10 -ErrorAction Stop
+        if($setup.needs_setup -ne $false -or
+           -not ($setup.csrf -is [string]) -or [string]::IsNullOrWhiteSpace($setup.csrf)) {
+            throw 'PI_R94_ORIGINAL_LOGIN_ACCOUNT_OR_SESSION_SETUP_REGRESSION'
+        }
+        Write-Output 'PI_R94_ORIGINAL_ACCOUNT_SETUP_AND_CSRF=VERIFIED'
         # A new R88/R89 API route must return JSON 401 for an anonymous request
         # (404 means stale routes; 200 means broken auth; 419 means POST/CSRF).
         foreach($path in @('api/qa-superior-r88/planning-crosswalk',
