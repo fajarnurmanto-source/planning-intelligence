@@ -154,3 +154,17 @@ The new `scripts/pi-r74-verify-entered-password.php` strips a single transport B
 `scripts/pi-r74-credential-parity-local.ps1` collects password *only* with `Read-Host -AsSecureString` in the owner's local console and sends private UTF-8 bytes by redirected STDIN, no CLI password args, no HTTP login, no plaintext/hashes in output, no DB writes. Windows runner CI must prove normal match, mismatch, BOM-prefixed seeded fixture, plus fixture SQLite unchanged before owner-side execution.
 
 This is a separate auth incident from the launcher source baseline. Preserve port 8820, protected original Laravel path, original backup and previous R87 account recovery snapshots. `BOM_R87_STORAGE_ON_OWNER=NOT_ASSESSED`, `LOGIN_E2E=FAIL`, `PRODUCTION_ADMISSION=DENIED`.
+
+
+## 22 Nov — password parity observed YES; actual HTTP Edge separation
+
+Owner PowerShell `-Pin 2b56864f4694c74d78d1cb804e40589cd240b801` executed the **protected original SQLite** password parity via secure local console and returned: `PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=YES`, `PI_R74_R87_RECOVERY_BOM_PREFIX_MATCH=NO`, `PI_R74_CREDENTIAL_CHECK_READ_ONLY=YES`. This proves the entered password matches the live account bcrypt and rules out the hypothesized historical UTF-8 BOM for that password. Main PHP 8820 process, original Laravel root, DB metadata, unique account row, tenant and role all previously verified. No rehash/reset/migration is authorized.
+
+Remaining split is **Edge browser autofill/cookies versus real HTTP Laravel auth**. Try Microsoft Edge **InPrivate** on `http://127.0.0.1:8820/login.html`, manually type `fajar.nurmanto` and same password, never paste it into chat. If this works, diagnose old saved password/autofill and isolate login session, without altering server or account. If still fails, use source-only `scripts/pi-r74-http-auth-parity.ps1` (must be fetched from the reviewed current PR #78 branch). Default invocation checks existing 8820 PHP identity, GET `/api/auth/setup-status` (should say `PI_R74_HTTP_NEEDS_SETUP=False`) and session CSRF; **does not POST login**. With `-ExerciseHttpLogin`, the script performs **one** local HTTP authentication attempt with a fresh in-memory cookie jar and secure console prompt (one normal server session/rate limiter write only; **no account password change**), checks `/api/auth/session`, prints no credentials/tokens or response bodies:
+
+- `PI_R74_HTTP_LOGIN_SESSION=AUTHENTICATED`: backend accepts same secret, investigate Edge autofill/cookies/browser state; never create another user.
+- `PI_R74_HTTP_LOGIN_RESULT=INVALID_CREDENTIALS_401`: backend effective auth context differs from direct protected SQLite password verification; inspect route/controller/DB binding in live PHP before changing data.
+- `PI_R74_HTTP_LOGIN_RESULT=CSRF_SESSION_419` or `THROTTLED_429`: investigate session/CSRF cookie or rate limits respectively.
+- `PI_R74_HTTP_NEEDS_SETUP=True`: HTTP backend does not see the same account as protected direct SQLite; do not bootstrap a new account.
+
+**No automatic HTTP login or launcher/DB modification is performed by CI**, Windows test script remains opt-in. R74 browser authentication is not yet accepted, and full R88/R89 source cutover remains separately blocked.
