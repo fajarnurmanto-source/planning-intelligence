@@ -161,8 +161,11 @@ try{
     await delay(500)
     return evalPage("({"+
       "viewport:window.innerWidth,"+
+      "visual:window.visualViewport?.width,"+
+      "screenWidth:window.screen.width,"+
       "docWidth:document.documentElement.scrollWidth,"+
       "bodyWidth:document.body.scrollWidth,"+
+      "overflow:Array.from(document.body.querySelectorAll('*')).map(e=>({e,r:e.getBoundingClientRect()})).filter(x=>x.r.right>390.5&&x.r.width>3).slice(0,16).map(x=>({tag:x.e.tagName,id:x.e.id,cls:String(x.e.className).slice(0,48),right:Math.round(x.r.right),width:Math.round(x.r.width)})),"+
       "r85Visible:document.querySelector('#r85-filters')?.getBoundingClientRect().width>0,"+
       "r86Visible:document.querySelector('#r86-lifecycle')?.getBoundingClientRect().width>0,"+
       "r88Visible:document.querySelector('#r88-crosswalk')?.getBoundingClientRect().width>0,"+
