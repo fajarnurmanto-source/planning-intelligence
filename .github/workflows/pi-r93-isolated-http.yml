@@ -1,0 +1,97 @@
+name: PI R93 isolated full HTTP Laravel acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'laravel/**'
+      - 'scripts/pi-r93-ci-seed.php'
+      - 'scripts/pi-r93-isolated-http-smoke.mjs'
+      - '.github/workflows/pi-r93-isolated-http.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-http:
+    name: One disposable Laravel origin, real CSRF and session
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      GITHUB_ACTIONS: 'true'
+      APP_ENV: testing
+      APP_DEBUG: 'false'
+      APP_KEY: 'base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
+      APP_URL: 'http://127.0.0.1:19893'
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ${{ runner.temp }}/pi-r93-isolated.sqlite
+      DB_URL: ''
+      SESSION_DRIVER: file
+      CACHE_STORE: array
+      QUEUE_CONNECTION: sync
+      LOG_CHANNEL: stderr
+      PI_R89_CLOUD_ENABLED: 'false'
+      PI_JDIH_BPK_SEARCH_ENABLED: 'false'
+      PI_REGULATORY_AUTO_ANCESTRY_ENABLED: 'false'
+      PI_R93_CI_ORIGIN: 'http://127.0.0.1:19893'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, xml, curl, zip, pdo_sqlite, sqlite3, bcmath, intl
+          tools: composer:v2
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies only in isolated CI checkout
+        run: |
+          mkdir -p laravel/bootstrap/cache laravel/storage/framework/{cache,sessions,views} laravel/storage/logs
+          composer install --working-dir=laravel --prefer-dist --no-interaction --no-progress
+      - name: Laravel integrated feature acceptance with in-memory SQLite
+        working-directory: laravel
+        run: php vendor/bin/phpunit --filter R93IntegratedAuthModuleAcceptanceTest
+      - name: Real HTTP CSRF, sessions, R85-R89 and reviewer safety
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$DB_DATABASE" in
+            "$RUNNER_TEMP/"*.sqlite) ;;
+            *) echo "PI_R93_CI_DB_PATH_NOT_EPHEMERAL" >&2; exit 2;;
+          esac
+          if [[ -e "$DB_DATABASE" ]]; then
+            echo "PI_R93_CI_DB_ALREADY_EXISTS" >&2
+            exit 2
+          fi
+          touch "$DB_DATABASE"
+          (cd laravel && php artisan migrate --force --no-interaction)
+          php scripts/pi-r93-ci-seed.php
+          (
+            cd laravel
+            php artisan serve --host=127.0.0.1 --port=19893 > "$RUNNER_TEMP/pi-r93-ci-http.log" 2>&1 &
+            echo $! > "$RUNNER_TEMP/pi-r93-server.pid"
+            for attempt in $(seq 1 60); do
+              if curl --silent --fail --output /dev/null http://127.0.0.1:19893/api/auth/setup-status; then
+                echo PI_R93_DISPOSABLE_LOCAL_SERVER=READY
+                node ../scripts/pi-r93-isolated-http-smoke.mjs
+                exit 0
+              fi
+              sleep 0.4
+            done
+            echo "PI_R93_LOCAL_SERVER_FAILED_TO_START" >&2
+            exit 2
+          )
+      - name: Report ephemeral DB and original Windows isolation
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f "$RUNNER_TEMP/pi-r93-server.pid" ]]; then
+            pid="$(cat "$RUNNER_TEMP/pi-r93-server.pid")"
+            if [[ "$pid" =~ ^[0-9]+$ ]]; then
+              kill "$pid" 2>/dev/null || true
+            fi
+          fi
+          echo 'PI_R93_OWNER_WINDOWS_ORIGINAL_APP=NOT_ACCESSED'
+          echo 'PI_R93_OWNER_DATABASE_AND_SHORTCUT=NOT_ACCESSED'
+          echo 'PI_R93_REAL_AI_PROVIDER_REQUESTS=NOT_AUTHORIZED'
