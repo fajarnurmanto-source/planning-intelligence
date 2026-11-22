@@ -25,6 +25,28 @@ final class R93IntegratedAuthModuleAcceptanceTest extends TestCase
 
     private const PASSWORD = 'R93-CI-Only-Password-Not-A-User-Secret!';
 
+    public function test_cloud_semantic_is_disabled_by_default_without_external_calls(): void
+    {
+        Http::preventStrayRequests();
+        $this->assertFalse((bool) config('pi.semantic_cloud.enabled'));
+
+        $this->actingAs(User::factory()->create([
+            'tenant_id' => 'ID-DIY-YOG',
+            'role' => 'institution_admin',
+        ]));
+
+        $filters = http_build_query([
+            'year' => 2026,
+            'as_of' => '2026-11-21',
+            'code' => '2.11.11.2.01.0004',
+        ]);
+        $this->getJson('/api/qa-superior-r89/semantic-preview?'.$filters)
+            ->assertOk()
+            ->assertJsonPath('semantic_reasoning.provider_execution', 'NOT_RUN');
+
+        Http::assertNothingSent();
+    }
+
     public function test_one_login_reaches_all_read_models_then_logout_invalidates_access(): void
     {
         Http::preventStrayRequests();
