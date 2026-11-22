@@ -1171,6 +1171,39 @@ jobs:
           }
           Write-Host 'PI_R94_WINDOWS_REAL_CODE_ONLY_APPLY=PASS'
           Write-Host 'PI_R94_WINDOWS_28_MAIN_ONLY_ASSETS_PRESERVE_SCOPE=PASS'
+          # Reproduce the owner's exact R94->R95 situation: all modules are
+          # already installed and ONLY the mobile CSS needs replacement.
+          $css='public\development-case-r85.css'
+          $liveCss=Join-Path $fixture.Root $css
+          [IO.File]::WriteAllText($liveCss,'CI prior R94 mobile CSS before 390px repair')
+          $incrementalBefore=@(& $script -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fixture.Base)
+          $expectedChange='PI_R94_CODE_CHANGE=public\development-case-r85.css:REPLACE'
+          $allChanges=@($incrementalBefore|Where-Object {$_ -like 'PI_R94_CODE_CHANGE=*'})
+          if($incrementalBefore -notcontains 'PI_R94_CODE_CUTOVER=READ_ONLY_PREFLIGHT_PASS' -or
+             $incrementalBefore -notcontains 'PI_R94_CHANGED_OR_ADDED_COUNT=1' -or
+             $allChanges.Count -ne 1 -or $allChanges[0] -cne $expectedChange) {
+            throw 'PI_R95_WINDOWS_CSS_ONLY_PREFLIGHT_NOT_STRICT'
+          }
+          $incrementalApplied=@(& $script -Apply -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fixture.Base)
+          if($incrementalApplied -notcontains 'PI_R94_CODE_CUTOVER=APPLIED_VERIFIED' -or
+             $incrementalApplied -notcontains 'PI_R94_PROTECTED_DATA_ASSET_SHA=UNCHANGED' -or
+             (Get-FileHash $liveCss -Algorithm SHA256).Hash -ne
+             (Get-FileHash (Join-Path (Join-Path $sourceRoot 'laravel') $css) -Algorithm SHA256).Hash) {
+            throw 'PI_R95_WINDOWS_CSS_ONLY_APPLY_NOT_VERIFIED'
+          }
+          foreach($rel in $protected) {
+            if((Get-FileHash (Join-Path $fixture.Root $rel) -Algorithm SHA256).Hash -ne $fixture.Hashes[$rel]) {
+              throw ('PI_R95_CSS_ONLY_MODIFIED_PROTECTED_ASSET='+$rel)
+            }
+          }
+          $noOpError=''
+          try { & $script -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fixture.Base | Out-Null }
+          catch { $noOpError=[string]$_.Exception.Message }
+          if($noOpError -notmatch 'PI_R94_NO_SOURCE_DIFFERENCE_HOLD'){
+            throw 'PI_R95_REPEATED_DEPLOYMENT_SHOULD_HOLD_NO_CHANGES'
+          }
+          Write-Host 'PI_R95_WINDOWS_EXACTLY_ONE_CSS_INCREMENTAL_APPLY=PASS'
+          Write-Host 'PI_R95_WINDOWS_SECOND_IDENTICAL_APPLY=HOLD_NO_CHANGES'
           $fault=New-R94Fixture 'r94-rollback'
           $err=''
           try {
