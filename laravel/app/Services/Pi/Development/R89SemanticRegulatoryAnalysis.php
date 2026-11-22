@@ -44,7 +44,7 @@ final class R89SemanticRegulatoryAnalysis
 
             return $result;
         }
-        if (! config('pi.semantic_cloud.enabled', true)) {
+        if (! config('pi.semantic_cloud.enabled', false)) {
             $result['semantic_reasoning']['status'] = 'ABSTAIN_CLOUD_DISABLED_BY_ADMIN';
 
             return $result;
