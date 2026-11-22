@@ -52,7 +52,12 @@ function Get-Classification([string]$source,[string]$dest) {
     $dHash=(Get-FileHash -LiteralPath $dest -Algorithm SHA256).Hash
     if ($sHash -ceq $dHash) {return 'BYTE_IDENTICAL'}
     $ext=[IO.Path]::GetExtension($source).ToLowerInvariant()
-    if ($script:textExtensions -notcontains $ext) {return 'BINARY_OR_UNSUPPORTED_DIFFERENT'}
+    # Apache .htaccess has no extension but is UTF-8 text and must not be
+    # mistaken for a binary change solely because of its filename.
+    if ($script:textExtensions -notcontains $ext -and
+        [IO.Path]::GetFileName($source).ToLowerInvariant() -cne '.htaccess') {
+        return 'BINARY_OR_UNSUPPORTED_DIFFERENT'
+    }
     $sBytes=[IO.File]::ReadAllBytes($source)
     $dBytes=[IO.File]::ReadAllBytes($dest)
     if ($sBytes.Length -gt 5242880 -or $dBytes.Length -gt 5242880) {
