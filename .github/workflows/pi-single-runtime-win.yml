@@ -9,6 +9,7 @@ on:
       - 'scripts/pi-r74-release-parity-readonly.ps1'
       - 'scripts/pi-r90-cutover-risk-readonly.ps1'
       - 'scripts/pi-r90-drift-classifier-readonly.ps1'
+      - 'scripts/pi-r91-sqlite-schema-readonly.php'
       - 'scripts/pi-r74-verify-backup.ps1'
       - 'scripts/pi-r74-auth-runtime-diagnostic.ps1'
       - 'scripts/pi-r74-auth-db-readonly.php'
@@ -953,3 +954,86 @@ jobs:
           Write-Host 'PI_R90_CRLF_VS_SEMANTIC_MIGRATION_FIXTURE=PASS'
           Write-Host 'PI_R90_COMPOSER_PACKAGE_IDENTITY_FIXTURE=PASS'
           Write-Host 'PI_R90_DRIFT_READ_ONLY_SHA256_FIXTURE=PASS'
+
+      - name: R91 original SQLite metadata-only gate using disposable database
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $script=Get-Content 'scripts/pi-r91-sqlite-schema-readonly.php' -Raw
+          foreach($term in @('SQLITE3_OPEN_READONLY',
+             'PI_R91_SQLITE_METADATA_AUDIT=COMPLETE_READ_ONLY',
+             'PI_R91_AUTH_DATA_PASSWORD_SESSION_VALUES=NOT_READ',
+             'PI_R91_EXPECTED_MIGRATION=',
+             'PI_R91_SCHEMA_EQUIVALENCE_BEYOND_MINIMUM=NOT_PROVEN')) {
+            if (-not $script.Contains($term)) {throw ('PI_R91_SOURCE_GUARD_MISSING='+$term)}
+          }
+          foreach($forbidden in @('SQLITE3_OPEN_READWRITE',
+             'UPDATE users','INSERT INTO users','DELETE FROM users',
+             'file_put_contents(', 'password_hash(')) {
+            if ($script.Contains($forbidden)) {throw ('PI_R91_SOURCE_MUTATION_FORBIDDEN='+$forbidden)}
+          }
+          & php -l scripts/pi-r91-sqlite-schema-readonly.php
+          if ($LASTEXITCODE -ne 0) {throw 'PI_R91_PHP_LINT_FAILED'}
+          $dir=Join-Path $env:RUNNER_TEMP ('pi-r91-metadata-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $dir -Force | Out-Null
+          $phpPath=Join-Path $dir 'fixture.php'
+          $dbPath=Join-Path $dir 'fake-for-ci-only.sqlite'
+          $fixturePhp=@'
+          <?php
+          $db=new SQLite3($argv[1],SQLITE3_OPEN_READWRITE|SQLITE3_OPEN_CREATE);
+          $sql=[
+           "CREATE TABLE migrations(migration TEXT,batch INTEGER)",
+           "CREATE TABLE users(id INTEGER,username TEXT,tenant_id TEXT,role TEXT,password TEXT)",
+           "CREATE TABLE sessions(id TEXT,user_id INTEGER,payload TEXT,last_activity INTEGER)",
+           "CREATE TABLE cache(key TEXT,value TEXT,expiration INTEGER)",
+           "CREATE TABLE cache_locks(key TEXT,owner TEXT,expiration INTEGER)",
+           "CREATE TABLE jobs(id INTEGER,queue TEXT,payload TEXT,attempts INTEGER)",
+           "CREATE TABLE job_batches(id TEXT,name TEXT,total_jobs INTEGER)",
+           "CREATE TABLE failed_jobs(id INTEGER,uuid TEXT,exception TEXT)",
+           "CREATE TABLE regulatory_evidence_reviews(id INTEGER,tenant_id TEXT,candidate_id TEXT,review_dimension TEXT,decision TEXT,reason TEXT,source_manifest_sha256 TEXT,candidate_sha256 TEXT,reviewer_id INTEGER,decided_at TEXT,created_at TEXT,updated_at TEXT)"
+          ];
+          foreach($sql as $statement){if(!$db->exec($statement)){exit(2);}}
+          $migrations=[
+           "0001_01_01_000000_create_users_table",
+           "0001_01_01_000001_create_cache_table",
+           "0001_01_01_000002_create_jobs_table",
+           "2026_11_07_033435_add_pi_identity_fields_to_users_table",
+           "2026_11_15_150000_create_regulatory_evidence_reviews_table"
+          ];
+          $stmt=$db->prepare("INSERT INTO migrations(migration,batch) VALUES (:migration,1)");
+          foreach($migrations as $m){$stmt->bindValue(":migration",$m,SQLITE3_TEXT);$stmt->execute();}
+          $db->close();
+          '@
+          [IO.File]::WriteAllText($phpPath,$fixturePhp)
+          & php $phpPath $dbPath
+          if ($LASTEXITCODE -ne 0) {throw 'PI_R91_FIXTURE_CREATION_FAILED'}
+          $hashBefore=(Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash
+          $out=@(& php scripts/pi-r91-sqlite-schema-readonly.php --ci-db $dbPath)
+          if ($LASTEXITCODE -ne 0 -or
+              $out -notcontains 'PI_R91_DATABASE_TARGET=CI_TEMP_FIXTURE' -or
+              $out -notcontains 'PI_R91_SQLITE_METADATA_AUDIT=COMPLETE_READ_ONLY' -or
+              $out -notcontains 'PI_R91_REQUIRED_TABLES_PRESENT=9/9' -or
+              $out -notcontains 'PI_R91_EXPECTED_MIGRATIONS_APPLIED=5' -or
+              $out -notcontains 'PI_R91_SCHEMA_MINIMUM=REQUIRED_COLUMNS_AND_LEDGER_PASS') {
+            throw 'PI_R91_COMPLETE_METADATA_FIXTURE_FAILED'
+          }
+          if ((Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash -ne $hashBefore) {
+            throw 'PI_R91_READ_ONLY_SQLITE_FIXTURE_MUTATED'
+          }
+          $negative=Join-Path $dir 'missing-migration-ci-only.sqlite'
+          Copy-Item -LiteralPath $dbPath -Destination $negative
+          & php -r '$db=new SQLite3($argv[1]);$db->exec("DELETE FROM migrations WHERE migration = ''2026_11_15_150000_create_regulatory_evidence_reviews_table''");$db->close();' $negative
+          if ($LASTEXITCODE -ne 0) {throw 'PI_R91_NEGATIVE_FIXTURE_CREATION_FAILED'}
+          $badHash=(Get-FileHash -LiteralPath $negative -Algorithm SHA256).Hash
+          $bad=@(& php scripts/pi-r91-sqlite-schema-readonly.php --ci-db $negative)
+          if ($LASTEXITCODE -ne 0 -or
+              $bad -notcontains 'PI_R91_EXPECTED_MIGRATIONS_NOT_IN_LEDGER=1' -or
+              $bad -notcontains 'PI_R91_SCHEMA_MINIMUM=NOT_YET_VERIFIED') {
+            throw 'PI_R91_NEGATIVE_LEDGER_FAIL_OPEN'
+          }
+          if ((Get-FileHash -LiteralPath $negative -Algorithm SHA256).Hash -ne $badHash) {
+            throw 'PI_R91_NEGATIVE_FIXTURE_MUTATED'
+          }
+          Write-Host 'PI_R91_SQLITE_METADATA_POSITIVE=PASS'
+          Write-Host 'PI_R91_SQLITE_MISSING_MIGRATION_FAIL_CLOSED=PASS'
+          Write-Host 'PI_R91_SQLITE_METADATA_NO_MUTATIONS=PASS'
