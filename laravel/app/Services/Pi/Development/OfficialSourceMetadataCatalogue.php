@@ -140,8 +140,10 @@ final class OfficialSourceMetadataCatalogue
                 || ! is_string($record['locator'] ?? null) || trim($record['locator']) === ''
                 || ($record['source_metadata_status'] ?? null) !== self::METADATA_STATUS
                 || ($record['document_bytes_status'] ?? null) !== self::BYTES_STATUS
-                || ($record['document_sha256'] ?? 'INVALID') !== null
-                || ($record['numeric_amount'] ?? 'INVALID') !== null
+                || ! array_key_exists('document_sha256', $record)
+                || $record['document_sha256'] !== null
+                || ! array_key_exists('numeric_amount', $record)
+                || $record['numeric_amount'] !== null
                 || ($record['case_program_equivalence'] ?? null) !== 'NOT_VERIFIED'
                 || ($record['legal_validity'] ?? null) !== 'NOT_ASSESSED') {
                 throw new RuntimeException('R100_OFFICIAL_SOURCE_ENTRY_INVALID');
