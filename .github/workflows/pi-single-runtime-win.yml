@@ -20,6 +20,7 @@ on:
       - 'scripts/pi-r94-one-origin-code-cutover.ps1'
       - 'scripts/pi-r98-r88-registry-repair.ps1'
       - 'scripts/pi-r100-official-source-cutover.ps1'
+      - 'scripts/pi-r101-r100-safe-owner-rollout.ps1'
       - 'laravel/resources/pi/official-source-metadata-r100.json'
       - 'laravel/public/official-sources-r100.js'
       - 'laravel/public/official-sources-r100.css'
@@ -1501,3 +1502,44 @@ jobs:
             }
           }
           Write-Host 'PI_R100_WINDOWS_INJECTED_FIRST_SWAP_ROLLBACK=PASS'
+
+          # R101 owner wrapper must handle a valid source baseline without
+          # Compare-Object, and stop before file writes on actual drift.
+          $wrapper='.\scripts\pi-r101-r100-safe-owner-rollout.ps1'
+          $tokens=$null; $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            $wrapper,[ref]$tokens,[ref]$errors
+          ) | Out-Null
+          if($errors.Count -ne 0){throw 'PI_R101_WRAPPER_PS51_PARSE_FAILED'}
+          $r101good=New-R100Fixture 'pi-r101-owner-wrapper-good'
+          $r101out=@(& $wrapper -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $r101good.Base -Apply)
+          if($r101out -notcontains 'PI_R101_EXACT_EIGHT_FILE_UTF8_PREFLIGHT=PASS' -or
+             $r101out -notcontains 'PI_R101_R100_ONE_ORIGIN_CUTOVER=APPLIED_VERIFIED') {
+            throw 'PI_R101_CI_OWNER_WRAPPER_GOOD_PATH_FAILED'
+          }
+          foreach($rel in $guard) {
+            if((Get-FileHash (Join-Path $r101good.Root $rel) -Algorithm SHA256).Hash -ne $r101good.Hash[$rel]){
+              throw ('PI_R101_CI_WRAPPER_MUTATED_PROTECTED='+$rel)
+            }
+          }
+          Write-Host 'PI_R101_WINDOWS_OWNER_WRAPPER_EIGHT_FILE=PASS'
+
+          $r101drift=New-R100Fixture 'pi-r101-owner-wrapper-drift'
+          $different=Join-Path $r101drift.Root 'public\development-case-r85.html'
+          [IO.File]::AppendAllText($different,([string][char]10)+'UNKNOWN LOCAL HTML CHANGE')
+          $before=(Get-FileHash $different -Algorithm SHA256).Hash
+          $fail=''
+          try {
+            & $wrapper -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $r101drift.Base -Apply | Out-Null
+          } catch {$fail=[string]$_.Exception.Message}
+          if($fail -notmatch 'PI_R100_ORIGINAL_CODE_DRIFT_HOLD' -or
+             (Get-FileHash $different -Algorithm SHA256).Hash -ne $before) {
+            throw 'PI_R101_CI_OWNER_WRAPPER_DRIFT_MUST_HOLD'
+          }
+          foreach($rel in $adds) {
+            if(Test-Path -LiteralPath (Join-Path $r101drift.Root $rel)) {
+              throw ('PI_R101_CI_WRAPPER_DRIFT_CREATED_FILE='+$rel)
+            }
+          }
+          Write-Host 'PI_R101_WINDOWS_OWNER_WRAPPER_DRIFT=HOLD_NO_MUTATIONS'
+
