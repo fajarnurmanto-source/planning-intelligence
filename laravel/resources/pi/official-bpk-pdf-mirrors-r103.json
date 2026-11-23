@@ -1,0 +1,41 @@
+{
+  "schema": "PI_R103_BPK_OFFICIAL_REPUBLICATION_ALLOWLIST_V1",
+  "snapshot_date": "2026-11-24",
+  "jurisdiction_id": "ID-DIY-YOG",
+  "allowlist_policy": "EXACT_TWO_SOURCE_IDS_AND_EXACT_BPK_PDF_URLS_NO_REDIRECT_GUESS",
+  "index_is_official_replica_not_jdih_original": true,
+  "bytes_acquired_into_quarantine": 0,
+  "bytes_sha256_confirmed": 0,
+  "document_signature_rights_and_version": "REVIEW_REQUIRED",
+  "production_admission": "DENIED",
+  "entries": [
+    {
+      "source_id": "YOG-APBD-DETAIL-2026",
+      "instrument": "PERWAL",
+      "number": 74,
+      "year": 2025,
+      "repository": "BPK_OFFICIAL_REPUBLICATION",
+      "primary_repository": "JDIH_KOTA_YOGYAKARTA",
+      "bpk_detail_url": "https://peraturan.bpk.go.id/Details/346297/perwali-kota-yogyakarta-no-74-tahun-2025",
+      "bpk_pdf_url": "https://peraturan.bpk.go.id/Download/409706/Perwal%20Jogja%20Nomor%2074%20Tahun%202025.pdf",
+      "bpk_read_url": "https://peraturan.bpk.go.id/Read/409706/Perwal%20Jogja%20Nomor%2074%20Tahun%202025.pdf",
+      "file_bytes_sha256": null,
+      "official_pdf_document_identity": "REVIEW_REQUIRED",
+      "document_version": "BASE_PENJABARAN_APBD_TA_2026"
+    },
+    {
+      "source_id": "YOG-APBD-DETAIL-CHANGE3-2026",
+      "instrument": "PERWAL",
+      "number": 12,
+      "year": 2026,
+      "repository": "BPK_OFFICIAL_REPUBLICATION",
+      "primary_repository": "JDIH_KOTA_YOGYAKARTA",
+      "bpk_detail_url": "https://peraturan.bpk.go.id/Details/350352/perwali-kota-yogyakarta-no-12-tahun-2026",
+      "bpk_pdf_url": "https://peraturan.bpk.go.id/Download/414066/perwalkot%20No.12%20thn%202026.pdf",
+      "bpk_read_url": "https://peraturan.bpk.go.id/Read/414066/perwalkot%20No.12%20thn%202026.pdf",
+      "file_bytes_sha256": null,
+      "official_pdf_document_identity": "REVIEW_REQUIRED",
+      "document_version": "THIRD_AMENDMENT_PENJABARAN_APBD_TA_2026"
+    }
+  ]
+}
