@@ -63,6 +63,19 @@ jobs:
           grep -Fxq PI_R102_OFFICIAL_ORIGIN_LINK=NOT_AUTHENTICATED "$work/bpk-dry.txt"
           echo PI_R103_CI_BPK_OFFICIAL_REPUBLICATION_OFFLINE_GUARD=PASS
 
+          php -l scripts/pi-r103-bpk-fetch.php
+          php scripts/pi-r103-bpk-fetch.php \
+            --source=YOG-APBD-DETAIL-2026 --output-dir="$work/quarantine" \
+            > "$work/bpk-preview.txt"
+          grep -Fxq PI_R103_DIRECT_BPK_FETCH=NOT_RUN_DEFAULT_READ_ONLY "$work/bpk-preview.txt"
+          if php scripts/pi-r103-bpk-fetch.php \
+            --source=YOG-APBD-DETAIL-2026 --output-dir="$work/quarantine" --unknown \
+            > "$work/bad-param.txt" 2>&1; then
+            echo PI_R103_UNEXPECTED_PARAMETER_ADMITTED >&2; exit 3
+          fi
+          grep -Fxq PI_R103_UNKNOWN_PARAMETER_HOLD "$work/bad-param.txt"
+          echo PI_R103_CI_NETWORK_FETCH_OPT_IN_AND_READ_ONLY_DEFAULT=PASS
+
       - run: node --test laravel/tests/frontend/*.test.cjs laravel/tests/js/*.test.cjs
       - run: node scripts/pi-build-regulatory-assets.mjs --check
       - name: R93 real Laravel routes and in-memory auth/module acceptance
