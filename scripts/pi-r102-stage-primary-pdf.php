@@ -21,12 +21,15 @@ declare(strict_types=1);
 use App\Services\Pi\Development\PrimaryPdfCandidateIntake;
 
 $root = dirname(__DIR__);
-$autoload = $root.'/laravel/vendor/autoload.php';
-if (! is_file($autoload)) {
-    fwrite(STDERR, "PI_R102_COMPOSER_AUTOLOAD_UNAVAILABLE\n");
+$servicePath = $root.'/laravel/app/Services/Pi/Development/PrimaryPdfCandidateIntake.php';
+// R103: this offline service has NO Laravel framework dependencies.
+// It works safely from a clean QA Git worktree with NO vendor/ directory,
+// and never needs Composer install or Laravel boot on the protected app.
+if (! is_file($servicePath) || is_link($servicePath)) {
+    fwrite(STDERR, "PI_R103_OFFLINE_SERVICE_SOURCE_UNAVAILABLE\n");
     exit(2);
 }
-require $autoload;
+require_once $servicePath;
 
 $args = [];
 foreach (array_slice($argv, 1) as $arg) {
