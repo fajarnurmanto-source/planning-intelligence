@@ -1394,18 +1394,42 @@ jobs:
               $target=Join-Path $app $rel
               New-Item -ItemType Directory -Path (Split-Path $target -Parent) -Force|Out-Null
               $gitPath='laravel/'+$rel.Replace([char]92,[char]47)
-              $lines=@(& git -C $sourceRoot show ($base+':'+$gitPath))
-              if($LASTEXITCODE -ne 0 -or $lines.Count -eq 0){
-                throw ('PI_R100_CI_BASE_FILE_NOT_FOUND='+$rel)
+              # Fixture must contain byte-exact R94 UTF-8 Git blob, never
+              # OEM-mojibake strings from native PowerShell git stdout.
+              $info=New-Object System.Diagnostics.ProcessStartInfo
+              $info.FileName=(Get-Command git.exe -ErrorAction Stop).Source
+              $info.Arguments='-C "'+$sourceRoot+'" show "'+$base+':'+$gitPath+'"'
+              $info.UseShellExecute=$false
+              $info.RedirectStandardOutput=$true
+              $info.CreateNoWindow=$true
+              $process=[Diagnostics.Process]::Start($info)
+              $output=[IO.File]::Open($target,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write)
+              try {
+                $process.StandardOutput.BaseStream.CopyTo($output)
+                $process.WaitForExit()
+                if($process.ExitCode -ne 0 -or $output.Length -eq 0) {
+                  throw ('PI_R100_CI_RAW_BASELINE_BYTES_NOT_FOUND='+$rel)
+                }
+              } finally {
+                $output.Dispose()
+                $process.Dispose()
               }
-              [IO.File]::WriteAllText($target,($lines -join [string][char]10)+[string][char]10,
-                [Text.UTF8Encoding]::new($false))
+              $decoded=[IO.File]::ReadAllText($target,[Text.UTF8Encoding]::new($false,$true))
+              if($rel -eq 'public\development-case-r85.html' -and -not $decoded.Contains('·')) {
+                throw 'PI_R101_CI_BASELINE_HTML_UTF8_CHARACTER_LOST'
+              }
               $hashes[$rel]=(Get-FileHash $target -Algorithm SHA256).Hash
             }
             return [pscustomobject]@{Base=$basePath;Root=$app;Hash=$hashes}
           }
           $good=New-R100Fixture 'r100-good'
           $pre=@(& $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $good.Base)
+          foreach($rel in $replace) {
+            if($pre -notcontains ('PI_R100_BASELINE_UTF8_VERIFIED='+$rel)) {
+              throw ('PI_R101_RAW_UTF8_R94_BASELINE_NOT_ACCEPTED='+$rel)
+            }
+          }
+          Write-Host 'PI_R101_WINDOWS_R94_BASELINE_RAW_UTF8=PASS'
           $diff=@($pre|Where-Object {$_ -like 'PI_R100_CHANGE=*'})
           if($pre -notcontains 'PI_R100_READ_ONLY_PREFLIGHT=PASS' -or
              $pre -notcontains 'PI_R100_FILES_TO_CHANGE=8' -or $diff.Count -ne 8){
