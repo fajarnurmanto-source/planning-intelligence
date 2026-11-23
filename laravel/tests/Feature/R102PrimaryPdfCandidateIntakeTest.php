@@ -165,7 +165,7 @@ final class R102PrimaryPdfCandidateIntakeTest extends TestCase
         $safe = 'https://jdih.jogjakota.go.id/asset/naskah/2025pw3405074.pdf';
 
         foreach ([
-            ['NOT_IN_CATALOGUE', $safe, 'PI_R102_SOURCE_ID_NOT_IN_REVIEWED_INDEX'],
+            ['YOG-MISSING-DOC-2026', $safe, 'PI_R102_SOURCE_ID_NOT_IN_REVIEWED_INDEX'],
             ['YOG-APBD-DETAIL-2026', 'https://attacker.example/source.pdf', 'PI_R102_UNTRUSTED_SOURCE_URL_HOLD'],
             ['YOG-APBD-DETAIL-2026', 'https://jdih.jogjakota.go.id.evil.org/asset/naskah/file.pdf', 'PI_R102_UNTRUSTED_SOURCE_URL_HOLD'],
             ['YOG-APBD-DETAIL-2026', 'https://jdih.jogjakota.go.id/asset/naskah/file.pdf?redirect=1', 'PI_R102_UNTRUSTED_SOURCE_URL_HOLD'],
