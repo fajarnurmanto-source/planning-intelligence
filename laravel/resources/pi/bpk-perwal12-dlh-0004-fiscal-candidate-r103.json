@@ -1,0 +1,117 @@
+{
+  "schema": "PI_R103_BPK_PDF_VIEW_FISCAL_CANDIDATE_V1",
+  "snapshot_date": "2026-11-24",
+  "case_id": "YOG-2026-PERSAMPAHAN",
+  "source_id": "YOG-APBD-DETAIL-CHANGE3-2026",
+  "origin_regulation": "Peraturan Wali Kota Yogyakarta Nomor 12 Tahun 2026",
+  "primary_reference_regulation": "Peraturan Wali Kota Yogyakarta Nomor 74 Tahun 2025",
+  "repository": "BPK_OFFICIAL_REPUBLICATION",
+  "detail_url": "https://peraturan.bpk.go.id/Details/350352/perwali-kota-yogyakarta-no-12-tahun-2026",
+  "pdf_url": "https://peraturan.bpk.go.id/Download/414066/perwalkot%20No.12%20thn%202026.pdf",
+  "source_pdf_page_count_observed": 1596,
+  "source_pdf_page_index_zero_based": 560,
+  "source_pdf_page_one_based": 561,
+  "printed_appendix_page": 520,
+  "visual_verification": "PAGE_SCREENSHOT_AND_TEXT_LAYER_INSPECTED",
+  "source_pdf_full_bytes_acquired": false,
+  "source_pdf_sha256": null,
+  "source_rights_and_legal_identity": "REVIEW_REQUIRED",
+  "subactivity_code": "2.11.11.2.01.0004",
+  "subactivity_name": "Peningkatan Peran Serta Masyarakat dalam Pengelolaan Persampahan",
+  "agency": "Dinas Lingkungan Hidup Kota Yogyakarta",
+  "parent_program_code": "2.11.11",
+  "parent_program_name": "Program Pengelolaan Persampahan",
+  "output_indicator": "Jumlah Masyarakat, Kelompok Masyarakat atau Para Pihak Lainnya yang Terlibat Aktif dalam Kegiatan Pengelolaan Sampah Berbasis Masyarakat",
+  "rows": [
+    {
+      "line": 1,
+      "description": "Kertas dan Cover",
+      "account_parent_code": "5.1.02.01.001",
+      "account_full_code": "PENDING_IMAGE_VERIFICATION_DUE_SPLIT_COLUMN_TEXT",
+      "before_idr": 18000000,
+      "after_idr": 18000000,
+      "delta_idr": 0,
+      "source_pdf_page_index_zero_based": 560,
+      "source_printed_page": 520
+    },
+    {
+      "line": 2,
+      "description": "Bahan Cetak",
+      "account_parent_code": "5.1.02.01.001",
+      "account_full_code": "PENDING_IMAGE_VERIFICATION_DUE_SPLIT_COLUMN_TEXT",
+      "before_idr": 48432250,
+      "after_idr": 48432250,
+      "delta_idr": 0,
+      "source_pdf_page_index_zero_based": 560,
+      "source_printed_page": 520
+    },
+    {
+      "line": 3,
+      "description": "Makanan dan Minuman Rapat",
+      "account_parent_code": "5.1.02.01.001",
+      "account_full_code": "PENDING_IMAGE_VERIFICATION_DUE_SPLIT_COLUMN_TEXT",
+      "before_idr": 27060000,
+      "after_idr": 27060000,
+      "delta_idr": 0,
+      "source_pdf_page_index_zero_based": 560,
+      "source_printed_page": 520
+    },
+    {
+      "line": 4,
+      "description": "Jasa PPPK Paruh Waktu — Tenaga Teknis",
+      "account_parent_code": "5.1.02.02.001",
+      "account_full_code": "PENDING_IMAGE_VERIFICATION_DUE_SPLIT_COLUMN_TEXT",
+      "before_idr": 48324000,
+      "after_idr": 48324000,
+      "delta_idr": 0,
+      "source_pdf_page_index_zero_based": 560,
+      "source_printed_page": 520
+    },
+    {
+      "line": 5,
+      "description": "Jasa Konsultansi Berorientasi Layanan — Manajemen",
+      "account_parent_code": "5.1.02.02.009",
+      "account_full_code": "PENDING_IMAGE_VERIFICATION_DUE_SPLIT_COLUMN_TEXT",
+      "before_idr": 75000000,
+      "after_idr": 75000000,
+      "delta_idr": 0,
+      "source_pdf_page_index_zero_based": 560,
+      "source_printed_page": 520
+    },
+    {
+      "line": 6,
+      "description": "Jasa yang Diberikan kepada Pihak Ketiga/Pihak Lain",
+      "account_parent_code": "5.1.02.05.002",
+      "account_full_code": "PENDING_IMAGE_VERIFICATION_DUE_SPLIT_COLUMN_TEXT",
+      "before_idr": 803550000,
+      "after_idr": 803550000,
+      "delta_idr": 0,
+      "source_pdf_page_index_zero_based": 560,
+      "source_printed_page": 520
+    }
+  ],
+  "derived_totals": {
+    "row_count": 6,
+    "before_idr": 1020366250,
+    "after_idr": 1020366250,
+    "delta_idr": 0,
+    "calculation": "SUM_ONLY_OF_SIX_VISIBLE_LEAF_EXPENDITURE_LINES_NOT_PRINTED_TOTAL"
+  },
+  "interpretation": {
+    "table_values": "BPK_PUBLIC_VIEW_CANDIDATE_FOR_REVIEW",
+    "version_scope": "THIRD_AMENDMENT_APRIL_10_2026_NOT_NECESSARILY_LATEST",
+    "article_i_appendix_ii_named_change_agencies": [
+      "Sekretariat Daerah (Bagian Kesejahteraan Rakyat)",
+      "Badan Pengelolaan Keuangan dan Aset Daerah"
+    ],
+    "agency_dlh_in_named_change_agencies": false,
+    "not_a_direct_dlh_amendment_claim": true,
+    "realization_data": "NOT_AVAILABLE",
+    "rka_dpa_reconciliation": "NOT_VERIFIED",
+    "fifth_amendment_check": "REQUIRED",
+    "value_admitted_to_fiscal_engine": false,
+    "full_document_sha_verified": false,
+    "reviewer_approved": false,
+    "production_admission": "DENIED"
+  }
+}
