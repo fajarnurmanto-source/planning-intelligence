@@ -80,3 +80,14 @@ R103_GITHUB_DIRECT_BPK_FETCH_12_2026=HOLD_HTTP403
 R103_PDF_HASHES_OF_FULL_BPK_FILES=NOT_AVAILABLE
 R103_FISCAL_PAGE_561_CANDIDATE=LOCATED_NOT_ADMITTED
 R103_OWNER_8820=UNCHANGED
+
+
+## R104 owner local BPK PDF acquisition — exact two-file SHA and quarantine
+User has downloaded both BPK PDF files into a local folder written as `?:\Download` with exact names:
+
+- `Perwal Jogja Nomor 74 Tahun 2025.pdf` maps ONLY to source ID `YOG-APBD-DETAIL-2026` and BPK Download/409706 exact URL.
+- `perwalkot No.12 thn 2026.pdf` maps ONLY to source ID `YOG-APBD-DETAIL-CHANGE3-2026` and BPK Download/414066 exact URL.
+
+A new Windows PowerShell 5.1 script `scripts/pi-r104-owner-bpk-two-pdf-intake.ps1` has been authored for a pinned clean QA worktree. It finds a **single unambiguous exact-name pair** by scanning only local drive-root `Download`/`Downloads` and the user's Downloads; accepts optional explicit `-DownloadDirectory` if needed. Dry-run mode calculates raw PDF byte count and SHA-256 after checking file magic, PDF EOF, symlink and size; neither file is edited. Explicit `-Archive` checks the same hashes again before invoking offline R102 with exact BPK URLs and recording immutable quarantine file+receipt under `%LOCALAPPDATA%\PlanningIntelligence\R104_BPK_PDF_QUARANTINE`, outside the user PI Laravel installation and web root. A successful SHA/archive receipt DOES NOT yet confirm legal identity/signature, originating JDIH content equivalence, completeness of appendix, current APBD revision, RKA/DPA or account reconciliation, or reviewer approval.
+
+CI source pin `9a551a920e33b572cf8e00ad994c0ecf487cdfbb`: Windows `PI existing unified launcher audit safety` run 45250402968 SUCCESS, step `R104 owner two downloaded BPK files SHA-only preflight, ambiguous and HTML rejection` PASS with synthetic files of the exact two names; `PI R88 crosswalk guards` 45250403024, R73/R74 workflows also SUCCESS. **No actual owner PDF bytes or SHA have yet been observed in this conversation.** Do not claim local archive or full document verification until owner returns `PI_R104_...` logs; then review R102 receipts, PDF signature/size and version, and read relevant appendices before fiscal admission.
