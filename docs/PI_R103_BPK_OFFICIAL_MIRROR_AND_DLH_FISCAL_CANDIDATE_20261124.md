@@ -60,3 +60,23 @@ R103_SIX_ROW_BEFORE_AND_AFTER_DERIVED_SUM=1020366250_IDR
 R103_LATEST_AMENDMENT_AND_ACTUAL_REALIZATION=NOT_VERIFIED
 R103_OWNER_8820_DEPLOYMENT=NOT_RUN
 PRODUCTION_ADMISSION=DENIED
+
+
+## 5. CI acceptance and actual public-HTTP attempt — 24 Nov 2026
+
+GitHub source-tested code commit `2b49be7efebb854f9da0ea90d0b7dda55b9f2684`, R88 CI run **45247893946**, job **137949400312**, plus R73/R74/Windows launcher workflows all **SUCCESS**:
+
+- **46 PHPUnit tests / 603 assertions PASS**, including R102 and R103 source allowlist and page-located six-row fiscal candidate.
+- Existing 61 JS frontend tests, R93 real HTTP and Chrome 390px regressions continue to PASS.
+- `PI_R103_CI_BPK_OFFICIAL_REPUBLICATION_OFFLINE_GUARD=PASS` and `PI_R103_CI_NETWORK_FETCH_OPT_IN_AND_READ_ONLY_DEFAULT=PASS`.
+- The new explicit HTTPS fetcher attempted BOTH canonical BPK Download URLs in an isolated temporary GitHub runner. **Both responded HTTP 403**, yielding `PI_R103_BPK_DIRECT_ACQUISITION_YOG-APBD-DETAIL-2026=HOLD_NOT_RETRIEVED`, `PI_R103_BPK_DIRECT_ACQUISITION_YOG-APBD-DETAIL-CHANGE3-2026=HOLD_NOT_RETRIEVED` and `PI_R103_HTTPS_FETCH_HOLD_STATUS_403` for each. A direct Python requests attempt in this assistant container failed earlier at DNS resolution. No genuine PDF bytes/hash were admitted in R103.
+- Browser-readable BPK PDF viewer still supports the quoted source page and table candidate (Perwali 12/2026 PDF page 561), but does not provide a source file for a lawful byte-level hash at this runtime.
+
+**Next actionable external acquisition:** an operator may open the official BPK detail/Read links in Edge, save BOTH full PDFs through the browser if its download flow works, then run `scripts/pi-r102-stage-primary-pdf.php` on each local file using the exact BPK URL IDs and a separate existing quarantine outside Laravel. Staging receipts must preserve `source_repository=BPK_OFFICIAL_REPUBLICATION`, `source_file_url_retrieval_confirmed=false` for offline user-supplied copies and `reviewer_approval=NOT_REQUESTED`. Any HTML/403 page saved as `.pdf` will be rejected. Avoid uploading into protected original 8820/public or changing DB/accounts.
+
+R103_GITHUB_CI=PASS_46_TESTS_603_ASSERTIONS
+R103_GITHUB_DIRECT_BPK_FETCH_74_2025=HOLD_HTTP403
+R103_GITHUB_DIRECT_BPK_FETCH_12_2026=HOLD_HTTP403
+R103_PDF_HASHES_OF_FULL_BPK_FILES=NOT_AVAILABLE
+R103_FISCAL_PAGE_561_CANDIDATE=LOCATED_NOT_ADMITTED
+R103_OWNER_8820=UNCHANGED
