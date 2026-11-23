@@ -38,3 +38,7 @@ R100_WINDOWS_CUTOVER_CI=BLOCKED_NOT_GREEN
 R100_OWNER_8820_INSTALLATION=NOT_RUN
 R100_NEW_SOURCE_BYTES_AND_NUMERIC_ADMISSION=ZERO
 PRODUCTION_ADMISSION=DENIED
+
+
+## Nov 23 update — Windows code-only fixture acceptance GREEN
+GitHub CI rerun on tested source `6f113b4d459466b66c7c646b66e9e966ab10a5fa` returned Windows `audit-safety` SUCCESS (run 45039570663, job 137712366481): PowerShell5.1 parse PASS; actual eight-file add/replacement fixture and SHA parity PASS; original DB/env/R88 protected sentinel hashes PASS; second application no-op PASS; unknown original code drift fail-closed PASS; injected first-swap failure rollback PASS. Independent R88 crosswalk CI run 45039570643 also SUCCESS. Earlier runner failed before steps; retry resolved. Source-only R100 is now eligible for ORIGINAL owner Windows preflight, not automatically deployed. Use exact pinned QA commit and require `PI_R100_READ_ONLY_PREFLIGHT=PASS`, 8 allowlist, expected 8 change lines and zero drift; only then explicit `-Apply` with backup and HTTP 401+asset SHA guard. Never modify original database, user, launcher, env or evidence. JDIH live PDF still maintenance, so 18 indexed source metadata only and no newly pinned original PDF bytes.
