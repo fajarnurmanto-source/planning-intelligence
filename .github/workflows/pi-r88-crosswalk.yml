@@ -76,6 +76,28 @@ jobs:
           grep -Fxq PI_R103_UNKNOWN_PARAMETER_HOLD "$work/bad-param.txt"
           echo PI_R103_CI_NETWORK_FETCH_OPT_IN_AND_READ_ONLY_DEFAULT=PASS
 
+      - name: R103 attempt actual BPK primary PDF acquisition on disposable runner (non-blocking)
+        shell: bash
+        continue-on-error: true
+        timeout-minutes: 5
+        run: |
+          set -uo pipefail
+          mkdir -p "$RUNNER_TEMP/pi-r103-bpk-primary"
+          for source in YOG-APBD-DETAIL-2026 YOG-APBD-DETAIL-CHANGE3-2026; do
+            if php scripts/pi-r103-bpk-fetch.php \
+              "--source=$source" \
+              "--output-dir=$RUNNER_TEMP/pi-r103-bpk-primary" --fetch \
+              > "$RUNNER_TEMP/pi-r103-$source.log" 2>&1; then
+                grep -E '^PI_R103_(SOURCE_ID|BPK_HTTP_200_PDF_BYTES|BPK_SHA256|BPK_BYTES_CANDIDATE_ARCHIVED)=' \
+                  "$RUNNER_TEMP/pi-r103-$source.log"
+            else
+                echo "PI_R103_BPK_DIRECT_ACQUISITION_$source=HOLD_NOT_RETRIEVED"
+                grep -E '^PI_R103_(SOURCE_ID|HTTPS_FETCH_HOLD|HTML_OR_NON_PDF_MIRROR_REJECTED|PDF_FOOTER_MISSING|DOWNLOAD_NOT_PDF)' \
+                  "$RUNNER_TEMP/pi-r103-$source.log" || true
+            fi
+          done
+          echo PI_R103_RUNNER_TEMP_DOWNLOADS=EPHEMERAL_NOT_IMPORTED_TO_OWNER_PI
+
       - run: node --test laravel/tests/frontend/*.test.cjs laravel/tests/js/*.test.cjs
       - run: node scripts/pi-build-regulatory-assets.mjs --check
       - name: R93 real Laravel routes and in-memory auth/module acceptance
