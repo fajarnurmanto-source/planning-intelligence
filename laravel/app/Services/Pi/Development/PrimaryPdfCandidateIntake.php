@@ -33,15 +33,7 @@ final class PrimaryPdfCandidateIntake
         bool $commit = false
     ): array {
         $identity = $this->sourceIdentity($sourceId);
-        if (! $this->isOfficialPdfUrl($officialPdfUrl)) {
-            throw new RuntimeException('PI_R102_UNTRUSTED_SOURCE_URL_HOLD');
-        }
-        // Existing R100 metadata URL can be a detail page. Treat this
-        // provided *file* URL as unverified identity until reviewer checks.
-        if ($identity['official_url'] !== $officialPdfUrl
-            && ! str_contains($identity['official_url'], '/home/produk_hukum/detail/')) {
-            throw new RuntimeException('PI_R102_OFFICIAL_URL_IDENTITY_MISMATCH');
-        }
+        $repository = $this->resolveOfficialRepository($sourceId, $officialPdfUrl, $identity);
 
         try {
             $time = new DateTimeImmutable($capturedAt);
@@ -94,6 +86,12 @@ final class PrimaryPdfCandidateIntake
             'source_id' => $sourceId,
             'case_id' => 'YOG-2026-PERSAMPAHAN',
             'origin_metadata_url' => $identity['official_url'],
+            'source_repository' => $repository['id'],
+            'source_repository_detail_url' => $repository['detail_url'],
+            'source_repository_relationship' => $repository['relationship'],
+            'source_repository_url_allowlist' => 'EXACT_REVIEWED_RECORD_ONLY',
+            'source_bytes_direct_retrieval_proof' => 'NOT_PRESENT_OFFLINE',
+
             'source_file_url_claimed' => $officialPdfUrl,
             'source_file_url_retrieval_confirmed' => false,
             'document_identity_match' => 'REVIEW_REQUIRED',
@@ -225,6 +223,94 @@ final class PrimaryPdfCandidateIntake
             }
         }
         throw new RuntimeException('PI_R102_SOURCE_ID_NOT_IN_REVIEWED_INDEX');
+    }
+
+    /**
+     * @param array<string,mixed> $identity
+     * @return array{id:string,detail_url:string,relationship:string}
+     */
+    private function resolveOfficialRepository(
+        string $sourceId, string $url, array $identity
+    ): array {
+        $sourceMetadataUrl = (string) ($identity['official_url'] ?? '');
+        if ($this->isOfficialPdfUrl($url)) {
+            if ($sourceMetadataUrl !== $url
+                && ! str_contains($sourceMetadataUrl, '/home/produk_hukum/detail/')) {
+                throw new RuntimeException('PI_R102_OFFICIAL_URL_IDENTITY_MISMATCH');
+            }
+
+            return [
+                'id' => 'JDIH_KOTA_YOGYAKARTA',
+                'detail_url' => $sourceMetadataUrl,
+                'relationship' => 'LOCAL_GOVERNMENT_ORIGIN_CLAIM_NOT_FETCH_VERIFIED',
+            ];
+        }
+
+        // BPK is an OFFICIAL REPUBLICATION of local government legislation,
+        // not proof of matching bytes/signatures from originating JDIH.
+        // Enforce exact pinned document+URL pairs even if the mirror JSON is
+        // accidentally edited. Do not accept arbitrary /Download/<id> paths.
+        $canonical = [
+            'YOG-APBD-DETAIL-2026' => [
+                'pdf' => 'https://peraturan.bpk.go.id/Download/409706/Perwal%20Jogja%20Nomor%2074%20Tahun%202025.pdf',
+                'detail' => 'https://peraturan.bpk.go.id/Details/346297/perwali-kota-yogyakarta-no-74-tahun-2025',
+            ],
+            'YOG-APBD-DETAIL-CHANGE3-2026' => [
+                'pdf' => 'https://peraturan.bpk.go.id/Download/414066/perwalkot%20No.12%20thn%202026.pdf',
+                'detail' => 'https://peraturan.bpk.go.id/Details/350352/perwali-kota-yogyakarta-no-12-tahun-2026',
+            ],
+        ];
+        if (! isset($canonical[$sourceId]) || $canonical[$sourceId]['pdf'] !== $url) {
+            throw new RuntimeException('PI_R102_UNTRUSTED_SOURCE_URL_HOLD');
+        }
+        if (! str_starts_with($sourceMetadataUrl, 'https://jdih.jogjakota.go.id/')) {
+            throw new RuntimeException('PI_R103_BPK_ORIGINAL_JDIH_IDENTITY_HOLD');
+        }
+
+        $index = dirname($this->cataloguePath).DIRECTORY_SEPARATOR.'official-bpk-pdf-mirrors-r103.json';
+        if (is_link($index) || ! is_file($index) || ! is_readable($index)
+            || filesize($index) > 48 * 1024) {
+            throw new RuntimeException('PI_R103_BPK_MIRROR_INDEX_UNAVAILABLE');
+        }
+        try {
+            $mirrors = json_decode((string) file_get_contents($index), true, 64, JSON_THROW_ON_ERROR);
+        } catch (JsonException $failure) {
+            throw new RuntimeException('PI_R103_BPK_MIRROR_INDEX_MALFORMED', 0, $failure);
+        }
+        if (! is_array($mirrors)
+            || ($mirrors['schema'] ?? null) !== 'PI_R103_BPK_OFFICIAL_REPUBLICATION_ALLOWLIST_V1'
+            || ($mirrors['bytes_acquired_into_quarantine'] ?? null) !== 0
+            || ($mirrors['bytes_sha256_confirmed'] ?? null) !== 0
+            || ($mirrors['production_admission'] ?? null) !== 'DENIED'
+            || ! is_array($mirrors['entries'] ?? null)
+            || count($mirrors['entries']) !== 2) {
+            throw new RuntimeException('PI_R103_BPK_MIRROR_CONTRACT_HOLD');
+        }
+        $records = [];
+        foreach ($mirrors['entries'] as $record) {
+            if (! is_array($record) || ! is_string($record['source_id'] ?? null)
+                || ! isset($canonical[$record['source_id']])
+                || isset($records[$record['source_id']])
+                || ($record['bpk_pdf_url'] ?? null) !== $canonical[$record['source_id']]['pdf']
+                || ($record['bpk_detail_url'] ?? null) !== $canonical[$record['source_id']]['detail']
+                || ($record['repository'] ?? null) !== 'BPK_OFFICIAL_REPUBLICATION'
+                || ($record['primary_repository'] ?? null) !== 'JDIH_KOTA_YOGYAKARTA'
+                || ! array_key_exists('file_bytes_sha256', $record)
+                || $record['file_bytes_sha256'] !== null
+                || ($record['official_pdf_document_identity'] ?? null) !== 'REVIEW_REQUIRED') {
+                throw new RuntimeException('PI_R103_BPK_MIRROR_UNEXPECTED_ID_OR_URL_HOLD');
+            }
+            $records[$record['source_id']] = true;
+        }
+        if (count($records) !== count($canonical)) {
+            throw new RuntimeException('PI_R103_BPK_MIRROR_PAIR_INCOMPLETE');
+        }
+
+        return [
+            'id' => 'BPK_OFFICIAL_REPUBLICATION',
+            'detail_url' => $canonical[$sourceId]['detail'],
+            'relationship' => 'OFFICIAL_BPK_REPUBLICATION_OF_CITY_LEGAL_RECORD_NOT_ORIGIN_BYTES',
+        ];
     }
 
     private function isOfficialPdfUrl(string $url): bool
