@@ -66,8 +66,8 @@ final class PrimaryPdfCandidateIntake
         }
         try {
             $magic = fread($handle, 8);
-            if (! is_string($magic) || ! str_starts_with($magic, '%PDF-1.')
-                && ! str_starts_with($magic, '%PDF-2.')) {
+            if (! is_string($magic) || (! str_starts_with($magic, '%PDF-1.')
+                && ! str_starts_with($magic, '%PDF-2.'))) {
                 throw new RuntimeException('PI_R102_NON_PDF_OR_MAINTENANCE_HTML_REJECTED');
             }
             if (fseek($handle, -min(4096, $bytes), SEEK_END) !== 0) {
@@ -217,8 +217,10 @@ final class PrimaryPdfCandidateIntake
             if (($document['id'] ?? null) === $sourceId
                 && ($document['source_metadata_status'] ?? null) === 'OFFICIAL_JDIH_INDEXED'
                 && ($document['document_bytes_status'] ?? null) === 'NOT_ACQUIRED_NOT_HASH_PINNED'
-                && ($document['document_sha256'] ?? false) === null
-                && ($document['numeric_amount'] ?? false) === null) {
+                && array_key_exists('document_sha256', $document)
+                && $document['document_sha256'] === null
+                && array_key_exists('numeric_amount', $document)
+                && $document['numeric_amount'] === null) {
                 return $document;
             }
         }
@@ -234,7 +236,7 @@ final class PrimaryPdfCandidateIntake
         return is_array($parsed)
             && ($parsed['scheme'] ?? null) === 'https'
             && ($parsed['host'] ?? null) === 'jdih.jogjakota.go.id'
-            && ! isset($parsed['user'], $parsed['pass'], $parsed['port'])
+            && ! isset($parsed['user']) && ! isset($parsed['pass']) && ! isset($parsed['port'])
             && ! isset($parsed['query']) && ! isset($parsed['fragment'])
             && preg_match('~\A/asset/naskah/[A-Za-z0-9._-]{4,100}\.pdf\z~D', (string) ($parsed['path'] ?? '')) === 1;
     }
