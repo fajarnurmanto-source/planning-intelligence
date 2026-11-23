@@ -76,6 +76,40 @@ if($LASTEXITCODE -ne 0){throw 'PI_R100_NOT_DESCENDANT_OF_ACCEPTED_R94'}
 function Normalize-Text([string]$value) {
     return ($value -replace '\r\n',[string][char]10).TrimStart([char]0xFEFF).TrimEnd([char]10,[char]13)
 }
+
+# Native git stdout on Windows PowerShell 5.1 may be OEM-decoded.
+# Compare raw Git blob UTF-8 bytes, NOT PowerShell-decoded Git output,
+# with the exact original disk file after normalizing only BOM + CRLF.
+function Read-GitBlobUtf8([string]$gitPath) {
+    $pinfo=New-Object System.Diagnostics.ProcessStartInfo
+    $pinfo.FileName=$git
+    $pinfo.Arguments='-C "'+$CandidateRepo+'" show "'+$base+':'+$gitPath+'"'
+    $pinfo.UseShellExecute=$false
+    $pinfo.RedirectStandardOutput=$true
+    $pinfo.CreateNoWindow=$true
+    $process=[Diagnostics.Process]::Start($pinfo)
+    if($null -eq $process){throw 'PI_R100_GIT_BASELINE_PROCESS_START_FAILED'}
+    $memory=New-Object System.IO.MemoryStream
+    try {
+        $process.StandardOutput.BaseStream.CopyTo($memory)
+        $process.WaitForExit()
+        if($process.ExitCode -ne 0 -or $memory.Length -eq 0 -or $memory.Length -gt 1048576){
+            throw ('PI_R100_BASELINE_GIT_BYTES_UNAVAILABLE='+$gitPath)
+        }
+        return [Text.UTF8Encoding]::new($false,$true).GetString($memory.ToArray())
+    } finally {
+        $memory.Dispose()
+        $process.Dispose()
+    }
+}
+function Get-TextSha256([string]$value) {
+    $hash=[Security.Cryptography.SHA256]::Create()
+    try {
+        return [BitConverter]::ToString(
+            $hash.ComputeHash([Text.Encoding]::UTF8.GetBytes($value))
+        ).Replace('-','')
+    } finally {$hash.Dispose()}
+}
 $catalogue=Get-Content -LiteralPath (Join-Path $CandidateRepo 'laravel\resources\pi\official-source-metadata-r100.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 if($catalogue.schema -cne 'PI_R100_OFFICIAL_SOURCE_METADATA_CATALOGUE_V1' -or
    @($catalogue.documents).Count -ne 18 -or
@@ -135,16 +169,30 @@ foreach($rel in $allow){
     if($replacements -contains $rel){
         if(-not $existing){throw ('PI_R100_PROTECTED_CODE_MISSING='+$rel)}
         $gitpath='laravel/'+$rel.Replace([char]92,[char]47)
-        $prior=@(& $git -C $CandidateRepo show ($base+':'+$gitpath))
-        if($LASTEXITCODE -ne 0 -or $prior.Count -eq 0) {
-            throw ('PI_R100_BASELINE_NOT_READABLE='+$rel)
-        }
-        $before=Normalize-Text ($prior -join [string][char]10)
-        $now=Normalize-Text ([IO.File]::ReadAllText($target))
-        $new=Normalize-Text ([IO.File]::ReadAllText($src))
-        if($now -cne $before -and $now -cne $new){
+        $before=Normalize-Text (Read-GitBlobUtf8 $gitpath)
+        $now=Normalize-Text ([IO.File]::ReadAllText($target,[Text.UTF8Encoding]::new($false,$true)))
+        $new=Normalize-Text ([IO.File]::ReadAllText($src,[Text.UTF8Encoding]::new($false,$true)))
+        if($now -cne $before -and $now -cne $new) {
+            $baselineLines=$before.Split([char]10)
+            $currentLines=$now.Split([char]10)
+            $firstDifference=[Math]::Min($baselineLines.Count,$currentLines.Count)+1
+            for($j=0;$j -lt [Math]::Min($baselineLines.Count,$currentLines.Count);$j++){
+                if($baselineLines[$j] -cne $currentLines[$j]){
+                    $firstDifference=$j+1
+                    break
+                }
+            }
+            # No source contents, account data or application secrets are logged.
+            Write-Output ('PI_R100_DRIFT_FILE='+$rel)
+            Write-Output ('PI_R100_DRIFT_FIRST_LINE='+$firstDifference)
+            Write-Output ('PI_R100_DRIFT_BASELINE_LINES='+$baselineLines.Count)
+            Write-Output ('PI_R100_DRIFT_ORIGINAL_LINES='+$currentLines.Count)
+            Write-Output ('PI_R100_DRIFT_EXPECTED_NORMALIZED_SHA256='+(Get-TextSha256 $before))
+            Write-Output ('PI_R100_DRIFT_ORIGINAL_NORMALIZED_SHA256='+(Get-TextSha256 $now))
+            Write-Output 'PI_R100_DRIFT_RESOLUTION=HOLD_NO_OVERWRITE'
             throw ('PI_R100_ORIGINAL_CODE_DRIFT_HOLD='+$rel)
         }
+        Write-Output ('PI_R100_BASELINE_UTF8_VERIFIED='+$rel)
     }
     $newSha=(Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash
     $oldSha=if($existing){(Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash}else{$null}
