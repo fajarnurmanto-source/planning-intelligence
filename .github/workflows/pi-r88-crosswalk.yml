@@ -1,7 +1,7 @@
 name: PI R88 crosswalk guards
 on:
   pull_request:
-    paths: ['laravel/**', '.gitattributes', 'scripts/pi-r93-*', 'scripts/pi-r95-*', 'scripts/pi-r97-*', '.github/workflows/pi-r88-crosswalk.yml']
+    paths: ['laravel/**', '.gitattributes', 'scripts/pi-r93-*', 'scripts/pi-r95-*', 'scripts/pi-r97-*', 'scripts/pi-r102-*', '.github/workflows/pi-r88-crosswalk.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -21,7 +21,39 @@ jobs:
           node-version: '22'
       - run: mkdir -p laravel/bootstrap/cache laravel/storage/framework/{cache,sessions,views} laravel/storage/logs
       - run: composer install --working-dir=laravel --prefer-dist --no-interaction --no-progress
-      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest|R100OfficialSourceMetadataTest'
+      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest|R100OfficialSourceMetadataTest|R102PrimaryPdfCandidateIntakeTest'
+
+      - name: R102 quarantine CLI dry-run, immutable archive and maintenance fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d)"
+          trap 'rm -rf "$work"' EXIT
+          mkdir -p "$work/quarantine"
+          php -r '$p=$argv[1]; file_put_contents($p,"%PDF-1.7\n".str_repeat("SYNTHETIC CI ONLY\n",20)."%%EOF\n");' "$work/synthetic.pdf"
+          set -- --id=YOG-APBD-DETAIL-2026 --file="$work/synthetic.pdf" \
+            --url=https://jdih.jogjakota.go.id/asset/naskah/2025pw3405074.pdf \
+            --captured-at=2026-11-23T21:00:00+07:00 --staging-root="$work/quarantine"
+          php scripts/pi-r102-stage-primary-pdf.php "$@" > "$work/dry.txt"
+          grep -Fxq PI_R102_DRY_RUN=PASS_NO_WRITE "$work/dry.txt"
+          if find "$work/quarantine" -mindepth 1 -print -quit | grep -q .; then
+            echo PI_R102_DRY_RUN_MUTATED_DISK >&2; exit 3
+          fi
+          php scripts/pi-r102-stage-primary-pdf.php "$@" --commit > "$work/committed.txt"
+          grep -Fxq PI_R102_LOCAL_PDF_CANDIDATE_STAGED=PASS "$work/committed.txt"
+          find "$work/quarantine" -type f -name '*.pdf' | grep -q .
+          find "$work/quarantine" -type f -name '*.receipt.json' | grep -q .
+          printf '<html>Sedang proses maintenance</html>' > "$work/maintenance.html"
+          if php scripts/pi-r102-stage-primary-pdf.php \
+            --id=YOG-APBD-DETAIL-2026 --file="$work/maintenance.html" \
+            --url=https://jdih.jogjakota.go.id/asset/naskah/2025pw3405074.pdf \
+            --captured-at=2026-11-23T21:00:00+07:00 --staging-root="$work/quarantine" \
+            > "$work/rejected.txt" 2>&1; then
+            echo PI_R102_MAINTENANCE_HTML_FALSE_ACCEPT >&2; exit 3
+          fi
+          grep -Eq 'PI_R102_(NON_PDF_OR_MAINTENANCE_HTML_REJECTED|LOCAL_PDF_SIZE_OUTSIDE_GATES)' "$work/rejected.txt"
+          echo PI_R102_CI_OFFLINE_PDF_QUARANTINE_AND_HTML_REJECTION=PASS
+
       - run: node --test laravel/tests/frontend/*.test.cjs laravel/tests/js/*.test.cjs
       - run: node scripts/pi-build-regulatory-assets.mjs --check
       - name: R93 real Laravel routes and in-memory auth/module acceptance
