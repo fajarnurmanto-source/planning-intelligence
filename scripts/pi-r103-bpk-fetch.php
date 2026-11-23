@@ -67,7 +67,8 @@ try {
             || isset($identities[$entry['source_id']])
             || $entry['bpk_pdf_url'] !== $allow[$entry['source_id']]['url']
             || $entry['bpk_detail_url'] !== $allow[$entry['source_id']]['detail']
-            || ($entry['file_bytes_sha256'] ?? 'ABSENT') !== null) {
+            || ! array_key_exists('file_bytes_sha256', $entry)
+            || $entry['file_bytes_sha256'] !== null) {
             throw new RuntimeException('PI_R103_BPK_RECORD_MISMATCH_HOLD');
         }
         $identities[$entry['source_id']] = true;
