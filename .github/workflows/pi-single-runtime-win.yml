@@ -1415,7 +1415,7 @@ jobs:
                 $process.Dispose()
               }
               $decoded=[IO.File]::ReadAllText($target,[Text.UTF8Encoding]::new($false,$true))
-              if($rel -eq 'public\development-case-r85.html' -and -not $decoded.Contains('·')) {
+              if($rel -eq 'public\development-case-r85.html' -and -not $decoded.Contains([string][char]0x00B7)) {
                 throw 'PI_R101_CI_BASELINE_HTML_UTF8_CHARACTER_LOST'
               }
               $hashes[$rel]=(Get-FileHash $target -Algorithm SHA256).Hash
