@@ -21,6 +21,7 @@ on:
       - 'scripts/pi-r98-r88-registry-repair.ps1'
       - 'scripts/pi-r100-official-source-cutover.ps1'
       - 'scripts/pi-r101-r100-safe-owner-rollout.ps1'
+      - 'scripts/pi-r104-owner-bpk-two-pdf-intake.ps1'
       - 'laravel/resources/pi/official-source-metadata-r100.json'
       - 'laravel/public/official-sources-r100.js'
       - 'laravel/public/official-sources-r100.css'
@@ -1543,3 +1544,53 @@ jobs:
           }
           Write-Host 'PI_R101_WINDOWS_OWNER_WRAPPER_DRIFT=HOLD_NO_MUTATIONS'
 
+
+      - name: R104 owner two downloaded BPK files SHA-only preflight, ambiguous and HTML rejection
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $qa=$PWD.Path
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if($LASTEXITCODE -ne 0){throw 'PI_R104_CI_COMMIT_NOT_FOUND'}
+          $script='.\scripts\pi-r104-owner-bpk-two-pdf-intake.ps1'
+          $tokens=$null;$errors=$null
+          [Management.Automation.Language.Parser]::ParseFile(
+            $script,[ref]$tokens,[ref]$errors
+          ) | Out-Null
+          if($errors.Count -ne 0){
+            $errors|Format-List
+            throw 'PI_R104_POWERSHELL51_PARSE_FAILED'
+          }
+          $folder=Join-Path $env:RUNNER_TEMP ('pi-r104-fixture-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $folder -Force | Out-Null
+          $names=@('perwalkot No.12 thn 2026.pdf','Perwal Jogja Nomor 74 Tahun 2025.pdf')
+          $text=('%PDF-1.7'+[string][char]10)+(('R104 CI synthetic bytes only'+[string][char]10)*12)+('%%EOF'+[string][char]10)
+          $bytes=[Text.Encoding]::ASCII.GetBytes($text)
+          if($bytes.Length -lt 128){throw 'PI_R104_CI_FIXTURE_TOO_SHORT'}
+          $hashes=@{}
+          foreach($name in $names){
+            $file=Join-Path $folder $name
+            [IO.File]::WriteAllBytes($file,$bytes)
+            $hashes[$name]=(Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash
+          }
+          $out=@(& $script -ExpectedCommit $pin -DownloadDirectory $folder)
+          if($out -notcontains 'PI_R104_TWO_LOCAL_PDF_HEADER_EOF_SHA256=PASS' -or
+             $out -notcontains 'PI_R104_MODE=READ_ONLY_NO_ARCHIVE' -or
+             @($out|Where-Object {$_ -like 'PI_R104_SOURCE_SHA256=*'}).Count -ne 2){
+            throw 'PI_R104_CI_READ_ONLY_TWO_PDF_CHECK_FAILED'
+          }
+          foreach($name in $names){
+            if((Get-FileHash (Join-Path $folder $name) -Algorithm SHA256).Hash -ne $hashes[$name]){
+              throw ('PI_R104_CI_READ_ONLY_CHANGED_ORIGINAL='+$name)
+            }
+          }
+          Write-Host 'PI_R104_WINDOWS_OWNER_EXACT_FILENAMES_AND_SHA_PREVIEW=PASS'
+          $source=Join-Path $folder 'perwalkot No.12 thn 2026.pdf'
+          [IO.File]::WriteAllText($source,'<html>Fake PDF maintenance</html>')
+          $failed=''
+          try { & $script -ExpectedCommit $pin -DownloadDirectory $folder|Out-Null }
+          catch {$failed=[string]$_.Exception.Message}
+          if($failed -notmatch 'PI_R104_PDF_SIZE_INVALID|PI_R104_NON_PDF_OR_HTML_REJECTED'){
+            throw 'PI_R104_CI_FAKE_HTML_NOT_REJECTED'
+          }
+          Write-Host 'PI_R104_WINDOWS_HTML_AS_PDF=HOLD_NO_ARCHIVE'
