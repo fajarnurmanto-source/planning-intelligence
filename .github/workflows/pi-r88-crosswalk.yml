@@ -21,7 +21,19 @@ jobs:
           node-version: '22'
       - run: mkdir -p laravel/bootstrap/cache laravel/storage/framework/{cache,sessions,views} laravel/storage/logs
       - run: composer install --working-dir=laravel --prefer-dist --no-interaction --no-progress
-      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest|R100OfficialSourceMetadataTest|R102PrimaryPdfCandidateIntakeTest|R103BpkMirrorAndFiscalEvidenceTest'
+      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest|R100OfficialSourceMetadataTest|R102PrimaryPdfCandidateIntakeTest|R103BpkMirrorAndFiscalEvidenceTest|R105BpkQuarantineReadOnlyReviewTest'
+
+      - name: R105 read-only QA CLI refuses mutation flag
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l scripts/pi-r105-review-bpk-quarantine.php
+          php -l laravel/app/Services/Pi/Development/BpkQuarantineReadOnlyReview.php
+          if php scripts/pi-r105-review-bpk-quarantine.php --commit > "$RUNNER_TEMP/pi-r105-unknown.txt" 2>&1; then
+            echo PI_R105_UNSAFE_WRITE_FLAG_ACCEPTED >&2; exit 3
+          fi
+          grep -Fxq PI_R105_UNKNOWN_PARAMETER_HOLD "$RUNNER_TEMP/pi-r105-unknown.txt"
+          echo PI_R105_CI_WRITE_OPTION_NOT_AVAILABLE=PASS
 
       - name: R102 quarantine CLI dry-run, immutable archive and maintenance fail-closed
         shell: bash

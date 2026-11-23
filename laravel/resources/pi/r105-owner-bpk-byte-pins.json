@@ -1,0 +1,24 @@
+{
+  "schema": "PI_R105_OWNER_BPK_BYTE_PINS_V1",
+  "snapshot_date": "2026-11-24",
+  "byte_pin_origin": "OWNER_R104_LOG_NOT_REMOTE_BINARY_VERIFICATION",
+  "document_identity": "REVIEW_REQUIRED",
+  "numeric_admission": 0,
+  "production_admission": "DENIED",
+  "entries": [
+    {
+      "source_id": "YOG-APBD-DETAIL-2026",
+      "owner_bytes": 17018238,
+      "owner_sha256": "E4AAA45F33B7254FDB7BBE3A0BC456999FD2CE3E19D8C07B874C640A5E1DEE24",
+      "bpk_pdf_url": "https://peraturan.bpk.go.id/Download/409706/Perwal%20Jogja%20Nomor%2074%20Tahun%202025.pdf",
+      "bpk_detail_url": "https://peraturan.bpk.go.id/Details/346297/perwali-kota-yogyakarta-no-74-tahun-2025"
+    },
+    {
+      "source_id": "YOG-APBD-DETAIL-CHANGE3-2026",
+      "owner_bytes": 5083310,
+      "owner_sha256": "4E5194E6987468E30406911B277BACCA73506B3BF93BE413C0C19784AE3825EA",
+      "bpk_pdf_url": "https://peraturan.bpk.go.id/Download/414066/perwalkot%20No.12%20thn%202026.pdf",
+      "bpk_detail_url": "https://peraturan.bpk.go.id/Details/350352/perwali-kota-yogyakarta-no-12-tahun-2026"
+    }
+  ]
+}
