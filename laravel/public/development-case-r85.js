@@ -19,6 +19,30 @@
       return null
     }
   }
+  // Planner labels are a PRESENTATION of the original machine statuses.
+  // The unmodified raw status stays available in an audit disclosure.
+  const statusLabels=Object.freeze({
+    REVIEW_READY_WITH_ABSTENTIONS:'Siap ditelaah · beberapa bukti belum cukup',
+    MIXED_VERIFIED_SOURCE_AND_CANDIDATE_RELATION:'Sumber ditemukan · hubungan perlu pemeriksaan',
+    CANDIDATE_REQUIRES_LEGAL_REVIEW:'Hubungan perlu pemeriksaan hukum',
+    DOCUMENTARY_SEQUENCE_REVIEW_REQUIRED:'Urutan dokumen perlu diperiksa',
+    OUTPUT_TRACE_CANDIDATE_NUMERIC_BLOCKED:'Jejak keluaran ditemukan · angka belum boleh dibandingkan',
+    TRACE_AVAILABLE_DECISION_ABSTAIN:'Jejak tersedia · keputusan belum dapat diambil',
+    VERIFIED:'Sumber telah diperiksa',
+    VERIFIED_SOURCE:'Sumber telah diperiksa',
+    NOT_ASSESSED:'Belum dinilai',
+    BLOCKED:'Belum diizinkan',
+    NO_ACTIVE_DECISION:'Belum ada keputusan pemeriksa',
+    DENIED:'Tidak diizinkan',
+    HIGH:'Tinggi',MEDIUM:'Sedang',LOW:'Rendah'
+  })
+  const explainStatus=code=>statusLabels[code]||'Perlu pemeriksaan lanjutan'
+  const technical=(parent,code,refs)=> {
+    const details=add(parent,'details','r85-technical')
+    add(details,'summary','','Lihat jejak bukti teknis')
+    add(details,'code','r85-edge-ref',refs||'Identitas bukti tidak tersedia')
+    add(details,'code','r85-edge-ref','Status sistem: '+code)
+  }
   const fail = message => {
     for (const id of ['r85-questions', 'r85-graphs', 'r85-evidence', 'r85-guards']) {
       const target = byId(id)
@@ -26,7 +50,8 @@
     }
     byId('r85-case-label').textContent = 'Kasus tidak tersedia'
     byId('r85-case-summary').textContent = 'Pemeriksaan dihentikan untuk mencegah tampilan data tanpa kontrak.'
-    byId('r85-case-status').textContent = '● ABSTAIN'
+    byId('r85-case-status').textContent = '● Belum dapat disimpulkan'
+    document.dispatchEvent(new CustomEvent('pi:case-state',{detail:{ready:false}}))
   }
   const assertData = data => {
     const caseData = data.case
@@ -63,16 +88,18 @@
     fillSelect('r85-year', available.years, selected.year)
     fillSelect('r85-topic', available.topics, selected.topic, value => value === 'PERSAMPAHAN' ? 'Persampahan' : value)
     fillSelect('r85-case', available.cases, selected.case, value => value.label)
+    document.dispatchEvent(new CustomEvent('pi:case-state',{detail:{ready:true}}))
   }
   const renderQuestions = caseData => {
     const container = byId('r85-questions')
     container.replaceChildren()
     for (const item of caseData.questions) {
       const card = add(container, 'article', 'r85-question')
-      add(card, 'span', 'r85-status', item.status.replaceAll('_', ' '))
+      const badge=add(card, 'span', 'r85-status', explainStatus(item.status))
+      badge.title='Status sumber: '+item.status
       add(card, 'h3', '', item.question)
       add(card, 'p', '', item.answer)
-      add(card, 'code', 'r85-edge-ref', `Relasi: ${item.edge_ids.join(' · ')}`)
+      technical(card,item.status,`Relasi: ${item.edge_ids.join(' · ')}`)
     }
   }
   const renderGraphs = caseData => {
@@ -122,8 +149,9 @@
       add(proof, 'p', '', source.locator)
       add(proof, 'span', 'r85-hash', source.source_sha256 ? `SHA-256 ${source.source_sha256}` : 'SHA-256 belum tersedia')
       const status = add(item, 'div', 'r85-verification')
-      add(status, 'span', '', source.verification_status.replaceAll('_', ' '))
-      add(status, 'span', source.uncertainty === 'HIGH' ? 'high' : '', `Ketidakpastian ${source.uncertainty}`)
+      const sourceBadge=add(status, 'span', '', explainStatus(source.verification_status))
+      sourceBadge.title='Status sumber: '+source.verification_status
+      add(status, 'span', source.uncertainty === 'HIGH' ? 'high' : '', `Ketidakpastian ${explainStatus(source.uncertainty)}`)
       add(status, 'small', '', `${source.version} · ${source.as_of_date}`)
     }
   }
@@ -131,13 +159,13 @@
     const guards = byId('r85-guards')
     guards.replaceChildren()
     const labels = [
-      `Harmonisasi hukum: ${interpretation.legal_harmonization}`,
-      `Keselarasan substantif: ${interpretation.substantive_alignment}`,
-      `Perbandingan angka: ${interpretation.numeric_comparison}`,
-      `Keputusan review: ${interpretation.review_decision}`,
-      `Promosi produksi: ${interpretation.production_admission}`,
+      `Harmonisasi hukum: ${explainStatus(interpretation.legal_harmonization)}`,
+      `Keselarasan substansi: ${explainStatus(interpretation.substantive_alignment)}`,
+      `Perbandingan angka: ${explainStatus(interpretation.numeric_comparison)}`,
+      `Keputusan pemeriksa: ${explainStatus(interpretation.review_decision)}`,
+      `Penggunaan resmi: ${explainStatus(interpretation.production_admission)}`,
     ]
-    for (const label of labels) add(guards, 'span', '', label.replaceAll('_', ' '))
+    for (const label of labels) add(guards, 'span', '', label)
   }
   async function load(filters = {}) {
     try {
@@ -148,7 +176,8 @@
       const caseData = assertData(data)
       byId('r85-case-label').textContent = caseData.label
       byId('r85-case-summary').textContent = caseData.summary
-      byId('r85-case-status').textContent = `● ${caseData.case_status.replaceAll('_', ' ')}`
+      byId('r85-case-status').textContent = `● ${explainStatus(caseData.case_status)}`
+      byId('r85-case-status').title = 'Status sistem: '+caseData.case_status
       renderFilters(data)
       renderQuestions(caseData)
       renderGraphs(caseData)

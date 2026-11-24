@@ -56,18 +56,36 @@ function initCase(){
  make('p','pi-r108-overline','RUANG KERJA TELAAH',shell)
  make('h2','', 'Apa yang ingin Anda periksa?',shell).id='pi-r108-workflow-title'
  make('p','pi-r108-intro','Pilih pekerjaan. Informasi lanjutan dibuka saat dibutuhkan, tanpa kehilangan sumber dan konteks kasus.',shell)
- const context=make('p','pi-r108-context','Konteks mengikuti wilayah, tahun, topik dan kasus yang Anda pilih.',shell)
+ const context=make('p','pi-r108-context','Menyiapkan konteks kasus…',shell)
+ const contextHint=make('p','pi-r108-hint',
+  'Kasus contoh: Pengelolaan Persampahan Kota Yogyakarta, tahun 2026. Data belum mencakup semua kasus daerah.',shell)
+ contextHint.setAttribute('role','note')
  context.setAttribute('aria-live','polite')
+ let caseReady=false
  const updateContext=()=>{
-  const names=['r85-jurisdiction','r85-year','r85-topic','r85-case']
-  const values=names.map(name=>{
-   const sel=byId(name)
-   return sel?.selectedOptions?.[0]?.textContent?.trim()||sel?.value||''
+  const fields=[
+   ['Wilayah','r85-jurisdiction'],['Tahun','r85-year'],
+   ['Topik','r85-topic'],['Kasus','r85-case']
+  ]
+  const values=fields.map(([label,id])=>{
+   const selected=byId(id)?.selectedOptions?.[0]
+   return selected ? label+': '+(selected.textContent?.trim()||selected.value||'') : ''
   }).filter(Boolean)
-  context.textContent=values.length?'Konteks: '+values.join(' · '):'Konteks dipilih melalui formulir di atas.'
+  context.textContent=caseReady&&values.length===fields.length
+   ? values.join(' · ')
+   : 'Menyiapkan pilihan wilayah, tahun, topik, dan kasus…'
  }
- filters.addEventListener('change',updateContext)
- filters.addEventListener('submit',()=>setTimeout(updateContext,0))
+ const syncContext=event=>{
+  caseReady=event.detail?.ready===true
+  if(!caseReady)context.textContent='Kasus belum tersedia. Periksa kembali akses atau sumber data.'
+  else updateContext()
+ }
+ document.addEventListener('pi:case-state',syncContext)
+ filters.addEventListener('change',()=>{
+  // A changed filter does not imply the server has accepted a different case.
+  context.textContent='Pilihan diubah. Tekan "Muat kasus" untuk memeriksa konteks.'
+ })
+ window.addEventListener('pageshow',()=>{if(caseReady)updateContext()})
  updateContext()
  const nav=make('nav','pi-r108-tabs',null,shell)
  nav.setAttribute('aria-label','Bagian pekerjaan telaah')
@@ -82,10 +100,16 @@ function initCase(){
  const info=make('div','pi-r108-current',null,shell)
  const heading=make('h3','pi-r108-current-heading','',info)
  const sub=make('p','','',info)
- const action=make('a','pi-r108-source-jump','',info)
- action.hidden=true
- action.href='#r106-annex-review'
- action.textContent='Periksa lampiran APBD'
+ const action=make('a','pi-r108-next-step','',info)
+ const nextSteps={
+  ringkasan:['Lanjut: Telaah kewenangan','kewenangan'],
+  kewenangan:['Lanjut: Telaah perencanaan','rencana'],
+  rencana:['Lanjut: Telaah anggaran','anggaran'],
+  anggaran:null,
+  dokumen:['Kembali ke ringkasan','ringkasan'],
+  rinci:['Kembali ke ringkasan','ringkasan']
+ }
+ document.body.classList.add('pi-r108-case')
  const first=byId('r88-crosswalk')
  first.parentNode.insertBefore(shell,first)
  const shortcuts={
@@ -111,9 +135,11 @@ function initCase(){
   }
   const definition=config.find(v=>v.id===selected)
   heading.textContent=definition.title;sub.textContent=definition.desc
-  action.hidden=selected!=='anggaran'
+  const next=nextSteps[selected]
+  action.hidden=!next
+  if(next){action.textContent=next[0];action.href='#pi-view='+next[1]}
   if(selected==='anggaran'){
-   sub.textContent+=' · '+activateSourceLinks()
+   sub.textContent='Periksa rincian rekening dan sumbernya di bawah. Tekan "Periksa lampiran dari arsip lokal" untuk menjalankan pemeriksaan; hasil tetap kandidat.'
   }
   document.title=definition.short+' · Telaah pembangunan · PI'
   if(focus){shell.scrollIntoView({block:'start',behavior:'auto'})}
@@ -137,6 +163,8 @@ function initHome(){
  make('p','pi-r108-overline','PILIH PEKERJAAN',section)
  make('h2','', 'Saya ingin…',section).id='pi-r108-home-title'
  const choices=make('div','pi-r108-task-grid',null,section)
+ document.body.classList.add('pi-r108-home')
+ make('p','pi-r108-hint','Pilihan di bawah membuka kasus contoh Persampahan Kota Yogyakarta 2026. Belum tersedia daftar pekerjaan lintas perangkat daerah.',section)
  const tasks=[
   ['Menelaah permasalahan dan kewenangan','Memeriksa persoalan, aturan dan perangkat daerah terkait.','./development-case-r85.html#pi-view=kewenangan'],
   ['Memeriksa program dan subkegiatan','Menelusuri hubungan sasaran, program, kegiatan dan indikator.','./development-case-r85.html#pi-view=rencana'],
@@ -150,6 +178,13 @@ function initHome(){
   make('strong','',label,a);make('span','',desc,a)
  }
  hero.insertAdjacentElement('afterend',section)
+ const heroActions=hero.querySelector('.hero-actions')
+ if(heroActions){
+  const options=make('details','pi-r108-hero-extras',null)
+  make('summary','', 'Pintasan lain dan bantuan AI',options)
+  heroActions.parentElement?.append(options)
+  options.append(heroActions)
+ }
  const kpis=wrap.querySelector('.kpis'),grid=wrap.querySelector('.content-grid')
  if(kpis&&grid){
   const details=make('details','pi-r108-home-details',null)

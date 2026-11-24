@@ -24,3 +24,30 @@
 .pi-r108-home-details .content-grid,.pi-r108-home-details .kpis{min-width:0}
 @media(max-width:700px){.pi-r108-workflow,.pi-r108-home-tasks{padding:16px}.pi-r108-task-grid{grid-template-columns:1fr}.pi-r108-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.pi-r108-tab{justify-content:center;text-align:center;font-size:.76rem}}
 @media(max-width:390px){.pi-r108-tabs{grid-template-columns:1fr 1fr}.pi-r108-tab{padding:8px 6px;min-width:0;overflow-wrap:anywhere}}
+
+/* R108 Wave2: first viewport prioritizes selected case and next task. */
+.pi-r108-home .hero,.pi-r108-case .hero{padding:19px 24px;gap:16px;grid-template-columns:minmax(0,1fr) minmax(185px,230px)}
+.pi-r108-home .hero h1,.pi-r108-case .hero h1{font-size:clamp(1.45rem,2vw,1.9rem);line-height:1.23;margin:8px 0}
+.pi-r108-home .hero-side,.pi-r108-case .hero-side{padding:13px}
+.pi-r108-home .hero-side strong,.pi-r108-case .hero-side strong{font-size:1.02rem;margin:6px 0}
+.pi-r108-home .hero-side .status-pill,.pi-r108-case .hero-side .status-pill{margin-top:8px}
+.pi-r108-home .content-wrap,.pi-r108-case .content-wrap{padding-top:16px}
+.pi-r108-case .r85-hero{margin-bottom:12px}
+.pi-r108-case #r85-filters{margin-bottom:12px;padding:12px}
+.pi-r108-workflow,.pi-r108-home-tasks{margin-top:12px;padding:18px}
+.pi-r108-hint{color:#b8d5c9;font-size:.78rem;line-height:1.55;max-width:90ch}
+.pi-r108-next-step{display:inline-flex;margin-top:9px;color:#baf2cc;font-size:.85rem;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.pi-r108-hero-extras{margin-top:12px;color:#c9e7da;font-size:.8rem}
+.pi-r108-hero-extras summary{cursor:pointer;font-weight:700}
+.pi-r108-hero-extras .hero-actions{margin-top:9px}
+.r85-technical{margin-top:10px;color:#55766a;font-size:.75rem}
+.r85-technical summary{cursor:pointer;color:#396f5c;font-weight:750}
+.r85-technical code{display:block;margin:6px 0 0;overflow-wrap:anywhere}
+.pi-r108-workflow .pi-r108-current{padding:11px 13px}
+.pi-r108-home .pi-r108-home-tasks h2{margin:4px 0 4px}
+@media(max-width:700px){
+ .pi-r108-home .hero,.pi-r108-case .hero{grid-template-columns:1fr;padding:16px}
+ .pi-r108-home .hero-side,.pi-r108-case .hero-side{padding:12px}
+ .pi-r108-home .content-wrap,.pi-r108-case .content-wrap{padding:12px}
+ .pi-r108-case #r85-filters{padding:12px}
+}

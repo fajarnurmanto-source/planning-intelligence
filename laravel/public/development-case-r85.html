@@ -30,11 +30,11 @@
       <div class="side-foot"><span class="online-dot"></span> Layanan QA lokal<br><small>Relasi kandidat memerlukan reviewer</small></div>
     </aside>
     <main class="main-content">
-      <header class="topbar"><span><b>Kasus pembangunan terpadu</b><span class="top-separator">/</span> PI Superior</span><span class="local-badge">● LOCAL QA</span></header>
+      <header class="topbar"><span><b>Telaah pembangunan</b><span class="top-separator">/</span> Kasus yang sedang diperiksa</span><span class="local-badge">● LOCAL QA</span></header>
       <div class="content-wrap">
         <div class="notice" role="note"><span class="notice-icon">i</span><span>Sumber terverifikasi, hubungan kandidat, dan abstain ditampilkan terpisah. <strong>Halaman ini tidak membuat kesimpulan hukum atau keputusan review otomatis.</strong></span><span class="notice-label">PERLU TELAAH</span></div>
         <section class="hero r85-hero" aria-labelledby="r85-title">
-          <div class="hero-main"><span class="eyebrow">TELAAH PERENCANAAN DAN ANGGARAN</span><h1 id="r85-title">Telaah pembangunan <em>berdasarkan bukti.</em></h1><p>Ikuti alasan dokumen, pemilik kewenangan, urutan proses, keluaran, dan jejak pembangunan dua arah dengan bukti pada setiap hubungan.</p></div>
+          <div class="hero-main"><span class="eyebrow">TELAAH PERENCANAAN DAN ANGGARAN</span><h1 id="r85-title">Telaah rencana, anggaran, dan bukti.</h1><p>Periksa apa yang diketahui, apa yang belum dapat dipastikan, dan bukti yang perlu ditelaah berikutnya.</p></div>
           <div class="hero-side"><span>KASUS AKTIF</span><strong id="r85-case-label">Memuat kasus…</strong><p id="r85-case-summary">Memeriksa kontrak bukti dan pembatasan.</p><span id="r85-case-status" class="status-pill">● Memuat</span></div>
         </section>
 
@@ -43,11 +43,11 @@
           <label>Tahun<select id="r85-year" name="year"></select></label>
           <label>Topik<select id="r85-topic" name="topic"></select></label>
           <label>Kasus<select id="r85-case" name="case"></select></label>
-          <button class="primary-btn" type="submit">Tampilkan jejak</button>
+          <button class="primary-btn" type="submit">Muat kasus</button>
         </form>
 
         <section id="r88-crosswalk" class="panel" aria-labelledby="r88-title">
-          <div class="panel-heading"><div><span class="section-number">KESESUAIAN PERENCANAAN</span><h2 id="r88-title">Telusuri kewenangan, nomenklatur dan anggaran</h2><p>Hubungan berasal dari bukti kasus R85 dan aturan waktu R86. Istilah terkait bukan bukti kesetaraan; perubahan lintas tahun tetap ABSTAIN tanpa versi pembanding.</p></div></div>
+          <div class="panel-heading"><div><span class="section-number">KESESUAIAN PERENCANAAN</span><h2 id="r88-title">Telusuri kewenangan, nomenklatur dan anggaran</h2><p>Periksa kesesuaian kewenangan, kode subkegiatan dan dokumen sesuai tahun acuan. Jika versi pembanding belum ada, hasil belum dapat disimpulkan.</p></div></div>
           <form id="r88-controls" class="r85-filters">
             <label>Kode subkegiatan<input name="code" value="2.11.11.2.01.0004" required maxlength="40"></label>
             <label>Tahun<select name="year"><option>2026</option><option>2027</option></select></label>
@@ -70,18 +70,18 @@
             <p id="r89-status" role="status" aria-live="polite">Muat crosswalk 2026 untuk menyiapkan pratinjau. Tidak ada panggilan AI otomatis.</p>
             <div id="r89-results" class="r85-question-grid"></div>
           </section>
-          <a href="/regulatory-trace-r70a.html#r84-review-workspace">Tinjau kandidat melalui reviewer R84</a>
+          <a href="/regulatory-trace-r70a.html#r84-review-workspace">Buka meja pemeriksaan bukti</a>
           <div id="r88-results" class="r85-question-grid"></div>
         </section>
         <section id="r86-lifecycle" class="panel r86-panel" aria-labelledby="r86-title">
-          <div class="panel-heading"><div><span class="section-number">DASAR KEWENANGAN</span><h2 id="r86-title">Dari kewenangan sampai perbaikan perencanaan</h2><p>Satu registry bersama untuk PI Superior dan lima aplikasi spesialis. Tahapan adalah graf dependensi, bukan garis waktu tunggal; bukti yang tidak tersedia tetap ditampilkan sebagai gap.</p></div><span class="small-tag amber">REVIEW MANUSIA</span></div>
+          <div class="panel-heading"><div><span class="section-number">DASAR KEWENANGAN</span><h2 id="r86-title">Dari kewenangan sampai perbaikan perencanaan</h2><p>Telusuri dasar kewenangan dan tahapan yang terkait. Jika dokumen belum tersedia, kekosongan bukti ditampilkan apa adanya.</p></div><span class="small-tag amber">REVIEW MANUSIA</span></div>
           <form id="r86-controls" class="r86-controls" aria-label="Filter siklus pemerintahan">
             <label>Tanggal acuan<input id="r86-as-of" name="as_of" type="date" value="2026-11-18" min="2000-01-01" max="2100-12-31"></label>
             <label>Tahap<select id="r86-stage" name="stage"><option value="">Semua tahap</option></select></label>
             <button class="primary-btn" type="submit">Periksa siklus</button>
             <button id="r86-export-json" class="secondary-btn" type="button" disabled>Ekspor data (lanjutan)</button>
             <button id="r86-export-md" class="secondary-btn" type="button" disabled>Ekspor Markdown</button>
-            <a class="secondary-btn" href="/regulatory-trace-r70a.html#r84-review-workspace">Buka reviewer R84</a>
+            <a class="secondary-btn" href="/regulatory-trace-r70a.html#r84-review-workspace">Buka meja pemeriksa</a>
           </form>
           <div id="r86-status" class="r86-status" role="status" aria-live="polite">Memeriksa hubungan dasar kewenangan…</div>
           <div id="r86-metrics" class="r86-metrics"></div>
@@ -158,7 +158,7 @@
           </div>
           <p class="r106-warning">Lampiran, keaslian naskah, Perwal 13/15 tahun 2026, RKA/DPA dan realisasi masih memerlukan review. Penerimaan angka dan produksi tetap ditolak.</p>
         </section>
-        <footer class="page-footer">Planning Intelligence · PI Superior R85<span>Kota Yogyakarta 2026 · Bukti publik dan QA lokal; keputusan manusia tetap wajib.</span></footer>
+        <footer class="page-footer">Planning Intelligence · Telaah Pembangunan<span>Kota Yogyakarta 2026 · Bukti publik dan QA lokal; keputusan manusia tetap wajib.</span></footer>
       </div>
     </main>
   </div>

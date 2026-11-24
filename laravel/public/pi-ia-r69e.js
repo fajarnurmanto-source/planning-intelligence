@@ -62,6 +62,7 @@
     {id:'settings',label:'Pengaturan dan bantuan',subtitle:'Layanan AI opsional dan pengaturan lanjutan',items:[
       {label:'Bantuan analisis AI',href:'./ai-gateway.html',key:'ai'},
       {label:'Pengaturan AI',href:'./ai-settings.html',key:'ai-settings'},
+      {label:'Paket dan akses layanan',href:'./subscription-r69e.html',key:'subscription'},
     ]},
   ]
   function create(tag,cls,text,parent) {
@@ -97,7 +98,7 @@
       }
       const list=create('div','pi-app-submenu',null,details)
       const displayItems=group.id==="superior"&&planName==="FREE"
-        ? [...group.items.filter(item=>item.key==="home"||item.key==="development-case"),{label:"Langganan aplikasi",href:"./subscription-r69e.html"}]
+        ? group.items.filter(item=>item.key==="home"||item.key==="development-case")
         : group.items
       for(const item of displayItems) {
         if(item.href && (!item.module || modulesAllowed.has(item.module))) {
@@ -139,7 +140,7 @@
       disclaimer.textContent='Autentikasi server QA aktif · SSO produksi belum aktif'
     const caveat=aside.querySelector('.pi-ux-caveat')
     if(caveat&&caveat.textContent!=='R69E · Login QA aktif; tenant produksi dan SSO belum diaktifkan')
-      caveat.textContent='R69E · Login QA aktif; tenant produksi dan SSO belum diaktifkan'
+      caveat.textContent='Login lokal aktif; SSO dan layanan produksi belum disahkan'
   }
   let scheduled=false
   function patch() {
