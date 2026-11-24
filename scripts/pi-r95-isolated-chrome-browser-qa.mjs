@@ -337,6 +337,26 @@ try{
   }
   assert.equal(externalRequests,0,'PI_R97_BROWSER_NETWORK_EGRESS_DETECTED')
   console.log('PI_R97_OWNER_EDGE_SNIPPET_REAL_CHROME_CI=PASS')
+
+  // R108 W3B: authenticated DOM, native disclosures and old direct links.
+  await send('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false})
+  await navigate('/regulatory-laravel-r70g.html')
+  await until("document.querySelectorAll('details[data-pi-regulatory-task]').length===4",'W3B_GROUPS')
+  assert.equal(await evalPage("document.querySelectorAll('details[data-pi-regulatory-task][open]').length"),0)
+  await evalPage("Array.from(document.querySelectorAll('nav a')).find(a=>a.hash==='#r70l-title').click()")
+  await until("document.getElementById('r70l-title').closest('details').open",'W3B_AUTHORITY')
+  await evalPage("location.hash='#r75-title'")
+  await until("document.getElementById('r75-title').closest('details').open",'W3B_REVIEW')
+  assert.equal(await evalPage("document.querySelectorAll('details[data-pi-regulatory-task][open]').length"),1)
+  await navigate('/regulatory-laravel-r70g.html#r74-title')
+  await until("document.getElementById('r74-title').closest('details').open",'W3B_DIRECT_GENEALOGY')
+  assert.equal(await evalPage("!!document.getElementById('r74-form')&&!!document.getElementById('r70o-form')"),true)
+  await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true})
+  await navigate('/regulatory-laravel-r70g.html#r72-title')
+  await until("document.getElementById('r72-title').closest('details').open",'W3B_MOBILE_HISTORY')
+  assert.ok(await evalPage("document.documentElement.scrollWidth<=innerWidth+3"),'W3B mobile overflow')
+  assert.equal(externalRequests,0,'W3B external request')
+  console.log('PI_R108_W3B_CHROME_TASK_GROUPS_AND_DEEP_LINKS=PASS')
   console.log('PI_R95_CHROME_RESPONSIVE_AUTHENTICATED_ACCEPTANCE=PASS')
 } finally {
   try{ws?.close()}catch{}

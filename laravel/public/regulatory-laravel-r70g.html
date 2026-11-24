@@ -23,25 +23,27 @@
   <main class="main-content">
     <header class="topbar"><span><b>Dokumen dan dasar hukum</b><span class="top-separator">/</span> Telaah regulasi</span><span class="local-badge">Lingkungan uji</span></header>
     <div class="content-wrap">
-      <details class="panel"><summary>Lingkup pemeriksaan dan keterbatasan layanan</summary><p>Halaman ini menampilkan bahan telaah dari sumber yang tersedia pada lingkungan uji Laravel. Tidak semua fungsi lama tersedia. Keselarasan hukum, angka konsolidasi dan penggunaan resmi belum disetujui.</p></details>
+      <details class="panel"><summary>Lingkup pemeriksaan dan keterbatasan layanan</summary><p>Halaman ini menampilkan bahan telaah dari sumber yang tersedia pada lingkungan uji Laravel. Tidak semua fungsi lama tersedia (bukan kesetaraan seluruh fungsi legacy). Keselarasan hukum, angka konsolidasi dan penggunaan resmi belum disetujui.</p></details>
       <section class="hero">
         <div class="hero-main">
           <span class="eyebrow">DASAR HUKUM DAN KEWENANGAN</span>
           <h1>Telaah dasar hukum<br><em>dan perubahan peraturan</em></h1>
           <p>Periksa dasar kewenangan, hubungan dokumen perencanaan, serta riwayat perubahan penjabaran APBD Kota Yogyakarta 2026. Hasil adalah bahan telaah, bukan pengesahan hukum.</p>
-          <div class="hero-actions"><a class="secondary-btn" href="#r70g-documents">Periksa ruang lingkup lampiran ↗</a><a class="primary-btn" href="#r72-title">Periksa riwayat perubahan ↗</a></div>
+          <div class="hero-actions"><a class="primary-btn" href="#r70l-title">Periksa dasar kewenangan ↗</a><a class="secondary-btn" href="#r72-title">Periksa riwayat perubahan ↗</a></div>
         </div>
         <div class="hero-side"><span>BATAS INTERPRETASI</span><strong>Perlu telaah</strong><p>Keselarasan hukum belum dinilai; perbandingan angka belum diizinkan.</p><span class="status-pill">Belum untuk keputusan resmi</span></div>
       </section>
+      <nav class="panel" aria-label="Pilih pekerjaan telaah regulasi"><h2>Pilih pekerjaan</h2><ul><li><a href="#r70l-title">Periksa dasar kewenangan</a></li><li><a href="#r72-title">Telusuri perubahan peraturan</a></li><li><a href="#r70j-title">Periksa hubungan dokumen perencanaan</a></li><li><a href="#r70o-title">Cari peraturan resmi</a></li><li><a href="#r75-title">Siapkan bahan telaah</a></li></ul></nav>
       <section class="r70g-stats" aria-label="Ringkasan bukti tersedia">
-        <article><small>Dokumen resmi</small><strong id="r70g-sources">—</strong><span>Ledger dan scope berantai</span></article>
+        <article><small>Dokumen resmi</small><strong id="r70g-sources">—</strong><span>Sumber dan ruang lingkup</span></article>
         <article><small>Peraturan pengubah</small><strong id="r70g-amendments">—</strong><span>Lima perubahan Perwali</span></article>
         <article><small>Rujukan Lampiran I/II</small><strong id="r70g-targets">—</strong><span>Klausul, bukan angka belanja</span></article>
         <article><small>Kutipan terverifikasi</small><strong id="r70g-hashes">—</strong><span>Kutipan terikat sumber</span></article>
       </section>
+      <details class="panel" data-pi-regulatory-task="riwayat" name="pi-regulatory-task"><summary><strong>Riwayat perubahan dan kutipan peraturan</strong></summary>
       <section class="panel r70g-panel" aria-labelledby="r70g-model-title">
-        <div class="panel-heading"><div><h2 id="r70g-model-title">Riwayat perubahan dan kutipan peraturan</h2><p>Setiap kartu menunjukkan rujukan sumber dan klausul dari model Laravel. Klik kutipan R70H untuk membuka teks bukti, halaman PDF, dan hash sumber melalui sesi R69E; keputusan hukum tetap memerlukan reviewer.</p></div></div>
-        <p id="r70g-status" class="r70g-status" role="status" aria-live="polite">Meminta read model Laravel dalam mode QA…</p>
+        <div class="panel-heading"><div><h2 id="r70g-model-title">Riwayat perubahan dan kutipan peraturan</h2><p>Buka kartu untuk memeriksa kutipan, halaman PDF dan sumber. Keputusan hukum tetap memerlukan pemeriksa berwenang.</p></div></div>
+        <p id="r70g-status" class="r70g-status" role="status" aria-live="polite">Memuat sumber peraturan…</p>
         <p class="r70h-instruction">Buka kelompok kutipan pada kartu untuk meninjau bukti satu per satu. Teks hanya tampil bila endpoint Laravel memverifikasi sumber; tidak ada penilaian legal atau angka otomatis.</p>
         <div class="r72-box" aria-labelledby="r72-title">
           <h3 id="r72-title">Garis waktu sasaran perubahan</h3>
@@ -51,9 +53,9 @@
           <div id="r72-groups" class="r72-groups"></div>
         </div>
         <div id="r70g-documents" class="r70g-stack"></div>
-      </section>
+      </section></details>
 
-      <details class="panel" data-pi-regulatory-task="r70i-panel" open><summary><strong>Hubungan peraturan dengan dokumen perencanaan</strong></summary>
+      <details class="panel" data-pi-regulatory-task="r70i-panel" name="pi-regulatory-task"><summary><strong>Hubungan peraturan dengan dokumen perencanaan</strong></summary>
 <section class="panel r70i-panel" aria-labelledby="r70i-title">
         <div class="panel-heading"><div>
           
@@ -62,9 +64,9 @@
         </div></div>
         <div class="r70i-controls">
           <button type="button" id="r70i-export" class="r70h-evidence-button" disabled>Unduh 10 kandidat pemetaan</button>
-          <p class="r70i-badge">MAPPING_CANDIDATE · REVIEW_REQUIRED</p>
+          <p class="r70i-badge">Kandidat hubungan · Perlu telaah</p>
         </div>
-        <p id="r70i-status" class="r70g-status" role="status" aria-live="polite">Menunggu read model sumber terverifikasi…</p>
+        <p id="r70i-status" class="r70g-status" role="status" aria-live="polite">Menunggu bukti sumber…</p>
         <p class="r70h-caveat">Kandidat ini belum memiliki ID dokumen perencanaan, kode program/kegiatan/subkegiatan yang divalidasi, atau kesimpulan angka. Tidak ada perubahan basis data.</p>
       </section>
       <section class="panel r70j-panel" aria-labelledby="r70j-title">
@@ -73,7 +75,7 @@
           <h2 id="r70j-title">RPJMD 2025–2029 ↔ RKPD 2026</h2>
           <p>Hubungan antar dokumen dengan metadata dari JDIH/BPK dan urutan waktu penerbitan. Tampilkan anchor rujukan yang dapat diperiksa reviewer sebelum memetakan program/kegiatan atau menilai keselarasan. Status tetap MAPPING_CANDIDATE, tanpa keputusan hukum atau perbandingan angka.</p>
         </div></div>
-        <p id="r70j-status" class="r70g-status" role="status" aria-live="polite">Memuat pasangan dokumen perencanaan resmi melalui Laravel…</p>
+        <p id="r70j-status" class="r70g-status" role="status" aria-live="polite">Memuat dokumen perencanaan resmi…</p>
         <div id="r70j-results" aria-label="Rujukan resmi dan hubungan dokumen untuk telaah"></div>
         <p class="r70h-caveat">Metadata dan anchor resmi ditelusuri pada 8 November 2026. SHA-256 registri bukan hash PDF; versi PDF daring belum diikat snapshot QA. Penilaian perubahan versi dan substansi tetap memerlukan reviewer.</p>
       </section>
@@ -89,14 +91,14 @@
         <p class="r70h-caveat">Nilai historis 2024 yang tercetak hanya ditampilkan sebagai konteks, bukan target 2026 atau dasar hitungan. Tidak ada keputusan hukum, validasi kode program, atau perubahan basis data.</p>
       </section>
 </details>
-      <details class="panel" data-pi-regulatory-task="r70l-panel" open><summary><strong>Dasar kewenangan, pencarian dan hubungan antarperaturan</strong></summary>
+      <details class="panel" data-pi-regulatory-task="r70l-panel" name="pi-regulatory-task"><summary><strong>Dasar kewenangan, pencarian dan hubungan antarperaturan</strong></summary>
 <section class="panel r70l-panel" aria-labelledby="r70l-title">
         <div class="panel-heading"><div>
           
           <h2 id="r70l-title">Aturan induk mendahului RPJMD dan RKPD</h2>
           <p>Telusuri Permendagri 86/2017 Pasal 76 sebagai dasar penerbitan pedoman tahunan, kemudian Permendagri 10/2025 yang secara khusus mengatur RKPD 2026. Periksa pasal, kewenangan, hubungan nasional–provinsi–kota, batas pengecualian DIY dan jalur ke anggaran sebelum memetakan substansi.</p>
         </div></div>
-        <p id="r70l-status" class="r70g-status" role="status" aria-live="polite">Meminta rantai norma induk resmi melalui Laravel…</p>
+        <p id="r70l-status" class="r70g-status" role="status" aria-live="polite">Memuat dasar hukum resmi…</p>
         <div id="r70l-results" aria-label="Dua peraturan induk, enam ketentuan, jejak delegasi dan gerbang abstain"></div>
         <p class="r70h-caveat">Ini adalah metadata dan ringkasan ketentuan dari PDF resmi, bukan teks PDF yang sudah di-hash. Hasil hanya untuk telaah; amendemen dan pemenuhan substansi belum disahkan. Tidak ada perhitungan anggaran.</p>
       </section>
@@ -143,12 +145,12 @@
           <select id="r74-lens"><option value="legal">Hukum / delegasi</option><option value="version">Perubahan versi</option><option value="thematic">Genealogi tematik</option><option value="all">Seluruh hubungan (berlabel)</option></select>
           <button type="submit" class="r70h-evidence-button">Telusuri graf</button>
         </form>
-        <p id="r74-status" class="r70g-status" role="status" aria-live="polite">Menunggu taksonomi Laravel…</p>
+        <p id="r74-status" class="r70g-status" role="status" aria-live="polite">Memuat kelompok peraturan…</p>
         <div id="r74-results" class="r74-results" aria-label="Simpul dan relasi genealogi"></div>
         <p class="r70h-caveat">GRAPH PARTIAL · REVIEW_REQUIRED · LEGAL_HARMONIZATION NOT_ASSESSED · NUMERIC BLOCKED · PRODUCTION DENIED. Tidak ada perubahan database atau keputusan hukum otomatis.</p>
       </section>
 </details>
-      <details class="panel" data-pi-regulatory-task="r75-panel" open><summary><strong>Bahan telaah dan tindak lanjut</strong></summary>
+      <details class="panel" data-pi-regulatory-task="r75-panel" name="pi-regulatory-task"><summary><strong>Bahan telaah dan tindak lanjut</strong></summary>
 <section class="panel r75-panel" aria-labelledby="r75-title">
         <div class="panel-heading"><div>
           
@@ -161,7 +163,7 @@
           <button type="button" class="r70h-evidence-button" id="r75-refresh">Muat ulang bukti</button>
           <button type="button" class="r70h-evidence-button" id="r75-export" disabled>Ekspor bahan telaah (JSON)</button>
         </div>
-        <p id="r75-status" class="r70g-status" role="status" aria-live="polite">Menunggu data crosswalk…</p>
+        <p id="r75-status" class="r70g-status" role="status" aria-live="polite">Menunggu hubungan dokumen…</p>
         <p id="r75-counts" class="r75-counts"></p>
         <div id="r75-workspace" class="r75-grid" aria-label="Kandidat lintas modul untuk penelaahan"></div>
         <p class="r70h-caveat">Semua keluaran tetap REVIEW_REQUIRED, ABSTAIN, NUMERIC BLOCKED, PRODUCTION DENIED. Hash metadata resmi bukan hash PDF; kesesuaian substansi dan keberlakuan aturan wajib ditelaah dengan bukti primer.</p>

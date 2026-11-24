@@ -388,3 +388,28 @@
     $('r70g-status').textContent = 'Read model belum dapat dimuat: ' + error.message
   }))
 })()
+
+/* R108 W3B: native disclosure, with stable legacy anchors. No network or permission changes. */
+;(() => {
+  'use strict'
+  function reveal(hash) {
+    if (!hash || !/^#[a-zA-Z0-9_-]+$/.test(hash)) return
+    const target = document.getElementById(hash.slice(1))
+    if (!target) return
+    const group = target.closest('details[data-pi-regulatory-task]')
+    if (!group) return
+    group.open = true
+    requestAnimationFrame(() => target.scrollIntoView({block:'start'}))
+  }
+  function ready() {
+    if (!document.querySelector('details[data-pi-regulatory-task]')) return
+    reveal(location.hash)
+    window.addEventListener('hashchange', () => reveal(location.hash))
+    document.addEventListener('click', event => {
+      const link = event.target.closest?.('a[href^="#"]')
+      if (link && link.hash === location.hash) reveal(link.hash)
+    })
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready, {once:true})
+  else ready()
+})()
