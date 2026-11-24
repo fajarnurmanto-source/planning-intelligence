@@ -14,3 +14,7 @@ Owner QA recovery usage after a clean SHA-pinned branch checkout:
 - If Poppler is installed outside known discovery paths, provide -PdfToTextPath with its full pdftotext.exe path (no installer).
 
 -Repair uses the exact WinGet ID oschwartz10612.Poppler. It is an explicit OS-package installation, not a silent PI application modification. It is skipped if the R106 engine is already functional. The helper refuses package installation for invalid source SHA, parsing discrepancies, or non-engine errors. Windows CI performs syntax-only checks and never invokes WinGet.
+
+
+## Verified development CI / owner retry state
+Last SOURCE-ONLY implementation SHA: ce769eb943b11670440c9a737782b11d2992b940. CI GREEN: R88 run 45346171153 (60 tests, 654 assertions), R73 run 45346171106, R74 run 45346171087, Windows run 45346171154 (PS5.1 safe recovery parse). Real owner Windows R106 acceptance AFTER this hotfix is NOT yet demonstrated. The script first uses an existing engine, and installs oschwartz10612.Poppler only with explicitly user-selected -Repair and only on an engine-absence failure. Original PI 8820, DB, APP_KEY, launcher, PDFs and receipts remain protected.
