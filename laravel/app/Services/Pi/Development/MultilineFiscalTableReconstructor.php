@@ -21,7 +21,7 @@ final class MultilineFiscalTableReconstructor
         $records=[];$counts=[];$scope=null;$scopePage=null;$previousPrinted=null;
         $account='/^\h*(\d(?:\.\d+){4}\.(?:\d{5}|\d{3}))(?!\d)/u';
         $boundary='/^\h*(?:Urusan(?:\h+Pemerintahan)?|Bidang\h+Urusan|Organisasi|Unit\h+Organisasi|Unit\h+Kerja|Perangkat\h+Daerah|SKPD|Program|Kegiatan|Sub\h*Kegiatan)\h*:/iu';
-        $sub='/^\h*Sub\h*Kegiatan\h*:\h*(\d+(?:\.\d+){4})\b/iu';
+        $sub='/^\h*Sub\h*Kegiatan\h*:\h*(\d+(?:\.\d+){5})(?![\d.])/iu';
         $header='/^\h*(?:Kode\h+Rekening|Kode\h+|Halaman\b|LAMPIRAN\b|PENJELASAN\b|Jumlah\b|Total\b|PERATURAN\b)/iu';
         $otherCode='/^\h*\d(?:\.\d+){1,}\b/u';
         $org=null;$organizationPage=null;$organizationLine=null;
