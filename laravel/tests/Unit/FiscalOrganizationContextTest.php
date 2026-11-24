@@ -28,4 +28,18 @@ final class FiscalOrganizationContextTest extends TestCase
         self::assertArrayNotHasKey('subactivity',$r['records'][1]['context']);
         self::assertSame(2,$r['held']);
     }
+    public function test_numbered_heading_and_discovery_window(): void
+    {
+        $text="1.   Urusan Pemerintahan : 4.01 – SEKRETARIAT DAERAH\nOrganisasi: DLH\nSub Kegiatan: 2.11.11.2.01.0004\n4.1.01.09.001.000 Pajak Reklame\n\n25  100,00  100,00  0,00\n\f";
+        $m=(new MultilineFiscalTableReconstructor)->reconstruct($text,1,true);
+        $s=new FiscalOrganizationContext;
+        $c=$s->resolve($text,$m);
+        self::assertSame('4.01 – SEKRETARIAT DAERAH',$c['records'][0]['context']['urusan']['value']);
+        $r=$s->enrich($text,$m,$c,dirname(__DIR__,2).'/resources/pi/affairs-nomenclature-seed-r87.json');
+        self::assertSame(1,$r['registry_matches']);
+        self::assertSame('2.11.11',$r['records'][0]['prefix_candidates']['program']);
+        self::assertSame(1,$r['next_line_groups']->BLANK);
+        self::assertSame('',$r['samples']->BLANK['window'][3]['text']);
+        self::assertFalse($r['national_master_verified']);
+    }
 }

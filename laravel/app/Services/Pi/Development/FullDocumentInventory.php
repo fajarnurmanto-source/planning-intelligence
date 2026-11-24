@@ -40,7 +40,9 @@ final class FullDocumentInventory
                 if ($layout) { $result['layout_candidates'] = (new DocumentLayoutReconstructor)->reconstruct($body, $expectedPages); }
                 if ($multilineAmendment !== null) {
                     $result['multiline_fiscal'] = (new MultilineFiscalTableReconstructor)->reconstruct($body, $expectedPages, $multilineAmendment);
-                    $result['fiscal_context'] = (new FiscalOrganizationContext)->resolve($body, $result['multiline_fiscal']);
+                    $contextEngine = new FiscalOrganizationContext;
+                    $result['fiscal_context'] = $contextEngine->resolve($body, $result['multiline_fiscal']);
+                    $result['fiscal_discovery'] = $contextEngine->enrich($body, $result['multiline_fiscal'], $result['fiscal_context'], dirname(__DIR__,4).'/resources/pi/affairs-nomenclature-seed-r87.json');
                 }
                 if (strtoupper((string)hash_file('sha256', $file)) !== $sha) {
                     throw new RuntimeException('PI_RDI_SOURCE_DRIFT');

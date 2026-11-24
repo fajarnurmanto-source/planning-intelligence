@@ -96,7 +96,7 @@ final class FiscalOrganizationContext
 
     private function heading(string $line): ?array
     {
-        if(!preg_match('/^\h*(Urusan(?:\h+Pemerintahan)?|Bidang\h+Urusan|Organisasi|Unit\h+Organisasi|Unit\h+Kerja|Perangkat\h+Daerah|SKPD|Program|Kegiatan|Sub\h*Kegiatan)\h*:\h*(.*)$/iu',$line,$m))return null;
+        if(!preg_match('/^\h*(?:\d{1,2}[.)]\h+)?(Urusan(?:\h+Pemerintahan)?|Bidang\h+Urusan|Organisasi|Unit\h+Organisasi|Unit\h+Kerja|Perangkat\h+Daerah|SKPD|Program|Kegiatan|Sub\h*Kegiatan)\h*:\h*(.*)$/iu',$line,$m))return null;
         $label=strtolower(preg_replace('/\h+/u',' ',trim($m[1])));
         $level=match($label){
             'urusan','urusan pemerintahan'=>'urusan','bidang urusan'=>'bidang',
@@ -106,9 +106,56 @@ final class FiscalOrganizationContext
         };
         $value=trim($m[2]);
         $valid=$value!=='';
+        if($level==='urusan'&&preg_match('/^\h*\d{1,2}[.)]\h+/u',$line)){$valid=preg_match('/^\d(?:\.\d{2})?(?:\h|$)/u',$value)===1;}
         if($level==='subactivity'){
             $valid=preg_match('/^\d+(?:\.\d+){5}(?![\d.])(?:\h|$)/u',$value)===1;
         }
         return [$level,$value,$valid];
     }
+    /** Separate derived candidates: never fill observed hierarchy or infer OPD. */
+    public function enrich(string $text,array $multiline,array $context,string $seedPath): array
+    {
+        $pages=explode("\f",$text);
+        if(array_pop($pages)!==''||count($pages)!==$multiline['pages']||count($context['records'])!==count($multiline['records']))throw new RuntimeException('PI_RDI_DISCOVERY_INPUT_HOLD');
+        $raw=file_get_contents($seedPath);$seed=json_decode($raw,true,32,JSON_THROW_ON_ERROR);
+        if(($seed['schema']??null)!=='PI_AFFAIR_FIRST_NOMENCLATURE_SEED_V1')throw new RuntimeException('PI_RDI_SEED_HOLD');
+        $index=[];foreach($seed['nomenclature'] as $e){if(($e['year']??null)===2026)$index[$e['code']][]=$e;}
+        $derived=[];$matches=0;$conflicts=0;$groups=[];$samples=[];$cachedPage=null;$lines=[];$hash=null;
+        foreach($multiline['records'] as $i=>$r){
+            $c=$context['records'][$i];$p=$r['page'];$l=$r['line'];
+            if($c['page']!==$p||$c['line']!==$l||$c['page_text_sha256']!==$r['page_text_sha256'])throw new RuntimeException('PI_RDI_DISCOVERY_LOCATOR_HOLD');
+            $sub=$c['context']['subactivity']??null;
+            if($sub!==null&&preg_match('/^(\d\.\d{2}\.\d{2}\.\d\.\d{2}\.\d{4})(?:\h|$)/u',$sub['value'],$m)){
+                $parts=explode('.',$m[1]);$prefixes=['bidang'=>implode('.',array_slice($parts,0,2)),'program'=>implode('.',array_slice($parts,0,3)),'activity'=>implode('.',array_slice($parts,0,5)),'subactivity'=>$m[1]];
+                $hits=[];$issues=[];
+                foreach($prefixes as $level=>$code){
+                    $explicit=$c['context'][$level]['value']??null;
+                    if($explicit!==null&&preg_match('/^(\d+(?:\.\d+)+)(?:\h|$)/u',$explicit,$em)&&$em[1]!==$code)$issues[]='EXPLICIT_'.$level.'_CONFLICT';
+                    if(count($index[$code]??[])===1)$hits[$level]=$index[$code][0];
+                    elseif(count($index[$code]??[])>1)$issues[]='REGISTRY_'.$level.'_AMBIGUOUS';
+                }
+                if($hits)$matches++;if($issues)$conflicts++;
+                $derived[]=['page'=>$p,'line'=>$l,'subactivity_source'=>$sub,'prefix_candidates'=>$prefixes,'registry_observations'=>$hits,'issues'=>$issues,'state'=>$issues?'HOLD':'PREFIX_CANDIDATE_ONLY','organization_identity'=>'NOT_INFERRED'];
+            }
+            if(!in_array('SPLIT_SUFFIX_UNRESOLVED',$r['reasons'],true)&&!in_array('COLUMN_TOKEN_COUNT_UNRESOLVED',$r['reasons'],true))continue;
+            if($cachedPage!==$p){$lines=preg_split('/\r\n|\n|\r/u',$pages[$p-1]);$hash=strtoupper(hash('sha256',$pages[$p-1]));$cachedPage=$p;}
+            if($hash!==$r['page_text_sha256']||strtoupper(hash('sha256',$lines[$l-1]))!==$r['evidence'][0]['sha256'])throw new RuntimeException('PI_RDI_WINDOW_LOCATOR_HOLD');
+            $next=$lines[$l]??null;
+            $kind=match(true){
+                $next===null=>'PAGE_END',
+                trim($next)==='' =>'BLANK',
+                preg_match('/^\h*\d(?:\.\d+){4}\.(?:\d{5}|\d{3})(?!\d)/u',$next)===1=>'NEXT_ACCOUNT',
+                preg_match('/^\h*\d(?:\.\d+){1,}\b/u',$next)===1=>'OTHER_DOTTED_CODE',
+                preg_match('/^\h*(?:Kode|Halaman|LAMPIRAN|PENJELASAN|Jumlah|Total|PERATURAN)\b/iu',$next)===1=>'HEADER_OR_TOTAL',
+                default=>'OTHER'
+            };
+            $groups[$kind]=($groups[$kind]??0)+1;
+            if(!isset($samples[$kind])){
+                $window=[];for($n=max(0,$l-3);$n<min(count($lines),$l+8);$n++)$window[]=['line'=>$n+1,'sha256'=>strtoupper(hash('sha256',$lines[$n])),'text'=>mb_substr($lines[$n],0,400,'UTF-8')];
+                $samples[$kind]=['page'=>$p,'line'=>$l,'page_sha256'=>$hash,'window'=>$window];
+            }
+        }
+        return ['schema'=>'PI_RDI_FISCAL_DISCOVERY_V1','seed_sha256'=>strtoupper(hash('sha256',$raw)),'seed_scope'=>$seed['scope'],'decomposed'=>count($derived),'registry_matches'=>$matches,'conflicts'=>$conflicts,'records'=>$derived,'next_line_groups'=>(object)$groups,'samples'=>(object)$samples,'national_master_verified'=>false,'numeric_admission'=>0,'production_admission'=>'DENIED'];
+    }
+
 }
