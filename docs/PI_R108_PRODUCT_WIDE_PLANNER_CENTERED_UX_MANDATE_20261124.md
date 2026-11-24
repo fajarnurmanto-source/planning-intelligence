@@ -153,3 +153,6 @@ Async case-context correctness, plain-language state and technical disclosure, f
 
 ## Wave2 original Windows deployment acceptance update (24 Nov 2026)
 The guarded Wave2 six-file cutover has now been explicitly executed by the owner on original Windows localhost8820. Preflight and -Apply verified all six source matches, PHP PID 5704 preserved, login/CSRF PASS, anonymous R106 endpoints HTTP401, live static-asset SHA PASS, .env/SQLite/APP_KEY/launcher unchanged. Original UX browser acceptance remains pending, and entire R108 mandatory product-wide Wave3 beyond the first two waves remains OPEN. Do not install Wave2 again. See CD-20261124-10O and PI_R108_WAVE2_IMPLEMENTATION_AND_ACCEPTANCE_20261124.md.
+
+## Wave3A source progress (24 November 2026)
+Wave2 original browser screenshots confirm context and clearer status but show Dokumen page still monolithic. Wave3A introduces canonical four graph-based expandable evidence groups retaining all 18 original relations and source links, plus closed official source catalogue. Source SHA e33ef1aceb636602ed94cd82fd571f3b2841e3cf; 4 CI workflows PASS including Chrome 390px and Windows 3-file rollback. Owner original Wave3A not yet applied; whole-product specialist/React workflow redesign remains open. No new services, data admission or automatic review.
