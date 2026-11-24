@@ -22,4 +22,14 @@ final class MultilineFiscalTableReconstructorTest extends TestCase
         self::assertNull($r['records'][2]['previous_page_scope_candidate']);
         self::assertSame(0,$r['numeric_admission']);
     }
+    public function test_r106_amount_before_suffix_and_conflicting_suffixes(): void
+    {
+        $text="Organisasi: DLH\nSub Kegiatan : 2.11.11.2.01.0004 Peningkatan\n5.1.02.01.001.000 URAIAN BELANJA\n        18.000.000,00  18.000.000,00  0,00\n25   URAIAN LANJUTAN\n5.1.02.01.001.001 URAIAN\n        100,00  100,00  0,00\n26   LANJUTAN\n27   KONFLIK\n\f";
+        $r=(new MultilineFiscalTableReconstructor)->reconstruct($text,1,true);
+        self::assertSame('5.1.02.01.001.00025',$r['records'][0]['account_code_candidate']);
+        self::assertSame('2.11.11.2.01.0004',$r['records'][0]['subactivity_same_page']);
+        self::assertNull($r['records'][1]['account_code_candidate']);
+        self::assertContains('SPLIT_SUFFIX_UNRESOLVED',$r['records'][1]['reasons']);
+        self::assertSame(0,$r['numeric_admission']);
+    }
 }

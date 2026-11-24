@@ -75,7 +75,7 @@ final class FullDocumentInventory
             'LETTER_MARKER'=>'/^\h*[a-z][.)]\h+\S/u',
             'NUMBER_MARKER'=>'/^\h*\d+[.)]\h+\S/u',
             'PREAMBLE_MARKER'=>'/^\h*(?:Menimbang|Mengingat|Memutuskan|Menetapkan)\h*:/iu',
-            'SUBACTIVITY_MARKER'=>'/^\h*Sub\h*Kegiatan\h*:\h*\d+(?:\.\d+){4}\b/iu',
+            'SUBACTIVITY_MARKER'=>'/^\h*Sub\h*Kegiatan\h*:\h*\d+(?:\.\d+){5}(?![\d.])/iu',
             'ACCOUNT_FULL_MARKER'=>'/^\h*\d(?:\.\d+){4}\.\d{5}(?!\d)/u',
             'ACCOUNT_SPLIT_MARKER'=>'/^\h*\d(?:\.\d+){4}\.\d{3}(?!\d)/u',
             'TABLE_LAYOUT_SIGNAL'=>'/\S\h{3,}\S\h{3,}\S/u',
@@ -106,7 +106,7 @@ final class FullDocumentInventory
                 'state'=>!$hasText?'NO_TEXT_OCR_OR_VISUAL_REQUIRED':(!$markers?'TEXT_UNCLASSIFIED':'TEXT_WITH_CANDIDATE_MARKERS'),
                 'marker_counts'=>$pageCounts,'markers'=>$markers];
         }
-        return ['schema'=>'PI_RDI_01A_PAGE_INVENTORY_V1','expected_pages'=>$expectedPages,
+        return ['schema'=>'PI_RDI_01A_PAGE_INVENTORY_V2','expected_pages'=>$expectedPages,
             'inventoried_pages'=>count($records),'text_pages'=>count($records)-$blank,
             'no_text_pages'=>$blank,'unclassified_text_pages'=>$unclassified,
             'marker_counts'=>$counts,'pages'=>$records,

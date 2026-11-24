@@ -68,7 +68,9 @@ final class MultilineFiscalTableReconstructor
                 }
                 $code=$full?$prefix:null;
                 if(!$full){
-                    if(count($suffixes)===1&&$suffixes[0]['line']===$n+2){$code=$prefix.$suffixes[0]['value'];}
+                    if(count($suffixes)===1){$code=$prefix.$suffixes[0]['value'];}
+                    // R106 fixture places the unique suffix AFTER the amount line.
+                    // The bounded row chunk, not immediate adjacency, is the evidence.
                     else{$reasons[]='SPLIT_SUFFIX_UNRESOLVED';}
                 }
                 $money=[];$evidence=[];
@@ -104,7 +106,7 @@ final class MultilineFiscalTableReconstructor
             }
         }
         $n=count($records);
-        return ['schema'=>'PI_RDI_MULTILINE_FISCAL_V1','pages'=>$expectedPages,'fragment_count'=>$n,
+        return ['schema'=>'PI_RDI_MULTILINE_FISCAL_V2','pages'=>$expectedPages,'fragment_count'=>$n,
             'resolved_code_candidates'=>count(array_filter($records,static fn($r)=>$r['account_code_candidate']!==null)),
             'positional_amount_candidates'=>count(array_filter($records,static fn($r)=>count($r['positional_minor_units'])===($amendment?3:1)&&!in_array('POSITIONAL_DELTA_MISMATCH',$r['reasons'],true)&&!in_array('NEGATIVE_ALLOCATION_HOLD',$r['reasons'],true)&&!in_array('CONTINUATION_LIMIT_HOLD',$r['reasons'],true))),
             'row_shape_candidates'=>count(array_filter($records,static fn($r)=>$r['state']==='ROW_SHAPE_CANDIDATE')),

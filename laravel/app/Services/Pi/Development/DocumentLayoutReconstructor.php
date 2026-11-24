@@ -40,7 +40,7 @@ final class DocumentLayoutReconstructor
                     $amendment=true;
                     $issues[]=$loc+['reason'=>'AMENDMENT_OR_QUOTATION_CONTEXT','excerpt'=>mb_substr($line,0,180)];
                 }
-                if(preg_match('/^Sub\h*Kegiatan\h*:\h*(\d+(?:\.\d+){4})\b/iu',$line,$m)){
+                if(preg_match('/^Sub\h*Kegiatan\h*:\h*(\d+(?:\.\d+){5})(?![\d.])/iu',$line,$m)){
                     $subactivity=$m[1];
                     // A fiscal context signal is sufficient to stop legal parent inference.
                     $zone='FISCAL_LAYOUT_CANDIDATE';$article=$ayat=$letter=null;
@@ -96,7 +96,7 @@ final class DocumentLayoutReconstructor
             }
         }
         unset($node);
-        return ['schema'=>'PI_RDI_LAYOUT_CANDIDATES_V1','pages'=>$pages,
+        return ['schema'=>'PI_RDI_LAYOUT_CANDIDATES_V2','pages'=>$pages,
             'hierarchy_nodes'=>array_values($nodes),'ambiguity_records'=>$issues,
             'ambiguous_node_count'=>count(array_filter($nodes,static fn($n)=>$n['state']==='AMBIGUOUS')),
             'account_fragment_pages'=>$tables,'account_fragments'=>array_sum(array_map(static fn($p)=>count($p['rows']),$tables)),

@@ -30,4 +30,19 @@ final class FiscalRecordReconstructionTest extends TestCase
         self::assertSame(2,$r['hold_reason_counts']['REPEATED_SUBACTIVITY_ACCOUNT_IDENTITY']);
         self::assertSame(1,$r['hold_reason_counts']['POSITIONAL_DELTA_MISMATCH']);
     }
+    public function test_different_subactivities_do_not_collapse_and_legacy_is_held(): void
+    {
+        $text="Sub Kegiatan: 2.11.11.2.01.0004\n5.1.02.01.01.00001  barang  1,00\nSub Kegiatan: 2.11.11.2.01.0005\n5.1.02.01.01.00001  barang  2,00\n\f";
+        $r=$this->runCase($text);
+        self::assertSame(2,$r['row_shape_candidates']);
+        self::assertSame('2.11.11.2.01.0004',$r['records'][0]['subactivity_candidate']);
+        self::assertSame('2.11.11.2.01.0005',$r['records'][1]['subactivity_candidate']);
+        $doc=(new FullDocumentInventory)->inventory($text,1);
+        $doc['source_sha256']=str_repeat('A',64);
+        $doc['layout_candidates']=(new DocumentLayoutReconstructor)->reconstruct($text,1);
+        $doc['layout_candidates']['schema']='PI_RDI_LAYOUT_CANDIDATES_V1';
+        $old=(new FiscalRecordReconstruction)->reconstruct($doc,false);
+        self::assertSame(0,$old['row_shape_candidates']);
+        self::assertSame(2,$old['hold_reason_counts']['LEGACY_SCOPE_REEXTRACTION_REQUIRED']);
+    }
 }

@@ -10,7 +10,7 @@ final class DocumentStructureProfile
 {
     public function profile(array $document): array
     {
-        if (($document['schema']??null)!=='PI_RDI_01A_PAGE_INVENTORY_V1'
+        if (!in_array($document['schema']??null,['PI_RDI_01A_PAGE_INVENTORY_V1','PI_RDI_01A_PAGE_INVENTORY_V2'],true)
             || !preg_match('/\A[A-F0-9]{64}\z/D',$document['source_sha256']??'')
             || ($document['numeric_admission']??null)!==0
             || ($document['production_admission']??null)!=='DENIED'

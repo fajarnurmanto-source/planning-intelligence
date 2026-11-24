@@ -15,7 +15,7 @@ final class FiscalRecordReconstruction
         $layout=$document['layout_candidates']??[];
         $sha=$document['source_sha256']??'';
         if (!preg_match('/\A[A-F0-9]{64}\z/D',$sha)
-            || ($layout['schema']??null)!=='PI_RDI_LAYOUT_CANDIDATES_V1'
+            || !in_array($layout['schema']??null,['PI_RDI_LAYOUT_CANDIDATES_V1','PI_RDI_LAYOUT_CANDIDATES_V2'],true)
             || ($layout['numeric_admission']??null)!==0
             || ($layout['production_admission']??null)!=='DENIED'
             || ($document['expected_pages']??null)!==($layout['pages']??null)
@@ -41,12 +41,13 @@ final class FiscalRecordReconstruction
                 $lastLine=$line;
                 $reasons=[];$values=[];$full=strlen(substr(strrchr($code,'.'),1))===5;
                 if(!$full)$reasons[]='SPLIT_CODE_NEEDS_CONTINUATION';
-                if($sub===null||!preg_match('/\A\d+(?:\.\d+){4}\z/D',$sub))$reasons[]='SUBACTIVITY_CONTEXT_UNRESOLVED';
+                if(($layout['schema']??null)==='PI_RDI_LAYOUT_CANDIDATES_V1')$reasons[]='LEGACY_SCOPE_REEXTRACTION_REQUIRED';
+                if($sub===null||!preg_match('/\A\d+(?:\.\d+){5}\z/D',$sub))$reasons[]='SUBACTIVITY_CONTEXT_UNRESOLVED';
                 else {
                     $nearest=null;
                     foreach($markers as $ml=>$m){
                         if($ml>=$line)break;
-                        if($m['kind']==='SUBACTIVITY_MARKER'&&preg_match('/Sub\h*Kegiatan\h*:\h*(\d+(?:\.\d+){4})\b/iu',$m['excerpt'],$hit))$nearest=$hit[1];
+                        if($m['kind']==='SUBACTIVITY_MARKER'&&preg_match('/Sub\h*Kegiatan\h*:\h*(\d+(?:\.\d+){5})(?![\d.])/iu',$m['excerpt'],$hit))$nearest=$hit[1];
                     }
                     if($nearest!==$sub)$reasons[]='SUBACTIVITY_MARKER_NOT_CORROBORATED';
                 }
@@ -63,7 +64,7 @@ final class FiscalRecordReconstruction
                     }
                 }
                 $id='p'.$page.'l'.$line;
-                $key=$full&&$sub!==null?$sub.'|'.$code:null;
+                $key=$full&&$sub!==null&&preg_match('/\A\d+(?:\.\d+){5}\z/D',$sub)?$sub.'|'.$code:null;
                 $records[$id]=['id'=>$id,'source_sha256'=>$sha,'page'=>$page,'line'=>$line,
                     'line_sha256'=>$row['line_sha256'],'subactivity_candidate'=>$sub,
                     'account_code_candidate'=>$full?$code:null,'code_fragment'=>$code,
