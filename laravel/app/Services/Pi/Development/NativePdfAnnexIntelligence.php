@@ -50,14 +50,14 @@ final class NativePdfAnnexIntelligence
         [$pageIndex, $offset] = $hits[0];
         $selected = substr($pages[$pageIndex], $offset);
         if (isset($pages[$pageIndex + 1])) {
-            $selected .= "\n".$pages[$pageIndex + 1];
+            $selected .= "\f".$pages[$pageIndex + 1];
         }
         $startLineEnd = strpos($selected, "\n");
         if ($startLineEnd === false) { throw new RuntimeException('PI_R106_ANNEX_SECTION_MALFORMED'); }
         if (preg_match('/\bSub\s*Kegiatan\s*:\s*\d+(?:\.\d+){4}\b/u', $selected, $match, PREG_OFFSET_CAPTURE, $startLineEnd + 1)) {
             $selected = substr($selected, 0, $match[0][1]);
         }
-        $rows = $amendment ? $this->splitAccountRows($selected) : $this->baseAccountRows($selected);
+        $rows = $amendment ? $this->splitAccountRows($selected, $pageIndex + 1) : $this->baseAccountRows($selected, $pageIndex + 1);
         if (count($rows) !== 6) { throw new RuntimeException('PI_R106_SIX_LEAF_ACCOUNTS_NOT_RESOLVED_HOLD'); }
         preg_match('/\bHalaman\s+(\d+)\b/u', $pages[$pageIndex], $printed);
         return [
@@ -119,7 +119,7 @@ final class NativePdfAnnexIntelligence
         throw new RuntimeException('PI_R106_PDFTOTEXT_UNAVAILABLE_OR_TEXT_LAYER_ABSTAIN');
     }
 
-    private function baseAccountRows(string $section): array
+    private function baseAccountRows(string $section, int $firstPage): array
     {
         preg_match_all('/(?m)^\h*(5(?:\.\d+){4}\.\d{5})(?!\d)\h*[^\r\n]*/u',
             $section, $matches, PREG_OFFSET_CAPTURE);
@@ -134,12 +134,13 @@ final class NativePdfAnnexIntelligence
                 throw new RuntimeException('PI_R106_BASE_AMOUNT_OR_DUPLICATE_HOLD');
             }
             $rows[$code] = ['code' => $code, 'amount_idr' => $money[0],
+                'page' => $firstPage + substr_count(substr($section, 0, $begin), "\f"),
                 'excerpt' => $this->excerpt($chunk)];
         }
         return $rows;
     }
 
-    private function splitAccountRows(string $section): array
+    private function splitAccountRows(string $section, int $firstPage): array
     {
         preg_match_all('/(?m)^\h*(5(?:\.\d+){4}\.\d{3})(?!\d)\h*[^\r\n]*/u',
             $section, $matches, PREG_OFFSET_CAPTURE);
@@ -159,6 +160,7 @@ final class NativePdfAnnexIntelligence
             }
             $rows[$code] = ['code' => $code, 'before_idr' => $money[0],
                 'after_idr' => $money[1], 'delta_idr' => $money[2],
+                'page' => $firstPage + substr_count(substr($section, 0, $begin), "\f"),
                 'excerpt' => $this->excerpt($chunk)];
         }
         return $rows;
@@ -197,8 +199,8 @@ final class NativePdfAnnexIntelligence
                 'third_amendment_before_idr' => $b['before_idr'],
                 'third_amendment_after_idr' => $b['after_idr'],
                 'third_amendment_delta_idr' => $b['delta_idr'],
-                'base_page' => $base['source_pdf_page'],
-                'change_page' => $change['source_pdf_page'],
+                'base_page' => $a['page'],
+                'change_page' => $b['page'],
                 'base_excerpt' => $a['excerpt'], 'change_excerpt' => $b['excerpt'],
                 'row_review' => 'TEXT_LAYER_CANDIDATE_NEEDS_VISUAL_REVIEW',
             ];

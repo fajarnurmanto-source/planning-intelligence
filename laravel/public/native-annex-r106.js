@@ -28,7 +28,7 @@ button.addEventListener('click',async()=>{
   for(const r of data.rows){
    const tr=document.createElement('tr');
    for(const value of [r.account_code,money(r.base_idr),money(r.third_amendment_after_idr),
-     money(r.third_amendment_delta_idr),'Perlu review']){
+     money(r.third_amendment_delta_idr),'PDF '+r.base_page+' / '+r.change_page,'Perlu review']){
     const td=document.createElement('td');td.textContent=value;tr.append(td);
    }
    body.append(tr);

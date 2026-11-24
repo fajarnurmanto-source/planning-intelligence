@@ -34,12 +34,26 @@ final class R106NativePdfAnnexIntelligenceTest extends TestCase
   $b=$s->parseLayout($this->fixture(true),'12','2026',true);
   $r=$s->reconcileParsed($a,$b);
   $this->assertCount(6,$r['rows']);
+  $this->assertSame(2,$r['rows'][0]['base_page']);
+  $this->assertSame(2,$r['rows'][0]['change_page']);
   $this->assertSame('5.1.02.01.001.00025',$r['rows'][0]['account_code']);
   $this->assertSame('5.1.02.05.002.00001',$r['rows'][5]['account_code']);
   $this->assertSame(1020366250,$r['derived_leaf_total_idr']);
   $this->assertSame(0,$r['numeric_admission']);
   $this->assertSame('DENIED',$r['production_admission']);
   $this->assertFalse($r['writes_performed']);
+ }
+
+
+ public function test_account_rows_follow_page_breaks_into_next_pdf_page(): void
+ {
+  $service=new NativePdfAnnexIntelligence;
+  $base=$this->fixture(false);
+  $base=str_replace("5.1.02.02.009.00013", "\f5.1.02.02.009.00013", $base);
+  $parsed=$service->parseLayout($base,'74','2025',false);
+  $this->assertSame(2,$parsed['rows']['5.1.02.01.001.00025']['page']);
+  $this->assertSame(3,$parsed['rows']['5.1.02.02.009.00013']['page']);
+  $this->assertSame(3,$parsed['rows']['5.1.02.05.002.00001']['page']);
  }
 
  public function test_missing_leaf_rejects(): void
