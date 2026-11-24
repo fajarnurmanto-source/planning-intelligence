@@ -29,3 +29,7 @@ Date: 2026-11-24 (Asia/Jakarta). Status: documented backlog, NOT IMPLEMENTED. Ev
 ## Current acceptance
 
 R107 original source install PASS and authenticated R106 successful button/table render PASS, PDF viewer open NOT YET VERIFIED. UX R108 design/backlog only; nothing here has been deployed to original 8820. Numeric admission ZERO, legal/reviewer status PENDING, production admission DENIED.
+
+## Source-viewer acceptance evidence update
+
+As of 2026-11-24 owner successfully opened BOTH original protected PDF URLs in Edge: base source PDF p384/1155 and amendment 3 source PDF p561/1596. Screenshot of amendment p561 visibly shows subactivity 2.11.11.2.01.0004 and first three target rows with 0 change. R108 is now explicitly a UI/navigation improvement, NOT a prerequisite to functional PDF viewer acceptance. Preserve both working PDF endpoints and existing security, add per-account exact page/deep-link context and shorten giant R85 case scroll. Do NOT silently conflate Edge signature warning with verification. No R108 source or UI code has been deployed.
