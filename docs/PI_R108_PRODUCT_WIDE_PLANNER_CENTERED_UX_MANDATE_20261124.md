@@ -139,3 +139,7 @@ P5 — incremental code-only guarded rollout to existing original Windows 8820 a
 ## Not in scope / do not overclaim
 
 This mandate does NOT by itself implement all planner workflows, acquire missing DPA/RKA/realisasi data, confirm fiscal/legal approval, validate a statute's current force or create another government system of record. Do not turn an information-architecture refactor into fake data completeness. The R107 original install and R106 scoped operational acceptance remain accepted. Original Windows PI UI **not modified** by this documentation/roadmap decision. PR #78 remains Draft.
+
+## First-wave actual code progress (24 November 2026)
+
+First-wave task-first navigation, home job cards and six task case views have been built and tested at SHA a1837a3c5b3c22e0f8cb0631800d1f0140bba18b (4/4 CI green). Windows code-only preflight and rollback fixture passed. The owner Windows original 8820 R108 change and user acceptance are not yet done. This does not close the whole-product UX mandate; especially compiled React workspace and legacy specialist page bodies require separate redesign.
