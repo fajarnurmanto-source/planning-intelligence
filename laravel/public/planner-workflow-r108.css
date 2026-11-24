@@ -54,3 +54,21 @@
 
 /* The HTML hidden attribute MUST win over authored display:flex declarations. */
 .pi-r108-next-step[hidden],.pi-r108-hero-extras[hidden]{display:none!important}
+
+/* R108 Wave 3: grouped evidence, accessible disclosure and audit on demand */
+.pi-r108-case .r85-evidence-list{display:block}
+.pi-r108-case .r85-evidence-summary{padding:12px 14px;margin:0 0 13px;color:#d8eee3;border:1px solid #486c61;border-radius:9px;line-height:1.55}
+.pi-r108-case .r85-evidence-group{margin:9px 0;border:1px solid #467065;background:#0e3037;border-radius:10px;overflow:hidden}
+.pi-r108-case .r85-evidence-group-heading{padding:15px;cursor:pointer;color:#dcf7e7;font-weight:800}
+.pi-r108-case .r85-evidence-group-heading:hover,.pi-r108-case .r85-evidence-group-heading:focus-visible{background:#1e504a}
+.pi-r108-case .r85-evidence-rows{display:grid;gap:10px;padding:11px}
+.pi-r108-case .r85-evidence-item{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(180px,1fr) auto;gap:11px;align-items:center;background:#f5fbf8;color:#183a30;border:1px solid #d5e6dd}
+.pi-r108-case .r85-evidence-item>code{font-size:.7rem}
+.pi-r108-case .r85-evidence-item .r85-verification{display:flex;flex-wrap:wrap;gap:7px}
+.pi-r108-case .r85-evidence-item .r85-technical{margin-top:8px}
+.pi-r108-case .r85-evidence-item .r85-technical code{display:block;overflow-wrap:anywhere}
+.pi-r108-case .r85-evidence-item a{font-size:.83rem;text-decoration:underline;text-underline-offset:2px}
+.pi-r108-catalog-details{margin-top:14px}
+.pi-r108-catalog-details>summary{border:1px solid #49736b;border-radius:9px;padding:14px;cursor:pointer;font-weight:800;color:#d5f7e5}
+.pi-r108-catalog-details[open]>summary{margin-bottom:12px}
+@media(max-width:900px){.pi-r108-case .r85-evidence-item{grid-template-columns:minmax(0,1fr)}}

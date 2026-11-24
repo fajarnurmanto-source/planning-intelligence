@@ -30,6 +30,9 @@
     TRACE_AVAILABLE_DECISION_ABSTAIN:'Jejak tersedia · keputusan belum dapat diambil',
     VERIFIED:'Sumber telah diperiksa',
     VERIFIED_SOURCE:'Sumber telah diperiksa',
+    VERIFIED_SOURCE_BYTES:'Berkas cocok dengan arsip · keabsahan hukum belum dinilai',
+    SOURCE_LOCATED_NOT_HASH_PINNED:'Lokasi sumber ditemukan · berkas belum diverifikasi',
+    LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED:'Catatan uji lokal · belum menjadi bukti dokumen',
     NOT_ASSESSED:'Belum dinilai',
     BLOCKED:'Belum diizinkan',
     NO_ACTIVE_DECISION:'Belum ada keputusan pemeriksa',
@@ -130,29 +133,52 @@
   const renderEvidence = caseData => {
     const container = byId('r85-evidence')
     container.replaceChildren()
+    const nodeLabels=new Map(caseData.nodes.map(node=>[node.id,node.label]))
     for (const edge of caseData.edges) {
       const source = edge.provenance
       const item = add(container, 'article', 'r85-evidence-item')
-      add(item, 'code', '', edge.id)
+      add(item, 'code', '', 'Bukti '+edge.id)
       const relation = add(item, 'div')
-      add(relation, 'strong', '', edge.relation)
-      add(relation, 'p', '', `${edge.from} → ${edge.to}`)
+      add(relation, 'strong', '', (nodeLabels.get(edge.from)||edge.from)+' → '+(nodeLabels.get(edge.to)||edge.to))
+      add(relation, 'p', '', 'Hubungan kandidat untuk diperiksa; bukan kesimpulan otomatis.')
       const proof = add(item, 'div')
       const href = allowedSource(source.source_url)
       if (!href) throw new Error('Origin sumber tidak diizinkan')
-      const anchor = add(proof, 'a', '', `${source.source_id} · buka sumber ↗`)
+      const anchor = add(proof, 'a', '', 'Buka dokumen sumber')
       anchor.href = href
       if (href !== './overview-r69c.json') {
         anchor.target = '_blank'
         anchor.rel = 'noopener noreferrer'
       }
-      add(proof, 'p', '', source.locator)
-      add(proof, 'span', 'r85-hash', source.source_sha256 ? `SHA-256 ${source.source_sha256}` : 'SHA-256 belum tersedia')
+      const technicalSource=add(proof,'details','r85-technical')
+      add(technicalSource,'summary','','Lihat identitas sumber')
+      add(technicalSource,'p','',source.locator)
+      add(technicalSource,'code','r85-edge-ref',edge.id+' · '+edge.relation+' · '+edge.from+' → '+edge.to)
+      add(technicalSource,'code','r85-edge-ref',source.source_id+' · '+source.version+' · '+source.as_of_date)
+      add(technicalSource,'span','r85-hash',source.source_sha256 ? 'SHA-256 '+source.source_sha256 : 'SHA-256 belum tersedia')
       const status = add(item, 'div', 'r85-verification')
       const sourceBadge=add(status, 'span', '', explainStatus(source.verification_status))
       sourceBadge.title='Status sumber: '+source.verification_status
       add(status, 'span', source.uncertainty === 'HIGH' ? 'high' : '', `Ketidakpastian ${explainStatus(source.uncertainty)}`)
-      add(status, 'small', '', `${source.version} · ${source.as_of_date}`)
+      add(status, 'small', '', source.as_of_date)
+    }
+    const cards=new Map(caseData.edges.map((edge,index)=>[edge.id,container.children[index]]))
+    const used=new Set()
+    container.replaceChildren()
+    const grouped=[]
+    for(const graph of caseData.graphs){
+      const ids=graph.edge_ids.filter(id=>cards.has(id)&&!used.has(id))
+      ids.forEach(id=>used.add(id))
+      if(ids.length)grouped.push({title:graph.label,ids})
+    }
+    const remaining=caseData.edges.map(edge=>edge.id).filter(id=>!used.has(id))
+    if(remaining.length)grouped.push({title:'Bukti lain untuk diperiksa',ids:remaining})
+    add(container,'p','r85-evidence-summary',caseData.edges.length+' hubungan bukti dalam '+grouped.length+' kelompok. Pilih kelompok untuk melihat sumber dan status pemeriksaannya.')
+    for(const group of grouped){
+      const details=add(container,'details','r85-evidence-group')
+      add(details,'summary','r85-evidence-group-heading',group.title+' · '+group.ids.length+' hubungan')
+      const rows=add(details,'div','r85-evidence-rows')
+      group.ids.forEach(id=>rows.append(cards.get(id)))
     }
   }
   const renderGuards = interpretation => {

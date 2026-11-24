@@ -167,6 +167,33 @@ try{
   await until("document.querySelector('#r85-questions')?.closest('section.panel')?.hidden === false",'R108_SUMMARY_SELECTED')
   console.log('PI_R108_CHROME_PLANNER_WORKFLOW_NAVIGATION=PASS')
 
+  // Wave3: the 18 evidence relations remain, but start in 4 closed groups.
+  await evalPage("location.hash='pi-view=dokumen'")
+  await until("document.querySelector('#r85-evidence .r85-evidence-group')!==null",
+    'R108_W3_EVIDENCE_READY')
+  const grouped=await evalPage("({"+
+    "groups:document.querySelectorAll('#r85-evidence .r85-evidence-group').length,"+
+    "rows:document.querySelectorAll('#r85-evidence article.r85-evidence-item').length,"+
+    "allClosed:Array.from(document.querySelectorAll('#r85-evidence .r85-evidence-group')).every(n=>!n.open),"+
+    "catalogClosed:!document.querySelector('.pi-r108-catalog-details')?.open"+
+    "})")
+  assert.equal(grouped.groups,4,'R108_W3_GRAPH_GROUPS_MISSING')
+  assert.equal(grouped.rows,18,'R108_W3_EVIDENCE_MISSING')
+  assert.equal(grouped.allClosed,true,'R108_W3_GROUPS_SHOULD_BEGIN_CLOSED')
+  assert.equal(grouped.catalogClosed,true,'R108_W3_CATALOG_SHOULD_BEGIN_CLOSED')
+  await evalPage("document.querySelector('#r85-evidence .r85-evidence-group').open=true")
+  const record=await evalPage("({"+
+    "label:document.querySelector('#r85-evidence .r85-evidence-group article strong')?.textContent,"+
+    "source:document.querySelector('#r85-evidence .r85-evidence-group article a')?.href,"+
+    "rawClosed:!document.querySelector('#r85-evidence .r85-evidence-group article details')?.open"+
+    "})")
+  assert.match(record.label,/→/)
+  assert.ok(record.source.startsWith('https://'))
+  assert.equal(record.rawClosed,true)
+  await evalPage("location.hash='pi-view=ringkasan'")
+  console.log('PI_R108_W3_GROUPED_DOCUMENTS_READONLY=PASS')
+
+
   // R108 Wave2: live async case context, form reload, and semantic
   // status presentation, without changing any authority decisions.
   await until("document.querySelector('.pi-r108-context')?.textContent?.includes('Tahun: 2026')",'R108_W2_CONTEXT_ASYNC')
