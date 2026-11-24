@@ -124,7 +124,7 @@ try{
     "r86Text:document.querySelector('#r86-status')?.textContent,"+
     "signedIn:document.body?.textContent?.includes('r93_ci_operator'),"+
     "cloudInitiallyDisabled:document.querySelector('#r89-run')?.disabled,"+
-    "r88NeedsClick:document.querySelector('#r88-status')?.textContent?.includes('Pilih Telusuri')" +
+    "r88NeedsClick:document.querySelector('#r88-status')?.textContent?.includes('Pilih Periksa')" +
     "})")
   assert.ok(loaded.caseCount>0,'R85 evidence questions must render')
   assert.match(loaded.r86Text,/10\/10/)
