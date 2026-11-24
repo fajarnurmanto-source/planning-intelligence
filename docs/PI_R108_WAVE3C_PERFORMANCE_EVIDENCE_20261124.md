@@ -1,3 +1,6 @@
 # R108 Wave 3C — Performance evidence view, first increment
 24 November 2026. Owner automated acceptance mandate CD-20261124-10R.
 Read-only R85 graph presentation in the existing planning stage. Uses actual E06/E08/E09/E10/E11/E12 candidate relations, source status and locators. Explicit missing substantive targets, baseline, units, actuals, outcomes/impact; no zero substitution. R88 remains available, optional AI moved after results without changing consent or controls. SCP-01 canonical contract admission implementation_authorized=false; no new engine, promotion or authority change. CI tests added; not yet run at time of commit. Original Windows W3B remains unchanged. Full Performance engine and other workspace bodies remain open.
+
+## Source CI and guarded rollout
+Source dc91ec1070edb17df2bdced1d42ecd4961015c92 four workflows completed success (45418573380, 45418573458, 45418573547, 45418573440). Guarded three-file Windows installer and synthetic rollback fixture added; Laravel Tinker read-only graph probe checks six candidate edges, indicator type, out-of-scope year and interpretation gates, wired into CI and original installer. New installer CI pending; original cutover not applied. No owner manual checklist. SCP-01 engine admission unchanged.

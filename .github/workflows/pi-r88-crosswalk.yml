@@ -122,6 +122,13 @@ jobs:
           done
           echo PI_R103_RUNNER_TEMP_DOWNLOADS=EPHEMERAL_NOT_IMPORTED_TO_OWNER_PI
 
+      - name: R108 Wave3C Laravel Tinker read-only graph acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd laravel
+          php artisan tinker --execute="require base_path('../scripts/pi-r108-wave3c-tinker-readonly.php');" | tee "$RUNNER_TEMP/pi-r108-w3c-tinker.txt"
+          grep -Fxq PI_R108_W3C_TINKER_CASE_SIX_RELATIONS_GATES=PASS "$RUNNER_TEMP/pi-r108-w3c-tinker.txt"
       - run: node --test laravel/tests/frontend/*.test.cjs laravel/tests/js/*.test.cjs
       - run: node scripts/pi-build-regulatory-assets.mjs --check
       - name: R93 real Laravel routes and in-memory auth/module acceptance
