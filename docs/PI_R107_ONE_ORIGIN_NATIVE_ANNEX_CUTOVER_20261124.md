@@ -39,3 +39,8 @@ The explicit -Apply operation reported:
 
 **Human review and fiscal gates remain:** legal identity and origin, annex completeness, later amendments 13/15/2026, RKA/DPA/realisasi, and R84 reviewer decisions still required. Candidate numeric admission zero, production admission denied. PR #78 remains DRAFT.
 
+## Owner original authenticated browser evidence — 24 Nov 2026
+
+Two owner-supplied screenshots demonstrate R106 user-facing execution on the original PI 8820 page after the R107 11-file source cutover. Visible message: "Kandidat ekstraksi lokal berhasil. Perlu review sumber dan hukum." Full account table displays 6 entries with verified-equivalent candidate amounts and zero deltas, source PDF pages 384/385 (Perwal 74/2025) and 561 (Perwal 12/2026), candidate total Rp1.020.366.250. Two source-page links are visibly rendered. **Acceptance status:** R106 authenticated click + six-row render PASS; the PDF links' actual open/read behavior remains NOT YET OBSERVED. This is not R84 review, legal document authenticity, Perwal13/15 harmonization, RKA/DPA/realisasi verification, fiscal numeric admission, or production approval.
+
+The full-page screenshot reveals significant UX debt: Kasus pembangunan terpadu is a long, dense single page of unrelated phases; R106 is at the very bottom after R100. Navigation exposes "Dokumen & bukti" in Evidence Intelligence and "Penganggaran & APBD" in Fiscal Intelligence, but neither is an obvious direct route to the R106 annex. This is a navigation and information architecture issue, not an extraction defect. Proposed R108 remediation is recorded separately; don't alter the original Windows app without a new guarded UI release and acceptance.
