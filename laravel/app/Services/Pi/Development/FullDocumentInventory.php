@@ -13,7 +13,7 @@ use Symfony\Component\Process\Process;
  */
 final class FullDocumentInventory
 {
-    public function read(string $file, string $sha, int $expectedPages, ?string $extractor = null): array
+    public function read(string $file, string $sha, int $expectedPages, ?string $extractor = null, bool $layout = false): array
     {
         if (!is_file($file) || is_link($file) || !is_readable($file)
             || filesize($file) < 128 || filesize($file) > 80 * 1024 * 1024
@@ -37,6 +37,7 @@ final class FullDocumentInventory
                 });
                 if (!$process->isSuccessful()) { continue; }
                 $result = $this->inventory($body, $expectedPages);
+                if ($layout) { $result['layout_candidates'] = (new DocumentLayoutReconstructor)->reconstruct($body, $expectedPages); }
                 if (strtoupper((string)hash_file('sha256', $file)) !== $sha) {
                     throw new RuntimeException('PI_RDI_SOURCE_DRIFT');
                 }

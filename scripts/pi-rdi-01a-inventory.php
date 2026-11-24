@@ -6,13 +6,14 @@ $autoload=getenv('PI_RDI_COMPOSER_AUTOLOAD') ?: $base.'/laravel/vendor/autoload.
 if(!is_file($autoload)){fwrite(STDERR,"PI_RDI_COMPOSER_AUTOLOAD_MISSING\n");exit(2);}
 require $autoload;
 // Candidate classes must be loaded from this checkout, not original runtime.
-foreach(['Development/NativePdfAnnexIntelligence','Development/BpkQuarantineReadOnlyReview','Development/FullDocumentInventory','Regulatory/R82NationalSourceVerifier'] as $class){require_once $base.'/laravel/app/Services/Pi/'.$class.'.php';}
+foreach(['Development/NativePdfAnnexIntelligence','Development/BpkQuarantineReadOnlyReview','Development/FullDocumentInventory','Development/DocumentLayoutReconstructor','Regulatory/R82NationalSourceVerifier'] as $class){require_once $base.'/laravel/app/Services/Pi/'.$class.'.php';}
 use App\Services\Pi\Development\FullDocumentInventory;
 use App\Services\Pi\Development\BpkQuarantineReadOnlyReview;
 use App\Services\Pi\Regulatory\R82NationalSourceVerifier;
 use Symfony\Component\Process\Process;
-$args=[];
+$args=[];$layout=false;
 foreach(array_slice($argv,1) as $arg){
+    if($arg==='--layout'&&!$layout){$layout=true;continue;}
     if(!preg_match('/^--(national-root|bpk-root|pdftotext|pdfinfo)=(.+)$/D',$arg,$m)||isset($args[$m[1]])){
         fwrite(STDERR,"PI_RDI_UNKNOWN_PARAMETER_HOLD\n");exit(2);
     }
@@ -50,7 +51,7 @@ foreach($docs as $id=>$d){
             try{$p=new Process($command);$p->setTimeout(30);$p->run();if($p->isSuccessful()&&preg_match('/^Pages:\h+(\d+)\h*$/m',$p->getOutput(),$m)){$pages=(int)$m[1];break;}}catch(Throwable){}
         }
         if(!$pages)throw new RuntimeException('PI_RDI_INDEPENDENT_PDFINFO_PAGE_COUNT_HOLD');
-        $r=(new FullDocumentInventory)->read($d['path'],$d['sha'],$pages,$args['pdftotext']??null);
+        $r=(new FullDocumentInventory)->read($d['path'],$d['sha'],$pages,$args['pdftotext']??null,$layout);
         $results[$id]=$r;
     }catch(Throwable $e){$errors[$id]=$e->getMessage();}
 }

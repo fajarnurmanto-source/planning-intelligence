@@ -2,7 +2,8 @@
 param(
  [Parameter(Mandatory=$true)][string]$CandidateRepo,
  [Parameter(Mandatory=$true)][string]$ExpectedCommit,
- [string]$NationalRoot
+ [string]$NationalRoot,
+ [switch]$Layout
 )
 $ErrorActionPreference='Stop'
 $repo=(Resolve-Path -LiteralPath $CandidateRepo).Path
@@ -31,6 +32,7 @@ $prior=$env:PI_RDI_COMPOSER_AUTOLOAD
 try{
  $env:PI_RDI_COMPOSER_AUTOLOAD=$autoload
  $argsRdi=@((Join-Path $repo 'scripts\pi-rdi-01a-inventory.php'))
+ if($Layout){$argsRdi+='--layout'}
  if($NationalRoot){$argsRdi+="--national-root=$NationalRoot"}
  # Start-Process avoids Windows PowerShell's lossy native UTF-8 pipe decoding.
  $quoted=@($argsRdi|ForEach-Object {'"'+$_+'"'})
@@ -38,6 +40,7 @@ try{
  $json=Get-Content -LiteralPath $receipt -Raw -Encoding UTF8|ConvertFrom-Json
  foreach($item in $json.documents.PSObject.Properties){
   $d=$item.Value
+  if($Layout -and $d.layout_candidates){$l=$d.layout_candidates;Write-Output ('PI_RDI_LAYOUT='+$item.Name+'|NODES='+@($l.hierarchy_nodes).Count+'|AMBIGUOUS='+$l.ambiguous_node_count+'|ACCOUNT_FRAGMENTS='+$l.account_fragments)}
   Write-Output ('PI_RDI_DOCUMENT='+$item.Name+'|PAGES='+$d.inventoried_pages+'|TEXT='+$d.text_pages+'|NO_TEXT='+$d.no_text_pages+'|UNCLASSIFIED='+$d.unclassified_text_pages)
  }
  Write-Output ('PI_RDI_RECEIPT='+$receipt)
