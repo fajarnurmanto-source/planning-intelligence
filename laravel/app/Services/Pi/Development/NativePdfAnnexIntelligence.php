@@ -89,36 +89,120 @@ final class NativePdfAnnexIntelligence
         return $parsed;
     }
 
-    private function extract(string $file, ?string $extractor): string
+    /**
+     * Native deterministic Poppler lookup, no installations or network.
+     * Supports WinGet, Scoop, PATH and WSL default before named distros.
+     * Exposes only bounded backend/exit diagnostics, never PDF contents.
+     *
+     * @return list<array{label:string,argv:list<string>}>
+     */
+    public function extractorCommands(string $file, ?string $extractor = null, ?string $os = null): array
     {
-        $commands = [[$extractor ?: 'pdftotext', '-layout', '-enc', 'UTF-8', $file, '-']];
-        if (!$extractor && PHP_OS_FAMILY === 'Windows'
-            && preg_match('~^([a-zA-Z]):[\\\\/](.+)$~', $file, $m)) {
-            $commands[] = ['wsl.exe', '-d', 'Ubuntu-24.04', '-e', 'pdftotext',
-                '-layout', '-enc', 'UTF-8',
-                '/mnt/'.strtolower($m[1]).'/'.str_replace('\\', '/', $m[2]), '-'];
+        $os ??= PHP_OS_FAMILY;
+        if ($extractor !== null && (trim($extractor) === '' || str_contains($extractor, "\0"))) {
+            throw new RuntimeException('PI_R106_EXPLICIT_EXTRACTOR_UNSAFE');
         }
-        foreach ($commands as $args) {
-            $pipes = [];
-            try {
-                $proc = @proc_open($args, [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w']],
-                    $pipes, null, null, ['bypass_shell' => true]);
-                if (!is_resource($proc)) { continue; }
-                fclose($pipes[0]);
-                $text = stream_get_contents($pipes[1]);
-                fclose($pipes[1]);
-                stream_get_contents($pipes[2]);
-                fclose($pipes[2]);
-                $exit = proc_close($proc);
-                if ($exit === 0 && is_string($text) && strlen($text) <= 20000000
-                    && strpos($text, "\f") !== false && preg_match('//u', $text)) {
-                    return $text;
+        $commands = [];
+        $args = ['-layout', '-enc', 'UTF-8', $file, '-'];
+        if ($extractor !== null) {
+            return [['label' => 'EXPLICIT_POPPLER', 'argv' => array_merge([$extractor], $args)]];
+        }
+        $commands[] = ['label' => 'NATIVE_PATH_POPPLER', 'argv' => array_merge(['pdftotext'], $args)];
+        if ($os !== 'Windows') {
+            return $commands;
+        }
+
+        $possible = [];
+        $local = getenv('LOCALAPPDATA');
+        $user = getenv('USERPROFILE');
+        if (is_string($local) && $local !== '') {
+            $base = str_replace('\\', '/', $local);
+            $possible[] = $base.'/Microsoft/WinGet/Links/pdftotext.exe';
+            $possible[] = $base.'/Microsoft/WinGet/Packages/oschwartz10612.Poppler*/poppler*/Library/bin/pdftotext.exe';
+            $possible[] = $base.'/Microsoft/WinGet/Packages/oschwartz10612.Poppler*/Library/bin/pdftotext.exe';
+        }
+        if (is_string($user) && $user !== '') {
+            $base = str_replace('\\', '/', $user);
+            $possible[] = $base.'/scoop/apps/poppler/current/Library/bin/pdftotext.exe';
+            $possible[] = $base.'/scoop/apps/poppler/current/bin/pdftotext.exe';
+        }
+        foreach ([getenv('ProgramFiles'), getenv('ProgramFiles(x86)')] as $base) {
+            if (!is_string($base) || $base === '') { continue; }
+            $base = str_replace('\\', '/', $base);
+            $possible[] = $base.'/poppler/Library/bin/pdftotext.exe';
+            $possible[] = $base.'/poppler/bin/pdftotext.exe';
+        }
+        $seen = [];
+        foreach ($possible as $glob) {
+            foreach (glob($glob) ?: [] as $exe) {
+                if (is_file($exe) && !is_link($exe) && is_readable($exe) && !isset($seen[$exe])) {
+                    $seen[$exe] = true;
+                    $commands[] = ['label'=>'NATIVE_INSTALLED_POPPLER',
+                        'argv'=>array_merge([$exe], $args)];
                 }
-            } catch (\Throwable) {
-                foreach ($pipes as $pipe) { if (is_resource($pipe)) { @fclose($pipe); } }
             }
         }
-        throw new RuntimeException('PI_R106_PDFTOTEXT_UNAVAILABLE_OR_TEXT_LAYER_ABSTAIN');
+        if (!preg_match('~^([a-zA-Z]):[\\\\/](.+)$~', $file, $parts)) {
+            return $commands;
+        }
+        $wslFile = '/mnt/'.strtolower($parts[1]).'/'.str_replace('\\', '/', $parts[2]);
+        $tail = ['pdftotext', '-layout', '-enc', 'UTF-8', $wslFile, '-'];
+        $commands[] = ['label'=>'WSL_DEFAULT', 'argv'=>array_merge(['wsl.exe','--exec'], $tail)];
+        foreach (['Ubuntu', 'Ubuntu-24.04'] as $name) {
+            $commands[] = ['label'=>'WSL_'.$name,
+                'argv'=>array_merge(['wsl.exe','--distribution',$name,'--exec'], $tail)];
+        }
+        return $commands;
+    }
+
+    private function extract(string $file, ?string $extractor): string
+    {
+        if (!function_exists('proc_open')) {
+            throw new RuntimeException('PI_R106_PHP_PROCESS_EXECUTION_DISABLED');
+        }
+        $attempts = [];
+        foreach ($this->extractorCommands($file, $extractor) as $candidate) {
+            $pipes = [];
+            $process = null;
+            try {
+                $process = @proc_open($candidate['argv'],
+                    [0=>['pipe','r'],1=>['pipe','w'],2=>['pipe','w']],
+                    $pipes, null, null, ['bypass_shell'=>true]);
+                if (!is_resource($process)) {
+                    $attempts[] = $candidate['label'].'_NOT_FOUND';
+                    continue;
+                }
+                fclose($pipes[0]);
+                $body = stream_get_contents($pipes[1], 20_000_001);
+                fclose($pipes[1]);
+                stream_get_contents($pipes[2], 4096);
+                fclose($pipes[2]);
+                $code = proc_close($process);
+                $process = null;
+                if ($code !== 0) {
+                    $attempts[] = $candidate['label'].'_EXIT_'.$code;
+                    continue;
+                }
+                if (!is_string($body) || $body === ''
+                    || strlen($body) > 20_000_000
+                    || !preg_match('//u', $body) || !str_contains($body, "\f")) {
+                    $attempts[] = $candidate['label'].'_INVALID_TEXT_LAYER';
+                    continue;
+                }
+                return $body;
+            } catch (\Throwable) {
+                $attempts[] = $candidate['label'].'_PROCESS_ERROR';
+            } finally {
+                foreach ($pipes as $pipe) {
+                    if (is_resource($pipe)) { @fclose($pipe); }
+                }
+                if (is_resource($process)) {
+                    @proc_terminate($process);
+                    @proc_close($process);
+                }
+            }
+        }
+        throw new RuntimeException('PI_R106_PDF_ENGINE_HOLD:'.implode(',', $attempts));
     }
 
     private function baseAccountRows(string $section, int $firstPage): array
