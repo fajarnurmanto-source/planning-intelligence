@@ -22,6 +22,8 @@ on:
       - 'scripts/pi-r100-official-source-cutover.ps1'
       - 'scripts/pi-r101-r100-safe-owner-rollout.ps1'
       - 'scripts/pi-r104-owner-bpk-two-pdf-intake.ps1'
+      - 'scripts/pi-r107-one-origin-native-annex-cutover.ps1'
+      - 'scripts/pi-r107-ci-windows-fixture.ps1'
       - 'scripts/pi-r106-windows-extractor-recovery.ps1'
       - 'laravel/resources/pi/official-source-metadata-r100.json'
       - 'laravel/public/official-sources-r100.js'
@@ -1608,3 +1610,8 @@ jobs:
             throw 'PI_R106_WINDOWS_EXTRACTOR_PS51_PARSE_FAILED'
           }
           Write-Host 'PI_R106_WINDOWS_PS51_ENGINE_RECOVERY_PARSE=PASS'
+      - name: R107 one-origin native annex 11-file cutover synthetic apply rollback and drift safety
+        shell: powershell
+        run: |
+          & .\scripts\pi-r107-ci-windows-fixture.ps1
+          if($LASTEXITCODE -ne 0){throw 'PI_R107_WINDOWS_FIXTURE_FAILURE'}

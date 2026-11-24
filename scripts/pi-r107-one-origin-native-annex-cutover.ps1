@@ -122,7 +122,7 @@ if(-not $config.Contains("PHP_OS_FAMILY === 'Windows'") -or
    -not $config.Contains("env('PI_R89_CLOUD_ENABLED', false)")){
  throw 'PI_R107_LOCAL_ONLY_CONFIG_GUARD_MISSING'
 }
-$rows=New-Object 'Collections.Generic.List[object]'
+$rows=New-Object 'System.Collections.Generic.List[object]'
 foreach($rel in $allow){
  $src=[IO.Path]::GetFullPath((Join-Path (Join-Path $repo 'laravel') $rel))
  $dst=[IO.Path]::GetFullPath((Join-Path $root $rel))
@@ -204,7 +204,7 @@ foreach($rel in $protected){
 $launcherSha=(Get-FileHash -LiteralPath $launcherFile -Algorithm SHA256).Hash
 $stamp=(Get-Date -Format 'yyyyMMdd-HHmmss-fff')+'-'+[guid]::NewGuid().ToString('N').Substring(0,8)
 $backup=Join-Path $launcher ('backups\R107_NATIVE_ANNEX_'+$stamp)
-$stages=New-Object 'Collections.Generic.List[string]'
+$stages=New-Object 'System.Collections.Generic.List[string]'
 $began=$false
 try{
  New-Item -ItemType Directory -Path (Join-Path $backup 'before') -Force|Out-Null
