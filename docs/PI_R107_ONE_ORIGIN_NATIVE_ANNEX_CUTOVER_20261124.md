@@ -1,0 +1,7 @@
+# R107 — single existing PI 8820 native annex cutover
+
+R107 provides a PowerShell 5.1 default read-only preflight, exact 11-file allowlist, SHA pin, R100 known source baseline, staged backups and automatic rollback for R106. No separate server, shortcut, DB migration, .env or credential changes. It updates 3 existing source files and adds 8 bounded R105/R106 source assets. Existing original launcher backup folder holds immutable snapshots and manifest. Any unknown local code drift BLOCKS. Authenticated PI UI click check is still required after operator -Apply; anonymous API PDF and annex routes must both give HTTP401 and JS/CSS/HTML bytes must match local. The R107 config enables only if an existing R104 isolated local archive is present under active Windows PHP user's LOCALAPPDATA; the R105 service validates SHA/receipts and unreviewed fiscal gates. This is not legal, fiscal, commercial, or production admission. PR #78 Draft.
+
+Owner next: pinned clean QA source; run scripts/pi-r107-one-origin-native-annex-cutover.ps1 -CandidateRepo <QA> -ExpectedCommit <SHA> (no -Apply) to inspect exact 11 changes and R100 baseline. After acceptance explicitly rerun with -Apply. Always maintain one original PHP 8820 and no config/route cache. Never rerun R94 or R100 installers.
+
+CI-only -CiFixtureRoot restricted to GitHub Actions RUNNER_TEMP; -CiFailAfterSecondWrite tests restoration on disposable copies and is denied on original.
