@@ -3,7 +3,8 @@ param(
  [Parameter(Mandatory=$true)][string]$CandidateRepo,
  [Parameter(Mandatory=$true)][string]$ExpectedCommit,
  [string]$NationalRoot,
- [switch]$Layout
+ [switch]$Layout,
+ [switch]$Multiline
 )
 $ErrorActionPreference='Stop'
 $repo=(Resolve-Path -LiteralPath $CandidateRepo).Path
@@ -33,13 +34,16 @@ try{
  $env:PI_RDI_COMPOSER_AUTOLOAD=$autoload
  $argsRdi=@((Join-Path $repo 'scripts\pi-rdi-01a-inventory.php'))
  if($Layout){$argsRdi+='--layout'}
+ if($Multiline){$argsRdi+='--multiline'}
  if($NationalRoot){$argsRdi+="--national-root=$NationalRoot"}
  # Start-Process avoids Windows PowerShell's lossy native UTF-8 pipe decoding.
- $quoted=@($argsRdi|ForEach-Object {'"'+$_+'"'})
+ $quoted=@('-d','memory_limit=1024M','-d','display_errors=stderr')+@($argsRdi|ForEach-Object {'"'+$_+'"'})
  $proc=Start-Process -FilePath $php -ArgumentList $quoted -NoNewWindow -Wait -PassThru -RedirectStandardOutput $receipt -RedirectStandardError (Join-Path $out 'stderr.log')
+ if($proc.ExitCode -ne 0){Get-Content -LiteralPath (Join-Path $out 'stderr.log')}
  $json=Get-Content -LiteralPath $receipt -Raw -Encoding UTF8|ConvertFrom-Json
  foreach($item in $json.documents.PSObject.Properties){
   $d=$item.Value
+  if($Multiline -and $d.multiline_fiscal){$m=$d.multiline_fiscal;Write-Output ('PI_RDI_MULTILINE='+$item.Name+'|FRAGMENTS='+$m.fragment_count+'|CODES='+$m.resolved_code_candidates+'|AMOUNTS='+$m.positional_amount_candidates+'|ROW_SHAPES='+$m.row_shape_candidates+'|CARRY_CANDIDATES='+$m.previous_page_scope_candidates);foreach($reason in $m.hold_reason_counts.PSObject.Properties){Write-Output ('PI_RDI_MULTILINE_HOLD='+$item.Name+'|'+$reason.Name+'|'+$reason.Value)}}
   if($Layout -and $d.layout_candidates){$l=$d.layout_candidates;Write-Output ('PI_RDI_LAYOUT='+$item.Name+'|NODES='+@($l.hierarchy_nodes).Count+'|AMBIGUOUS='+$l.ambiguous_node_count+'|ACCOUNT_FRAGMENTS='+$l.account_fragments)}
   Write-Output ('PI_RDI_DOCUMENT='+$item.Name+'|PAGES='+$d.inventoried_pages+'|TEXT='+$d.text_pages+'|NO_TEXT='+$d.no_text_pages+'|UNCLASSIFIED='+$d.unclassified_text_pages)
  }
