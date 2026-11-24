@@ -54,5 +54,5 @@ foreach($docs as $id=>$d){
         $results[$id]=$r;
     }catch(Throwable $e){$errors[$id]=$e->getMessage();}
 }
-echo json_encode(['schema'=>'PI_RDI_01A_CORPUS_RECEIPT_V1','expected_documents'=>4,'processed_documents'=>count($results),'documents'=>$results,'holds'=>$errors,'numeric_admission'=>0,'production_admission'=>'DENIED'],JSON_UNESCAPED_UNICODE|JSON_INVALID_UTF8_SUBSTITUTE|JSON_THROW_ON_ERROR)."\n";
+echo json_encode(['schema'=>'PI_RDI_01A_CORPUS_RECEIPT_V1','expected_documents'=>4,'processed_documents'=>count($results),'documents'=>$results,'holds'=>(object)$errors,'numeric_admission'=>0,'production_admission'=>'DENIED'],JSON_UNESCAPED_UNICODE|JSON_INVALID_UTF8_SUBSTITUTE|JSON_THROW_ON_ERROR)."\n";
 exit(count($results)===4&&!$errors?0:1);

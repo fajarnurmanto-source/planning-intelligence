@@ -43,7 +43,9 @@ try{
  Write-Output ('PI_RDI_RECEIPT='+$receipt)
  Write-Output ('PI_RDI_RECEIPT_SHA256='+(Get-FileHash -LiteralPath $receipt -Algorithm SHA256).Hash)
  Write-Output ('PI_RDI_PROCESSED='+$json.processed_documents+'/4')
- foreach($hold in $json.holds.PSObject.Properties){Write-Output ('PI_RDI_HOLD='+$hold.Name+'|'+$hold.Value)}
+ if($json.holds -is [System.Management.Automation.PSCustomObject]){
+  foreach($hold in $json.holds.PSObject.Properties){Write-Output ('PI_RDI_HOLD='+$hold.Name+'|'+$hold.Value)}
+ }elseif($null -ne $json.holds -and @($json.holds).Count -ne 0){throw 'PI_RDI_HOLD_SCHEMA_INVALID'}
  if($proc.ExitCode -ne 0){throw 'PI_RDI_PARTIAL_CORPUS_HOLD'}
  Write-Output 'PI_RDI_CORPUS_INVENTORY=PASS_CANDIDATE_ONLY'
 }finally{$env:PI_RDI_COMPOSER_AUTOLOAD=$prior}
