@@ -12,6 +12,10 @@ return [
     'planning_lineage' => [
         'registry_path' => resource_path('pi/official-planning-lineage-r70j.json'),
     ],
+    'native_annex' => [
+        'enabled' => env('PI_R106_NATIVE_ANNEX_ENABLED', false),
+        'quarantine_root' => env('PI_R106_QUARANTINE_ROOT'),
+    ],
     'official_sources' => [
         'registry_path' => resource_path('pi/official-source-metadata-r100.json'),
     ],
