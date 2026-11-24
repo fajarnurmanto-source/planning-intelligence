@@ -37,7 +37,7 @@ final class FiscalRecordReconstruction
                     ||!preg_match('/\A\d(?:\.\d+){4}\.(?:\d{3}|\d{5})\z/D',$code)
                     ||!preg_match('/\A[A-F0-9]{64}\z/D',$row['line_sha256']??'')
                     ||($markers[$line]['line_sha256']??null)!==$row['line_sha256']
-                    ||!is_array($row['money_tokens']??null))throw new RuntimeException('PI_RDI_FISCAL_FRAGMENT_HOLD');
+                    ||!is_array($row['money_tokens']??null))throw new RuntimeException('PI_RDI_FISCAL_FRAGMENT_HOLD:page='.$page.':line='.$line);
                 $lastLine=$line;
                 $reasons=[];$values=[];$full=strlen(substr(strrchr($code,'.'),1))===5;
                 if(!$full)$reasons[]='SPLIT_CODE_NEEDS_CONTINUATION';
