@@ -3,13 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PI Superior · Planning Intelligence R69E</title>
+  <title>Beranda kerja · Planning Intelligence</title>
   <meta name="description" content="Beranda institusional pratinjau Planning Intelligence Kota Yogyakarta">
   <link rel="stylesheet" href="./institution-home.css">
   <link rel="stylesheet" href="./pi-ia-r69e.css">
   <script defer src="./institution-home.js"></script>
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
+  <link rel="stylesheet" href="./planner-workflow-r108.css">
+  <script defer src="./planner-workflow-r108.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -23,9 +25,9 @@
     <main class="main-content">
       <header class="topbar"><span><b>Beranda</b><span class="top-separator">/</span> Pemerintah Kota Yogyakarta</span><span class="local-badge">● LOCAL QA</span></header>
       <div class="content-wrap">
-        <div class="notice" role="note"><span class="notice-icon">i</span><span>Autentikasi dan pembatasan data di server QA aktif. <strong>AI membantu telaah, bukan memutuskan.</strong> Integrasi Laravel/SSO serta keamanan produksi belum disahkan.</span><span class="notice-label">QA · R69E</span></div>
+        <div class="notice" role="note"><span class="notice-icon">i</span><span>Autentikasi dan pembatasan data di server QA aktif. <strong>AI membantu telaah, bukan memutuskan.</strong> Integrasi Laravel/SSO serta keamanan produksi belum disahkan.</span><span class="notice-label">LINGKUNGAN UJI</span></div>
 
-        <section class="hero" aria-labelledby="home-title"><div class="hero-main"><span class="eyebrow">PLANNING INTELLIGENCE · BERANDA INSTITUSIONAL</span><h1 id="home-title">Satu tempat untuk memahami <em>rencana, anggaran, dan keputusan.</em></h1><p>Mulai dari pekerjaan yang paling penting: telusuri dokumen resmi, periksa temuan, lalu catat keputusan dengan bukti yang dapat ditinjau kembali.</p><div class="hero-actions"><a class="primary-btn" href="./development-case-r85.html">Buka kasus pembangunan terpadu <span aria-hidden="true">↗</span></a><a class="secondary-btn" href="./workspace.html?pi_section=penganggaran">Telaah penganggaran <span aria-hidden="true">↗</span></a><a class="secondary-btn" href="./ai-gateway.html">Analisis AI <span aria-hidden="true">✦</span></a></div></div><div class="hero-side"><span>FOKUS PEMERIKSAAN SAAT INI</span><strong>Persampahan Kota Yogyakarta</strong><p>Regulasi–kewenangan–rencana–program–anggaran 2026</p><span class="status-pill"><span aria-hidden="true">●</span> Perlu keputusan reviewer</span></div></section>
+        <section class="hero" aria-labelledby="home-title"><div class="hero-main"><span class="eyebrow">PLANNING INTELLIGENCE · BERANDA INSTITUSIONAL</span><h1 id="home-title">Mulai dari pekerjaan yang <em>perlu Anda selesaikan.</em></h1><p>Mulai dari pekerjaan yang paling penting: telusuri dokumen resmi, periksa temuan, lalu catat keputusan dengan bukti yang dapat ditinjau kembali.</p><div class="hero-actions"><a class="primary-btn" href="./development-case-r85.html">Lanjutkan telaah pembangunan <span aria-hidden="true">↗</span></a><a class="secondary-btn" href="./development-case-r85.html#pi-view=anggaran">Periksa anggaran dan lampiran <span aria-hidden="true">↗</span></a><a class="secondary-btn" href="./ai-gateway.html">Analisis AI <span aria-hidden="true">✦</span></a></div></div><div class="hero-side"><span>FOKUS PEMERIKSAAN SAAT INI</span><strong>Persampahan Kota Yogyakarta</strong><p>Regulasi–kewenangan–rencana–program–anggaran 2026</p><span class="status-pill"><span aria-hidden="true">●</span> Perlu keputusan reviewer</span></div></section>
 
         <section class="kpis" aria-label="Ringkasan bukti"><article class="kpi"><span>Dokumen dalam katalog</span><strong id="metric-docs">—</strong><small>Untuk telaah kasus ini</small></article><article class="kpi"><span>PDF bukti dapat dibuka</span><strong id="metric-pdfs">—</strong><small>Diperiksa dari berkas QA terpasang</small></article><article class="kpi"><span>Temuan perlu ditelaah</span><strong id="metric-findings">—</strong><small>Belum menjadi keputusan final</small></article><article class="kpi warning"><span>Keputusan reviewer</span><strong id="metric-decisions">0/3</strong><small>Belum ada persetujuan resmi</small></article></section>
 
@@ -35,7 +37,7 @@
           <section class="panel" aria-labelledby="chain-title"><div class="panel-heading"><div><span class="section-number">02 · HUBUNGAN DOKUMEN</span><h2 id="chain-title">Jejak dari rencana hingga belanja</h2><p>Yang sudah ditemukan adalah keberadaan kode dan dokumen, belum keselarasan angka maupun substansi.</p></div><span class="small-tag green">4 TAHAP</span></div><div id="chain-list" class="chain-list"><p class="loading">Memuat tahapan dokumen…</p></div></section>
         </div><div class="secondary-column">
           <section class="panel compact" aria-labelledby="sources-title"><div class="panel-heading"><div><span class="section-number">03 · SUMBER</span><h2 id="sources-title">Bukti resmi yang tersedia</h2></div></div><div id="documents-list" class="documents-list"><p class="loading">Memeriksa akses PDF…</p></div><p class="source-caveat" id="source-caveat">Status PDF dihitung dari paket lokal; katalog tidak berarti semua PDF telah tersedia.</p></section>
-          <section class="panel compact intelligence" aria-labelledby="ai-title"><span class="section-number">04 · PENDAMPING KEPUTUSAN</span><h2 id="ai-title">AI menyusun analisis. Anda memegang keputusan.</h2><p>Gunakan penyedia API seperti Gemini / DeepSeek atau AI lokal melalui Ollama. Pilihan provider tetap opsional, bukti dibatasi, dan keputusan harus direview manusia.</p><a class="primary-btn" href="./ai-gateway.html">Masuk ke Analisis AI <span aria-hidden="true">↗</span></a><small>Tidak ada pemanggilan API otomatis dari halaman ini.</small></section>
+          <section class="panel compact intelligence" aria-labelledby="ai-title"><span class="section-number">04 · PENDAMPING KEPUTUSAN</span><h2 id="ai-title">AI menyusun analisis. Anda memegang keputusan.</h2><p>Gunakan penyedia API seperti Gemini / DeepSeek atau AI lokal melalui Ollama. Pilihan provider tetap opsional, bukti dibatasi, dan keputusan harus direview manusia.</p><a class="primary-btn" href="./ai-gateway.html">Buka bantuan analisis AI <span aria-hidden="true">↗</span></a><small>Tidak ada pemanggilan API otomatis dari halaman ini.</small></section>
           <section class="panel compact safeguards" aria-labelledby="guard-title"><span class="section-number">05 · BATAS PEMERIKSAAN</span><h2 id="guard-title">Apa yang belum boleh disimpulkan?</h2><ul><li>Perbandingan angka target atau pagu belum diizinkan.</li><li>Keselarasan substansi belum dinilai.</li><li>Perubahan Penjabaran APBD belum direkonsiliasi.</li></ul><span class="small-tag amber">STATUS: PERLU VERIFIKASI</span></section>
         </div></div>
         <footer class="page-footer">Planning Intelligence · R69E Superior + 5 Specialized QA <span>Dokumen publik untuk contoh telaah. Otorisasi QA lokal; belum untuk keputusan produksi.</span></footer>

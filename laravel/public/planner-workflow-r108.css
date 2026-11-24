@@ -1,0 +1,26 @@
+/* R108: task-first progressive disclosure. Existing functional DOM survives. */
+.pi-r108-workflow,.pi-r108-home-tasks{background:#12343c;color:#edf8f4;border:1px solid #35645b;border-radius:15px;padding:24px;margin:20px 0 16px;min-width:0}
+.pi-r108-workflow h2,.pi-r108-home-tasks h2{font-size:clamp(1.2rem,2.5vw,1.6rem);margin:5px 0 7px;color:#e8faf1}
+.pi-r108-overline{font-size:.72rem;letter-spacing:.08em;font-weight:800;color:#a2ecc8;margin:0}
+.pi-r108-intro,.pi-r108-context{color:#bcd3cc;font-size:.82rem;line-height:1.6}
+.pi-r108-context{border-top:1px solid #3e6158;margin:15px 0 10px;padding-top:12px;overflow-wrap:anywhere}
+.pi-r108-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.pi-r108-tab{display:inline-flex;min-height:40px;align-items:center;padding:9px 12px;border-radius:9px;border:1px solid #527b6e;color:#e5f2ea;background:#1d4549;font-weight:750;font-size:.82rem;text-decoration:none}
+.pi-r108-tab:hover,.pi-r108-tab:focus-visible{background:#2b5c55}
+.pi-r108-tab.is-active{background:#b5f1ca;color:#14352c;border-color:#b5f1ca}
+.pi-r108-current{padding:14px 15px;border:1px solid #335b53;background:#0b2c32;border-radius:10px}
+.pi-r108-current-heading{font-size:1rem;margin:0 0 4px;color:#eaf7f0}
+.pi-r108-current p{font-size:.8rem;color:#c0d9d0;line-height:1.5;margin:0}
+.pi-r108-source-jump{display:inline-flex;margin-top:10px;color:#b3f4d2;font-weight:700}
+[data-pi-planner-view][hidden]{display:none!important}
+.pi-r108-task-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:15px}
+.pi-r108-task-card{display:flex;flex-direction:column;gap:9px;min-width:0;padding:16px;border:1px solid #49746a;border-radius:10px;background:#193f45;text-decoration:none;color:#f0f9f3}
+.pi-r108-task-card:hover,.pi-r108-task-card:focus-visible{background:#255650;border-color:#9be3bb}
+.pi-r108-task-card strong{font-size:.95rem}
+.pi-r108-task-card span{font-size:.78rem;line-height:1.55;color:#bad6cd}
+.pi-r108-home-details{border:1px solid #315653;border-radius:12px;padding:16px 14px;margin-top:15px;background:#0b2630}
+.pi-r108-home-details>summary{cursor:pointer;font-size:.87rem;font-weight:800;color:#b4eecb;padding:8px}
+.pi-r108-home-details[open]>summary{margin-bottom:14px}
+.pi-r108-home-details .content-grid,.pi-r108-home-details .kpis{min-width:0}
+@media(max-width:700px){.pi-r108-workflow,.pi-r108-home-tasks{padding:16px}.pi-r108-task-grid{grid-template-columns:1fr}.pi-r108-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.pi-r108-tab{justify-content:center;text-align:center;font-size:.76rem}}
+@media(max-width:390px){.pi-r108-tabs{grid-template-columns:1fr 1fr}.pi-r108-tab{padding:8px 6px;min-width:0;overflow-wrap:anywhere}}
