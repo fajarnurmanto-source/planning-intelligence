@@ -28,6 +28,8 @@ on:
       - 'scripts/pi-r108-ci-windows-fixture.ps1'
       - 'scripts/pi-r108-wave2-planner-cutover.ps1'
       - 'scripts/pi-r108-wave2-ci-windows-fixture.ps1'
+      - 'scripts/pi-r108-wave3a-documents-cutover.ps1'
+      - 'scripts/pi-r108-wave3a-ci-windows-fixture.ps1'
       - 'scripts/pi-r106-windows-extractor-recovery.ps1'
       - 'laravel/resources/pi/official-source-metadata-r100.json'
       - 'laravel/public/official-sources-r100.js'
@@ -1629,3 +1631,8 @@ jobs:
         run: |
           & .\scripts\pi-r108-wave2-ci-windows-fixture.ps1
           if($LASTEXITCODE -ne 0){throw 'PI_R108_W2_WINDOWS_FIXTURE_FAILURE'}
+      - name: R108 Wave3A grouped evidence source-only rollback and drift safety
+        shell: powershell
+        run: |
+          & .\scripts\pi-r108-wave3a-ci-windows-fixture.ps1
+          if($LASTEXITCODE -ne 0){throw 'PI_R108_W3A_WINDOWS_FIXTURE_FAILURE'}
