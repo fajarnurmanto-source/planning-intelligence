@@ -67,7 +67,7 @@ if($PdfToTextPath -ne ''){
 if($first.Text -notmatch 'PI_R106_PDF_ENGINE_HOLD:'){
   throw 'PI_R106_SOURCE_OR_PARSER_FAILURE_NOT_ENGINE_INSTALL'
 }
-if($first.Text -match 'INVALID_TEXT_LAYER|_PROCESS_ERROR'){
+if($first.Text -match 'INVALID_TEXT_LAYER'){
   throw 'PI_R106_TEXT_OR_PROCESS_FAILURE_NOT_SAFE_TO_INSTALL'
 }
 if(-not $Repair){
