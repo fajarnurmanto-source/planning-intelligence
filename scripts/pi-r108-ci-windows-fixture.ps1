@@ -12,8 +12,8 @@ $repo=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 $git=(Get-Command git.exe -ErrorAction Stop).Source
 $head=([string](& $git -C $repo rev-parse HEAD)).Trim().ToLowerInvariant()
 if($LASTEXITCODE -ne 0){throw 'PI_R108_CI_SOURCE_COMMIT_UNKNOWN'}
-$r107='1f0620fbf0c2571a6b8aa13fe5a719c0ca8da24b'
-$fixture=Join-Path $env:RUNNER_TEMP ('pi-r108-ux-fixture-'+[guid]::NewGuid().ToString('N'))
+$baseline='1f0620fbf0c2571a6b8aa13fe5a719c0ca8da24b'
+$fixture=Join-Path $env:RUNNER_TEMP ('pi-r108-planner-fixture-'+[guid]::NewGuid().ToString('N'))
 $root=Join-Path $fixture 'laravel'
 $launcher=Join-Path $fixture 'launcher'
 New-Item -ItemType Directory -Path $root,$launcher -Force | Out-Null
@@ -24,7 +24,7 @@ function Save-Baseline([string]$relative){
  $gitPath='laravel/'+$relative.Replace([char]92,[char]47)
  $psi=New-Object Diagnostics.ProcessStartInfo
  $psi.FileName=$git
- $psi.Arguments='-C "'+$repo+'" show "'+$r107+':'+$gitPath+'"'
+ $psi.Arguments='-C "'+$repo+'" show "'+$baseline+':'+$gitPath+'"'
  $psi.UseShellExecute=$false
  $psi.RedirectStandardOutput=$true
  $psi.CreateNoWindow=$true
@@ -125,7 +125,7 @@ $target=Join-Path $root 'public\index.html'
 $driftSha=(Get-FileHash $target -Algorithm SHA256).Hash
 $reason=''
 try{& $script @argsFixed -Apply|Out-Null}catch{$reason=[string]$_.Exception.Message}
-if($reason -notmatch 'PI_R108_BASELINE_SOURCE_DRIFT_HOLD' -or
+if($reason -notmatch 'PI_R108_R100_SOURCE_DRIFT_HOLD' -or
    (Get-FileHash $target -Algorithm SHA256).Hash -cne $driftSha){
  throw 'PI_R108_CI_UNREVIEWED_DRIFT_NOT_REJECTED'
 }

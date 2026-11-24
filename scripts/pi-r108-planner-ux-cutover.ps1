@@ -1,6 +1,6 @@
 #requires -Version 5.1
 <#
-R108: explicit, source-only, fail-closed planner task-first UX source-only cutover.
+R108: explicit, source-only, fail-closed planner-facing UX cutover.
 Default PREVIEW, -Apply required. No .env/DB/APP_KEY/launcher edit,
 migration, new server, Composer, source downloads or cloud inference.
 CI fixture and fault injection only inside GitHub Actions RUNNER_TEMP.
@@ -17,7 +17,7 @@ Set-StrictMode -Version 2
 $ErrorActionPreference='Stop'
 $baseline='1f0620fbf0c2571a6b8aa13fe5a719c0ca8da24b'
 $root='D:\Research\PlanningIntelligence\planning-intelligence-v0.0-starter\planning-intelligence-v0.0\laravel'
-$launcher='D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_202666'
+$launcher='D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111'
 $ci=($CiFixtureRoot -ne '')
 if($ci){
  if($env:GITHUB_ACTIONS -cne 'true' -or -not $env:RUNNER_TEMP){
@@ -42,8 +42,8 @@ $prefix=$root+[IO.Path]::DirectorySeparatorChar
 $replace=@('public\pi-ia-r69e.js','public\pi-ia-r69e.css','public\index.html','public\development-case-r85.html')
 $add=@('public\planner-workflow-r108.js','public\planner-workflow-r108.css')
 $allow=@($replace)+@($add)
-if($allow.Count -ne 6 -or @($allow|Select-Object -Unique).Count -ne 6){
- throw 'PI_R108_EXACT_ELEVEN_FILE_MANIFEST_REQUIRED'
+if($allow.Count -ne 6 -or @($allow|Select-Object -Unique).Count -ne 11){
+ throw 'PI_R108_EXACT_SIX_FILE_MANIFEST_REQUIRED'
 }
 $protected=@(
  'artisan','.env','database\database.sqlite',
@@ -73,7 +73,7 @@ if($LASTEXITCODE -ne 0 -or $dirty.Count -gt 0){
  throw 'PI_R108_QA_WORKTREE_NOT_CLEAN'
 }
 & $git -C $repo merge-base --is-ancestor $baseline $pin
-if($LASTEXITCODE -ne 0){throw 'PI_R108_BASELINE_ANCESTOR_NOT_FOUND'}
+if($LASTEXITCODE -ne 0){throw 'PI_R108_R107_ANCESTOR_NOT_FOUND'}
 function Read-GitUtf8([string]$relative){
  $path='laravel/'+$relative.Replace([char]92,[char]47)
  $psi=New-Object Diagnostics.ProcessStartInfo
@@ -89,7 +89,7 @@ function Read-GitUtf8([string]$relative){
   $p.StandardOutput.BaseStream.CopyTo($m)
   $p.WaitForExit()
   if($p.ExitCode -ne 0 -or $m.Length -lt 5 -or $m.Length -gt 1048576){
-   throw ('PI_R108_BASELINE_BASELINE_UNAVAILABLE='+$relative)
+   throw ('PI_R108_R107_BASELINE_UNAVAILABLE='+$relative)
   }
   return [Text.UTF8Encoding]::new($false,$true).GetString($m.ToArray())
  }finally{$m.Dispose();$p.Dispose()}
@@ -142,14 +142,14 @@ foreach($rel in $allow){
  $oldHash=if($exists){(Get-FileHash -LiteralPath $dst -Algorithm SHA256).Hash}else{$null}
  $newHash=(Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash
  if($replace -contains $rel){
-  if(-not $exists){throw ('PI_R108_BASELINE_REPLACEMENT_MISSING='+$rel)}
+  if(-not $exists){throw ('PI_R108_R100_REPLACEMENT_MISSING='+$rel)}
   $actual=Normalize ([IO.File]::ReadAllText($dst,[Text.UTF8Encoding]::new($false,$true)))
   $base=Normalize (Read-GitUtf8 $rel)
   $candidate=Normalize ([IO.File]::ReadAllText($src,[Text.UTF8Encoding]::new($false,$true)))
   if($actual -cne $base -and $actual -cne $candidate){
-   throw ('PI_R108_BASELINE_SOURCE_DRIFT_HOLD='+$rel)
+   throw ('PI_R108_R100_SOURCE_DRIFT_HOLD='+$rel)
   }
-  Write-Output ('PI_R108_BASELINE_BASELINE_VERIFIED='+$rel)
+  Write-Output ('PI_R108_R107_BASELINE_VERIFIED='+$rel)
  }elseif($exists -and $oldHash -cne $newHash){
   throw ('PI_R108_ADDITION_COLLIDES_WITH_UNKNOWN_FILE='+$rel)
  }
