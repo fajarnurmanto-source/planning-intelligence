@@ -22,6 +22,7 @@ on:
       - 'scripts/pi-r100-official-source-cutover.ps1'
       - 'scripts/pi-r101-r100-safe-owner-rollout.ps1'
       - 'scripts/pi-r104-owner-bpk-two-pdf-intake.ps1'
+      - 'scripts/pi-r106-windows-extractor-recovery.ps1'
       - 'laravel/resources/pi/official-source-metadata-r100.json'
       - 'laravel/public/official-sources-r100.js'
       - 'laravel/public/official-sources-r100.css'
@@ -1594,3 +1595,16 @@ jobs:
             throw 'PI_R104_CI_FAKE_HTML_NOT_REJECTED'
           }
           Write-Host 'PI_R104_WINDOWS_HTML_AS_PDF=HOLD_NO_ARCHIVE'
+      - name: R106 Windows PowerShell 5.1 safe PDF engine recovery parses without installation
+        shell: powershell
+        run: |
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r106-windows-extractor-recovery.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if($errors.Count -ne 0){
+            $errors | Format-List
+            throw 'PI_R106_WINDOWS_EXTRACTOR_PS51_PARSE_FAILED'
+          }
+          Write-Host 'PI_R106_WINDOWS_PS51_ENGINE_RECOVERY_PARSE=PASS'
