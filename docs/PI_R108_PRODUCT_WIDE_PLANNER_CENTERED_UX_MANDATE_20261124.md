@@ -150,3 +150,6 @@ The owner original Windows 8820 in-place six-file R108 Wave1 installation is now
 
 ## Mandatory R108 progress — Wave2 source completed, owner rollout pending (24 Nov 2026)
 Async case-context correctness, plain-language state and technical disclosure, first-viewport task hierarchy, clear next actions, pilot truthfulness and subscription relocation implemented at source SHA 63ee3c30d5846ef3b28dee8b8ee8239a97ba417b. All four GitHub CI workflows passed; Windows fixture rollback passed. Owner original Windows Wave2 not yet run. Wave3 specialist and React workspace bodies and role-based representative planner use remain mandatory, not waived by Wave2 source acceptance.
+
+## Wave2 original Windows deployment acceptance update (24 Nov 2026)
+The guarded Wave2 six-file cutover has now been explicitly executed by the owner on original Windows localhost8820. Preflight and -Apply verified all six source matches, PHP PID 5704 preserved, login/CSRF PASS, anonymous R106 endpoints HTTP401, live static-asset SHA PASS, .env/SQLite/APP_KEY/launcher unchanged. Original UX browser acceptance remains pending, and entire R108 mandatory product-wide Wave3 beyond the first two waves remains OPEN. Do not install Wave2 again. See CD-20261124-10O and PI_R108_WAVE2_IMPLEMENTATION_AND_ACCEPTANCE_20261124.md.

@@ -29,3 +29,19 @@ Owner browser after cutover must demonstrate: selected context now reads wilayah
 
 ## Mandate continues to R108 Wave3
 Whole product still needs redesign inside compiled React workspace, specialist regulatory views, fiscal/monitoring and reviewer workbenches; role-based end-to-end planner task acceptance and return context. No fabricated multi-case portfolio, RKA/DPA/realisasi data or instant legal approval. Fiscal numeric admission ZERO, production DENIED; PR #78 Draft.
+
+## Owner original Windows Wave 2 source cutover — PASS (24 Nov 2026)
+
+Owner provided actual R108_W2 read-only preflight and explicit -Apply PowerShell transcript. QA source pinned to 63ee3c30d5846ef3b28dee8b8ee8239a97ba417b; all six original UI files matched the accepted Wave1 baseline. Preflight PI_R108_W2_READ_ONLY_PREFLIGHT=PASS, allowlist 6, changes 6.
+
+Actual original port8820 -Apply reported:
+- PI_R108_W2_ORIGINAL_PHP_PID_PRESERVED=5704
+- PI_R108_W2_ORIGINAL_LOGIN_CSRF=PASS
+- PI_R108_W2_ANONYMOUS_R106_API_AND_PDF=401
+- PI_R108_W2_LIVE_HTML_JS_CSS_SHA=PASS
+- PI_R108_W2_BACKUP=D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111\backups\R108_WAVE2_PLANNER_20261124-192901-110-ca03b47e
+- PI_R108_W2_CODE_CUTOVER=APPLIED_VERIFIED
+- PI_R108_W2_SQLITE_ENV_APPKEY_LAUNCHER=UNCHANGED
+- PI_R108_W2_NUMERIC_REVIEW_PRODUCTION_ADMISSION=DENIED
+
+**R108_WAVE2_ORIGINAL_SOURCE_CUTOVER=OWNER_PASS.** This is verified deployment of the six UI source assets only, not visual end-user acceptance. No repeat Apply is necessary. Pending original owner browser checks: refresh home and inspect one-pilot label; on case Ringkasan confirm selected region/year/topic/case context updates after server data; check status readable but raw IDs in optional "Lihat jejak bukti teknis"; test "Muat kasus" filter action; Anggaran still renders candidate six accounts and both previously approved PDF links; 390px no overflow. Do not claim the two original PDF viewers were reopened after Wave2 based only on the original Windows PHP source SHA. Keep backup; legal source signature review, future Perwal revisions, RKA/DPA/realisasi, reviewer and production approval remain pending/denied.
