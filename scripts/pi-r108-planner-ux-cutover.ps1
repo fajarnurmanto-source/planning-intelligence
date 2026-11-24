@@ -42,7 +42,7 @@ $prefix=$root+[IO.Path]::DirectorySeparatorChar
 $replace=@('public\pi-ia-r69e.js','public\pi-ia-r69e.css','public\index.html','public\development-case-r85.html')
 $add=@('public\planner-workflow-r108.js','public\planner-workflow-r108.css')
 $allow=@($replace)+@($add)
-if($allow.Count -ne 6 -or @($allow|Select-Object -Unique).Count -ne 11){
+if($allow.Count -ne 6 -or @($allow|Select-Object -Unique).Count -ne 6){
  throw 'PI_R108_EXACT_SIX_FILE_MANIFEST_REQUIRED'
 }
 $protected=@(
