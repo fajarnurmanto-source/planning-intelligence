@@ -147,3 +147,6 @@ First-wave task-first navigation, home job cards and six task case views have be
 ## Owner Wave1 source cutover status update — 24 November 2026
 
 The owner original Windows 8820 in-place six-file R108 Wave1 installation is now ACCEPTED from observed preflight and -Apply PowerShell transcript, using source a1837a3c5b3c22e0f8cb0631800d1f0140bba18b and preserving original PHP PID 5704, login/CSRF, R106 anonymous 401 and unchanged DB, APP_KEY and launcher. Browser task usability and R106 post-cutover manual regression are still pending; whole-product R108 work and specialist/React screen redesign remain in progress. See PI_R108_WAVE1_IMPLEMENTATION_AND_ACCEPTANCE_20261124.md, milestone CD-20261124-10L.
+
+## Mandatory R108 progress — Wave2 source completed, owner rollout pending (24 Nov 2026)
+Async case-context correctness, plain-language state and technical disclosure, first-viewport task hierarchy, clear next actions, pilot truthfulness and subscription relocation implemented at source SHA 63ee3c30d5846ef3b28dee8b8ee8239a97ba417b. All four GitHub CI workflows passed; Windows fixture rollback passed. Owner original Windows Wave2 not yet run. Wave3 specialist and React workspace bodies and role-based representative planner use remain mandatory, not waived by Wave2 source acceptance.

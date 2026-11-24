@@ -30,3 +30,6 @@ P2 — SPECIALIST CONTENT. Shared sidebar labels changed, but compiled React wor
 - Avoid duplication and provide honest pilot scope; preserve existing R106 six rows and signed-in PDF links, R84 review/entitlements, APP_KEY and DB.
 - Test entry from an issue, known subactivity code, APBD document and a planning mismatch; distinguish absent data from 0.
 - No new runtime/launcher, no destructive migrations, no blanket approval. All fiscal/reviewer/production gates remain closed. PR #78 draft.
+
+## Wave2 source progress on screenshot findings (24 Nov 2026)
+The stale context shown despite selected filters is now addressed with an authenticated R85 data-loader completion signal, consumed by R108. Original enum status meanings are displayed in plain Indonesian without changing backend gates; technical codes are in optional detail. Home and case hero compacted, one next action, pilot scope explicit, subscription moved to settings. Source SHA 63ee3c30d5846ef3b28dee8b8ee8239a97ba417b, 4/4 CI green. Still SOURCE ONLY, NOT deployed to owner original Windows; exact test and rollout details in PI_R108_WAVE2_IMPLEMENTATION_AND_ACCEPTANCE_20261124.md. Whole-product UX remains open.
