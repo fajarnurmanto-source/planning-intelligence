@@ -16,3 +16,12 @@ Auth + tenant guarded opt-in GET /api/qa-superior-r106/annex-fiscal-review and /
 CI tests synthetic fixtures and negative cases. Review: visual page checks, complete signatures and legal identity, BPK/JDIH originating version equivalence, Perwal 13/15, RKA/DPA/realization and reviewer decision still pending. 2027 ABSTAIN; numeric admission 0, production DENIED. Never install unreviewed source into original Windows 8820.
 
 Page-accurate R106 correction: direct visual inspection of the two uploaded PDFs confirmed that the six base ledger lines cross the source PDF page boundary. The first FOUR accounts appear on Perwal74 PDF p384/printed335, and the final TWO on PDF p385/printed336. All SIX third-amendment lines appear on Perwal12 PDF p561/printed520. R106 now preserves form-feed delimiters in the exact source text and emits source page numbers per account, avoiding the earlier incorrect assumption that all base leaf rows were on PDF p384. Visual observation here is evidence for the QA case only; not an authenticated legal issuer signature or final fiscal approval.
+
+
+## CI acceptance and page-locator correction
+
+Source QA pinned to 2a6f5ca39003cd53c80872860086de04330abb2b. All four GitHub Actions success: R88 workflow 45337208008, R74 45337208020, R73 45337208025, Windows single-runtime safety 45337208005. R88 PHP targeted suite 56 tests/644 assertions passed; isolated authenticated HTTP and Chrome 390px passed; R106 CLI refuses unknown/mutating flag.
+
+Actual attached original SHA-verified PDF analysis: Perwal74 first four account lines on PDF p384, two final leaf accounts on p385; Perwal12 all six on PDF p561. CI initially surfaced a deliberate synthetic page-boundary test failure; source was repaired to preserve form feed and account-level PDF page provenance and all tests now pass. Does NOT imply issuer identity authentication, legal signature, newer budget reconciliation or fiscal value admission.
+
+Next: owner run same R106 QA PHP CLI against preexisting R104 quarantine in a clean pinned QA worktree; that is separate from code-only CI. No original app 8820 deployment or R84 reviewer approval occurred.
