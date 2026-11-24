@@ -21,7 +21,19 @@ jobs:
           node-version: '22'
       - run: mkdir -p laravel/bootstrap/cache laravel/storage/framework/{cache,sessions,views} laravel/storage/logs
       - run: composer install --working-dir=laravel --prefer-dist --no-interaction --no-progress
-      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest|R100OfficialSourceMetadataTest|R102PrimaryPdfCandidateIntakeTest|R103BpkMirrorAndFiscalEvidenceTest|R105BpkQuarantineReadOnlyReviewTest'
+      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest|R100OfficialSourceMetadataTest|R102PrimaryPdfCandidateIntakeTest|R103BpkMirrorAndFiscalEvidenceTest|R105BpkQuarantineReadOnlyReviewTest|R106NativePdfAnnexIntelligenceTest'
+
+      - name: R106 read-only source CLI syntax and write flag refusal
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l scripts/pi-r106-native-annex-review.php
+          php -l laravel/app/Services/Pi/Development/NativePdfAnnexIntelligence.php
+          if php scripts/pi-r106-native-annex-review.php --commit > "$RUNNER_TEMP/r106-refuse.txt" 2>&1; then
+            echo PI_R106_CLI_WRITING_FLAG_ACCEPTED >&2; exit 3
+          fi
+          grep -Fxq PI_R106_UNKNOWN_PARAMETER_HOLD "$RUNNER_TEMP/r106-refuse.txt"
+          echo PI_R106_CI_NO_WRITE_FLAG=PASS
 
       - name: R105 read-only QA CLI refuses mutation flag
         shell: bash

@@ -10,12 +10,14 @@
   <link rel="stylesheet" href="./development-case-r85.css">
   <link rel="stylesheet" href="./regulatory-lifecycle-r86.css">
   <link rel="stylesheet" href="./official-sources-r100.css">
+  <link rel="stylesheet" href="./native-annex-r106.css">
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./development-case-r85.js"></script>
   <script defer src="./regulatory-lifecycle-r86.js"></script>
   <script defer src="./regulatory-planning-r88.js"></script>
   <script defer src="./official-sources-r100.js"></script>
+  <script defer src="./native-annex-r106.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -134,6 +136,25 @@
           <button id="r100-more" class="r100-more" type="button" hidden>Lihat semua sumber</button>
           <div id="r100-gaps" class="r100-gaps"><strong>Celah bukti belum diperiksa</strong></div>
           <p class="r100-guard">R100 hanya mengindeks metadata yang ditemukan pada JDIH. Keterkaitan dengan subkegiatan .0004, keabsahan ketentuan, versi perubahan APBD, angka keluaran dan kesetaraan 2026–2027 tetap memerlukan naskah, lampiran, hash, dan review manusia. Tidak ada pemanggilan API cloud atau pengambilan berkas otomatis.</p>
+        </section>
+        <section class="panel r106-panel" id="r106-annex-review" aria-labelledby="r106-title">
+          <div class="panel-heading"><div><span class="section-number">06 · R106 · LAMPIRAN PDF ASLI</span>
+            <h2 id="r106-title">Pemeriksaan lampiran APBD secara lokal</h2>
+            <p class="r106-warning">PI memeriksa dua berkas PDF terverifikasi SHA-256 dan memulihkan kode rekening yang terpotong pada subkegiatan 2.11.11.2.01.0004. Bukti ini belum menjadi keputusan fiskal atau hukum.</p>
+          </div></div>
+          <div class="r106-actions">
+            <button type="button" id="r106-run" class="primary-btn">Periksa lampiran dari arsip lokal</button>
+            <p id="r106-status" role="status" aria-live="polite">Memerlukan R105 dan aktivasi R106 read-only.</p>
+          </div>
+          <p id="r106-summary" aria-live="polite"></p>
+          <div id="r106-source-links" class="r106-links" aria-label="Lihat halaman PDF sumber"></div>
+          <div class="r106-table-wrap">
+            <table aria-label="Perbandingan enam rekening">
+              <thead><tr><th>Kode rekening lengkap</th><th>Perwal 74/2025</th><th>Perwal 12/2026</th><th>Selisih</th><th>Status</th></tr></thead>
+              <tbody id="r106-rows"></tbody>
+            </table>
+          </div>
+          <p class="r106-warning">Lampiran, keaslian naskah, Perwal 13/15 tahun 2026, RKA/DPA dan realisasi masih memerlukan review. Penerimaan angka dan produksi tetap ditolak.</p>
         </section>
         <footer class="page-footer">Planning Intelligence · PI Superior R85<span>Kota Yogyakarta 2026 · Bukti publik dan QA lokal; keputusan manusia tetap wajib.</span></footer>
       </div>
