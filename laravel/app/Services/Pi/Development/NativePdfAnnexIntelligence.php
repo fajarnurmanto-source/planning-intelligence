@@ -57,6 +57,8 @@ final class NativePdfAnnexIntelligence
         if (preg_match('/\bSub\s*Kegiatan\s*:\s*\d+(?:\.\d+){4}\b/u', $selected, $match, PREG_OFFSET_CAPTURE, $startLineEnd + 1)) {
             $selected = substr($selected, 0, $match[0][1]);
         }
+        // Preserve page boundaries, but make new-page account starts addressable by ^ in multiline regex.
+        $selected = str_replace("\f", "\f\n", $selected);
         $rows = $amendment ? $this->splitAccountRows($selected, $pageIndex + 1) : $this->baseAccountRows($selected, $pageIndex + 1);
         if (count($rows) !== 6) { throw new RuntimeException('PI_R106_SIX_LEAF_ACCOUNTS_NOT_RESOLVED_HOLD'); }
         preg_match('/\bHalaman\s+(\d+)\b/u', $pages[$pageIndex], $printed);
