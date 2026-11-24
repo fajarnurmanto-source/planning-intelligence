@@ -24,6 +24,8 @@ on:
       - 'scripts/pi-r104-owner-bpk-two-pdf-intake.ps1'
       - 'scripts/pi-r107-one-origin-native-annex-cutover.ps1'
       - 'scripts/pi-r107-ci-windows-fixture.ps1'
+      - 'scripts/pi-r108-planner-ux-cutover.ps1'
+      - 'scripts/pi-r108-ci-windows-fixture.ps1'
       - 'scripts/pi-r106-windows-extractor-recovery.ps1'
       - 'laravel/resources/pi/official-source-metadata-r100.json'
       - 'laravel/public/official-sources-r100.js'
@@ -1615,3 +1617,8 @@ jobs:
         run: |
           & .\scripts\pi-r107-ci-windows-fixture.ps1
           if($LASTEXITCODE -ne 0){throw 'PI_R107_WINDOWS_FIXTURE_FAILURE'}
+      - name: R108 guarded planner-first UX six-file Windows cutover, rollback and drift prevention
+        shell: powershell
+        run: |
+          & .\scripts\pi-r108-ci-windows-fixture.ps1
+          if($LASTEXITCODE -ne 0){throw 'PI_R108_WINDOWS_FIXTURE_FAILURE'}
