@@ -18,3 +18,24 @@ R107 genuine Windows PowerShell5.1 CI fixture used an isolated synthetic R100 or
 - PI_R107_WINDOWS_UNKNOWN_LOCAL_DRIFT=HOLD_NO_OVERWRITE
 
 The owner original 8820 Windows app R107 preflight and Apply have NOT been run. Actual authenticated R106 UI/API/PDF viewer must still be accepted on the original session. If any original shared file differs from R100 and from the exact R107 candidate, stop and reconcile drift separately. The read-only native PDF feature activates only if the owner R104 quarantine exists under the active PHP process Windows profile and R105 passes; no .env, DB, APP_KEY, launcher or reviewer changes. Production/fiscal admission still DENIED.
+
+## Owner original single-runtime Windows Apply PASS — 24 November 2026
+
+The owner provided complete post-command PowerShell output for R107 original source cutover. GitHub tested source pinned at 1f0620fbf0c2571a6b8aa13fe5a719c0ca8da24b. Three original files matched canonical R100 baseline: config/pi.php, routes/web.php and public/development-case-r85.html. Exactly 11 allowable Laravel files: 3 replacements and 8 new R105/R106 service/controller/asset/resource files. Default dry-run PI_R107_READ_ONLY_PREFLIGHT=PASS.
+
+The explicit -Apply operation reported:
+- PI_R107_ORIGINAL_PHP_PID_PRESERVED=5704
+- PI_R107_ORIGINAL_LOGIN_CSRF=PASS
+- PI_R107_ANONYMOUS_R106_API_AND_PDF=401
+- PI_R107_LIVE_HTML_JS_CSS_SHA=PASS
+- PI_R107_BACKUP=D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111\backups\R107_NATIVE_ANNEX_20261124-153454-794-fe294548
+- PI_R107_CODE_CUTOVER=APPLIED_VERIFIED
+- PI_R107_SQLITE_ENV_APPKEY_LAUNCHER=UNCHANGED
+- PI_R107_NUMERIC_REVIEW_PRODUCTION_ADMISSION=DENIED.
+
+**R107_ORIGINAL_WINDOWS_SOURCE_CUTOVER=OWNER_PASS.** Existing original server PID, login/CSRF and anonymous auth gate have passed. No need to rerun the R107 installer. No new server, launcher, DB migration or API-model spend. Keep the backup folder.
+
+**Next independent gate, not yet observed:** owner browser, authenticated to original http://127.0.0.1:8820/development-case-r85.html, click "Periksa lampiran dari arsip lokal" and confirm 6 exact account rows and 1,020,366,250 candidate sum, and test BOTH source PDF page links. An authenticated 503 means the original PHP user's LOCALAPPDATA isolation / R104 quarantine visibility or R105 gate requires diagnosis; do not disable auth, invent receipt approval or change original env without review.
+
+**Human review and fiscal gates remain:** legal identity and origin, annex completeness, later amendments 13/15/2026, RKA/DPA/realisasi, and R84 reviewer decisions still required. Candidate numeric admission zero, production admission denied. PR #78 remains DRAFT.
+
