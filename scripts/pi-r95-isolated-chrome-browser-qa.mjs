@@ -133,6 +133,41 @@ try{
   assert.equal(loaded.r88NeedsClick,true)
   console.log('PI_R95_CHROME_R85_R86_AUTHENTICATED_RENDER=PASS')
 
+  // R108: actual browser navigation confirms progressive disclosure and
+  // task labels while all legacy evidence DOM remains mounted for audit.
+  const ux=await evalPage("({"+
+    "tabs:document.querySelectorAll('.pi-r108-tab').length,"+
+    "title:document.querySelector('#pi-r108-workflow-title')?.textContent,"+
+    "current:document.querySelector('.pi-r108-tab[aria-current=page]')?.dataset.view,"+
+    "annexHidden:document.querySelector('#r106-annex-review')?.hidden,"+
+    "regulatoryHidden:document.querySelector('#r86-lifecycle')?.hidden,"+
+    "menu:Array.from(document.querySelectorAll('.pi-app-group-name')).map(e=>e.textContent)"+
+    "})")
+  assert.equal(ux.tabs,6,'PI_R108_SIX_WORK_STAGES_MISSING')
+  assert.match(ux.title,/ingin Anda periksa/i)
+  assert.equal(ux.current,'ringkasan')
+  assert.equal(ux.annexHidden,true)
+  assert.equal(ux.regulatoryHidden,true)
+  assert.ok(ux.menu.includes('Telaah perencanaan'))
+  assert.ok(ux.menu.includes('Anggaran dan pendanaan'))
+  await evalPage("location.hash='pi-view=anggaran'")
+  await until("document.querySelector('#r106-annex-review')?.hidden === false",'R108_ANNEX_SELECTED')
+  const fiscal=await evalPage("({"+
+    "code:document.querySelector('#r106-run')?.textContent,"+
+    "current:document.querySelector('.pi-r108-tab[aria-current=page]')?.dataset.view,"+
+    "other:document.querySelector('#r86-lifecycle')?.hidden"+
+    "})")
+  assert.match(fiscal.code,/Periksa lampiran/)
+  assert.equal(fiscal.current,'anggaran')
+  assert.equal(fiscal.other,true)
+  await evalPage("location.hash='pi-view=dokumen'")
+  await until("document.querySelector('#r100-official-sources')?.hidden === false",'R108_DOCUMENT_SELECTED')
+  assert.equal(await evalPage("document.querySelector('#r106-annex-review')?.hidden"),true)
+  await evalPage("location.hash='pi-view=ringkasan'")
+  await until("document.querySelector('#r85-questions')?.closest('section.panel')?.hidden === false",'R108_SUMMARY_SELECTED')
+  console.log('PI_R108_CHROME_PLANNER_WORKFLOW_NAVIGATION=PASS')
+
+
   await evalPage("document.querySelector('#r88-controls').requestSubmit()")
   await until("document.querySelector('#r88-status')?.textContent?.includes('Jejak tersedia')","R88_CROSSWALK")
   const crosswalk=await evalPage("({"+
