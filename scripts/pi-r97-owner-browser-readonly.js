@@ -116,10 +116,38 @@
       check(docWidth <= viewport+3 && bodyWidth <= viewport+3 &&
         visual <= viewport+3,
         'MOBILE_390_HORIZONTAL_OVERFLOW_'+docWidth+'_'+viewport)
-      for (const id of ['r85-filters','r86-lifecycle',
-        'r88-crosswalk','r89-panel']) {
-        check(element(id).getBoundingClientRect().width > 0,
-          'MOBILE_SECTION_NOT_VISIBLE_'+id)
+      const r108 = document.querySelector('.pi-r108-tabs')
+      if (r108) {
+        // R108 intentionally shows ONE stage at a time. Inspect every
+        // relevant stage rather than demand all four be visible together.
+        const beforeHash = location.hash
+        try {
+          const stages = [
+            ['ringkasan','r85-filters'],
+            ['kewenangan','r86-lifecycle'],
+            ['rencana','r88-crosswalk'],
+            ['rencana','r89-panel'],
+            ['anggaran','r106-annex-review'],
+            ['dokumen','r100-official-sources'],
+          ]
+          for (const [view,id] of stages) {
+            location.hash='pi-view='+view
+            await wait(() => element(id).getBoundingClientRect().width>0,
+              'R108_STAGE_NOT_VISIBLE_'+id)
+            check(document.documentElement.scrollWidth<=viewport+3,
+              'R108_STAGE_HORIZONTAL_OVERFLOW_'+view)
+          }
+        } finally {
+          location.hash=beforeHash||'#pi-view=ringkasan'
+        }
+        info(prefix+'R108_PLANNER_STAGE_NAVIGATION=PASS')
+      } else {
+        // Prior source releases retain the older all-sections-visible UI.
+        for (const id of ['r85-filters','r86-lifecycle',
+          'r88-crosswalk','r89-panel']) {
+          check(element(id).getBoundingClientRect().width > 0,
+            'MOBILE_SECTION_NOT_VISIBLE_'+id)
+        }
       }
       info(prefix+'EDGE_MOBILE_390_NO_OVERFLOW=PASS')
     } else {
