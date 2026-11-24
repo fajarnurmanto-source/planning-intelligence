@@ -1,0 +1,5 @@
+# R108 Wave 3B — Regulatory task-oriented first increment
+
+Owner reports 7/7 Wave 3A original 8820 functional acceptance on 24 Nov 2026: document tab, evidence group, official catalogue, budget tab, six accounts, both PDF links. Owner-reported, not independently observed. No reinstall. Fiscal admission ZERO; production DENIED.
+
+Wave 3B candidate: one existing HTML file regulatory-laravel-r70g.html, planner-facing headings, bounded review context, three native disclosure groups (initially open to preserve legacy visible controls), collapsed technical diagnostics. All existing IDs and script/style references checked unchanged by source transformation. No backend, DB, auth, launcher, bundle or API changes. No production deployment. Browser/CI pending; further compact default and deep-link acceptance required before original cutover. Full specialist/React UX remains open.
