@@ -38,7 +38,10 @@ final class FullDocumentInventory
                 if (!$process->isSuccessful()) { continue; }
                 $result = $this->inventory($body, $expectedPages);
                 if ($layout) { $result['layout_candidates'] = (new DocumentLayoutReconstructor)->reconstruct($body, $expectedPages); }
-                if ($multilineAmendment !== null) { $result['multiline_fiscal'] = (new MultilineFiscalTableReconstructor)->reconstruct($body, $expectedPages, $multilineAmendment); }
+                if ($multilineAmendment !== null) {
+                    $result['multiline_fiscal'] = (new MultilineFiscalTableReconstructor)->reconstruct($body, $expectedPages, $multilineAmendment);
+                    $result['fiscal_context'] = (new FiscalOrganizationContext)->resolve($body, $result['multiline_fiscal']);
+                }
                 if (strtoupper((string)hash_file('sha256', $file)) !== $sha) {
                     throw new RuntimeException('PI_RDI_SOURCE_DRIFT');
                 }
