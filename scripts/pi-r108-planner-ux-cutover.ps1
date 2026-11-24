@@ -83,7 +83,7 @@ function Read-GitUtf8([string]$relative){
  $psi.RedirectStandardOutput=$true
  $psi.CreateNoWindow=$true
  $p=[Diagnostics.Process]::Start($psi)
- if($null -eq $p){throw 'PI_R108_BASELINE_PROCESS_MISSING'}
+ if($null -eq $p){throw 'PI_R108_R107_BASELINE_PROCESS_MISSING'}
  $m=New-Object IO.MemoryStream
  try{
   $p.StandardOutput.BaseStream.CopyTo($m)
@@ -142,12 +142,12 @@ foreach($rel in $allow){
  $oldHash=if($exists){(Get-FileHash -LiteralPath $dst -Algorithm SHA256).Hash}else{$null}
  $newHash=(Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash
  if($replace -contains $rel){
-  if(-not $exists){throw ('PI_R108_R100_REPLACEMENT_MISSING='+$rel)}
+  if(-not $exists){throw ('PI_R108_R107_BASELINE_REPLACEMENT_MISSING='+$rel)}
   $actual=Normalize ([IO.File]::ReadAllText($dst,[Text.UTF8Encoding]::new($false,$true)))
   $base=Normalize (Read-GitUtf8 $rel)
   $candidate=Normalize ([IO.File]::ReadAllText($src,[Text.UTF8Encoding]::new($false,$true)))
   if($actual -cne $base -and $actual -cne $candidate){
-   throw ('PI_R108_R100_SOURCE_DRIFT_HOLD='+$rel)
+   throw ('PI_R108_R107_BASELINE_SOURCE_DRIFT_HOLD='+$rel)
   }
   Write-Output ('PI_R108_R107_BASELINE_VERIFIED='+$rel)
  }elseif($exists -and $oldHash -cne $newHash){

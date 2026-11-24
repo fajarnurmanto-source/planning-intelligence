@@ -63,7 +63,7 @@ $before=@{}
 foreach($rel in @($replace)+@($guard)){
  $before[$rel]=(Get-FileHash -LiteralPath (Join-Path $root $rel) -Algorithm SHA256).Hash
 }
-$script=Join-Path $PSScriptRoot 'pi-r108-one-origin-native-annex-cutover.ps1'
+$script=Join-Path $PSScriptRoot 'pi-r108-planner-ux-cutover.ps1'
 $tokens=$null
 $errors=$null
 [Management.Automation.Language.Parser]::ParseFile($script,[ref]$tokens,[ref]$errors)|Out-Null
@@ -125,7 +125,7 @@ $target=Join-Path $root 'public\index.html'
 $driftSha=(Get-FileHash $target -Algorithm SHA256).Hash
 $reason=''
 try{& $script @argsFixed -Apply|Out-Null}catch{$reason=[string]$_.Exception.Message}
-if($reason -notmatch 'PI_R108_R100_SOURCE_DRIFT_HOLD' -or
+if($reason -notmatch 'PI_R108_R107_BASELINE_SOURCE_DRIFT_HOLD' -or
    (Get-FileHash $target -Algorithm SHA256).Hash -cne $driftSha){
  throw 'PI_R108_CI_UNREVIEWED_DRIFT_NOT_REJECTED'
 }
