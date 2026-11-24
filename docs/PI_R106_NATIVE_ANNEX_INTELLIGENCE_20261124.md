@@ -30,3 +30,9 @@ Next: owner run same R106 QA PHP CLI against preexisting R104 quarantine in a cl
 ## Owner R106 blocked extraction and recovery
 
 Owner Windows attempt from QA pin 2a6f5ca39003cd53c80872860086de04330abb2b produced PI_R106_PDFTOTEXT_UNAVAILABLE_OR_TEXT_LAYER_ABSTAIN then PI_R106_REVIEW_HOLD. This does NOT supersede R105 SHA acceptance. New R106 owner-side recovery feature at SHA ce769eb943b11670440c9a737782b11d2992b940 makes PDF engine discovery robust and diagnostics actionable, with a Windows PowerShell 5.1 script for optional explicit WinGet Poppler installation. Four CI workflows at SHA all green, R88 60 tests/654 assertions PASS. The actual owner rerun remains pending. No file or original runtime modification and no budget admission.
+
+
+## 2026-11-24 owner-local source acceptance milestone
+
+Owner Windows R106 at ce769eb943b11670440c9a737782b11d2992b940: Poppler v26.09.0-0 installed with explicit owner-approved WinGet repair after native PATH and existing WSL distros did not provide executable; then exact R104/R105 quarantined PDFs passed R105 gate, six complete leaf accounts reconstructed and reconciled (base PDF page384, change3 PDF page561, exact derived six-line candidate Rp1,020,366,250), PI_R106_NATIVE_TEXT_LAYER_RECONCILIATION=PASS_CANDIDATE_ONLY and PI_R106_OWNER_QA=PASS. Full owner output documented in PI_R106_WINDOWS_EXTRACTOR_RECOVERY_20261124.md. This is local QA PDF extraction acceptance ONLY. Original PI 8820 code, auth, database, shortcut and in-app R106 screen remain UNTOUCHED / NOT DEPLOYED; later legal and fiscal evidence review not completed. Numeric admission zero, production admission denied.
+
