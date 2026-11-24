@@ -51,3 +51,6 @@
  .pi-r108-home .content-wrap,.pi-r108-case .content-wrap{padding:12px}
  .pi-r108-case #r85-filters{padding:12px}
 }
+
+/* The HTML hidden attribute MUST win over authored display:flex declarations. */
+.pi-r108-next-step[hidden],.pi-r108-hero-extras[hidden]{display:none!important}

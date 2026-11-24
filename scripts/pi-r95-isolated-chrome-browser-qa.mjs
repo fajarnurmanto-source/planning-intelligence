@@ -167,6 +167,31 @@ try{
   await until("document.querySelector('#r85-questions')?.closest('section.panel')?.hidden === false",'R108_SUMMARY_SELECTED')
   console.log('PI_R108_CHROME_PLANNER_WORKFLOW_NAVIGATION=PASS')
 
+  // R108 Wave2: live async case context, form reload, and semantic
+  // status presentation, without changing any authority decisions.
+  await until("document.querySelector('.pi-r108-context')?.textContent?.includes('Tahun: 2026')",'R108_W2_CONTEXT_ASYNC')
+  const plannerStatus=await evalPage("({"+
+    "context:document.querySelector('.pi-r108-context')?.textContent,"+
+    "banner:document.querySelector('#r85-case-status')?.textContent,"+
+    "guards:document.querySelector('#r85-guards')?.textContent,"+
+    "badges:Array.from(document.querySelectorAll('#r85-questions .r85-status')).map(x=>x.textContent),"+
+    "raw:document.querySelector('#r85-questions details code')?.textContent"+
+    "})")
+  assert.match(plannerStatus.context,/Wilayah: ID-DIY-YOG/)
+  assert.match(plannerStatus.context,/Tahun: 2026/)
+  assert.match(plannerStatus.context,/Topik: Persampahan/)
+  assert.match(plannerStatus.banner,/Siap ditelaah|Perlu pemeriksaan/)
+  assert.match(plannerStatus.guards,/Belum dinilai/)
+  assert.match(plannerStatus.guards,/Tidak diizinkan/)
+  assert.ok(plannerStatus.badges.every(x=>!x.includes('_')),'R108_UI_BADGE_ENUM_LEAK')
+  assert.match(plannerStatus.raw,/Relasi:/)
+  await evalPage("document.querySelector('#r85-year').dispatchEvent(new Event('change',{bubbles:true}))")
+  await until("document.querySelector('.pi-r108-context')?.textContent?.includes('Pilihan diubah')",'R108_W2_CONTEXT_CHANGED')
+  await evalPage("document.querySelector('#r85-filters').requestSubmit()")
+  await until("document.querySelector('.pi-r108-context')?.textContent?.includes('Tahun: 2026')",'R108_W2_CONTEXT_RELOADED')
+  console.log('PI_R108_W2_OWNER_CASE_CONTEXT_AND_PLAIN_STATUS=PASS')
+
+
 
   await evalPage("document.querySelector('#r88-controls').requestSubmit()")
   await until("document.querySelector('#r88-status')?.textContent?.includes('Jejak tersedia')","R88_CROSSWALK")
