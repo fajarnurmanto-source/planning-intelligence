@@ -34,3 +34,19 @@ Browser owner acceptance: open existing localhost8820 index.html, inspect task c
 
 ## Remaining mandatory R108 work
 Complete all route/screen ownership and vocabulary mapping (especially React workspace), revise lengthy regulatory and specialist body screens, support nonlinear return context and multiple planner-role user journeys, make exact-source row navigation and accessible keyboard/browser paths, run in-person usability acceptance, and guard another original release. These are NOT marked done by first-wave code. PR #78 remains DRAFT; legal/financial/production admission remains DENIED.
+
+## Owner Windows original runtime source cutover ACCEPTED — 24 Nov 2026
+
+The owner supplied the complete PI_R108 PowerShell transcript showing a successful guarded **real original single-Laravel port 8820** R108 Wave1 six-file source cutover, not merely GitHub fixture tests. QA pin a1837a3c5b3c22e0f8cb0631800d1f0140bba18b, clean worktree, R107 baseline for all four replacement files, exactly six allowed changes, preflight PASS.
+
+The explicit -Apply returned:
+- PI_R108_ORIGINAL_PHP_PID_PRESERVED=5704
+- PI_R108_ORIGINAL_LOGIN_CSRF=PASS
+- PI_R108_ANONYMOUS_R106_API_AND_PDF=401
+- PI_R108_LIVE_HTML_JS_CSS_SHA=PASS
+- PI_R108_BACKUP=D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111\backups\R108_PLANNER_UX_20261124-181012-187-04b429ae
+- PI_R108_CODE_CUTOVER=APPLIED_VERIFIED
+- PI_R108_SQLITE_ENV_APPKEY_LAUNCHER=UNCHANGED
+- PI_R108_NUMERIC_REVIEW_PRODUCTION_ADMISSION=DENIED.
+
+**R108_WAVE1_ORIGINAL_SOURCE_CUTOVER=OWNER_PASS. No reinstallation necessary.** Full system acceptance remains separate: the user has not yet supplied actual browser screenshots/results demonstrating the task-first home, six workflow views, retained ability to run R106 and open both protected PDFs after this cutover, or meaningful usability improvements perceived by a planner. Preserve the R107/R108 backups. All R84/R105/R106 legal, reviewer and fiscal gates remain as before, numeric admission zero, production denied; PR #78 remains DRAFT. Further product-wide R108 phases not closed by this successful Wave1 cutover.

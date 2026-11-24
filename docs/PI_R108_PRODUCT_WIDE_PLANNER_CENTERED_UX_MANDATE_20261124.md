@@ -143,3 +143,7 @@ This mandate does NOT by itself implement all planner workflows, acquire missing
 ## First-wave actual code progress (24 November 2026)
 
 First-wave task-first navigation, home job cards and six task case views have been built and tested at SHA a1837a3c5b3c22e0f8cb0631800d1f0140bba18b (4/4 CI green). Windows code-only preflight and rollback fixture passed. The owner Windows original 8820 R108 change and user acceptance are not yet done. This does not close the whole-product UX mandate; especially compiled React workspace and legacy specialist page bodies require separate redesign.
+
+## Owner Wave1 source cutover status update — 24 November 2026
+
+The owner original Windows 8820 in-place six-file R108 Wave1 installation is now ACCEPTED from observed preflight and -Apply PowerShell transcript, using source a1837a3c5b3c22e0f8cb0631800d1f0140bba18b and preserving original PHP PID 5704, login/CSRF, R106 anonymous 401 and unchanged DB, APP_KEY and launcher. Browser task usability and R106 post-cutover manual regression are still pending; whole-product R108 work and specialist/React screen redesign remain in progress. See PI_R108_WAVE1_IMPLEMENTATION_AND_ACCEPTANCE_20261124.md, milestone CD-20261124-10L.
