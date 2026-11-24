@@ -2,7 +2,11 @@
 declare(strict_types=1);
 // Read-only local corpus inventory; output JSON to stdout, no admission or DB.
 $base=dirname(__DIR__);
-require $base.'/laravel/vendor/autoload.php';
+$autoload=getenv('PI_RDI_COMPOSER_AUTOLOAD') ?: $base.'/laravel/vendor/autoload.php';
+if(!is_file($autoload)){fwrite(STDERR,"PI_RDI_COMPOSER_AUTOLOAD_MISSING\n");exit(2);}
+require $autoload;
+// Candidate classes must be loaded from this checkout, not original runtime.
+foreach(['Development/NativePdfAnnexIntelligence','Development/BpkQuarantineReadOnlyReview','Development/FullDocumentInventory','Regulatory/R82NationalSourceVerifier'] as $class){require_once $base.'/laravel/app/Services/Pi/'.$class.'.php';}
 use App\Services\Pi\Development\FullDocumentInventory;
 use App\Services\Pi\Development\BpkQuarantineReadOnlyReview;
 use App\Services\Pi\Regulatory\R82NationalSourceVerifier;

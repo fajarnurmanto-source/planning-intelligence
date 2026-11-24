@@ -20,26 +20,45 @@ for(const executable of ['google-chrome','google-chrome-stable','chromium','chro
   if(result.status===0){chrome=result.stdout.trim();break}
 }
 assert.ok(chrome,'PI_R95_CHROME_NOT_INSTALLED_ON_RUNNER')
-const profile=mkdtempSync(join(process.env.RUNNER_TEMP,'pi-r95-cdp-'))
-const spawned=spawn(chrome,[
+let profile,spawned,port
+async function startChrome(){
+ for(let attempt=1;attempt<=2;attempt++){
+  profile=mkdtempSync(join(process.env.RUNNER_TEMP,'pi-r95-cdp-'))
+  let stderr=''
+  let spawnError=false
+  spawned=spawn(chrome,[
   '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
   '--no-first-run','--disable-background-networking','--disable-extensions',
   '--remote-allow-origins=*','--remote-debugging-port=0',
   '--user-data-dir='+profile,'--window-size=1440,900','about:blank',
-],{stdio:'ignore'})
+],{stdio:['ignore','ignore','pipe']})
+  spawned.on('error',()=>{spawnError=true})
+  spawned.stderr.on('data',chunk=>{stderr=(stderr+chunk.toString()).slice(-4000)})
+  for(let i=0;i<150;i++){
+    if(spawnError||spawned.exitCode!==null)break
+    const file=join(profile,'DevToolsActivePort')
+    if(existsSync(file)){
+      const candidate=Number(readFileSync(file,'utf8').split(/\r?\n/)[0])
+      if(candidate>0&&candidate<=65535){
+        try{
+          const response=await fetch('http://127.0.0.1:'+candidate+'/json/version',{signal:AbortSignal.timeout(1000)})
+          if(response.ok){port=candidate;return}
+        }catch{}
+      }
+    }
+    await delay(200)
+  }
+  console.error('PI_R95_CHROME_START_ATTEMPT_FAILED='+attempt+' '+stderr)
+  try{spawned.kill('SIGKILL')}catch{}
+  await delay(500)
+  try{rmSync(profile,{recursive:true,force:true})}catch{}
+ }
+ throw new Error('PI_R95_CHROME_DEBUG_PORT_TIMEOUT_AFTER_TWO_ATTEMPTS')
+}
 let ws
 let send
 try{
-  let contents
-  for(let i=0;i<90;i++){
-    const file=join(profile,'DevToolsActivePort')
-    if(existsSync(file)){contents=readFileSync(file,'utf8');break}
-    if(spawned.exitCode!==null)throw new Error('PI_R95_CHROME_EXITED_BEFORE_DEBUGGER')
-    await delay(200)
-  }
-  assert.ok(contents,'PI_R95_CHROME_DEBUG_PORT_TIMEOUT')
-  const port=Number(contents.split(/\r?\n/)[0])
-  assert.ok(port>0&&port<=65535,'invalid ephemeral debugger port')
+  await startChrome()
   let targets=await (await fetch('http://127.0.0.1:'+port+'/json')).json()
   let tab=targets.find(t=>t.type==='page')
   if(!tab){
@@ -367,6 +386,6 @@ try{
   console.log('PI_R95_CHROME_RESPONSIVE_AUTHENTICATED_ACCEPTANCE=PASS')
 } finally {
   try{ws?.close()}catch{}
-  try{spawned.kill('SIGTERM')}catch{}
+  try{spawned?.kill('SIGTERM')}catch{}
   try{rmSync(profile,{recursive:true,force:true})}catch{}
 }

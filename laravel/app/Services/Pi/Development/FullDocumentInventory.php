@@ -27,9 +27,16 @@ final class FullDocumentInventory
             try {
                 $process = new Process($candidate['argv']);
                 $process->setTimeout(180);
-                $process->run();
+                $body='';
+                $process->run(static function (string $type, string $chunk) use (&$body): void {
+                    if ($type !== Process::OUT) { return; }
+                    if (strlen($body)+strlen($chunk)>60_000_000) {
+                        throw new RuntimeException('PI_RDI_TEXT_SIZE_HOLD');
+                    }
+                    $body.=$chunk;
+                });
                 if (!$process->isSuccessful()) { continue; }
-                $result = $this->inventory($process->getOutput(), $expectedPages);
+                $result = $this->inventory($body, $expectedPages);
                 if (strtoupper((string)hash_file('sha256', $file)) !== $sha) {
                     throw new RuntimeException('PI_RDI_SOURCE_DRIFT');
                 }
