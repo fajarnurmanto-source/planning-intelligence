@@ -156,3 +156,7 @@ The guarded Wave2 six-file cutover has now been explicitly executed by the owner
 
 ## Wave3A source progress (24 November 2026)
 Wave2 original browser screenshots confirm context and clearer status but show Dokumen page still monolithic. Wave3A introduces canonical four graph-based expandable evidence groups retaining all 18 original relations and source links, plus closed official source catalogue. Source SHA e33ef1aceb636602ed94cd82fd571f3b2841e3cf; 4 CI workflows PASS including Chrome 390px and Windows 3-file rollback. Owner original Wave3A not yet applied; whole-product specialist/React workflow redesign remains open. No new services, data admission or automatic review.
+
+
+## 24 November 2026 — Wave3B original cutover acceptance
+Owner PowerShell transcript confirms exact code pin 31a85a8b58fefd7575b4bdac6924e682472f14fc, three baseline files verified, preflight PASS, three replacements APPLIED_VERIFIED, original PHP PID 5704 preserved, login/CSRF PASS, anonymous R106 API/PDF 401, live asset SHA PASS, SQLite/ENV/APP_KEY/launcher unchanged. Backup R108_WAVE3B_REGULATORY_20261124-213149-575-0030646b. GitHub workflows 45401495815, 45401495971, 45401495863, 45401495972 completed success. Original interactive browser acceptance remains pending; do not reinstall. Fiscal admission ZERO, production DENIED. Product-wide R108 remains OPEN.
