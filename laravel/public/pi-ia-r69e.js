@@ -51,6 +51,14 @@
       {label:'Meja pemeriksa',href:'./regulatory-trace-r70a.html#r84-review-workspace',key:'reviewer',module:'regulatory'},
       {label:'Rincian hubungan bukti',href:'./development-case-r85.html#pi-view=rinci',key:'rinci'},
     ]},
+    {id:'specialist',label:'Telaah regulasi lanjutan',subtitle:'Riwayat perubahan dan hubungan ketentuan hukum',items:[
+      {label:'Jejak ketentuan',href:'./regulatory-trace-r70a.html',key:'norma',module:'regulatory'},
+      {label:'Naskah dan PDF regulasi',href:'./regulatory-sources-r70b.html',key:'naskah',module:'regulatory'},
+      {label:'Riwayat perubahan peraturan',href:'./regulatory-laravel-r70g.html#r72-title',key:'perubahan',module:'regulatory'},
+      {label:'Sasaran dan ruang lingkup lampiran',href:'./regulatory-laravel-r70g.html#r70g-documents',key:'cakupan',module:'regulatory'},
+      {label:'Hubungan antar peraturan',href:'./regulatory-laravel-r70g.html#r74-title',key:'genealogi',module:'regulatory'},
+      {label:'Meja telaah terpadu',href:'./regulatory-laravel-r70g.html#r75-title',key:'laravel',module:'regulatory'},
+    ]},
     {id:'settings',label:'Pengaturan dan bantuan',subtitle:'Layanan AI opsional dan pengaturan lanjutan',items:[
       {label:'Bantuan analisis AI',href:'./ai-gateway.html',key:'ai'},
       {label:'Pengaturan AI',href:'./ai-settings.html',key:'ai-settings'},
