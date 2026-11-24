@@ -220,6 +220,13 @@ try{
 
 
 
+  await until("document.querySelectorAll('#pi-performance-evidence .pi-performance-card').length===4",'W3C_PERFORMANCE_EVIDENCE')
+  const performanceEvidence=await evalPage("document.getElementById('pi-performance-evidence').textContent")
+  assert.match(performanceEvidence,/Indikator keluaran/)
+  assert.match(performanceEvidence,/Target dan satuan: belum tersedia/)
+  assert.match(performanceEvidence,/Realisasi: belum tersedia/)
+  assert.match(performanceEvidence,/Keluaran tidak membuktikan outcome/)
+  console.log('PI_R108_W3C_EVIDENCE_AND_MISSING_VALUES=PASS')
   await evalPage("document.querySelector('#r88-controls').requestSubmit()")
   await until("document.querySelector('#r88-status')?.textContent?.includes('Jejak tersedia')","R88_CROSSWALK")
   const crosswalk=await evalPage("({"+

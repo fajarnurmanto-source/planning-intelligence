@@ -72,3 +72,10 @@
 .pi-r108-catalog-details>summary{border:1px solid #49736b;border-radius:9px;padding:14px;cursor:pointer;font-weight:800;color:#d5f7e5}
 .pi-r108-catalog-details[open]>summary{margin-bottom:12px}
 @media(max-width:900px){.pi-r108-case .r85-evidence-item{grid-template-columns:minmax(0,1fr)}}
+
+/* R108 W3C: compact evidence-backed performance view. */
+.pi-r108-performance{margin:12px 0 20px;padding:14px;border:1px solid #49736b;border-radius:10px;min-width:0}
+#pi-performance-evidence{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pi-performance-card{padding:13px;border:1px solid #54786d;border-radius:8px;min-width:0;overflow-wrap:anywhere;background:#f5fbf8;color:#183a30}
+.pi-performance-card h4{margin:0 0 8px;color:#183a30}.pi-performance-card p{margin:8px 0;font-size:.86rem;color:#183a30}.pi-performance-card small{display:block;color:#49665a;font-size:.75rem}.pi-performance-card a{color:#24664f;text-decoration:underline}.pi-r108-performance-extra{margin:14px 0}.pi-r108-performance-extra>summary{cursor:pointer;padding:12px;border:1px solid #49736b;border-radius:8px;font-weight:700}
+@media(max-width:700px){#pi-performance-evidence{grid-template-columns:minmax(0,1fr)}}

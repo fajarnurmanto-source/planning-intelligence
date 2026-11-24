@@ -48,6 +48,7 @@
 
         <section id="r88-crosswalk" class="panel" aria-labelledby="r88-title">
           <div class="panel-heading"><div><span class="section-number">KESESUAIAN PERENCANAAN</span><h2 id="r88-title">Telusuri kewenangan, nomenklatur dan anggaran</h2><p>Periksa kesesuaian kewenangan, kode subkegiatan dan dokumen sesuai tahun acuan. Jika versi pembanding belum ada, hasil belum dapat disimpulkan.</p></div></div>
+          <section class="pi-r108-performance" aria-labelledby="pi-performance-title"><h3 id="pi-performance-title">Sasaran, indikator dan program kasus</h3><p>Ringkasan bukti kasus yang dimuat. Target dan realisasi tidak boleh disimpulkan dari nama indikator atau anggaran.</p><div id="pi-performance-evidence" role="status" aria-live="polite">Menunggu bukti kasus…</div></section>
           <form id="r88-controls" class="r85-filters">
             <label>Kode subkegiatan<input name="code" value="2.11.11.2.01.0004" required maxlength="40"></label>
             <label>Tahun<select name="year"><option>2026</option><option>2027</option></select></label>
@@ -56,6 +57,9 @@
             <button id="r88-export" type="button" class="secondary-btn" disabled>Ekspor data bukti (lanjutan)</button>
           </form>
           <p id="r88-status" role="status" aria-live="polite">Pilih Periksa kesesuaian untuk memuat bukti.</p>
+
+          <a href="/regulatory-trace-r70a.html#r84-review-workspace">Buka meja pemeriksaan bukti</a>
+          <div id="r88-results" class="r85-question-grid"></div>
           <section id="r89-panel" class="r89-panel" aria-labelledby="r89-title">
             <h3 id="r89-title">Bantuan AI untuk memeriksa kesesuaian istilah</h3>
             <p>DeepSeek, OpenAI, Gemini, Groq, atau OpenRouter melalui API cloud. Tidak memerlukan model atau GPU lokal. AI hanya menyarankan hubungan makna; hukum dan indikator tetap memerlukan pembuktian dan reviewer.</p>
@@ -70,8 +74,6 @@
             <p id="r89-status" role="status" aria-live="polite">Muat crosswalk 2026 untuk menyiapkan pratinjau. Tidak ada panggilan AI otomatis.</p>
             <div id="r89-results" class="r85-question-grid"></div>
           </section>
-          <a href="/regulatory-trace-r70a.html#r84-review-workspace">Buka meja pemeriksaan bukti</a>
-          <div id="r88-results" class="r85-question-grid"></div>
         </section>
         <section id="r86-lifecycle" class="panel r86-panel" aria-labelledby="r86-title">
           <div class="panel-heading"><div><span class="section-number">DASAR KEWENANGAN</span><h2 id="r86-title">Dari kewenangan sampai perbaikan perencanaan</h2><p>Telusuri dasar kewenangan dan tahapan yang terkait. Jika dokumen belum tersedia, kekosongan bukti ditampilkan apa adanya.</p></div><span class="small-tag amber">REVIEW MANUSIA</span></div>

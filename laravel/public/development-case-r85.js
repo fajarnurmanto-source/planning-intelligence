@@ -47,6 +47,7 @@
     add(details,'code','r85-edge-ref','Status sistem: '+code)
   }
   const fail = message => {
+    byId('pi-performance-evidence')?.replaceChildren(add(document.createDocumentFragment(),'p','','Bukti kasus belum tersedia. Belum dapat disimpulkan.'))
     for (const id of ['r85-questions', 'r85-graphs', 'r85-evidence', 'r85-guards']) {
       const target = byId(id)
       target.replaceChildren(add(document.createDocumentFragment(), 'p', 'r85-error', message))
@@ -181,6 +182,50 @@
       group.ids.forEach(id=>rows.append(cards.get(id)))
     }
   }
+
+  // R108 W3C: read-only presentation of the already authenticated R85 graph.
+  // No numeric inference, causal claim, new source, or SCP-01 engine admission.
+  const renderPerformance = caseData => {
+    const root=byId('pi-performance-evidence')
+    if(!root)return
+    root.replaceChildren()
+    const nodes=new Map(caseData.nodes.map(n=>[n.id,n]))
+    const edges=new Map(caseData.edges.map(e=>[e.id,e]))
+    const lanes=[
+      ['Arah kebijakan dan sasaran',['E06','E08','E09']],
+      ['Program dan subkegiatan',['E10','E11']],
+      ['Indikator keluaran',['E12']]
+    ]
+    for(const [label,ids] of lanes){
+      const card=add(root,'article','pi-performance-card')
+      add(card,'h4','',label)
+      for(const id of ids){
+        const e=edges.get(id)
+        const from=nodes.get(e?.from),to=nodes.get(e?.to)
+        if(!e||!from||!to)continue
+        add(card,'p','',from.label+' → '+to.label)
+        add(card,'small','',explainStatus(e.provenance.verification_status)+' · Hubungan perlu telaah')
+        const audit=add(card,'details','r85-technical')
+        add(audit,'summary','','Sumber dan status hubungan')
+        add(audit,'p','',e.provenance.locator+' · '+e.provenance.version)
+        add(audit,'code','r85-edge-ref',e.id+' · '+e.status+' · '+e.provenance.as_of_date)
+        const href=allowedSource(e.provenance.source_url)
+        if(href && href!=='./overview-r69c.json'){
+          const link=add(audit,'a','','Buka sumber resmi')
+          link.href=href;link.target='_blank';link.rel='noopener noreferrer'
+        }
+      }
+      if(!card.querySelector('details'))add(card,'p','','Belum tersedia bukti hubungan.')
+    }
+    const gaps=add(root,'article','pi-performance-card')
+    add(gaps,'h4','','Nilai dan hasil yang belum dapat dinilai')
+    for(const name of ['Sasaran substantif','Baseline','Target dan satuan','Realisasi','Outcome dan dampak']){
+      add(gaps,'p','',name+': belum tersedia bukti nilai pada kasus ini.')
+    }
+    add(gaps,'small','','Keluaran tidak membuktikan outcome. Anggaran bukan realisasi kinerja.')
+    const link=add(gaps,'a','','Periksa dokumen dan bukti')
+    link.href='#pi-view=dokumen'
+  }
   const renderGuards = interpretation => {
     const guards = byId('r85-guards')
     guards.replaceChildren()
@@ -209,6 +254,7 @@
       renderGraphs(caseData)
       renderEvidence(caseData)
       renderGuards(data.interpretation)
+      renderPerformance(caseData)
     } catch (error) {
       fail(`Tidak dapat menampilkan kasus: ${String(error.message || error)}.`)
     }
@@ -216,6 +262,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     byId('r85-filters').addEventListener('submit', event => {
       event.preventDefault()
+      byId('pi-performance-evidence')?.replaceChildren(add(document.createDocumentFragment(),'p','','Memuat kembali bukti kasus…'))
       load({
         jurisdiction: byId('r85-jurisdiction').value,
         year: byId('r85-year').value,

@@ -1,0 +1,3 @@
+# R108 Wave 3C — Performance evidence view, first increment
+24 November 2026. Owner automated acceptance mandate CD-20261124-10R.
+Read-only R85 graph presentation in the existing planning stage. Uses actual E06/E08/E09/E10/E11/E12 candidate relations, source status and locators. Explicit missing substantive targets, baseline, units, actuals, outcomes/impact; no zero substitution. R88 remains available, optional AI moved after results without changing consent or controls. SCP-01 canonical contract admission implementation_authorized=false; no new engine, promotion or authority change. CI tests added; not yet run at time of commit. Original Windows W3B remains unchanged. Full Performance engine and other workspace bodies remain open.
