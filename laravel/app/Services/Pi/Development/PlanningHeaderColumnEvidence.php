@@ -53,13 +53,13 @@ final class PlanningHeaderColumnEvidence
             if($w['truncated']){ $counts['TRUNCATED_LINE_HOLD']=($counts['TRUNCATED_LINE_HOLD']??0)+count($tr['tokens']);continue; }
             $raw=$this->checked($w);$shift=0;
             if($tr['offset_basis']==='AFTER_CODE'){
-                if(!preg_match('/^\h*(?:\d{1,3}\.\h+)?'.preg_quote($row['code'],'/').'\h*/u',$raw,$m))throw new RuntimeException('PI_RDI03C_CODE_HOLD');
+                if(!preg_match('/^\h*(?:\d{1,3}\.\h+)?'.preg_quote($row['code'],'/').'(?=\h|$)/u',$raw,$m))throw new RuntimeException('PI_RDI03C_CODE_HOLD');
                 $shift=mb_strlen($m[0],'UTF-8');
             }elseif($tr['offset_basis']!=='FULL_LINE')throw new RuntimeException('PI_RDI03C_OFFSET_HOLD');
             $group=[];
             foreach($tr['tokens'] as $t){
                 $x=$shift+$t['offset'];$len=mb_strlen($t['raw'],'UTF-8');
-                if(mb_substr($raw,$x,$len,'UTF-8')!==$t['raw'])throw new RuntimeException('PI_RDI03C_TOKEN_DRIFT');
+                if(mb_substr($raw,$x,$len,'UTF-8')!==$t['raw'])throw new RuntimeException('PI_RDI03C_TOKEN_DRIFT:page='.$row['page'].':anchor='.$row['line'].':line='.$tr['line'].':basis='.$tr['offset_basis'].':offset='.$x);
                 $end=$x+$len;$hits=[];
                 foreach($columns as $c){
                     // Right-aligned table cells: only near header right edge, no nearest-column guess.

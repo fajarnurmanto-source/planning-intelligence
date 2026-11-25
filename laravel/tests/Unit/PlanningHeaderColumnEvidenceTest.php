@@ -19,10 +19,23 @@ final class PlanningHeaderColumnEvidenceTest extends TestCase
         $code='1.01.01';$head=str_repeat(' ',24).'2026'.str_repeat(' ',36).'2027';
         $roles=str_repeat(' ',16).'TARGET'.str_repeat(' ',6).'PAGU'.str_repeat(' ',24).'TARGET'.str_repeat(' ',6).'PAGU';
         $raw=$code.str_repeat(' ',17).'1.000,00';
-        $r=(new PlanningHeaderColumnEvidence)->map(['page'=>1,'line'=>5,'code'=>$code,'page_sha256'=>str_repeat('A',64),'header_signals'=>[$this->line(2,$head),$this->line(3,$roles)],'window'=>[$this->line(5,$raw)],'token_rows'=>[['line'=>5,'offset_basis'=>'AFTER_CODE','tokens'=>[['raw'=>'1.000,00','offset'=>0]]]],'boundary'=>'STRUCTURAL_BOUNDARY']);
+        $r=(new PlanningHeaderColumnEvidence)->map(['page'=>1,'line'=>5,'code'=>$code,'page_sha256'=>str_repeat('A',64),'header_signals'=>[$this->line(2,$head),$this->line(3,$roles)],'window'=>[$this->line(5,$raw)],'token_rows'=>[['line'=>5,'offset_basis'=>'AFTER_CODE','tokens'=>[['raw'=>'1.000,00','offset'=>17]]]],'boundary'=>'STRUCTURAL_BOUNDARY']);
         self::assertSame('PAIRED_YEAR_ROLE_CANDIDATE',$r['header_status']);
         self::assertSame(24,$r['tokens'][0]['start']);
         self::assertSame('PAGU',$r['tokens'][0]['column']['role']);
         self::assertNull($r['tokens'][0]['numeric_value']);
+    }
+    public function test_producer_consumer_offset_contract_with_actual_ordinal_shape(): void
+    {
+        $raw='   1.   1.01.01                PROGRAM PENUNJANG            Nilai SPIP Dindikpora     -                                         4,930 Nilai       247.911.494.484,00';
+        $page=$raw."\n";
+        $hash=strtoupper(hash('sha256',$page));
+        $a=(new \App\Services\Pi\Development\AdaptivePlanningTableEvidence)->scan($page."\f",109,109,[109=>$hash],[109=>[1=>['code'=>'1.01.01','window'=>[['sha256'=>strtoupper(hash('sha256',$raw))]]]]]);
+        $r=(new PlanningHeaderColumnEvidence)->map($a['records'][0]);
+        self::assertSame(['4,930','247.911.494.484,00'],array_column($r['tokens'],'raw'));
+        foreach($r['tokens'] as $token)self::assertSame($token['raw'],mb_substr($raw,$token['start'],$token['end']-$token['start'],'UTF-8'));
+        $bad=$a['records'][0];$bad['token_rows'][0]['tokens'][0]['offset']++;
+        $this->expectException(\RuntimeException::class);
+        (new PlanningHeaderColumnEvidence)->map($bad);
     }
 }
