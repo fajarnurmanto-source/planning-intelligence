@@ -1,0 +1,76 @@
+{
+  "schema": "PI_RF03_OFFICIAL_SERIES_SOURCE_QUEUE_V1",
+  "observed_on": "2026-11-25",
+  "series": {
+    "id": "ID:KEMENDAGRI:RKPD-GUIDANCE",
+    "cadence": "ANNUAL"
+  },
+  "members": [
+    {
+      "jurisdiction": "ID",
+      "issuer": "KEMENDAGRI",
+      "kind": "PERMENDAGRI",
+      "number": "10",
+      "year": 2023,
+      "series_id": "ID:KEMENDAGRI:RKPD-GUIDANCE",
+      "target_start_year": 2024,
+      "target_end_year": 2024,
+      "observed_on": "2026-11-25",
+      "effective_on": null,
+      "repealed_on": null,
+      "source_url": "https://peraturan.bpk.go.id/Details/267338/permendagri-no-10-tahun-2023",
+      "source_locator": "Official metadata title; operative dates and membership evidence not reconciled",
+      "evidence_status": "OFFICIAL_METADATA_CANDIDATE"
+    },
+    {
+      "jurisdiction": "ID",
+      "issuer": "KEMENDAGRI",
+      "kind": "PERMENDAGRI",
+      "number": "12",
+      "year": 2024,
+      "series_id": "ID:KEMENDAGRI:RKPD-GUIDANCE",
+      "target_start_year": 2025,
+      "target_end_year": 2025,
+      "observed_on": "2026-11-25",
+      "effective_on": null,
+      "repealed_on": null,
+      "source_url": "https://peraturan.bpk.go.id/Details/304628/permendagri-no-12-tahun-2024",
+      "source_locator": "Official metadata title; operative dates and membership evidence not reconciled",
+      "evidence_status": "OFFICIAL_METADATA_CANDIDATE"
+    },
+    {
+      "jurisdiction": "ID",
+      "issuer": "KEMENDAGRI",
+      "kind": "PERMENDAGRI",
+      "number": "10",
+      "year": 2025,
+      "series_id": "ID:KEMENDAGRI:RKPD-GUIDANCE",
+      "target_start_year": 2026,
+      "target_end_year": 2026,
+      "observed_on": "2026-11-25",
+      "effective_on": null,
+      "repealed_on": null,
+      "source_url": "https://peraturan.bpk.go.id/Details/321470/permendagri-no-10-tahun-2025",
+      "source_locator": "Official metadata title; operative dates and membership evidence not reconciled",
+      "evidence_status": "OFFICIAL_METADATA_CANDIDATE"
+    },
+    {
+      "jurisdiction": "ID",
+      "issuer": "KEMENDAGRI",
+      "kind": "PERMENDAGRI",
+      "number": "14",
+      "year": 2026,
+      "series_id": "ID:KEMENDAGRI:RKPD-GUIDANCE",
+      "target_start_year": 2027,
+      "target_end_year": 2027,
+      "observed_on": "2026-11-25",
+      "effective_on": null,
+      "repealed_on": null,
+      "source_url": "https://peraturan.go.id/id/permendagri-no-14-tahun-2026",
+      "source_locator": "Official metadata title; operative dates and membership evidence not reconciled",
+      "evidence_status": "OFFICIAL_METADATA_CANDIDATE"
+    }
+  ],
+  "census_complete": false,
+  "production_admission": "DENIED"
+}
