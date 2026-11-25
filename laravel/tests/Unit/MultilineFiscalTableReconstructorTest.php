@@ -32,4 +32,22 @@ final class MultilineFiscalTableReconstructorTest extends TestCase
         self::assertContains('SPLIT_SUFFIX_UNRESOLVED',$r['records'][1]['reasons']);
         self::assertSame(0,$r['numeric_admission']);
     }
+    public function test_real_change3_grouped_rupiah_is_not_a_dotted_code_boundary(): void
+    {
+        $text="4.1.01.09.001.000         Pajak Reklame\n                                                             7.175.000.000,00       7.175.000.000,00                  0,00\n01                  Papan/Billboard/Videotron/ Megatron\n\n4.1.01.09.002            Pajak Reklame Kain                    734.000.000,00         734.000.000,00                  0,00\n\n4.1.01.09.002.000\n                          Pajak Reklame Kain                   734.000.000,00         734.000.000,00                  0,00\n01\n\f";
+        $r=(new MultilineFiscalTableReconstructor)->reconstruct($text,1,true);
+        self::assertSame(2,$r['fragment_count']);
+        self::assertSame(2,$r['resolved_code_candidates']);
+        self::assertSame(2,$r['positional_amount_candidates']);
+        self::assertSame('4.1.01.09.001.00001',$r['records'][0]['account_code_candidate']);
+        self::assertSame([717500000000,717500000000,0],$r['records'][0]['positional_minor_units']);
+        self::assertSame('4.1.01.09.002.00001',$r['records'][1]['account_code_candidate']);
+        self::assertSame(0,$r['numeric_admission']);
+    }
+    public function test_actual_hierarchical_code_still_stops_continuation(): void
+    {
+        $r=(new MultilineFiscalTableReconstructor)->reconstruct("4.1.01.09.001.000 Pajak\n4.1.01.09.002  subtotal  734.000.000,00  734.000.000,00  0,00\n01\n\f",1,true);
+        self::assertNull($r['records'][0]['account_code_candidate']);
+        self::assertSame([], $r['records'][0]['money_tokens']);
+    }
 }

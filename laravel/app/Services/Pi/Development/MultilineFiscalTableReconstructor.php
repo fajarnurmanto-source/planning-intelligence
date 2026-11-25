@@ -23,7 +23,9 @@ final class MultilineFiscalTableReconstructor
         $boundary='/^\h*(?:Urusan(?:\h+Pemerintahan)?|Bidang\h+Urusan|Organisasi|Unit\h+Organisasi|Unit\h+Kerja|Perangkat\h+Daerah|SKPD|Program|Kegiatan|Sub\h*Kegiatan)\h*:/iu';
         $sub='/^\h*Sub\h*Kegiatan\h*:\h*(\d+(?:\.\d+){5})(?![\d.])/iu';
         $header='/^\h*(?:Kode\h+Rekening|Kode\h+|Halaman\b|LAMPIRAN\b|PENJELASAN\b|Jumlah\b|Total\b|PERATURAN\b)/iu';
-        $otherCode='/^\h*\d(?:\.\d+){1,}\b/u';
+        // A leading rupiah amount is not a hierarchical code. Require a
+        // complete code token ending at horizontal whitespace or EOL.
+        $otherCode='/^\h*\d(?:\.\d+){1,}(?=\h|$)/u';
         $org=null;$organizationPage=null;$organizationLine=null;
         foreach($pages as $i=>$page){
             $p=$i+1;$lines=preg_split('/\r\n|\n|\r/u',$page);

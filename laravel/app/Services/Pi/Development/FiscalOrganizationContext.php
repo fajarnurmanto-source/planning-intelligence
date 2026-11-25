@@ -145,7 +145,7 @@ final class FiscalOrganizationContext
                 $next===null=>'PAGE_END',
                 trim($next)==='' =>'BLANK',
                 preg_match('/^\h*\d(?:\.\d+){4}\.(?:\d{5}|\d{3})(?!\d)/u',$next)===1=>'NEXT_ACCOUNT',
-                preg_match('/^\h*\d(?:\.\d+){1,}\b/u',$next)===1=>'OTHER_DOTTED_CODE',
+                preg_match('/^\h*\d(?:\.\d+){1,}(?=\h|$)/u',$next)===1=>'OTHER_DOTTED_CODE',
                 preg_match('/^\h*(?:Kode|Halaman|LAMPIRAN|PENJELASAN|Jumlah|Total|PERATURAN)\b/iu',$next)===1=>'HEADER_OR_TOTAL',
                 default=>'OTHER'
             };
