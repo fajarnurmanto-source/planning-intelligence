@@ -34,10 +34,10 @@ final class R82NationalEvidencePipeline
     }
 
     /** @return array<string,mixed> */
-    public function build(?string $root = null, ?array $texts = null): array
+    public function build(?string $root = null, ?array $texts = null, ?string $registryRoot = null): array
     {
         $verified = $this->verifier->verify($root ?? $this->snapshotDirectory());
-        $coverage = $this->r80->project();
+        $coverage = $registryRoot === null ? $this->r80->project() : $this->r80->project($registryRoot.'/regulatory-delegation-coverage-r80.json', $registryRoot.'/regulatory-genealogy-r74.json');
         if (($coverage['candidate_article_count'] ?? null) !== 7
             || ($coverage['source_count'] ?? null) !== 1
             || ($coverage['tenant_id'] ?? null) !== 'ID-DIY-YOG'

@@ -6,9 +6,9 @@ require __DIR__.'/pi-hria-runtime-context.php';
 $root=sys_get_temp_dir().'/pi-hria-context-'.bin2hex(random_bytes(8));
 mkdir($root.'/config',0700,true);
 mkdir($root.'/storage/app/private',0700,true);
-mkdir($root.'/resources/pi',0700,true);
+// Original runtime deliberately has no regulatory registry.
 $qa=dirname(__DIR__).'/laravel';
-foreach(['regulatory-genealogy-r74.json','regulatory-delegation-coverage-r80.json'] as $f)copy($qa.'/resources/pi/'.$f,$root.'/resources/pi/'.$f);
+
 file_put_contents($root.'/config/app.php','<?php return '.var_export(['key'=>'base64:'.base64_encode(random_bytes(32)),'cipher'=>'AES-256-CBC','previous_keys'=>[]],true).';');
 file_put_contents($root.'/config/filesystems.php','<?php return '.var_export(['default'=>'local','disks'=>['local'=>['driver'=>'local','root'=>$root.'/storage/app/private','throw'=>true]]],true).';');
 file_put_contents($root.'/config/pi.php','<?php return ["tenant_id"=>"ID-DIY-YOG"];');
@@ -23,5 +23,10 @@ $out=(new \App\Services\Pi\Development\CloudSemanticCandidateProvider)->propose(
 if($out['semantic_relation']!=='RELATED')throw new RuntimeException('HRIA_FIXTURE_PROVIDER_HOLD');
 \Illuminate\Support\Facades\Http::assertSentCount(1);
 if(is_dir($root.'/bootstrap/cache'))throw new RuntimeException('HRIA_PACKAGE_CACHE_MUTATION_HOLD');
+$registry=new \App\Services\Pi\Regulatory\RegulatoryTaxonomyRegistry;
+$coverage=new \App\Services\Pi\Regulatory\RegulatoryDelegationCoverage($registry);
+$projection=$coverage->project($qa.'/resources/pi/regulatory-delegation-coverage-r80.json',$qa.'/resources/pi/regulatory-genealogy-r74.json');
+if($projection['candidate_article_count']!==7||is_dir($root.'/resources'))throw new RuntimeException('HRIA_QA_REGISTRY_ISOLATION_HOLD');
+echo "HRIA_QA_REGISTRY_ISOLATION=PASS\n";
 echo "HRIA_MINIMAL_CONTEXT_VAULT_FAKE_PROVIDER=PASS\n";
 echo "HRIA_PACKAGE_CACHE_DISCOVERY=NOT_REQUIRED\n";

@@ -42,9 +42,9 @@ try {
     $negative=(new HriaNegativeControls)->evaluate($pp,$uu);
     echo json_encode(['negative_controls'=>$negative],JSON_THROW_ON_ERROR).PHP_EOL;
     if($negative['state']!=='PASS_TWO_NEGATIVE_CONTROLS')exit(1);
-    // The original app resource path contains the already accepted R80/R74 registry.
+    // Analysis registry comes exclusively from the pinned QA checkout.
     $stage='R82_PIPELINE';
-    $report=$pipeline->build($root,['PP-81-2012'=>$pp,'UU-18-2008'=>$uu]);
+    $report=$pipeline->build($root,['PP-81-2012'=>$pp,'UU-18-2008'=>$uu],$qa.'/resources/pi');
     $reasoner=new HybridPrimaryLegalReasoner(new RegulatoryGenealogyGraph($registry));
     $stage='PRIMARY_PREVIEW';
     $preview=$reasoner->preview($report,16,'2026-11-26','2026-11-26');

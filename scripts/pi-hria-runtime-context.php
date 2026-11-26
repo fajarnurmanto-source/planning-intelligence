@@ -44,8 +44,8 @@ function piHriaRuntimeContext(string $runtime,string $qa): \Illuminate\Foundatio
     $app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
     $app->singleton(\Illuminate\Http\Client\Factory::class,static fn()=>new \Illuminate\Http\Client\Factory);
     foreach(['regulatory-genealogy-r74.json','regulatory-delegation-coverage-r80.json'] as $name){
-        $a=$runtime.'/resources/pi/'.$name;$b=$qa.'/resources/pi/'.$name;
-        if(!is_file($a)||!is_file($b)||hash_file('sha256',$a)!==hash_file('sha256',$b))throw new RuntimeException('HRIA_REGISTRY_PARITY_HOLD');
+        $file=$qa.'/resources/pi/'.$name;
+        if(!is_file($file)||!is_readable($file))throw new RuntimeException('HRIA_QA_REGISTRY_HOLD');
     }
     return $app;
 }
