@@ -10,7 +10,22 @@ function piHriaRuntimeContext(string $runtime,string $qa): \Illuminate\Foundatio
 {
     $app=new \Illuminate\Foundation\Application($runtime);
     (new \Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables)->bootstrap($app);
-    (new \Illuminate\Foundation\Bootstrap\LoadConfiguration)->bootstrap($app);
+    // Avoid recursive config discovery (Windows path/case differences).
+    // Use Laravel's own cache path and environment resolver, then exact files.
+    if($app->configurationIsCached()){
+        $values=require $app->getCachedConfigPath();
+        if(!is_array($values))throw new RuntimeException('HRIA_CONFIG_CACHE_HOLD');
+        $values=array_intersect_key($values,array_flip(['app','filesystems','pi']));
+    }else{
+        $values=[];
+        foreach(['app','filesystems','pi'] as $name){
+            $path=$app->configPath($name.'.php');
+            if(!is_file($path))throw new RuntimeException('HRIA_EXACT_CONFIG_FILE_HOLD');
+            $values[$name]=require $path;
+            if(!is_array($values[$name]))throw new RuntimeException('HRIA_EXACT_CONFIG_SCHEMA_HOLD');
+        }
+    }
+    $app->instance('config',new \Illuminate\Config\Repository($values));
     (new \Illuminate\Foundation\Bootstrap\RegisterFacades)->bootstrap($app);
     $config=$app->make('config');
     if($config->get('pi.tenant_id')!=='ID-DIY-YOG')throw new RuntimeException('HRIA_TENANT_HOLD');

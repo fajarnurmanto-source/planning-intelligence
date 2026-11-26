@@ -197,5 +197,7 @@ jobs:
           php -d memory_limit=1536M scripts/pi-rf04-corpus-inventory.php "$RUNNER_TEMP/rf04" > "$RUNNER_TEMP/rf04-inventory.json" || true
           php -r '$r=json_decode(file_get_contents($argv[1]),true,64,JSON_THROW_ON_ERROR);foreach($r["documents"] as $id=>$d)echo $id." SHA=".$d["source_sha256"]." PAGES=".$d["inventory"]["expected_pages"]." FORMAT_SIGNALS=".json_encode($d["format_profile"]["counts"])."\n";echo "RF04_PROCESSED=".$r["processed_documents"]."/".$r["expected_documents"]."\nRF04_HOLDS=".json_encode($r["holds"])."\n";exit($r["processed_documents"]===$r["expected_documents"]?0:1);' "$RUNNER_TEMP/rf04-inventory.json"
 
+      - name: HRIA isolated exact configuration and vault smoke (zero spend)
+        run: php scripts/pi-hria-runtime-context-smoke.php
       - name: RAI live manifestation benchmark CLI syntax
         run: php -l scripts/pi-rai-live-manifestation.php

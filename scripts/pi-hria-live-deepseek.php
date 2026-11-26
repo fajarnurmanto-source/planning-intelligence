@@ -73,6 +73,6 @@ try {
     // Never print arbitrary exception messages, stack traces or configuration.
     $message=$e->getMessage();
     $safe=preg_match('/\A(?:HRIA|R82|R80|PI_AI)_[A-Z0-9_]+\z/D',$message)?$message:'UNCLASSIFIED_EXCEPTION';
-    fwrite(STDERR,json_encode(['state'=>'HRIA_LOCAL_PREFLIGHT_HOLD','stage'=>$stage,'reason'=>$safe,'exception_class'=>get_class($e),'line'=>$e->getLine(),'provider_execution'=>'NOT_RUN'],JSON_THROW_ON_ERROR).PHP_EOL);
+    fwrite(STDERR,json_encode(['state'=>'HRIA_LOCAL_PREFLIGHT_HOLD','stage'=>$stage,'reason'=>$safe,'exception_class'=>get_class($e),'exception_file'=>basename($e->getFile()),'line'=>$e->getLine(),'provider_execution'=>'NOT_RUN'],JSON_THROW_ON_ERROR).PHP_EOL);
     exit(2);
 }
