@@ -21,7 +21,11 @@ final class HriaDelegationBenchmark
         $rows=[];
         foreach($reference['cases'] as $case){
             $a=$case['article'];$r=$records[$a]??null;$actual='INSUFFICIENT';
-            if(($r['evidence_status']??null)==='TEXT_LAYER_CANDIDATE_REVIEW_REQUIRED'&&($r['paragraphs_requested']??null)===$case['paragraphs']){
+            if(($r['evidence_status']??null)==='TEXT_LAYER_CANDIDATE_REVIEW_REQUIRED'&&($r['paragraphs_requested']??null)===$case['paragraphs']
+                &&is_string($r['pp_reference']['excerpt']??null)
+                &&strtoupper(hash('sha256',$r['pp_reference']['excerpt']))===($r['pp_reference']['excerpt_sha256']??null)){
+                $expectedCount=max(1,count($case['paragraphs']));
+                if(count($r['uu_passages']??[])!==$expectedCount){$rows[]=['article'=>$a,'expected'=>$case['expected'],'observed'=>'INSUFFICIENT','match'=>false];continue;}
                 $parts=[];
                 foreach($r['uu_passages'] as $p){
                     if(($p['truncated']??true)||strtoupper(hash('sha256',$p['excerpt']))!==$p['excerpt_sha256']){$parts=[];break;}
