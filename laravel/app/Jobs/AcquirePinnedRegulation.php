@@ -70,6 +70,13 @@ final class AcquirePinnedRegulation implements ShouldQueue
         $result['next_retry_at']=$next?min($next):null;
         $result['retry_budget_remaining']=max(0,$this->tries-$this->attempts());
         $result['freshness']='UNVERIFIED';
+        $result['freshness_assessment']=(new \App\Services\Pi\Regulatory\RegulatoryFreshnessAssessment)->assess($document['expected_sha256'],null,time());
+        $result['recovery_state']=match(true){
+            $result['state']!=='ACQUISITION_PENDING'=>'NO_RETRY_REQUIRED',
+            $next&&$this->attempts()<$this->tries=>'RETRY_SCHEDULED',
+            (bool)$next=>'RETRY_BUDGET_EXHAUSTED',
+            default=>'ALTERNATE_OR_DISCOVERY_REQUIRED',
+        };
         $cache->put('pi-rai-result:'.$this->documentId,$result,now()->addDays(7));
         if($result['state']==='ACQUISITION_PENDING'&&$next&&$this->attempts()<$this->tries)$this->release(max(1,min($next)-time()));
     }
