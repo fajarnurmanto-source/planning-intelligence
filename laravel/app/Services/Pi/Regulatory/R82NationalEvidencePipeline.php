@@ -102,7 +102,7 @@ final class R82NationalEvidencePipeline
         ];
     }
 
-    private function extract(string $file): ?string
+    public function extract(string $file): ?string
     {
         $commands = [['pdftotext', '-layout', '-enc', 'UTF-8', $file, '-']];
         if (PHP_OS_FAMILY === 'Windows'
