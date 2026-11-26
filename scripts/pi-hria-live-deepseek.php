@@ -23,9 +23,9 @@ try {
         if(!class_exists($fqcn,false))require_once $qa.'/app/Services/Pi/Regulatory/'.$class.'.php';
         if(realpath((new ReflectionClass($fqcn))->getFileName())!==realpath($qa.'/app/Services/Pi/Regulatory/'.$class.'.php'))throw new RuntimeException('HRIA_CLASS_ORIGIN_HOLD');
     }
-    $stage='LARAVEL_BOOTSTRAP';
-    $app=require $runtime.'/bootstrap/app.php';
-    $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+    $stage='LARAVEL_MINIMAL_CONTEXT';
+    require_once __DIR__.'/pi-hria-runtime-context.php';
+    $app=piHriaRuntimeContext($runtime,$qa);
     $stage='TENANT_CONFIG';
     if(config('pi.tenant_id')!=='ID-DIY-YOG')throw new RuntimeException('HRIA_TENANT_HOLD');
     // Existing Laravel configuration and storage are read; no database operation.
