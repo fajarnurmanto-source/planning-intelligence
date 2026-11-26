@@ -1,0 +1,57 @@
+{
+  "schema": "PI_RF04_SCOPED_RELATION_METADATA_V1",
+  "source_url": "https://peraturan.bpk.go.id/Details/122742/uu-no-17-tahun-2019",
+  "observed_on": "2026-11-26",
+  "effective_on": "2019-10-16",
+  "source_instrument": "UU-17-2019",
+  "target_instrument": "UU-23-2014",
+  "relation": "PARTIALLY_REPEALS",
+  "scope_candidates": [
+    {
+      "matrix": "I",
+      "field": "C",
+      "row": "1",
+      "column": 3,
+      "letter": "B"
+    },
+    {
+      "matrix": "I",
+      "field": "C",
+      "row": "1",
+      "column": 4,
+      "letter": "B"
+    },
+    {
+      "matrix": "I",
+      "field": "C",
+      "row": "1",
+      "column": 5,
+      "letter": "B"
+    },
+    {
+      "matrix": "I",
+      "field": "CC",
+      "row": "1",
+      "column": 3,
+      "letter": "A"
+    },
+    {
+      "matrix": "I",
+      "field": "CC",
+      "row": "1",
+      "column": 4,
+      "letter": "B"
+    },
+    {
+      "matrix": "I",
+      "field": "CC",
+      "row": "1",
+      "column": 5,
+      "letter": null
+    }
+  ],
+  "status": "OFFICIAL_METADATA_CANDIDATE_NOT_PRIMARY_RECONCILED",
+  "source_sha256": null,
+  "legal_effect": "NOT_ASSESSED",
+  "production_admission": "DENIED"
+}
