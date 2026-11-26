@@ -34,19 +34,19 @@ final class AcquirePinnedRegulation implements ShouldQueue
         foreach($registry['documents'] as $d)if($d['id']===$this->documentId){$document=$d;break;}
         if(!$document)throw new RuntimeException('PI_RAI_UNKNOWN_DOCUMENT');
         $cache=Cache::store('file');
-        $now=time();$next=[];
-        $result=$resolver->resolve($document,$root,function(string $url)use($cache,$now,$policy,&$next):array{
+        $now=time();$next=[];$observations=[];
+        $result=$resolver->resolve($document,$root,function(string $url)use($cache,$now,$policy,&$next,&$observations):array{
             $host=parse_url($url,PHP_URL_HOST);
             $key='pi-rai-source:'.hash('sha256',$host);
             $urlKey='pi-rai-url:'.hash('sha256',$url);
             $state=$cache->get($key,[]);
-            if($cache->get($urlKey,false))return ['status'=>404];
-            if(($state['retry_at']??0)>$now){$next[]=$state['retry_at'];return ['status'=>429];}
+            if($held=$cache->get($urlKey)){ $observations[]=['url'=>$url,'state'=>'URL_COOLDOWN','previous_status'=>$held];return ['status'=>$held]; }
+            if(($state['retry_at']??0)>$now){$next[]=$state['retry_at'];$observations[]=['url'=>$url,'state'=>'SOURCE_COOLDOWN','retry_at'=>$state['retry_at']];return ['status'=>429];}
             $lock=$cache->lock($key.':lock',45);
-            if(!$lock->get()){$next[]=$now+60;return ['status'=>429];}
+            if(!$lock->get()){$next[]=$now+60;$observations[]=['url'=>$url,'state'=>'SOURCE_LOCK_BUSY'];return ['status'=>429];}
             try{
                 $state=$cache->get($key,[]);
-                if(($state['retry_at']??0)>$now){$next[]=$state['retry_at'];return ['status'=>429];}
+                if(($state['retry_at']??0)>$now){$next[]=$state['retry_at'];$observations[]=['url'=>$url,'state'=>'SOURCE_COOLDOWN','retry_at'=>$state['retry_at']];return ['status'=>429];}
                 $tmp=tempnam(sys_get_temp_dir(),'pi-rai-');
                 if($tmp===false)throw new RuntimeException('PI_RAI_TEMP_HOLD');
                 $status=0;$retryAfter=null;$body=null;
@@ -57,14 +57,19 @@ final class AcquirePinnedRegulation implements ShouldQueue
                 }catch(\Throwable){$status=0;}finally{@unlink($tmp);}
                 $decision=$policy->decide($status,min(100,1+(int)($state['failures']??0)),$now,$retryAfter);
                 if($status===200)$cache->forget($key);
-                elseif($status===404||$status===403)$cache->put($urlKey,true,now()->addHours(24));
+                elseif($status===404||$status===403)$cache->put($urlKey,$status,now()->addHours(24));
                 elseif($decision['retry_at']!==null){
                     $cache->put($key,['failures'=>min(100,1+(int)($state['failures']??0)),'retry_at'=>$decision['retry_at']],max(3600,$decision['retry_at']-$now+3600));
                     $next[]=$decision['retry_at'];
                 }
+                $observations[]=['url'=>$url,'state'=>'HTTP_ATTEMPT','status'=>$status];
                 return ['status'=>$status,'body'=>$body];
             }finally{$lock->release();}
         });
+        $result['transport_observations']=$observations;
+        $result['next_retry_at']=$next?min($next):null;
+        $result['retry_budget_remaining']=max(0,$this->tries-$this->attempts());
+        $result['freshness']='UNVERIFIED';
         $cache->put('pi-rai-result:'.$this->documentId,$result,now()->addDays(7));
         if($result['state']==='ACQUISITION_PENDING'&&$next&&$this->attempts()<$this->tries)$this->release(max(1,min($next)-time()));
     }
