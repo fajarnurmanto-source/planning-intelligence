@@ -1,0 +1,83 @@
+{
+  "schema": "PI_HRIA_DELEGATION_REFERENCE_V1",
+  "observed_on": "2026-11-26",
+  "source_class": "OFFICIAL_WEB_TEXT_REFERENCE_NOT_LOCAL_BYTE_VERIFICATION",
+  "source_pp": "https://peraturan.bpk.go.id/Download/35278/PP%20Nomor%2081%20Tahun%202012.pdf",
+  "source_uu": "https://peraturan.bpk.go.id/Download/28462/UU%20Nomor%2018%20Tahun%202008.pdf",
+  "pp_reference_locator": "Menimbang, PDF page 1",
+  "cases": [
+    {
+      "article": 11,
+      "paragraphs": [
+        2
+      ],
+      "topic": "tata cara penggunaan hak",
+      "expected": "PP_AND_PERDA"
+    },
+    {
+      "article": 16,
+      "paragraphs": [],
+      "topic": "fasilitas pemilahan, label, kewajiban produsen",
+      "expected": "PP"
+    },
+    {
+      "article": 20,
+      "paragraphs": [
+        5
+      ],
+      "topic": "pengurangan sampah",
+      "expected": "PP"
+    },
+    {
+      "article": 22,
+      "paragraphs": [
+        2
+      ],
+      "topic": "penanganan sampah",
+      "expected": "PP_AND_OR_PERDA"
+    },
+    {
+      "article": 24,
+      "paragraphs": [
+        3
+      ],
+      "topic": "pembiayaan",
+      "expected": "PP_AND_OR_PERDA"
+    },
+    {
+      "article": 25,
+      "paragraphs": [
+        3,
+        4
+      ],
+      "topic": "dampak negatif dan kompensasi",
+      "expected": "MIXED_PP_AND_PP_AND_OR_PERDA"
+    },
+    {
+      "article": 28,
+      "paragraphs": [
+        3
+      ],
+      "topic": "peran masyarakat",
+      "expected": "PP_AND_OR_PERDA"
+    }
+  ],
+  "negative_controls": [
+    {
+      "article": 12,
+      "paragraphs": [
+        2
+      ],
+      "expected": "PERDA_ONLY_NOT_CITED_IN_PP_PREAMBLE"
+    },
+    {
+      "article": 21,
+      "paragraphs": [
+        2
+      ],
+      "expected": "PP_MANDATE_NOT_CITED_IN_THIS_PREAMBLE"
+    }
+  ],
+  "legal_effect": "NOT_ASSESSED",
+  "production_admission": "DENIED"
+}
