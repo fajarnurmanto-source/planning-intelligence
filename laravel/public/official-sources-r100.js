@@ -55,7 +55,7 @@
       article.appendChild(write('span',
         (laneLabel[doc.lane] || doc.lane)+' · '+doc.instrument+' '+doc.number+'/'+doc.year,
         'r100-kicker'))
-      article.appendChild(write('strong',doc.title))
+      article.appendChild(write('strong',window.PIRegulatoryIdentity?.label(doc) || doc.title))
       article.appendChild(write('p','Periode '+doc.period+' · '+doc.locator))
       article.appendChild(write('span','METADATA RESMI TERINDEKS · BERKAS BELUM DIPIN HASH','r100-status'))
       const link = safeOfficialLink(doc.official_url)

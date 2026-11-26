@@ -1,0 +1,5 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const read=n=>fs.readFileSync(path.join(__dirname,'../../public',n),'utf8');
+test('PER01 shared search and registry use authenticated existing catalogue',()=>{const s=read('pi-auth-shell.js');assert.match(s,/Cari di PI/);assert.match(s,/qa-superior-r100\/official-sources/);assert.match(s,/credentials:'same-origin'/);assert.match(s,/a\.pi-app-item\[href\]/);assert.doesNotMatch(s,/innerHTML|localStorage/);});
+test('PER01 five stages retain missing evidence',()=>{assert.match(read('index.html'),/5 TAHAP/);const s=read('institution-home.js');assert.match(s,/KUA-PPAS 2026/);assert.match(s,/Bukti RKA-SKPD dan RAPBD belum tersedia/);assert.match(s,/Bukti DPA belum tersedia/);});
+test('PER01 fiscal source names use shared identity',()=>{const s=read('native-annex-r106.js');assert.match(s,/PIRegulatoryIdentity\.resolve/);assert.match(s,/YOG-APBD-DETAIL-CHANGE3-2026/);assert.match(s,/judul belum terverifikasi/);assert.match(read('development-case-r85.html'),/per01-base-title/);});

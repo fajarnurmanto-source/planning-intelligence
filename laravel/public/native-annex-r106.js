@@ -4,6 +4,11 @@ const button=document.getElementById('r106-run'),status=document.getElementById(
 summary=document.getElementById('r106-summary'),body=document.getElementById('r106-rows'),
 links=document.getElementById('r106-source-links');
 if(!button||!status||!summary||!body||!links)return;
+document.addEventListener('DOMContentLoaded',()=>{
+ for(const [id,key,fallback] of [['per01-base-title','YOG-APBD-DETAIL-2026','Perwal 74/2025'],['per01-change-title','YOG-APBD-DETAIL-CHANGE3-2026','Perwal 12/2026']]){
+  const el=document.getElementById(id);if(el&&window.PIRegulatoryIdentity)window.PIRegulatoryIdentity.resolve(key,fallback).then(title=>{el.textContent=title;});
+ }
+});
 const money=n=>new Intl.NumberFormat('id-ID').format(n);
 button.addEventListener('click',async()=>{
  button.disabled=true;status.textContent='Memeriksa bukti PDF lokal...';
@@ -18,11 +23,12 @@ button.addEventListener('click',async()=>{
    throw Error('Kontrak bukti R106 tidak sesuai.');
   status.textContent='Kandidat ekstraksi lokal berhasil. Perlu review sumber dan hukum.';
   summary.textContent='Enam rekening: Rp'+money(data.derived_leaf_total_idr)+' (kandidat; bukan angka yang sudah disahkan).';
-  for(const [source,page,label] of [
-   ['base',data.source_documents.base.source_pdf_page,'Perwal 74/2025'],
-   ['change3',data.source_documents.third_amendment.source_pdf_page,'Perwal 12/2026']]){
+  for(const [source,page,label,identityId] of [
+   ['base',data.source_documents.base.source_pdf_page,'Perwal 74/2025','YOG-APBD-DETAIL-2026'],
+   ['change3',data.source_documents.third_amendment.source_pdf_page,'Perwal 12/2026','YOG-APBD-DETAIL-CHANGE3-2026']]){
    const link=document.createElement('a');link.href='/api/qa-superior-r106/annex-pdf?source='+source+'#page='+encodeURIComponent(page);
-   link.target='_blank';link.rel='noopener noreferrer';link.textContent=label+' · PDF halaman '+page;
+   link.target='_blank';link.rel='noopener noreferrer';link.textContent=label+' · judul belum terverifikasi · PDF halaman '+page;
+   if(window.PIRegulatoryIdentity)window.PIRegulatoryIdentity.resolve(identityId,label).then(title=>{link.textContent=title+' · PDF halaman '+page;});
    links.append(link);
   }
   for(const r of data.rows){
