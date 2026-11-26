@@ -18,7 +18,7 @@ final class ResilientRegulatoryAcquisition
         $sources=[];
         foreach($document['sources'] as $s){
             $u=parse_url($s['url']??'');$adapter=$s['adapter']??'';
-            if(!isset(self::HOSTS[$adapter])||!is_array($u)||($u['scheme']??null)!=='https'||($u['host']??null)!==self::HOSTS[$adapter]||isset($u['user'])||isset($u['pass'])||isset($u['port'])||isset($u['fragment'])||isset($u['query'])||!preg_match('~^/(?:Download/[0-9]+/[^/]+|files/[^/]+)\.pdf$~i',$u['path']??''))throw new RuntimeException('PI_RAI_SOURCE_HOLD');
+            if(!isset(self::HOSTS[$adapter])||!is_array($u)||($u['scheme']??null)!=='https'||(($u['host']??null)!==self::HOSTS[$adapter]&&!($adapter==='DITJEN_PP'&&($u['host']??null)==='www.peraturan.go.id'))||isset($u['user'])||isset($u['pass'])||isset($u['port'])||isset($u['fragment'])||isset($u['query'])||!preg_match('~^/(?:Download/[0-9]+/[^/]+|files/[^/]+)\.pdf$~i',$u['path']??''))throw new RuntimeException('PI_RAI_SOURCE_HOLD');
             $sources[$s['url']]=$s;
         }
         $path=rtrim($root,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$sha.'.pdf';

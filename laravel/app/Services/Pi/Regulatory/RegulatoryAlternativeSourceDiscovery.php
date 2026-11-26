@@ -32,13 +32,14 @@ final class RegulatoryAlternativeSourceDiscovery
             $href=trim($a->getAttribute('href'));
             if(str_starts_with($href,'/files/'))$href='https://peraturan.go.id'.$href;
             $p=parse_url($href);
-            if(!is_array($p)||($p['scheme']??null)!=='https'||($p['host']??null)!=='peraturan.go.id'||isset($p['user'])||isset($p['pass'])||isset($p['port'])||isset($p['query'])||isset($p['fragment'])||!preg_match('~^/files/[A-Za-z0-9%_.-]+\.pdf$~D',$p['path']??''))continue;
+            if(!is_array($p)||($p['scheme']??null)!=='https'||!in_array($p['host']??null,['peraturan.go.id','www.peraturan.go.id'],true)||isset($p['user'])||isset($p['pass'])||isset($p['port'])||isset($p['query'])||isset($p['fragment'])||!preg_match('~^/files/[A-Za-z0-9%_.-]+\.pdf$~D',$p['path']??''))continue;
             $name=strtolower(rawurldecode(basename($p['path'])));
             // A link in the document page may also refer to a different instrument.
             $k=strtolower($m[1]);
-            if(!preg_match('/^'.preg_quote($k,'/').'[-_ ]*(?:no[-_ ]*)?'.$m[2].'[-_ ]*(?:tahun[-_ ]*)?'.$m[3].'(?:bt)?\.pdf$/D',$name))continue;
-            $result['sources'][$href]=['adapter'=>'DITJEN_PP','url'=>$href];
-            if(count($result['sources'])>=2)break;
+            if(!preg_match('/^'.preg_quote($k,'/').'[-_ ]*(?:no[-_ ]*)?'.$m[2].'[-_ ]*(?:tahun[-_ ]*)?'.$m[3].'(?:[-_ ]*(bt|pjl|lampiran))?\.pdf$/D',$name,$part))continue;
+            $role=match($part[1]??''){'bt'=>'BODY_CANDIDATE','pjl'=>'EXPLANATION_CANDIDATE','lampiran'=>'ANNEX_CANDIDATE',default=>'UNSPECIFIED_CANDIDATE'};
+            $result['sources'][$href]=['adapter'=>'DITJEN_PP','url'=>$href,'component_role'=>$role];
+            if(count($result['sources'])>=4)break;
         }
         $result['sources']=array_values($result['sources']);
         return $result+['state'=>$result['sources']?'LINK_CANDIDATES_FOUND':'NO_EXACT_PDF_LINK'];

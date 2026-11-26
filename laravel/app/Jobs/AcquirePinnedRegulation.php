@@ -83,7 +83,24 @@ final class AcquirePinnedRegulation implements ShouldQueue
             // At most one additional PDF attempt, preserving worker timeout budget.
             if($alternatives){
                 $prior=$result['attempts'];
-                $result=$resolver->resolve(array_replace($document,['sources'=>array_slice($alternatives,0,1)]),$root,$fetch);
+                $candidate=$alternatives[0];
+                // Canonical resolver still accepts exact bytes only. Distinct official
+                // manifestations can be preserved separately for subsequent reconciliation.
+                $altFetch=function(string $url)use($fetch,$candidate,$found,$document,$root,&$manifestation):array{
+                    $r=$fetch($url);
+                    if(($r['status']??0)===200&&is_string($r['body']??null)
+                        &&strtoupper(hash('sha256',$r['body']))!==$document['expected_sha256']
+                        &&config('pi_rai.manifestation_enabled',false)){
+                        $quarantine=$root.DIRECTORY_SEPARATOR.'manifestation-quarantine';
+                        if(!is_dir($quarantine))@mkdir($quarantine,0750);
+                        try{$manifestation=(new \App\Services\Pi\Regulatory\RegulatoryManifestationIntake)->stage($document['id'],$found,$candidate,$r['body'],$quarantine,$document['expected_sha256']);}
+                        catch(\Throwable){$manifestation=['state'=>'MANIFESTATION_INTAKE_HOLD'];}
+                    }
+                    return $r;
+                };
+                $manifestation=null;
+                $result=$resolver->resolve(array_replace($document,['sources'=>[$candidate]]),$root,$altFetch);
+                if($manifestation!==null)$result['manifestation']=$manifestation;
                 $result['attempts']=array_merge($prior,$result['attempts']);
             }
             $result['discovery']=$found;
