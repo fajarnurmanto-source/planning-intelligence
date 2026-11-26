@@ -21,7 +21,7 @@ jobs:
           node-version: '22'
       - run: mkdir -p laravel/bootstrap/cache laravel/storage/framework/{cache,sessions,views} laravel/storage/logs
       - run: composer install --working-dir=laravel --prefer-dist --no-interaction --no-progress
-      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest|R100OfficialSourceMetadataTest|R102PrimaryPdfCandidateIntakeTest|R103BpkMirrorAndFiscalEvidenceTest|R105BpkQuarantineReadOnlyReviewTest|R106NativePdfAnnexIntelligenceTest|R106PdfExtractorRecoveryTest|FullDocumentInventoryTest|DocumentStructureProfileTest|DocumentLayoutReconstructorTest|FiscalRecordReconstructionTest|MultilineFiscalTableReconstructorTest|FiscalOrganizationContextTest|FiscalContextDiagnosticsTest|PlanningPageProfileTest|PlanningNomenclatureEvidenceTest|PlanningSemanticCandidatesTest|PlanningFiscalEvidenceCrosswalkTest|AdaptivePlanningTableEvidenceTest|PlanningHeaderColumnEvidenceTest|RegulatorySeriesFoundationTest|RegulatoryRelationGuardTest|RegulatorySeriesSourceQueueTest|RegulatorySeriesMetadataAcceptanceTest'
+      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest|R100OfficialSourceMetadataTest|R102PrimaryPdfCandidateIntakeTest|R103BpkMirrorAndFiscalEvidenceTest|R105BpkQuarantineReadOnlyReviewTest|R106NativePdfAnnexIntelligenceTest|R106PdfExtractorRecoveryTest|FullDocumentInventoryTest|DocumentStructureProfileTest|DocumentLayoutReconstructorTest|FiscalRecordReconstructionTest|MultilineFiscalTableReconstructorTest|FiscalOrganizationContextTest|FiscalContextDiagnosticsTest|PlanningPageProfileTest|PlanningNomenclatureEvidenceTest|PlanningSemanticCandidatesTest|PlanningFiscalEvidenceCrosswalkTest|AdaptivePlanningTableEvidenceTest|PlanningHeaderColumnEvidenceTest|RegulatorySeriesFoundationTest|RegulatoryRelationGuardTest|RegulatorySeriesSourceQueueTest|RegulatorySeriesMetadataAcceptanceTest|RegulatoryAnnexBenchmarkProfileTest'
 
       - name: RDI inventory CLI syntax and mutation flag refusal
         shell: bash
@@ -182,3 +182,17 @@ jobs:
             node ../scripts/pi-r95-isolated-chrome-browser-qa.mjs
           )
           echo PI_R93_ORIGINAL_WINDOWS_8820_AND_DB=NOT_ACCESSED
+
+      - name: RF04 actual official PDF acquisition and candidate inventory (disposable)
+        continue-on-error: true
+        timeout-minutes: 12
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq && sudo apt-get install -y poppler-utils
+          mkdir -p "$RUNNER_TEMP/rf04"
+          php -r '$q=json_decode(file_get_contents("laravel/resources/pi/rf04-primary-acquisition.json"),true);foreach($q["documents"] as $d)echo $d["id"]."\t".$d["pdf_url"]."\n";' | while IFS=$'\t' read -r id url; do
+            curl --fail --silent --show-error --proto '=https' --connect-timeout 15 --max-time 90 --max-filesize 83886080 "$url" -o "$RUNNER_TEMP/rf04/$id.pdf" || rm -f "$RUNNER_TEMP/rf04/$id.pdf"
+          done
+          php -d memory_limit=1536M scripts/pi-rf04-corpus-inventory.php "$RUNNER_TEMP/rf04" > "$RUNNER_TEMP/rf04-inventory.json" || true
+          php -r '$r=json_decode(file_get_contents($argv[1]),true,64,JSON_THROW_ON_ERROR);foreach($r["documents"] as $id=>$d)echo $id." SHA=".$d["source_sha256"]." PAGES=".$d["inventory"]["expected_pages"]." FORMAT_SIGNALS=".json_encode($d["format_profile"]["counts"])."\n";echo "RF04_PROCESSED=".$r["processed_documents"]."/".$r["expected_documents"]."\nRF04_HOLDS=".json_encode($r["holds"])."\n";exit($r["processed_documents"]===$r["expected_documents"]?0:1);' "$RUNNER_TEMP/rf04-inventory.json"

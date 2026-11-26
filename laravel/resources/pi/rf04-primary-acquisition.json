@@ -1,0 +1,31 @@
+{
+  "schema": "PI_RF04_PRIMARY_ACQUISITION_V1",
+  "documents": [
+    {
+      "id": "PERMENDAGRI-10-2023",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/324630/Permendagri%20Nomor%2010%20Tahun%202023.pdf",
+      "lane": "SERIES"
+    },
+    {
+      "id": "PERMENDAGRI-12-2024",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/364721/Permendagri%20No.%2012%20Tahun%202024.pdf",
+      "lane": "SERIES"
+    },
+    {
+      "id": "PERMENDAGRI-10-2025",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/383215/Permendagri%20Nomor%2010%20Tahun%202025.pdf",
+      "lane": "SERIES"
+    },
+    {
+      "id": "PERMENDAGRI-4-2026",
+      "pdf_url": "https://peraturan.go.id/files/permendagri-no-4-tahun-2026.pdf",
+      "lane": "HOLDOUT_CANDIDATE"
+    }
+  ],
+  "missing_direct_pdf_links": [
+    "UU-23-2014",
+    "PERMENDAGRI-1-2023",
+    "PERMENDAGRI-14-2026"
+  ],
+  "production_admission": "DENIED"
+}
