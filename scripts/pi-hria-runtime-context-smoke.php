@@ -22,4 +22,6 @@ if($r['source']!=='encrypted_vault'||$r['api_key']!=='synthetic-test-key')throw 
 $out=(new \App\Services\Pi\Development\CloudSemanticCandidateProvider)->propose(['scope'=>'PRIMARY_TEXT_LAYER_CANDIDATES_NOT_CERTIFIED_LEGAL_TEXT'],'deepseek',$r['model'],$r['api_key']);
 if($out['semantic_relation']!=='RELATED')throw new RuntimeException('HRIA_FIXTURE_PROVIDER_HOLD');
 \Illuminate\Support\Facades\Http::assertSentCount(1);
+if(is_dir($root.'/bootstrap/cache'))throw new RuntimeException('HRIA_PACKAGE_CACHE_MUTATION_HOLD');
 echo "HRIA_MINIMAL_CONTEXT_VAULT_FAKE_PROVIDER=PASS\n";
+echo "HRIA_PACKAGE_CACHE_DISCOVERY=NOT_REQUIRED\n";

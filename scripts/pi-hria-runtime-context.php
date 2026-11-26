@@ -26,7 +26,11 @@ function piHriaRuntimeContext(string $runtime,string $qa): \Illuminate\Foundatio
         }
     }
     $app->instance('config',new \Illuminate\Config\Repository($values));
-    (new \Illuminate\Foundation\Bootstrap\RegisterFacades)->bootstrap($app);
+    // Register only the facade container, not package discovery or alias loading.
+    // RegisterFacades invokes PackageManifest::aliases(), which may write
+    // bootstrap/cache/packages.php and fails on a read-only owner runtime.
+    \Illuminate\Support\Facades\Facade::clearResolvedInstances();
+    \Illuminate\Support\Facades\Facade::setFacadeApplication($app);
     $config=$app->make('config');
     if($config->get('pi.tenant_id')!=='ID-DIY-YOG')throw new RuntimeException('HRIA_TENANT_HOLD');
     if(!is_string($config->get('app.key'))||trim($config->get('app.key'))==='')throw new RuntimeException('HRIA_APP_ENCRYPTION_CONFIG_HOLD');
