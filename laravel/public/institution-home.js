@@ -54,13 +54,21 @@
       }
 
       const chain = id('chain-list'); chain.replaceChildren()
-      for (const item of data.stages) {
+      const stages = data.stages.slice()
+      if (stages.length === 4) {
+        stages.splice(2,0,{type:'KEBIJAKAN DAN PRIORITAS ANGGARAN',title:'KUA-PPAS 2026',summary:'Disusun berdasarkan RKPD. Bukti KUA dan PPAS kasus ini belum tersedia.',pdf_available:false})
+        stages[3]={...stages[3],type:'PENYUSUNAN DAN PENETAPAN ANGGARAN',title:'RKA-SKPD → RAPBD → APBD 2026',summary:stages[3].summary+' Bukti RKA-SKPD dan RAPBD belum tersedia.'}
+        stages[4]={...stages[4],type:'RINCIAN DAN DASAR PELAKSANAAN',title:'Penjabaran APBD & DPA',summary:stages[4].summary+' Bukti DPA belum tersedia.'}
+      }
+      const count = id('chain-title')?.closest('.panel-heading')?.querySelector('.small-tag')
+      if(count)count.textContent=stages.length+' TAHAP'
+      for (const item of stages) {
         const box = add(chain, 'article', 'stage')
         add(box, 'small', '', item.type)
         add(box, 'strong', '', item.title)
         add(box, 'p', '', item.summary)
         if (item.pdf_available) link(box, item.pdf_href, 'Lihat bukti ↗')
-        else add(box, 'small', '', 'Cuplikan belum terkemas')
+        else add(box, 'small', '', 'Bukti belum tersedia dalam paket')
       }
 
       const documents = id('documents-list'); documents.replaceChildren()
