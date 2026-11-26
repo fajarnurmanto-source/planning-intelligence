@@ -43,3 +43,12 @@
 .pi-app-route{font-size:10px}
 .pi-app-route strong{font-size:9px}
 .pi-app-unavailable{opacity:.8}
+
+/* PER01: keep authenticated header inside actual mobile viewport. */
+@media(max-width:700px){
+ .pi-user-bar{flex-shrink:1;min-width:0;max-width:100%;white-space:normal;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+ .pi-user-bar>span{min-width:0;overflow-wrap:anywhere;flex:1 1 70px}
+ .pi-user-bar button{flex:0 0 auto;white-space:nowrap;padding:5px 6px}
+ .topbar{height:auto;min-height:50px;gap:6px;flex-wrap:wrap;padding-block:6px}
+ .topbar>span{min-width:0;overflow-wrap:anywhere}
+}
