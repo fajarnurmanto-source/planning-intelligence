@@ -223,3 +223,28 @@ Artisan::command('pi:rai:status {document}', function (): int {
     $this->line(json_encode($r,JSON_THROW_ON_ERROR|JSON_UNESCAPED_SLASHES));
     return 0;
 })->purpose('Read last public candidate acquisition result');
+
+
+// Bounded periodic observation, opt-in and independent of acquisition or analysis.
+Artisan::command('pi:rai:observe-freshness {document?}', function (): int {
+    if(!config('pi_rai.enabled',false)||!config('pi_rai.freshness_enabled',false)){$this->warn('PI_RAI_FRESHNESS_DISABLED');return 2;}
+    $q=json_decode(file_get_contents(resource_path('pi/rai-source-registry.json')),true,32,JSON_THROW_ON_ERROR);
+    $id=$this->argument('document');
+    $cache=Cache::store('file');
+    $observer=app(\App\Services\Pi\Regulatory\RegulatoryFreshnessObserver::class);
+    $docs=$q['documents'];
+    if($id!==null){
+        $docs=array_values(array_filter($docs,static fn($d)=>$d['id']===$id));
+        if(!$docs)return 2;
+    }else{
+        // Oldest observations first; missing observations sort first.
+        usort($docs,static fn($a,$b)=>($cache->get('pi-rai-freshness:'.$a['id'])['observed_at']??0)<=>($cache->get('pi-rai-freshness:'.$b['id'])['observed_at']??0));
+        $docs=array_values(array_filter($docs,static fn($d)=>($cache->get('pi-rai-freshness:'.$d['id'])['observed_at']??0)<=time()-86400));
+        $docs=array_slice($docs,0,2);
+    }
+    foreach($docs as $d)$this->line(json_encode(['id'=>$d['id']]+$observer->observe($d),JSON_THROW_ON_ERROR|JSON_UNESCAPED_SLASHES));
+    return 0;
+})->purpose('Observe registered official PDF byte freshness without replacing snapshots');
+
+Schedule::command('pi:rai:observe-freshness')->hourly()->withoutOverlapping(10)
+    ->when(static fn()=>config('pi_rai.enabled',false)&&config('pi_rai.freshness_enabled',false));
