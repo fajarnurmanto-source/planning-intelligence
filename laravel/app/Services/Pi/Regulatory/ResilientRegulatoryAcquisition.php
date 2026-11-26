@@ -24,7 +24,7 @@ final class ResilientRegulatoryAcquisition
         $path=rtrim($root,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$sha.'.pdf';
         $result=['id'=>$id,'expected_sha256'=>$sha,'attempts'=>[],'freshness'=>'UNVERIFIED','legal_effect'=>'NOT_ASSESSED','production_admission'=>'DENIED','analysis_scope'=>'CANDIDATE_HISTORICAL_ONLY'];
         if(file_exists($path)||is_link($path)){
-            if(!$this->validFile($path,$sha))return $result+['state'=>'LOCAL_INTEGRITY_HOLD'];
+            if(!$this->validFile($path,$sha))return array_replace($result,['state'=>'LOCAL_INTEGRITY_HOLD','analysis_scope'=>'NO_DOCUMENT_AVAILABLE']);
             return $result+['state'=>'LOCAL_PINNED_CANDIDATE_AVAILABLE','source'=>'LOCAL'];
         }
         foreach($sources as $s){
@@ -40,20 +40,26 @@ final class ResilientRegulatoryAcquisition
             if(strtoupper(hash('sha256',$body))!==$sha){$result['attempts'][]=array_replace($attempt,['action'=>'DIFFERENT_BYTES_HOLD']);continue;}
             // Exclusive creation: no replacement of an existing snapshot.
             $f=@fopen($path,'xb');
-            if($f===false)return $result+['state'=>'REPOSITORY_WRITE_HOLD'];
+            if($f===false)return array_replace($result,['state'=>'REPOSITORY_WRITE_HOLD','analysis_scope'=>'NO_DOCUMENT_AVAILABLE']);
             try{$written=fwrite($f,$body);}finally{fclose($f);}
-            if($written!==strlen($body)||!$this->validFile($path,$sha)){@unlink($path);return $result+['state'=>'REPOSITORY_WRITE_HOLD'];}
+            if($written!==strlen($body)||!$this->validFile($path,$sha)){@unlink($path);return array_replace($result,['state'=>'REPOSITORY_WRITE_HOLD','analysis_scope'=>'NO_DOCUMENT_AVAILABLE']);}
             $result['attempts'][]=array_replace($attempt,['action'=>'PIN_MATCH']);
             return $result+['state'=>'REMOTE_PINNED_CANDIDATE_STORED','source'=>$s['adapter']];
         }
-        return $result+['state'=>'ACQUISITION_PENDING','analysis_scope'=>'CANDIDATE_HISTORICAL_ONLY'];
+        return array_replace($result,['state'=>'ACQUISITION_PENDING','analysis_scope'=>'NO_DOCUMENT_AVAILABLE']);
     }
 
     public function importPinned(array $document,string $file,string $root): array
     {
         $sha=$document['expected_sha256']??'';
         if(!is_string($sha)||!preg_match('/^[A-F0-9]{64}$/D',$sha)||!$this->validFile($file,$sha))throw new RuntimeException('PI_RAI_IMPORT_PIN_HOLD');
-        return $this->resolve($document,$root,static fn()=>['status'=>200,'body'=>file_get_contents($file)]);
+        $r=$this->resolve($document,$root,static fn()=>['status'=>200,'body'=>file_get_contents($file)]);
+        if($r['state']==='REMOTE_PINNED_CANDIDATE_STORED'){
+            $r['state']='IMPORTED_PINNED_CANDIDATE_STORED';
+            $r['source']='LOCAL_IMPORT';
+            $r['attempts']=[];
+        }
+        return $r;
     }
 
     private function validFile(string $file,string $sha): bool

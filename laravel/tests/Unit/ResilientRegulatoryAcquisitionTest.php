@@ -30,4 +30,18 @@ final class ResilientRegulatoryAcquisitionTest extends TestCase
             self::assertSame('ACQUISITION_PENDING',$r['state']);self::assertSame('DENIED',$r['production_admission']);self::assertSame('DIFFERENT_BYTES_HOLD',$r['attempts'][1]['action']);self::assertSame(['.','..'],scandir($root));
         }finally{@rmdir($root);}
     }
+    public function test_local_import_does_not_claim_remote_download(): void
+    {
+        $root=sys_get_temp_dir().'/rai-'.bin2hex(random_bytes(8));mkdir($root);
+        $file=$root.'/origin.pdf';$body="%PDF-1.7\n".str_repeat('fixture ',30)."\n%%EOF\n";file_put_contents($file,$body);
+        $sha=strtoupper(hash('sha256',$body));$path=$root.'/'.$sha.'.pdf';
+        $d=['id'=>'UU-TEST-2026','expected_sha256'=>$sha,'sources'=>[['adapter'=>'BPK','url'=>'https://peraturan.bpk.go.id/Download/1/test.pdf']]];
+        try{
+            $s=new ResilientRegulatoryAcquisition();$r=$s->importPinned($d,$file,$root);
+            self::assertSame('IMPORTED_PINNED_CANDIDATE_STORED',$r['state']);
+            self::assertSame('LOCAL_IMPORT',$r['source']);self::assertSame([],$r['attempts']);
+            self::assertSame('LOCAL_PINNED_CANDIDATE_AVAILABLE',$s->importPinned($d,$file,$root)['state']);
+            self::assertSame($body,file_get_contents($file));
+        }finally{@unlink($path);@unlink($file);@rmdir($root);}
+    }
 }
