@@ -12,7 +12,7 @@ final class RegulatoryAlternativeSourceDiscovery
     public function metadataUrl(string $id): string
     {
         if(!preg_match('/^(UU|PERMENDAGRI)-([1-9][0-9]{0,3})-((?:19|20)[0-9]{2})$/D',$id,$m))throw new RuntimeException('PI_RAI_DISCOVERY_ID_HOLD');
-        return 'https://peraturan.go.id/id/'.strtolower($m[1]).'-no-'.$m[2].'-tahun-'.$m[3];
+        return 'https://www.peraturan.go.id/id/'.strtolower($m[1]).'-no-'.$m[2].'-tahun-'.$m[3];
     }
     public function discover(string $id,callable $fetch): array
     {
@@ -30,7 +30,7 @@ final class RegulatoryAlternativeSourceDiscovery
         $result['metadata_sha256']=strtoupper(hash('sha256',$html));
         foreach($xp->query('//a[@href]') as $a){
             $href=trim($a->getAttribute('href'));
-            if(str_starts_with($href,'/files/'))$href='https://peraturan.go.id'.$href;
+            if(str_starts_with($href,'/files/'))$href='https://www.peraturan.go.id'.$href;
             $p=parse_url($href);
             if(!is_array($p)||($p['scheme']??null)!=='https'||!in_array($p['host']??null,['peraturan.go.id','www.peraturan.go.id'],true)||isset($p['user'])||isset($p['pass'])||isset($p['port'])||isset($p['query'])||isset($p['fragment'])||!preg_match('~^/files/[A-Za-z0-9%_.-]+\.pdf$~D',$p['path']??''))continue;
             $name=strtolower(rawurldecode(basename($p['path'])));
