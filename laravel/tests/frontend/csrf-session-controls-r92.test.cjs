@@ -21,7 +21,7 @@ test('R92 logout sends Laravel CSRF header and session cookies without exposing 
     },
   }
   const document = {
-    body: {},
+    body: {append() {}},
     addEventListener(name, fn) {
       if (name === 'DOMContentLoaded') domReady = fn
     },
@@ -29,6 +29,9 @@ test('R92 logout sends Laravel CSRF header and session cookies without exposing 
       return {
         tag,
         children: [],
+        style: {},
+        setAttribute() {},
+        addEventListener() {},
         append(...children) { this.children.push(...children) },
       }
     },
@@ -47,7 +50,7 @@ test('R92 logout sends Laravel CSRF header and session cookies without exposing 
     throw new Error('Unexpected fetch: '+url)
   }
   vm.runInNewContext(shell, {
-    document, fetch, location:{replace(url){navigation.push(url)}},
+    window:{}, document, fetch, location:{replace(url){navigation.push(url)}},
     MutationObserver:class {},
   }, {filename:'pi-auth-shell.js'})
   assert.equal(typeof domReady,'function')
@@ -55,7 +58,7 @@ test('R92 logout sends Laravel CSRF header and session cookies without exposing 
   await new Promise(setImmediate)
   assert.equal(header.children.length,1)
   const menu=header.children[0]
-  const button=menu.children.find(child => child.tag === 'button')
+  const button=menu.children.find(child => child.tag === 'button' && child.textContent === 'Keluar')
   assert.ok(button)
   await button.onclick()
   const logout=calls.find(call=>call.url==='/api/auth/logout')
