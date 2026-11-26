@@ -19,9 +19,37 @@ $r=$vault->resolve('ID-DIY-YOG','deepseek');
 if($r['source']!=='encrypted_vault'||$r['api_key']!=='synthetic-test-key')throw new RuntimeException('HRIA_FIXTURE_VAULT_HOLD');
 \Illuminate\Support\Facades\Http::preventStrayRequests();
 \Illuminate\Support\Facades\Http::fake(['https://api.deepseek.com/chat/completions'=>\Illuminate\Support\Facades\Http::response(['choices'=>[['message'=>['content'=>'{"semantic_relation":"RELATED","semantic_confidence":"MEDIUM","explanation":"Synthetic only"}'],'finish_reason'=>'stop']]],200)]);
-$out=(new \App\Services\Pi\Development\CloudSemanticCandidateProvider)->propose(['scope'=>'PRIMARY_TEXT_LAYER_CANDIDATES_NOT_CERTIFIED_LEGAL_TEXT'],'deepseek',$r['model'],$r['api_key']);
+$provider=new \App\Services\Pi\Development\CloudSemanticCandidateProvider;
+$out=$provider->propose(['scope'=>'PRIMARY_TEXT_LAYER_CANDIDATES_NOT_CERTIFIED_LEGAL_TEXT'],'deepseek',$r['model'],$r['api_key']);
 if($out['semantic_relation']!=='RELATED')throw new RuntimeException('HRIA_FIXTURE_PROVIDER_HOLD');
 \Illuminate\Support\Facades\Http::assertSentCount(1);
+\Illuminate\Support\Facades\Http::assertSent(static function($request){
+    $data=$request->data();
+    return ($data['thinking']['type']??null)==='disabled'
+        && ($data['response_format']['type']??null)==='json_object'
+        && ($data['max_tokens']??null)===400
+        && ($data['stream']??null)===false;
+});
+if(($provider->diagnostic()['stage']??null)!=='OUTPUT_CONTRACT_PASS')throw new RuntimeException('HRIA_FIXTURE_DIAGNOSTIC_HOLD');
+foreach([
+    [401, ['error'=>['message'=>'DO_NOT_PRINT_FIXTURE']], 'R89_CLOUD_PROVIDER_UNAVAILABLE', 'HTTP_RESPONSE', null],
+    [402, ['error'=>['message'=>'DO_NOT_PRINT_FIXTURE']], 'R89_CLOUD_PROVIDER_UNAVAILABLE', 'HTTP_RESPONSE', null],
+    [429, ['error'=>['message'=>'DO_NOT_PRINT_FIXTURE']], 'R89_CLOUD_PROVIDER_UNAVAILABLE', 'HTTP_RESPONSE', null],
+    [200, ['choices'=>[['message'=>['content'=>'{}'],'finish_reason'=>'length']]], 'R89_CLOUD_PROVIDER_UNAVAILABLE', 'HTTP_RESPONSE', 'length'],
+    [200, ['choices'=>[['message'=>['content'=>'   '],'finish_reason'=>'stop']]], 'R89_CLOUD_OUTPUT_INVALID', 'HTTP_RESPONSE', 'stop'],
+    [200, ['choices'=>[['message'=>['content'=>'invalid-json'],'finish_reason'=>'stop']]], 'JSON_EXCEPTION', 'JSON_DECODE', 'stop'],
+] as [$status,$body,$expected,$stage,$finish]){
+    \Illuminate\Support\Facades\Http::swap(new \Illuminate\Http\Client\Factory);
+    \Illuminate\Support\Facades\Http::preventStrayRequests();
+    \Illuminate\Support\Facades\Http::fake(['https://api.deepseek.com/chat/completions'=>\Illuminate\Support\Facades\Http::response($body,$status)]);
+    $failed=false;
+    try{$provider->propose(['scope'=>'PRIMARY_TEXT_LAYER_CANDIDATES_NOT_CERTIFIED_LEGAL_TEXT'],'deepseek',$r['model'],$r['api_key']);}
+    catch(Throwable $e){$failed=($e instanceof JsonException?'JSON_EXCEPTION':$e->getMessage())===$expected;}
+    $diag=$provider->diagnostic();
+    if(!$failed||$diag['http_status']!==$status||$diag['stage']!==$stage||$diag['finish_reason']!==$finish||str_contains(json_encode($diag),'DO_NOT_PRINT_FIXTURE'))throw new RuntimeException('HRIA_FIXTURE_FAILURE_DIAGNOSTIC_HOLD');
+    \Illuminate\Support\Facades\Http::assertSentCount(1);
+}
+echo "HRIA_DEEPSEEK_BOUNDED_JSON_AND_SAFE_FAILURE_DIAGNOSTICS=PASS\n";
 if(is_dir($root.'/bootstrap/cache'))throw new RuntimeException('HRIA_PACKAGE_CACHE_MUTATION_HOLD');
 $registry=new \App\Services\Pi\Regulatory\RegulatoryTaxonomyRegistry;
 $coverage=new \App\Services\Pi\Regulatory\RegulatoryDelegationCoverage($registry);

@@ -13,8 +13,17 @@ use RuntimeException;
  */
 final class CloudSemanticCandidateProvider implements SemanticCandidateProvider
 {
+    private array $diagnostic = [];
+
+    /** Safe metadata only, without response content or credentials. */
+    public function diagnostic(): array
+    {
+        return $this->diagnostic;
+    }
+
     public function propose(array $context, string $provider, string $model, string $apiKey): array
     {
+        $this->diagnostic = ['stage' => 'REQUEST_PREFLIGHT', 'http_status' => null, 'finish_reason' => null, 'usage' => [], 'request_attempted' => false];
         if (! isset(AiProviderCredentialVault::PROVIDERS[$provider])
             || preg_match('~\A[A-Za-z0-9_.:/-]{1,100}\z~D', $model) !== 1
             || trim($apiKey) === '') {
@@ -55,6 +64,8 @@ final class CloudSemanticCandidateProvider implements SemanticCandidateProvider
             if (preg_match('/\A[A-Za-z0-9_.-]{1,100}\z/D', $model) !== 1) {
                 throw new RuntimeException('R89_GEMINI_MODEL_INVALID');
             }
+            $this->diagnostic['stage'] = 'HTTP_REQUEST';
+            $this->diagnostic['request_attempted'] = true;
             $response = $request->withHeaders(['x-goog-api-key' => $apiKey])
                 ->post('https://generativelanguage.googleapis.com/v1beta/models/'.$model.':generateContent', [
                     'systemInstruction' => ['parts' => [['text' => $instruction]]],
@@ -92,11 +103,28 @@ final class CloudSemanticCandidateProvider implements SemanticCandidateProvider
                 $body['max_tokens'] = 400;
                 $body['temperature'] = 0;
             }
+            if ($provider === 'deepseek') {
+                // Current Flash defaults to thinking; reserve the bounded budget for visible JSON.
+                $body['thinking'] = ['type' => 'disabled'];
+                $body['response_format'] = ['type' => 'json_object'];
+                $body['messages'][0]['content'] .= ' Contoh format JSON (bukan jawaban): {"semantic_relation":"INSUFFICIENT","semantic_confidence":"UNDETERMINED","explanation":"Bukti belum cukup."}';
+            }
+            $this->diagnostic['stage'] = 'HTTP_REQUEST';
+            $this->diagnostic['request_attempted'] = true;
             $response = $request->withToken($apiKey)->post($url, $body);
             $raw = $response->json('choices.0.message.content');
             $finish = $response->json('choices.0.finish_reason');
         }
 
+        $this->diagnostic['stage'] = 'HTTP_RESPONSE';
+        $this->diagnostic['http_status'] = $response->status();
+        $this->diagnostic['finish_reason'] = in_array($finish, ['stop', 'length', 'content_filter', 'tool_calls', 'insufficient_system_resource', 'STOP', 'MAX_TOKENS', 'SAFETY', 'RECITATION'], true) ? $finish : ($finish === null ? null : 'OTHER');
+        foreach (['prompt_tokens', 'completion_tokens', 'total_tokens'] as $field) {
+            $value = $response->json('usage.'.$field);
+            if (is_int($value) && $value >= 0) {
+                $this->diagnostic['usage'][$field] = $value;
+            }
+        }
         if (! $response->successful() || strlen($response->body()) > 16384
             || in_array($finish, ['length', 'MAX_TOKENS'], true)) {
             throw new RuntimeException('R89_CLOUD_PROVIDER_UNAVAILABLE');
@@ -104,12 +132,16 @@ final class CloudSemanticCandidateProvider implements SemanticCandidateProvider
         if (! is_string($raw) || strlen($raw) > 4000 || trim($raw) === '') {
             throw new RuntimeException('R89_CLOUD_OUTPUT_INVALID');
         }
+        $this->diagnostic['stage'] = 'JSON_DECODE';
         $proposal = json_decode($raw, true, 8, JSON_THROW_ON_ERROR);
+        $this->diagnostic['stage'] = 'OUTPUT_CONTRACT';
         if (! is_array($proposal) || array_is_list($proposal)
             || count($proposal) !== 3
             || array_diff(array_keys($proposal), ['semantic_relation', 'semantic_confidence', 'explanation']) !== []) {
             throw new RuntimeException('R89_CLOUD_OUTPUT_CONTRACT_REJECTED');
         }
+
+        $this->diagnostic['stage'] = 'OUTPUT_CONTRACT_PASS';
 
         return $proposal;
     }

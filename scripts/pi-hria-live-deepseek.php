@@ -57,18 +57,28 @@ try {
     fwrite(STDOUT,"Type APPROVE ONE DEEPSEEK REQUEST to authorize sending the displayed public excerpts and provider charges: ");
     if(trim((string)fgets(STDIN))!=='APPROVE ONE DEEPSEEK REQUEST'){echo "\nHRIA_LIVE_NOT_AUTHORIZED\n";exit(1);}
     $start=hrtime(true);
+    $provider=new CloudSemanticCandidateProvider;
+    $liveStage='PROVIDER_PROPOSE';
     try{
-        $suggestion=(new CloudSemanticCandidateProvider)->propose($preview['context'],'deepseek',$credential['model'],$credential['api_key']);
+        $suggestion=$provider->propose($preview['context'],'deepseek',$credential['model'],$credential['api_key']);
+        $liveStage='REASONER_ASSESS';
         $result=$reasoner->assess($preview,$suggestion);
         $result['provider_execution']='CLOUD_PROVIDER_CALLED';
         $result['latency_ms']=round((hrtime(true)-$start)/1e6);
         $result['provider']='deepseek';$result['model']=$credential['model'];
         $result['benchmark_scope']='ARTICLE_16_SINGLE_LIVE_SMOKE_NOT_FULL_ACCURACY';
         $result['accuracy']='REQUIRES_REFERENCE_REVIEW';
-        $result['token_usage']='NOT_EXPOSED_BY_EXISTING_ADAPTER';
+        $result['provider_diagnostic']=$provider->diagnostic();
+        $result['token_usage']=$provider->diagnostic()['usage']?:'NOT_REPORTED';
         echo "\n".json_encode($result,JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES).PHP_EOL;
         exit($result['state']==='SEMANTIC_CANDIDATE_REVIEW_REQUIRED'?0:1);
-    }catch(Throwable){echo "\nHRIA_PROVIDER_OR_VALIDATION_HOLD\n";exit(1);}
+    }catch(Throwable $e){
+        $known=['R89_PROVIDER_NOT_CONFIGURED','R89_CLOUD_CONTEXT_TOO_LARGE','R89_GEMINI_MODEL_INVALID','R89_PROVIDER_NOT_ALLOWED','R89_CLOUD_PROVIDER_UNAVAILABLE','R89_CLOUD_OUTPUT_INVALID','R89_CLOUD_OUTPUT_CONTRACT_REJECTED'];
+        $reason=in_array($e->getMessage(),$known,true)?$e->getMessage():($e instanceof JsonException?'JSON_DECODE_FAILED':($e instanceof \Illuminate\Http\Client\ConnectionException?'TRANSPORT_CONNECTION_FAILED':'UNCLASSIFIED_EXCEPTION'));
+        $diagnostic=$provider->diagnostic();
+        echo "\n".json_encode(['state'=>'HRIA_PROVIDER_OR_VALIDATION_HOLD','stage'=>$liveStage,'reason'=>$reason,'provider_diagnostic'=>$diagnostic,'exception_class'=>get_class($e),'exception_file'=>basename($e->getFile()),'line'=>$e->getLine(),'latency_ms'=>round((hrtime(true)-$start)/1e6),'provider_execution'=>($diagnostic['request_attempted']??false)?'ATTEMPTED_DELIVERY_UNKNOWN_OR_RESPONSE_RECEIVED':'NOT_ATTEMPTED','legal_effect'=>'NOT_ASSESSED','production_admission'=>'DENIED'],JSON_THROW_ON_ERROR|JSON_UNESCAPED_SLASHES).PHP_EOL;
+        exit(1);
+    }
  }catch(Throwable $e){
     // Never print arbitrary exception messages, stack traces or configuration.
     $message=$e->getMessage();
