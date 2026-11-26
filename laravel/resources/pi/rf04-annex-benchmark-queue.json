@@ -1,0 +1,50 @@
+{
+  "schema": "PI_RF04_BENCHMARK_ACQUISITION_QUEUE_V1",
+  "status": "NOT_ACQUIRED_NOT_GOLD",
+  "documents": [
+    {
+      "id": "UU-23-2014",
+      "url": "https://peraturan.go.id/id/uu-no-23-tahun-2014",
+      "target_formats": [
+        "HIERARCHICAL_PROVISIONS",
+        "AUTHORITY_MATRIX"
+      ],
+      "split": "HOLDOUT_CANDIDATE"
+    },
+    {
+      "id": "PERMENDAGRI-1-2023",
+      "url": "https://peraturan.go.id/id/permendagri-no-1-tahun-2023",
+      "target_formats": [
+        "FORMS",
+        "MIXED_LAYOUT"
+      ],
+      "split": "HOLDOUT_CANDIDATE"
+    },
+    {
+      "id": "PERMENDAGRI-14-2026",
+      "url": "https://peraturan.bpk.go.id/Details/357698/permendagri-no-14-tahun-2026-pedoman-penyusunan-rencana-kerja-pemerintah-daerah",
+      "target_formats": [
+        "NARRATIVE",
+        "MULTILEVEL_TABLE",
+        "CROSS_PAGE_TABLE"
+      ],
+      "split": "HOLDOUT_CANDIDATE"
+    },
+    {
+      "id": "PERMENDAGRI-4-2026",
+      "url": "https://peraturan.go.id/id/permendagri-no-4-tahun-2026",
+      "target_formats": [
+        "SUPERVISION_MATRIX",
+        "NARRATIVE"
+      ],
+      "split": "HOLDOUT_CANDIDATE"
+    }
+  ],
+  "format_labels": "EXPECTED_NOT_VERIFIED",
+  "required_remaining": [
+    "SCANNED_IMAGE",
+    "MIXED_TEXT_IMAGE"
+  ],
+  "gold_records": 0,
+  "production_admission": "DENIED"
+}
