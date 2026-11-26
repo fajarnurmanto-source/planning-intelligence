@@ -1,0 +1,103 @@
+{
+  "schema": "PI_RAI_SOURCE_REGISTRY_V1",
+  "receipt_sha256": "8F61C4ED8EC67F1C905C456C65DA55048722AFF262E903A27F7AAE2F8142B55D",
+  "pin_status": "OWNER_OBSERVED_INVENTORY_CANDIDATE",
+  "documents": [
+    {
+      "id": "PERMENDAGRI-10-2023",
+      "expected_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "sources": [
+        {
+          "adapter": "BPK",
+          "url": "https://peraturan.bpk.go.id/Download/324630/Permendagri%20Nomor%2010%20Tahun%202023.pdf"
+        }
+      ],
+      "freshness": "UNVERIFIED",
+      "rights": "PUBLIC_REGULATION_CANDIDATE"
+    },
+    {
+      "id": "PERMENDAGRI-12-2024",
+      "expected_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "sources": [
+        {
+          "adapter": "BPK",
+          "url": "https://peraturan.bpk.go.id/Download/364721/Permendagri%20No.%2012%20Tahun%202024.pdf"
+        }
+      ],
+      "freshness": "UNVERIFIED",
+      "rights": "PUBLIC_REGULATION_CANDIDATE"
+    },
+    {
+      "id": "PERMENDAGRI-10-2025",
+      "expected_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "sources": [
+        {
+          "adapter": "BPK",
+          "url": "https://peraturan.bpk.go.id/Download/383215/Permendagri%20Nomor%2010%20Tahun%202025.pdf"
+        }
+      ],
+      "freshness": "UNVERIFIED",
+      "rights": "PUBLIC_REGULATION_CANDIDATE"
+    },
+    {
+      "id": "PERMENDAGRI-4-2026",
+      "expected_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "sources": [
+        {
+          "adapter": "DITJEN_PP",
+          "url": "https://peraturan.go.id/files/permendagri-no-4-tahun-2026.pdf"
+        }
+      ],
+      "freshness": "UNVERIFIED",
+      "rights": "PUBLIC_REGULATION_CANDIDATE"
+    },
+    {
+      "id": "PERMENDAGRI-14-2026",
+      "expected_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "sources": [
+        {
+          "adapter": "BPK",
+          "url": "https://peraturan.bpk.go.id/Download/421769/permendagri_no_14_tahun_2026.pdf"
+        }
+      ],
+      "freshness": "UNVERIFIED",
+      "rights": "PUBLIC_REGULATION_CANDIDATE"
+    },
+    {
+      "id": "PERMENDAGRI-1-2023",
+      "expected_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "sources": [
+        {
+          "adapter": "BPK",
+          "url": "https://peraturan.bpk.go.id/Download/301556/Permendagri%20Nomor%201%20Tahun%202023.pdf"
+        }
+      ],
+      "freshness": "UNVERIFIED",
+      "rights": "PUBLIC_REGULATION_CANDIDATE"
+    },
+    {
+      "id": "UU-23-2014",
+      "expected_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "sources": [
+        {
+          "adapter": "BPK",
+          "url": "https://peraturan.bpk.go.id/Download/28013/UU%20Nomor%2023%20Tahun%202014.pdf"
+        }
+      ],
+      "freshness": "UNVERIFIED",
+      "rights": "PUBLIC_REGULATION_CANDIDATE"
+    },
+    {
+      "id": "UU-17-2019",
+      "expected_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "sources": [
+        {
+          "adapter": "BPK",
+          "url": "https://peraturan.bpk.go.id/Download/113525/UU%20Nomor%2017%20Tahun%202019.pdf"
+        }
+      ],
+      "freshness": "UNVERIFIED",
+      "rights": "PUBLIC_REGULATION_CANDIDATE"
+    }
+  ]
+}
