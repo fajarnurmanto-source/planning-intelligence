@@ -133,13 +133,16 @@ foreach($rel in @($replace)+@($guard)){
  $before[$rel]=(Get-FileHash -LiteralPath (Join-Path $root $rel) -Algorithm SHA256).Hash
 }
 $script=Join-Path $PSScriptRoot 'pi-apr-integrated-cutover.ps1'
-$tokens=$null
-$errors=$null
-[Management.Automation.Language.Parser]::ParseFile($script,[ref]$tokens,[ref]$errors)|Out-Null
-if($errors.Count -ne 0){
- $errors|Format-List
- throw 'PI_APR_CUTOVER_CI_PS51_SYNTAX_FAIL'
+foreach($checked in @($script,(Join-Path $PSScriptRoot 'pi-apr-tinker-contract.ps1'))){
+ $tokens=$null;$errors=$null
+ [Management.Automation.Language.Parser]::ParseFile($checked,[ref]$tokens,[ref]$errors)|Out-Null
+ if($errors.Count -ne 0){$errors|Format-List;throw 'PI_APR_CUTOVER_CI_PS51_SYNTAX_FAIL'}
 }
+$code=[IO.File]::ReadAllText($script)
+foreach($marker in @('PI_APR_CUTOVER_PREWRITE_TINKER=PASS','PI_APR_CUTOVER_POSTWRITE_TINKER=PASS','PI_APR_CUTOVER_AUTO_ROLLBACK=RESTORED_OLD_CODE_VERIFIED','PI_APR_CUTOVER_READ_ONLY_PREFLIGHT=PASS')){
+ if([regex]::Matches($code,[regex]::Escape($marker)).Count -ne 1){throw ('PI_APR_CUTOVER_CI_STRUCTURE_HOLD='+$marker)}
+}
+if([regex]::Matches($code,'Invoke-PiAprTinkerProbe -Php').Count -ne 2){throw 'PI_APR_CUTOVER_CI_PROBE_COUNT_HOLD'}
 Write-Host 'PI_APR_CUTOVER_WINDOWS_POWERSHELL51_SYNTAX=PASS'
 $argsFixed=@{CandidateRepo=$repo;ExpectedCommit=$head;CiFixtureRoot=$fixture}
 $pre=@(& $script @argsFixed)
@@ -215,7 +218,8 @@ foreach($case in @(
  @{Code=0;Lines=@('PI_APR_CUTOVER_TINKER_CASE_SIX_RELATIONS_GATES=PASS')},
  @{Code=1;Lines=@($good)},
  @{Code=0;Lines=@($good,$good)},
- @{Code=0;Lines=@('PI_R108_W3C_TINKER_HOLD_EDGE_E06')}
+ @{Code=0;Lines=@('PI_R108_W3C_TINKER_HOLD_EDGE_E06')},
+ @{Code=0;Lines=@($good,'PI_R108_W3C_TINKER_HOLD_EDGE_E06')}
 )){
  $rejected=$false
  try{Assert-PiAprTinkerResult -ExitCode $case.Code -Lines $case.Lines|Out-Null}catch{$rejected=$true}
@@ -233,8 +237,13 @@ $env:DB_DATABASE=':memory:'
 $env:QUEUE_CONNECTION='sync'
 $env:APP_KEY='base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
 $workDir='--working-dir='+(Join-Path $repo 'laravel')
-& composer install $workDir --prefer-dist --no-interaction --no-progress
-if($LASTEXITCODE -ne 0){throw 'PI_APR_TINKER_CI_DEPENDENCIES_HOLD'}
+$oldPreference=$ErrorActionPreference
+try{
+ $ErrorActionPreference='Continue'
+ & composer install $workDir --prefer-dist --no-interaction --no-progress
+ $composerExit=$LASTEXITCODE
+}finally{$ErrorActionPreference=$oldPreference}
+if($composerExit -ne 0){throw 'PI_APR_TINKER_CI_DEPENDENCIES_HOLD'}
 $php=(Get-Command php.exe -ErrorAction Stop).Source
 $result=@(Invoke-PiAprTinkerProbe -Php $php -AppRoot (Join-Path $repo 'laravel') -Probe (Join-Path $repo 'scripts\pi-r108-wave3c-tinker-readonly.php'))
 if($result -notcontains 'PI_APR_CUTOVER_TINKER_CASE_SIX_RELATIONS_GATES=PASS'){throw 'PI_APR_TINKER_REAL_WINDOWS_HOLD'}
