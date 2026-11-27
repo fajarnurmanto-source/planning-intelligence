@@ -34,6 +34,8 @@ on:
       - 'scripts/pi-r108-wave3b-ci-windows-fixture.ps1'
       - 'scripts/pi-r108-wave3c-performance-cutover.ps1'
       - 'scripts/pi-r108-wave3c-ci-windows-fixture.ps1'
+      - 'scripts/pi-apr-integrated-cutover.ps1'
+      - 'scripts/pi-apr-ci-windows-fixture.ps1'
       - 'scripts/pi-r106-windows-extractor-recovery.ps1'
       - 'laravel/resources/pi/official-source-metadata-r100.json'
       - 'laravel/public/official-sources-r100.js'
@@ -1647,3 +1649,8 @@ jobs:
         run: |
           & .\scripts\pi-r108-wave3c-ci-windows-fixture.ps1
           if($LASTEXITCODE -ne 0){throw 'PI_R108_W3C_WINDOWS_FIXTURE_FAILURE'}
+
+      - name: APR exact 56-file protected cutover and rollback fixture
+        shell: powershell
+        run: |
+          & '.\scripts\pi-apr-ci-windows-fixture.ps1'

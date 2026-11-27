@@ -1,0 +1,40 @@
+{
+  "schema": "PI_RF05_LOCAL_ACCEPTANCE_V1",
+  "baseline": "8f1653efd885a33b9b767e915e5fffbead7ad772",
+  "owner_log_only": true,
+  "independent_receipt_read": false,
+  "ci": {
+    "decision": "PASS_4_OF_4",
+    "runs": [
+      45951112405,
+      45951112432,
+      45951112424,
+      45951112423
+    ]
+  },
+  "local": {
+    "documents": 8,
+    "pages": 1119,
+    "holds": 0,
+    "network_requests": 0,
+    "receipt_sha256": "1EF33BAD25D259FB415AFBCC6291960E8F803CA8CD7F2889F397707EDFA3BA66",
+    "processing_route_counts": {
+      "PROVISION_STRUCTURE_CANDIDATE": 415,
+      "TABLE_RECONSTRUCTION_CANDIDATE": 282,
+      "FORMAT_REVIEW_REQUIRED": 422
+    },
+    "decision": "PASS_LOCAL_PINNED_INVENTORY_CANDIDATE_ONLY"
+  },
+  "runtime": {
+    "matched": 161,
+    "different": 18,
+    "missing": 38,
+    "original_only_files_in_r90_scope": 28,
+    "deployment": "NOT_PERFORMED",
+    "dependency_package_identity": "NOT_ASSESSED",
+    "sqlite_schema": "NOT_ASSESSED"
+  },
+  "legal_effect": "NOT_ASSESSED",
+  "numeric_admission": 0,
+  "production_admission": "DENIED"
+}
