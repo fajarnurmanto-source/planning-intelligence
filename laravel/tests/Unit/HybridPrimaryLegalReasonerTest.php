@@ -86,4 +86,23 @@ final class HybridPrimaryLegalReasonerTest extends TestCase
         $this->expectExceptionMessage('HRIA_EXCERPT_HOLD');
         $this->reasoner()->preview($f,16,'2026-11-26','2026-11-26');
     }
+    public function test_pp_body_retrieval_is_separate_from_citation_and_excludes_explanation(): void
+    {
+        $f=$this->fixture();
+        $scan=(new R82ProvisionTextScanner)->scan(
+            "Menimbang: Pasal 16 perlu aturan.\nMengingat:\nMEMUTUSKAN:\nPasal 7\nPenyediaan fasilitas pemilahan sampah dilakukan secara bertahap.\nPasal 8\nKetentuan lainnya.\nPENJELASAN\nPasal 9\nPenyediaan fasilitas pemilahan sampah.\nPasal 10\nContoh.",
+            "Pasal 16\nPenyediaan fasilitas pemilahan sampah diatur dengan peraturan pemerintah.\nPasal 17\nLainnya.",
+            [['article'=>16,'paragraphs'=>[]]]);
+        $f['candidates']=$scan['records'];
+        self::assertSame([7],array_column($f['candidates'][0]['pp_body_candidates'],'article'));
+        $preview=$this->reasoner()->preview($f,16,'2026-11-26','2026-11-26');
+        self::assertSame(1,$preview['operative_retrieval']['included']);
+        self::assertSame('PP_BODY_LEXICAL_CANDIDATE',$preview['context']['evidence'][3]['role']);
+        $result=$this->reasoner()->assess($preview,['semantic_relation'=>'RELATED','semantic_confidence'=>'LOW','explanation'=>'Kandidat untuk ditelaah.']);
+        self::assertSame('CITES_AS_BASIS',$result['structural_relation']['type']);
+        self::assertSame('NOT_ASSESSED',$result['legal_effect']);
+        $f['candidates'][0]['pp_body_candidates'][0]['excerpt'].=' altered';
+        $this->expectExceptionMessage('HRIA_PP_BODY_EXCERPT_HOLD');
+        $this->reasoner()->preview($f,16,'2026-11-26','2026-11-26');
+    }
 }

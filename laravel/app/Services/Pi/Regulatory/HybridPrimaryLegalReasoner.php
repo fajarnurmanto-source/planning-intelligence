@@ -41,9 +41,24 @@ final class HybridPrimaryLegalReasoner
             $evidence[]=['id'=>'P'.(count($evidence)+1),'instrument_id'=>'PP-81-2012','source_url'=>$src['acquisition_url'],'source_sha256'=>$src['pdf_sha256'],'pdf_page'=>$extra['pdf_page'],'excerpt'=>$extra['excerpt'],'excerpt_sha256'=>$extra['excerpt_sha256'],'role'=>'PREAMBLE_CONTEXT_CANDIDATE'];
         }
         $ctx=['scope'=>'PRIMARY_TEXT_LAYER_CANDIDATES_NOT_CERTIFIED_LEGAL_TEXT','case_date'=>$caseDate,'knowledge_date'=>$knowledgeDate,'article'=>$article,'evidence'=>$evidence,'permitted_task'=>'Assess whether the excerpts support a reference or potential implementation/delegation relation; distinguish missing evidence. No legal effect or policy compliance conclusion.'];
+        $retrieved=$record['pp_body_candidates']??[];
+        if(!is_array($retrieved)||count($retrieved)>2)throw new RuntimeException('HRIA_PP_BODY_CONTRACT_HOLD');
+        $included=0;$seenArticles=[];
+        foreach($retrieved as $candidate){
+            if(!is_array($candidate)||($candidate['evidence_state']??null)!=='PP_BODY_LEXICAL_CANDIDATE_FOR_REVIEW'||($candidate['truncated']??true)
+                ||!is_int($candidate['article']??null)||$candidate['article']<1||$candidate['article']>999||isset($seenArticles[$candidate['article']])
+                ||!is_int($candidate['pdf_page']??null)||$candidate['pdf_page']<1||!is_string($candidate['excerpt']??null)||mb_strlen($candidate['excerpt'])>700
+                ||!preg_match('/^Pasal\h+'.preg_quote((string)$candidate['article'],'/').'\b/u',$candidate['excerpt'])
+                ||strtoupper(hash('sha256',$candidate['excerpt']))!==($candidate['excerpt_sha256']??null))throw new RuntimeException('HRIA_PP_BODY_EXCERPT_HOLD');
+            $seenArticles[$candidate['article']]=true;
+            $src=$sources['PP-81-2012'];
+            $next=$ctx;
+            $next['evidence'][]=['id'=>'P'.(count($ctx['evidence'])+1),'instrument_id'=>'PP-81-2012','source_url'=>$src['acquisition_url'],'source_sha256'=>$src['pdf_sha256'],'pdf_page'=>$candidate['pdf_page'],'excerpt'=>$candidate['excerpt'],'excerpt_sha256'=>$candidate['excerpt_sha256'],'role'=>'PP_BODY_LEXICAL_CANDIDATE','article'=>$candidate['article']];
+            if(strlen(json_encode($next,JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES))<=6000){$ctx=$next;$included++;}
+        }
         $raw=json_encode($ctx,JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
         if(strlen($raw)>6000)throw new RuntimeException('HRIA_CONTEXT_LIMIT');
-        return ['schema'=>'PI_HRIA_PRIMARY_PREVIEW_V1','context'=>$ctx,'sha256'=>strtoupper(hash('sha256',$raw)),'legal_effect'=>'NOT_ASSESSED','production_admission'=>'DENIED'];
+        return ['schema'=>'PI_HRIA_PRIMARY_PREVIEW_V1','context'=>$ctx,'operative_retrieval'=>['method'=>'BOUNDED_LEXICAL_CANDIDATES_ONLY','found'=>count($retrieved),'included'=>$included,'verification'=>'NOT_PERFORMED'],'sha256'=>strtoupper(hash('sha256',$raw)),'legal_effect'=>'NOT_ASSESSED','production_admission'=>'DENIED'];
     }
 
     /** Model output is a semantic opinion, never independently established legal evidence. */

@@ -164,6 +164,7 @@ final class R82ProvisionTextScanner
                 'pp_reference' => $ref,
                 'pp_preamble_context' => $ref !== null && ($preambleContext['pdf_page'] ?? null) === $ref['pdf_page'] ? $preambleContext : null,
                 'uu_passages' => $passages,
+                'pp_body_candidates' => $complete ? $this->retrieveBodyCandidates($ppText,$passages) : [],
                 'article_heading_count' => count($positionList),
                 'evidence_status' => $complete
                     ? 'TEXT_LAYER_CANDIDATE_REVIEW_REQUIRED'
@@ -176,6 +177,59 @@ final class R82ProvisionTextScanner
 
         return ['records' => $result, 'extracted' => $extracted,
             'unresolved' => count($result) - $extracted];
+    }
+
+    /**
+     * Bounded lexical retrieval, not a delegation proof. Only complete,
+     * uniquely headed single-page PP article spans before explanation/annex.
+     * Exact shared non-boilerplate word pairs rank candidates for review.
+     */
+    private function retrieveBodyCandidates(string $text,array $passages): array
+    {
+        $body=str_replace("\f","\n\f\n",$text);
+        if(!preg_match('/(?m)^\h*MEMUTUSKAN\h*:/iu',$body,$start,PREG_OFFSET_CAPTURE))return [];
+        $offset=$start[0][1];
+        if(preg_match('/(?m)^\h*(?:P\h*E\h*N\h*J\h*E\h*L\h*A\h*S\h*A\h*N(?:\h+ATAS)?|LAMPIRAN(?:\h+[IVXLCDM\d]+)?|DAFTAR\h+ISI)\h*$/iu',$body,$cut,PREG_OFFSET_CAPTURE,$offset)){
+            $body=substr($body,0,$cut[0][1]);
+        }
+        preg_match_all('/(?m)^\h*Pasal\h+([0-9]{1,3})\h*$/iu',$body,$head,PREG_OFFSET_CAPTURE,$offset);
+        if(count($head[0])>500)return [];
+        $frequency=array_count_values(array_column($head[1],0));
+        $query=[];
+        foreach($passages as $p){if(!($p['truncated']??true))$query+=$this->wordPairs($p['excerpt']);}
+        if($query===[])return [];
+        $ranked=[];
+        for($i=0;$i+1<count($head[0]);$i++){
+            [$heading,$from]=$head[0][$i];$number=$head[1][$i][0];
+            if($frequency[$number]!==1)continue;
+            $span=rtrim(substr($body,$from,$head[0][$i+1][1]-$from));
+            // Trim only trailing page delimiters: no joining text across pages.
+            $span=rtrim($span,"\r\n\t \f");
+            if($span===''||str_contains($span,"\f"))continue;
+            $excerpt=trim(preg_replace('/\s+/u',' ',$span)??'');
+            if(mb_strlen($excerpt)<30||mb_strlen($excerpt)>700)continue;
+            $shared=array_keys(array_intersect_key($this->wordPairs($excerpt),$query));
+            if(count($shared)<2)continue;
+            sort($shared,SORT_STRING);
+            $ranked[]=['article'=>(int)$number,'pdf_page'=>$this->page($body,$from),'excerpt'=>$excerpt,
+                'excerpt_sha256'=>strtoupper(hash('sha256',$excerpt)),'matched_pairs'=>array_slice($shared,0,8),
+                'match_count'=>count($shared),'truncated'=>false,'evidence_state'=>'PP_BODY_LEXICAL_CANDIDATE_FOR_REVIEW'];
+        }
+        usort($ranked,static fn($a,$b)=>($b['match_count']<=>$a['match_count'])?:($a['article']<=>$b['article']));
+        return array_slice($ranked,0,2);
+    }
+
+    private function wordPairs(string $text):array
+    {
+        preg_match_all('/\p{L}{4,}/u',mb_strtolower($text),$m);
+        $stop=array_flip(['pasal','ayat','yang','dengan','dalam','untuk','dari','atau','pada','sebagaimana','dimaksud','ketentuan','lebih','lanjut','diatur','peraturan','pemerintah','undang','tahun','nomor','tersebut','tentang','dapat','harus','serta','oleh']);
+        $pairs=[];$previous=null;
+        foreach($m[0] as $word){
+            if(isset($stop[$word])){$previous=null;continue;}
+            if($previous!==null)$pairs[$previous.' '.$word]=true;
+            $previous=$word;
+        }
+        return $pairs;
     }
 
     /** @return array<string,mixed> */

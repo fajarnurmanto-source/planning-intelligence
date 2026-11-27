@@ -54,7 +54,7 @@
       results.replaceChildren()
       retry.hidden=!catalogueFailed||loading;
       const terms=normalize(input.value).split(' ').filter(Boolean)
-      if(!terms.length){status.textContent='Ketik kata kunci. Cakupan awal: menu tersedia dan katalog resmi R100.';return}
+      if(!terms.length){status.textContent=catalogueFailed?'Katalog dokumen belum tersedia. Pencarian fitur tetap dapat digunakan; pilih Muat ulang katalog.':loading?'Memuat katalog dokumen…':'Ketik kata kunci untuk mencari fitur dan katalog produk hukum.';return}
       const entries=[]
       for(const a of document.querySelectorAll('nav[data-pi-app-nav] a.pi-app-item[href]')){
         const u=new URL(a.href,location.href)

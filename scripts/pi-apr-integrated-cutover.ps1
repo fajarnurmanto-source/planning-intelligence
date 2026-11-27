@@ -10,7 +10,7 @@ param(
  [Parameter(Mandatory=$true)][string]$CandidateRepo,
  [Parameter(Mandatory=$true)][ValidatePattern('^[a-fA-F0-9]{40}$')][string]$ExpectedCommit,
  [switch]$Apply,
- [ValidateSet('Integrated56','Gemini6')][string]$ReleaseProfile='Integrated56',
+ [ValidateSet('Integrated56','Gemini6','R106Diagnostic1')][string]$ReleaseProfile='Integrated56',
  [string]$CiFixtureRoot,
  [switch]$CiFailAfterSecondWrite,
  [int]$CiFailAfterWrite=0
@@ -114,6 +114,13 @@ if($ReleaseProfile -eq 'Gemini6'){
   'app\Services\Pi\Development\SemanticProviderRecovery.php',
   'app\Services\Pi\Regulatory\HybridPrimaryLegalAnalysis.php','public\regulatory-planning-r88.js')
  $add=@('app\Services\Pi\Development\GeminiSemanticBudget.php','config\pi_ai_budget.php')
+}
+if($ReleaseProfile -eq 'R106Diagnostic1'){
+ $baseline='49d07c955add998d40693f5d4139a3fe0268def1'
+ $release='4c7adadc7b15421a3afea570302c348f3aeb54c8'
+ $expectedFiles=1
+ $replace=@('public\native-annex-r106.js')
+ $add=@()
 }
 Write-Output ('PI_APR_CUTOVER_RELEASE_PROFILE='+$ReleaseProfile)
 # Add dependencies first, route registrations last. No removals outside rollback.
