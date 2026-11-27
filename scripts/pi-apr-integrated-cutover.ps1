@@ -19,6 +19,7 @@ $ErrorActionPreference='Stop'
 $baseline='a71bac9836654ecc9f313b19f7142ea7bc0aa0c8'
 $release='49d07c955add998d40693f5d4139a3fe0268def1'
 . (Join-Path $PSScriptRoot 'pi-apr-tinker-contract.ps1')
+. (Join-Path $PSScriptRoot 'pi-apr-laravel-prerequisites.ps1')
 $root='D:\Research\PlanningIntelligence\planning-intelligence-v0.0-starter\planning-intelligence-v0.0\laravel'
 $launcher='D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111'
 $ci=($CiFixtureRoot -ne '')
@@ -253,6 +254,8 @@ if(-not $ci){
  $p=Get-CimInstance Win32_Process -Filter "ProcessId=$($listener[0].OwningProcess)"
  if($null -eq $p -or $p.Name -notmatch '^(php|php-cgi)\.exe$'){throw 'PI_APR_CUTOVER_8820_NOT_EXISTING_PHP'}
  $php=Join-Path (Split-Path $p.ExecutablePath -Parent) 'php.exe'
+ $null=Invoke-PiAprLaravelPrerequisites -AppRoot $root
+ Write-Output 'PI_APR_RUNTIME_DIRECTORIES=READ_ONLY_PRESENT'
  Assert-PiAprPlatform -Php $php -Lock (Join-Path $repo 'laravel\composer.lock') -Mode runtime
  $probe=Join-Path $repo 'scripts\pi-r108-wave3c-tinker-readonly.php'
  Invoke-PiAprTinkerProbe -Php $php -AppRoot $root -Probe $probe

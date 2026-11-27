@@ -247,6 +247,13 @@ $fakeLock=Join-Path $fixture 'apr-platform-negative.json'
 $negative=@(& $php $platformProbe $fakeLock ci)
 if($LASTEXITCODE -ne 1 -or $negative -cnotcontains 'PI_APR_PLATFORM_MISSING_EXTENSION=pi_apr_missing_fixture' -or $negative -cnotcontains 'PI_APR_PLATFORM_EXTENSION_PRESENCE=HOLD'){throw 'PI_APR_PLATFORM_MISSING_EXTENSION_NEGATIVE_HOLD'}
 Write-Host 'PI_APR_PLATFORM_MISSING_EXTENSION_NEGATIVE=PASS'
+. (Join-Path $PSScriptRoot 'pi-apr-laravel-prerequisites.ps1')
+& (Join-Path $PSScriptRoot 'pi-apr-prerequisites-negative-controls.ps1') -FixtureRoot $fixture
+$lockBefore=(Get-FileHash -LiteralPath (Join-Path $repo 'laravel\composer.lock')).Hash
+$runtimeReceipt=Invoke-PiAprLaravelPrerequisites -AppRoot (Join-Path $repo 'laravel') -IsolatedRoot $env:RUNNER_TEMP -Repair
+Assert-PiAprLaravelReceipt $runtimeReceipt
+$runtimeReceipt|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $fixture 'laravel-prerequisites.json')
+Write-Host 'PI_APR_LARAVEL_RUNTIME_DIRECTORIES=PASS'
 $workDir='--working-dir='+(Join-Path $repo 'laravel')
 $oldPreference=$ErrorActionPreference
 try{
@@ -264,6 +271,15 @@ try{
 }finally{$ErrorActionPreference=$oldPreference}
 if($platformExit -ne 0){throw 'PI_APR_TINKER_COMPOSER_PLATFORM_HOLD'}
 Write-Host 'PI_APR_TINKER_COMPOSER_PLATFORM=PASS'
+if((Get-FileHash -LiteralPath (Join-Path $repo 'laravel\composer.lock')).Hash -cne $lockBefore){throw 'PI_APR_COMPOSER_LOCK_CHANGED_HOLD'}
+Push-Location -LiteralPath (Join-Path $repo 'laravel')
+try{
+ & $php artisan package:discover --ansi
+ if($LASTEXITCODE -ne 0){throw 'PI_APR_PACKAGE_DISCOVERY_HOLD'}
+ & $php -r 'require "vendor/autoload.php"; if (!class_exists("Illuminate\Foundation\Application")) exit(1);'
+ if($LASTEXITCODE -ne 0){throw 'PI_APR_AUTOLOAD_HOLD'}
+}finally{Pop-Location}
+Write-Host 'PI_APR_LOCKED_INSTALL_DISCOVERY_AUTOLOAD=PASS'
 $result=@(Invoke-PiAprTinkerProbe -Php $php -AppRoot (Join-Path $repo 'laravel') -Probe (Join-Path $repo 'scripts\pi-r108-wave3c-tinker-readonly.php'))
 if($result -notcontains 'PI_APR_CUTOVER_TINKER_CASE_SIX_RELATIONS_GATES=PASS'){throw 'PI_APR_TINKER_REAL_WINDOWS_HOLD'}
 Write-Host 'PI_APR_TINKER_REAL_WINDOWS_RELEASE_CONTRACT=PASS'

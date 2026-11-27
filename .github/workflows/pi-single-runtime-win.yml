@@ -38,6 +38,8 @@ on:
       - 'scripts/pi-apr-ci-windows-fixture.ps1'
       - 'scripts/pi-apr-tinker-contract.ps1'
       - 'scripts/pi-apr-platform-readonly.php'
+      - 'scripts/pi-apr-laravel-prerequisites.ps1'
+      - 'scripts/pi-apr-prerequisites-negative-controls.ps1'
       - 'scripts/pi-r106-windows-extractor-recovery.ps1'
       - 'laravel/resources/pi/official-source-metadata-r100.json'
       - 'laravel/public/official-sources-r100.js'
