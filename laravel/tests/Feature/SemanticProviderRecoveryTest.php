@@ -32,7 +32,7 @@ final class SemanticProviderRecoveryTest extends TestCase
         $this->travelBack();Cache::purge('file');File::deleteDirectory($this->root);
         parent::tearDown();
     }
-    private function call(string $provider='deepseek',string $tenant=self::TENANT):array
+    private function invokeRecovery(string $provider='deepseek',string $tenant=self::TENANT):array
     {
         return (new SemanticProviderRecovery)->invoke(new CloudSemanticCandidateProvider,$tenant,$provider,'test-model',self::KEY,['fixture'=>true]);
     }
@@ -43,7 +43,7 @@ final class SemanticProviderRecoveryTest extends TestCase
     public function test_persisted_balance_hold_survives_new_cache_instance_then_recovers():void
     {
         Http::fake(['https://api.deepseek.com/*'=>Http::sequence()->push(['error'=>['message'=>'PRIVATE_RESPONSE']],402)->push($this->reply(),200)]);
-        $first=$this->call();
+        $first=$this->invokeRecovery();
         self::assertSame('PROVIDER_BALANCE',$first['recovery']['failure_class']);
         self::assertSame('CLOUD_PROVIDER_ATTEMPTED',$first['provider_execution']);
         $receipt=Cache::store('file')->get($this->scope());
@@ -51,10 +51,10 @@ final class SemanticProviderRecoveryTest extends TestCase
         self::assertStringNotContainsString(self::KEY,json_encode($receipt));
         self::assertStringNotContainsString('PRIVATE_RESPONSE',json_encode($receipt));
         Cache::purge('file');
-        self::assertSame('NOT_RUN',$this->call()['provider_execution']);
+        self::assertSame('NOT_RUN',$this->invokeRecovery()['provider_execution']);
         Http::assertSentCount(1);
         $this->travel(16)->minutes();
-        self::assertSame('RESPONSE',$this->call()['state']);
+        self::assertSame('RESPONSE',$this->invokeRecovery()['state']);
         Http::assertSentCount(2);
         self::assertNull(Cache::store('file')->get($this->scope()));
     }
@@ -63,26 +63,26 @@ final class SemanticProviderRecoveryTest extends TestCase
         Http::fake(['https://api.deepseek.com/*'=>Http::response($this->reply(),200)]);
         $lock=Cache::store('file')->lock($this->scope().':lock',60);
         self::assertTrue($lock->get());
-        try{self::assertSame('PROVIDER_BUSY',$this->call()['recovery']['failure_class']);}
+        try{self::assertSame('PROVIDER_BUSY',$this->invokeRecovery()['recovery']['failure_class']);}
         finally{$lock->release();}
         Cache::store('file')->put($this->scope(),['failure_class'=>'PROVIDER_REQUEST_UNCERTAIN','retry_not_before'=>now()->timestamp+60],60);
-        self::assertSame('NOT_RUN',$this->call()['provider_execution']);
+        self::assertSame('NOT_RUN',$this->invokeRecovery()['provider_execution']);
         Http::assertNothingSent();
         config(['cache.default'=>'null']);
-        self::assertSame('RECOVERY_GUARD_UNAVAILABLE',$this->call()['recovery']['failure_class']);
+        self::assertSame('RECOVERY_GUARD_UNAVAILABLE',$this->invokeRecovery()['recovery']['failure_class']);
         Http::assertNothingSent();
     }
     public function test_rate_limit_is_scoped_and_honors_retry_after():void
     {
         Http::fake(['https://api.deepseek.com/*'=>Http::sequence()->push([],429,['Retry-After'=>'300'])->push($this->reply(),200)->push($this->reply(),200)]);
-        $first=$this->call();
+        $first=$this->invokeRecovery();
         self::assertSame('PROVIDER_RATE_LIMIT',$first['recovery']['failure_class']);
         self::assertGreaterThanOrEqual(now()->timestamp+299,$first['recovery']['retry_not_before']);
-        self::assertSame('RESPONSE',$this->call('deepseek','APR-OTHER-TENANT')['state']);
-        self::assertSame('NOT_RUN',$this->call()['provider_execution']);
+        self::assertSame('RESPONSE',$this->invokeRecovery('deepseek','APR-OTHER-TENANT')['state']);
+        self::assertSame('NOT_RUN',$this->invokeRecovery()['provider_execution']);
         Http::assertSentCount(2);
         $this->travel(6)->minutes();
-        self::assertSame('RESPONSE',$this->call()['state']);
+        self::assertSame('RESPONSE',$this->invokeRecovery()['state']);
         Http::assertSentCount(3);
     }
 }
