@@ -64,19 +64,30 @@ final class CloudSemanticCandidateProvider implements SemanticCandidateProvider
             if (preg_match('/\A[A-Za-z0-9_.-]{1,100}\z/D', $model) !== 1) {
                 throw new RuntimeException('R89_GEMINI_MODEL_INVALID');
             }
+            $generation = [
+                'temperature' => 0,
+                'maxOutputTokens' => 400,
+                'responseMimeType' => 'application/json',
+            ];
+            if ($model === 'gemini-3.5-flash-lite') {
+                $generation['thinkingConfig'] = ['thinkingLevel' => 'MINIMAL'];
+            }
             $this->diagnostic['stage'] = 'HTTP_REQUEST';
             $this->diagnostic['request_attempted'] = true;
             $response = $request->withHeaders(['x-goog-api-key' => $apiKey])
                 ->post('https://generativelanguage.googleapis.com/v1beta/models/'.$model.':generateContent', [
                     'systemInstruction' => ['parts' => [['text' => $instruction]]],
                     'contents' => [['role' => 'user', 'parts' => [['text' => $payload]]]],
-                    'generationConfig' => [
-                        'temperature' => 0,
-                        'maxOutputTokens' => 400,
-                        'responseMimeType' => 'application/json',
-                    ],
+                    'generationConfig' => $generation,
                 ]);
-            $raw = $response->json('candidates.0.content.parts.0.text');
+            $parts = $response->json('candidates.0.content.parts');
+            $visible = [];
+            foreach (is_array($parts) ? $parts : [] as $part) {
+                if (is_array($part) && ($part['thought'] ?? false) !== true && is_string($part['text'] ?? null)) {
+                    $visible[] = $part['text'];
+                }
+            }
+            $raw = implode('', $visible);
             $finish = $response->json('candidates.0.finishReason');
         } else {
             $url = match ($provider) {
@@ -125,8 +136,19 @@ final class CloudSemanticCandidateProvider implements SemanticCandidateProvider
                 $this->diagnostic['usage'][$field] = $value;
             }
         }
+        if ($provider === 'gemini') {
+            foreach (['promptTokenCount', 'candidatesTokenCount', 'thoughtsTokenCount', 'totalTokenCount'] as $field) {
+                $value = $response->json('usageMetadata.'.$field);
+                if (is_int($value) && $value >= 0) {
+                    $this->diagnostic['usage'][$field] = $value;
+                }
+            }
+            $block = $response->json('promptFeedback.blockReason');
+            $this->diagnostic['prompt_block_reason'] = in_array($block, ['SAFETY', 'OTHER', 'BLOCKLIST', 'PROHIBITED_CONTENT', 'IMAGE_SAFETY'], true) ? $block : ($block === null ? null : 'UNCLASSIFIED');
+        }
         if (! $response->successful() || strlen($response->body()) > 16384
-            || in_array($finish, ['length', 'MAX_TOKENS'], true)) {
+            || in_array($finish, ['length', 'MAX_TOKENS'], true)
+            || ($provider === 'gemini' && ($finish !== 'STOP' || $this->diagnostic['prompt_block_reason'] !== null))) {
             throw new RuntimeException('R89_CLOUD_PROVIDER_UNAVAILABLE');
         }
         if (! is_string($raw) || strlen($raw) > 4000 || trim($raw) === '') {

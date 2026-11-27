@@ -7,7 +7,9 @@ use App\Services\PlanningIntelligence\AiProviderCredentialVault;
 
 $stage='ARGUMENTS';
 try {
-    if(PHP_SAPI!=='cli'||count($argv)!==3)throw new RuntimeException('HRIA_ARGUMENT_HOLD');
+    if(PHP_SAPI!=='cli'||!in_array(count($argv),[3,4],true))throw new RuntimeException('HRIA_ARGUMENT_HOLD');
+    $selected=$argv[3]??'deepseek';
+    if(!in_array($selected,['deepseek','gemini','groq','openrouter','openai'],true))throw new RuntimeException('HRIA_PROVIDER_SELECTION_HOLD');
     $runtime=realpath($argv[1]);$root=realpath($argv[2]);
     if(!$runtime||!$root||!is_file($runtime.'/vendor/autoload.php'))throw new RuntimeException('HRIA_PATH_HOLD');
     $stage='RUNTIME_AUTOLOAD';
@@ -23,6 +25,10 @@ try {
         if(!class_exists($fqcn,false))require_once $qa.'/app/Services/Pi/Regulatory/'.$class.'.php';
         if(realpath((new ReflectionClass($fqcn))->getFileName())!==realpath($qa.'/app/Services/Pi/Regulatory/'.$class.'.php'))throw new RuntimeException('HRIA_CLASS_ORIGIN_HOLD');
     }
+    $stage='QA_PROVIDER_CLASS';
+    $fqcn=CloudSemanticCandidateProvider::class;
+    if(!class_exists($fqcn,false))require_once $qa.'/app/Services/Pi/Development/CloudSemanticCandidateProvider.php';
+    if(realpath((new ReflectionClass($fqcn))->getFileName())!==realpath($qa.'/app/Services/Pi/Development/CloudSemanticCandidateProvider.php'))throw new RuntimeException('HRIA_PROVIDER_CLASS_ORIGIN_HOLD');
     $stage='LARAVEL_MINIMAL_CONTEXT';
     require_once __DIR__.'/pi-hria-runtime-context.php';
     $app=piHriaRuntimeContext($runtime,$qa);
@@ -49,23 +55,24 @@ try {
     $stage='PRIMARY_PREVIEW';
     $preview=$reasoner->preview($report,16,'2026-11-26','2026-11-26');
     $stage='CREDENTIAL_VAULT';
-    $credential=$app->make(AiProviderCredentialVault::class)->resolve('ID-DIY-YOG','deepseek');
+    $credential=$app->make(AiProviderCredentialVault::class)->resolve('ID-DIY-YOG',$selected);
     if($credential['source']!=='encrypted_vault'||trim($credential['api_key'])===''||trim($credential['model'])==='')throw new RuntimeException('HRIA_VAULT_CONFIG_HOLD');
     $stage='APPROVAL_PREVIEW';
-    echo json_encode(['provider'=>'deepseek','model'=>$credential['model'],'context_sha256'=>$preview['sha256'],'context'=>$preview['context'],'maximum_requests'=>1,'maximum_output_tokens'=>400,'legal_effect'=>'NOT_ASSESSED'],JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES).PHP_EOL;
+    echo json_encode(['provider'=>$selected,'model'=>$credential['model'],'context_sha256'=>$preview['sha256'],'context'=>$preview['context'],'maximum_requests'=>1,'maximum_output_tokens'=>400,'legal_effect'=>'NOT_ASSESSED'],JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES).PHP_EOL;
     // Explicit local benchmark approval, not a persistent activation of the web cloud endpoint.
-    fwrite(STDOUT,"Type APPROVE ONE DEEPSEEK REQUEST to authorize sending the displayed public excerpts and provider charges: ");
-    if(trim((string)fgets(STDIN))!=='APPROVE ONE DEEPSEEK REQUEST'){echo "\nHRIA_LIVE_NOT_AUTHORIZED\n";exit(1);}
+    $approval='APPROVE ONE '.strtoupper($selected).' REQUEST';
+    fwrite(STDOUT,"Type $approval to authorize sending the displayed public excerpts and potential provider charges (free tier not verified by PI): ");
+    if(trim((string)fgets(STDIN))!==$approval){echo "\nHRIA_LIVE_NOT_AUTHORIZED\n";exit(1);}
     $start=hrtime(true);
     $provider=new CloudSemanticCandidateProvider;
     $liveStage='PROVIDER_PROPOSE';
     try{
-        $suggestion=$provider->propose($preview['context'],'deepseek',$credential['model'],$credential['api_key']);
+        $suggestion=$provider->propose($preview['context'],$selected,$credential['model'],$credential['api_key']);
         $liveStage='REASONER_ASSESS';
         $result=$reasoner->assess($preview,$suggestion);
         $result['provider_execution']='CLOUD_PROVIDER_CALLED';
         $result['latency_ms']=round((hrtime(true)-$start)/1e6);
-        $result['provider']='deepseek';$result['model']=$credential['model'];
+        $result['provider']=$selected;$result['model']=$credential['model'];
         $result['benchmark_scope']='ARTICLE_16_SINGLE_LIVE_SMOKE_NOT_FULL_ACCURACY';
         $result['accuracy']='REQUIRES_REFERENCE_REVIEW';
         $result['provider_diagnostic']=$provider->diagnostic();

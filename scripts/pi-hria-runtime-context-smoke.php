@@ -50,6 +50,24 @@ foreach([
     \Illuminate\Support\Facades\Http::assertSentCount(1);
 }
 echo "HRIA_DEEPSEEK_BOUNDED_JSON_AND_SAFE_FAILURE_DIAGNOSTICS=PASS\n";
+// Gemini fixture exercises original vault, fixed endpoint and visible JSON parsing.
+$vault->save('ID-DIY-YOG','gemini','synthetic-gemini-key','gemini-3.5-flash-lite');
+$g=$vault->resolve('ID-DIY-YOG','gemini');
+if($g['source']!=='encrypted_vault'||$g['api_key']!=='synthetic-gemini-key')throw new RuntimeException('HRIA_GEMINI_VAULT_HOLD');
+\Illuminate\Support\Facades\Http::swap(new \Illuminate\Http\Client\Factory);
+\Illuminate\Support\Facades\Http::preventStrayRequests();
+\Illuminate\Support\Facades\Http::fake(['https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent'=>\Illuminate\Support\Facades\Http::response(['candidates'=>[['content'=>['parts'=>[['thought'=>true,'text'=>'IGNORE_THOUGHT'],['text'=>'{"semantic_relation":"RELATED","semantic_confidence":"MEDIUM","explanation":"P1 and P2; synthetic"}']]],'finishReason'=>'STOP']],'usageMetadata'=>['promptTokenCount'=>120,'candidatesTokenCount'=>35,'thoughtsTokenCount'=>8,'totalTokenCount'=>163]],200)]);
+$out=$provider->propose(['scope'=>'PRIMARY_TEXT_LAYER_CANDIDATES_NOT_CERTIFIED_LEGAL_TEXT'],'gemini',$g['model'],$g['api_key']);
+if($out['semantic_relation']!=='RELATED'||($provider->diagnostic()['usage']['totalTokenCount']??null)!==163)throw new RuntimeException('HRIA_GEMINI_OUTPUT_HOLD');
+\Illuminate\Support\Facades\Http::assertSentCount(1);
+\Illuminate\Support\Facades\Http::assertSent(static function($request){
+    $data=$request->data();
+    return $request->hasHeader('x-goog-api-key','synthetic-gemini-key')
+        && ($data['generationConfig']['thinkingConfig']['thinkingLevel']??null)==='MINIMAL'
+        && ($data['generationConfig']['responseMimeType']??null)==='application/json'
+        && ($data['generationConfig']['maxOutputTokens']??null)===400;
+});
+echo "HRIA_GEMINI_VAULT_VISIBLE_JSON_USAGE=PASS\n";
 if(is_dir($root.'/bootstrap/cache'))throw new RuntimeException('HRIA_PACKAGE_CACHE_MUTATION_HOLD');
 $registry=new \App\Services\Pi\Regulatory\RegulatoryTaxonomyRegistry;
 $coverage=new \App\Services\Pi\Regulatory\RegulatoryDelegationCoverage($registry);
