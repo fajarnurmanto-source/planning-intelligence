@@ -16,7 +16,15 @@ button.addEventListener('click',async()=>{
  try{
   const response=await fetch('/api/qa-superior-r106/annex-fiscal-review',
    {credentials:'same-origin',cache:'no-store',headers:{Accept:'application/json'}});
-  if(!response.ok)throw Error(response.status===401?'Silakan login di PI.':'ABSTAIN: PDF belum tersedia atau fitur belum diaktifkan.');
+  if(!response.ok){
+   const messages={401:'Silakan login di PI',403:'Akses pemeriksaan ditolak',419:'Sesi pemeriksaan berakhir',
+    422:'Parameter pemeriksaan tidak valid',429:'Batas pemeriksaan sementara tercapai',
+    503:'Bukti PDF lokal atau pemeriksa belum tersedia. Hasil ditahan'};
+   const retry=response.headers?.get('Retry-After');
+   const delay=response.status===429&&/^[0-9]{1,4}$/.test(retry||'')&&Number(retry)>0&&Number(retry)<=3600
+    ? ' Coba lagi setelah '+Number(retry)+' detik.' : '';
+   throw Error((messages[response.status]||'Pemeriksaan tidak dapat diselesaikan')+' (HTTP '+response.status+').'+delay);
+  }
   const data=await response.json();
   if(data.schema!=='PI_R106_NATIVE_PDF_ANNEX_REVIEW_V1'||data.production_admission!=='DENIED'
     ||data.numeric_admission!==0||data.row_count!==6||!Array.isArray(data.rows))

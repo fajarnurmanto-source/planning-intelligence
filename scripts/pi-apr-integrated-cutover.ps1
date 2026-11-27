@@ -10,6 +10,7 @@ param(
  [Parameter(Mandatory=$true)][string]$CandidateRepo,
  [Parameter(Mandatory=$true)][ValidatePattern('^[a-fA-F0-9]{40}$')][string]$ExpectedCommit,
  [switch]$Apply,
+ [ValidateSet('Integrated56','Gemini6')][string]$ReleaseProfile='Integrated56',
  [string]$CiFixtureRoot,
  [switch]$CiFailAfterSecondWrite,
  [int]$CiFailAfterWrite=0
@@ -103,9 +104,21 @@ $add=@(
  'app\Services\Pi\Development\PrimaryPdfCandidateIntake.php',
  'resources\pi\official-bpk-pdf-mirrors-r103.json'
 )
+# Separate immutable release scope: never expands the original 56-file profile.
+$expectedFiles=56
+if($ReleaseProfile -eq 'Gemini6'){
+ $baseline='49d07c955add998d40693f5d4139a3fe0268def1'
+ $release='450cf0b2a7dad92d7f96799c41b26efa438b0387'
+ $expectedFiles=6
+ $replace=@('app\Services\Pi\Development\R89SemanticRegulatoryAnalysis.php',
+  'app\Services\Pi\Development\SemanticProviderRecovery.php',
+  'app\Services\Pi\Regulatory\HybridPrimaryLegalAnalysis.php','public\regulatory-planning-r88.js')
+ $add=@('app\Services\Pi\Development\GeminiSemanticBudget.php','config\pi_ai_budget.php')
+}
+Write-Output ('PI_APR_CUTOVER_RELEASE_PROFILE='+$ReleaseProfile)
 # Add dependencies first, route registrations last. No removals outside rollback.
 $allow=@($add)+@($replace|Where-Object {$_ -notlike 'routes\*'})+@($replace|Where-Object {$_ -like 'routes\*'})
-if($allow.Count -ne 56 -or @($allow|Select-Object -Unique).Count -ne 56){throw 'PI_APR_CUTOVER_SCOPE_HOLD'}
+if($allow.Count -ne $expectedFiles -or @($allow|Select-Object -Unique).Count -ne $expectedFiles){throw 'PI_APR_CUTOVER_SCOPE_HOLD'}
 $protected=@(
  'artisan',
  '.env',
@@ -288,7 +301,7 @@ foreach($rel in $protected){
 }
 $launcherSha=(Get-FileHash -LiteralPath $launcherFile -Algorithm SHA256).Hash
 $stamp=(Get-Date -Format 'yyyyMMdd-HHmmss-fff')+'-'+[guid]::NewGuid().ToString('N').Substring(0,8)
-$backup=Join-Path $launcher ('backups\APR_INTEGRATED_'+$stamp)
+$backup=Join-Path $launcher ('backups\APR_'+$ReleaseProfile+'_'+$stamp)
 $stages=New-Object 'System.Collections.Generic.List[string]'
 $began=$false
 try{

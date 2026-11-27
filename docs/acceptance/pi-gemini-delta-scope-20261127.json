@@ -1,0 +1,50 @@
+{
+  "schema": "PI_GEMINI_SEPARATE_RELEASE_DELTA_V1",
+  "baseline": "49d07c955add998d40693f5d4139a3fe0268def1",
+  "candidate": "450cf0b2a7dad92d7f96799c41b26efa438b0387",
+  "product_file_count": 6,
+  "files": [
+    {
+      "change": "A",
+      "path": "laravel/app/Services/Pi/Development/GeminiSemanticBudget.php",
+      "baseline_sha256": null,
+      "candidate_sha256": "73783B1C5914886206D313D0FEF0E97470DCE65ECF7BE5A5B1C9BE11C3D5461B"
+    },
+    {
+      "change": "M",
+      "path": "laravel/app/Services/Pi/Development/R89SemanticRegulatoryAnalysis.php",
+      "baseline_sha256": "2E2E28F7210006F4CF5276B0665B464A3B56D926BC1706B3D01623D8C24FCB11",
+      "candidate_sha256": "4C48C393A74C0C6F87FBACDD66B560EA19EB2E2631A6CCC707A6C2DE3DEE25DD"
+    },
+    {
+      "change": "M",
+      "path": "laravel/app/Services/Pi/Development/SemanticProviderRecovery.php",
+      "baseline_sha256": "5B861921BAB8655B4BC86568A2C8FC83C4236FD02E781CDA5229B7C290ADF868",
+      "candidate_sha256": "BA834641B56433064D0D94E18073E6D8FD521AE25C7AE913A7E8F568F9948B1B"
+    },
+    {
+      "change": "M",
+      "path": "laravel/app/Services/Pi/Regulatory/HybridPrimaryLegalAnalysis.php",
+      "baseline_sha256": "A7DDBC7C58BDD3EF20ACD25D20354FA9E100A130995FFF3BE6B0D56D9C53469C",
+      "candidate_sha256": "666F28CB5EE162F3DCB7DA4F0F5A40EB31E94B8BA807E23845446C740B0E7300"
+    },
+    {
+      "change": "A",
+      "path": "laravel/config/pi_ai_budget.php",
+      "baseline_sha256": null,
+      "candidate_sha256": "97F9CD68770D23F3BF93A7E9B78F41429282BCD2B7A4B86AF0463EBF51A204CA"
+    },
+    {
+      "change": "M",
+      "path": "laravel/public/regulatory-planning-r88.js",
+      "baseline_sha256": "2F70AFEF7511CB939C54B4E27CC8B2498662F599DCD880123DDB62DF30A56226",
+      "candidate_sha256": "5DE5F533819C570CD761A4498E61824FE888EA31FDB220EB72857C6E2B460404"
+    }
+  ],
+  "composer_change": false,
+  "migration_change": false,
+  "applied": false,
+  "owner_delta_approval": "NOT_RECORDED",
+  "live_api_calls": 0,
+  "production_admission": "DENIED"
+}

@@ -37,6 +37,7 @@ on:
       - 'scripts/pi-apr-integrated-cutover.ps1'
       - 'scripts/pi-apr-ci-windows-fixture.ps1'
       - 'scripts/pi-apr-tinker-contract.ps1'
+      - 'scripts/pi-apr-gemini-ci-windows-fixture.ps1'
       - 'scripts/pi-apr-platform-readonly.php'
       - 'scripts/pi-apr-laravel-prerequisites.ps1'
       - 'scripts/pi-apr-prerequisites-negative-controls.ps1'
@@ -1659,3 +1660,8 @@ jobs:
         shell: powershell
         run: |
           & '.\scripts\pi-apr-ci-windows-fixture.ps1'
+
+      - name: Separate Gemini six-file release rollback and drift guard
+        shell: powershell
+        run: |
+          & scripts/pi-apr-gemini-ci-windows-fixture.ps1

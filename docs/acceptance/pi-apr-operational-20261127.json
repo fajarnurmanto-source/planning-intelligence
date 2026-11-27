@@ -1,0 +1,130 @@
+{
+  "schema": "PI_APR_ACCEPTANCE_RECEIPT_V1",
+  "date_wib": "2026-11-27",
+  "starting_head": "7aeada7fc44e3781f9508746188fad2b5f82b2e3",
+  "accepted_executor": "b5e1f731737b5ed817b0013fe7dac9608217cc29",
+  "product_release": "49d07c955add998d40693f5d4139a3fe0268def1",
+  "github_ci": {
+    "status": "PASS_4_OF_4",
+    "head": "b5e1f731737b5ed817b0013fe7dac9608217cc29",
+    "runs": {
+      "r73": 45989010191,
+      "r74": 45989010143,
+      "r88": 45989010236,
+      "windows": 45989010398
+    },
+    "backend": {
+      "tests": 130,
+      "assertions": 1030
+    },
+    "isolated_auth": {
+      "tests": 3,
+      "assertions": 56
+    },
+    "nonblocking_rf04": {
+      "processed": 0,
+      "expected": 8,
+      "status": "NOT_ACCEPTED"
+    }
+  },
+  "isolated_windows": {
+    "locked_packages": 119,
+    "composer_lock_changed": false,
+    "platform_requirements": "PASS",
+    "package_discovery": "PASS",
+    "tinker": "PASS",
+    "missing_unwritable_collision_malformed_idempotence": "PASS"
+  },
+  "owner": {
+    "origin": "http://127.0.0.1:8820",
+    "php_pid": 5704,
+    "preflight": "PASS",
+    "cutover": "APPLIED_VERIFIED",
+    "scope_files": 56,
+    "prewrite_tinker": "PASS",
+    "postwrite_tinker": "PASS",
+    "idempotence": "NO_CHANGE_ALREADY_MATCHED",
+    "served_assets": "SHA_MATCH",
+    "anonymous_endpoints": "401",
+    "csrf": "PASS",
+    "database_replaced": false,
+    "migration_performed": false,
+    "password_or_account_changed": false,
+    "configuration_or_launcher_changed": false,
+    "normal_authentication_sessions_exercised": true
+  },
+  "actual_browser": {
+    "identity": "EXISTING_OWNER_ACCOUNT_MANUAL_LOGIN",
+    "origin": "ORIGINAL_8820",
+    "login": "PASS",
+    "logout": "PASS",
+    "revoked_session": "UNAUTHENTICATED",
+    "global_search_74_2025": "PASS_FIVE_RESULTS",
+    "planning_six_relations_indicator": "PASS",
+    "fiscal_annex_six_rows": "PASS",
+    "baseline_pdf": "OPENED_PAGE_384",
+    "amendment_pdf": "OPENED_PAGE_561",
+    "numeric_admission": 0,
+    "r89_gemini_preview": "PASS_NO_PROVIDER_CALL",
+    "desktop": {
+      "width": 1440,
+      "document_width": 1425,
+      "overflow": false
+    },
+    "mobile": {
+      "width": 390,
+      "document_width": 375,
+      "overflow": false,
+      "annex_rows": 6
+    },
+    "visual_evidence": "ACTUAL_BROWSER_SCREENSHOTS_IN_SESSION_TOOL_OUTPUT",
+    "initial_annex_failure": "GENERIC_HOLD_HTTP_STATUS_NOT_CAPTURED",
+    "subsequent_annex_attempt": "SUCCESS_AFTER_READ_ONLY_CLI_DIAGNOSIS_NO_OWNER_SOURCE_PATCH",
+    "automatic_runtime_recovery_claimed": false
+  },
+  "rai": {
+    "expected": 8,
+    "pins_matched": 8,
+    "missing": 0,
+    "corrupt": 0,
+    "network_requests": 0,
+    "prior_inventory_pages": 1119,
+    "prior_candidate_counts": {
+      "provisions": 415,
+      "tables": 282,
+      "format_review": 422
+    },
+    "prior_inventory_recomputed": false
+  },
+  "provider_recovery": {
+    "classification": "SIMULATED_RECOVERY_PASS",
+    "release49_tests": 3,
+    "release49_assertions": 24,
+    "gemini_candidate_tests": 5,
+    "gemini_candidate_assertions": 35,
+    "owner_paid_calls": 0,
+    "owner_provider_fault_injection": "NOT_TESTED"
+  },
+  "per": {
+    "a": "PARTIAL_GLOBAL_SEARCH_VERIFIED_CATALOGUE_RETRY_NOT_OWNER_FAULT_TESTED",
+    "b": "PARTIAL_PLANNING_BUDGET_JOURNEY_VERIFIED_RAW_DEVELOPER_LABELS_REMAIN",
+    "c": "VERIFIED_TITLES_AND_BOTH_AUTHENTICATED_PDF_LINKS",
+    "verbatim_owner_critiques": "NOT_RECOVERED"
+  },
+  "gemini_delta": {
+    "candidate": "450cf0b2a7dad92d7f96799c41b26efa438b0387",
+    "files": 6,
+    "applied": false,
+    "guarded_profile": "SOURCE_IMPLEMENTED_PENDING_CI"
+  },
+  "gates": {
+    "legal_harmonization": "NOT_ASSESSED",
+    "legal_effect": "NOT_ASSESSED",
+    "numeric_comparison": "BLOCKED",
+    "fiscal_admission": "ZERO",
+    "review_decision": "NO_ACTIVE_DECISION",
+    "relation_promotion": "NOT_PERFORMED",
+    "production_admission": "DENIED",
+    "commercial_ready": "NOT_PROVEN"
+  }
+}
