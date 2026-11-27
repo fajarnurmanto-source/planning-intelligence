@@ -7,8 +7,10 @@ use App\Services\PlanningIntelligence\AiProviderCredentialVault;
 
 $stage='ARGUMENTS';
 try {
-    if(PHP_SAPI!=='cli'||!in_array(count($argv),[3,4],true))throw new RuntimeException('HRIA_ARGUMENT_HOLD');
+    if(PHP_SAPI!=='cli'||!in_array(count($argv),[3,4,5],true))throw new RuntimeException('HRIA_ARGUMENT_HOLD');
     $selected=$argv[3]??'deepseek';
+    $previewOnly=($argv[4]??null)==='--preview-only';
+    if(count($argv)===5&&!$previewOnly)throw new RuntimeException('HRIA_ARGUMENT_HOLD');
     if(!in_array($selected,['deepseek','gemini','groq','openrouter','openai'],true))throw new RuntimeException('HRIA_PROVIDER_SELECTION_HOLD');
     $runtime=realpath($argv[1]);$root=realpath($argv[2]);
     if(!$runtime||!$root||!is_file($runtime.'/vendor/autoload.php'))throw new RuntimeException('HRIA_PATH_HOLD');
@@ -54,6 +56,10 @@ try {
     $reasoner=new HybridPrimaryLegalReasoner(new RegulatoryGenealogyGraph($registry));
     $stage='PRIMARY_PREVIEW';
     $preview=$reasoner->preview($report,16,'2026-11-26','2026-11-26');
+    if($previewOnly){
+        echo json_encode(['state'=>'HRIA_OFFLINE_PREVIEW_ONLY','preview'=>$preview,'provider_execution'=>'NOT_RUN','production_admission'=>'DENIED'],JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES).PHP_EOL;
+        exit(0);
+    }
     $stage='CREDENTIAL_VAULT';
     $credential=$app->make(AiProviderCredentialVault::class)->resolve('ID-DIY-YOG',$selected);
     if($credential['source']!=='encrypted_vault'||trim($credential['api_key'])===''||trim($credential['model'])==='')throw new RuntimeException('HRIA_VAULT_CONFIG_HOLD');
@@ -75,10 +81,12 @@ try {
         $result['provider']=$selected;$result['model']=$credential['model'];
         $result['benchmark_scope']='ARTICLE_16_SINGLE_LIVE_SMOKE_NOT_FULL_ACCURACY';
         $result['accuracy']='REQUIRES_REFERENCE_REVIEW';
+        $accepted=($result['model_output_validation']??null)==='PASS'&&($result['state']==='SEMANTIC_CANDIDATE_REVIEW_REQUIRED'||($result['state']==='ABSTAIN'&&$result['reason']==='INSUFFICIENT_SEMANTICS'));
+        $result['technical_acceptance']=$accepted?'PASS_VALID_MODEL_RESPONSE':'HOLD_INVALID_MODEL_RESPONSE';
         $result['provider_diagnostic']=$provider->diagnostic();
         $result['token_usage']=$provider->diagnostic()['usage']?:'NOT_REPORTED';
         echo "\n".json_encode($result,JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES).PHP_EOL;
-        exit($result['state']==='SEMANTIC_CANDIDATE_REVIEW_REQUIRED'?0:1);
+        exit($accepted?0:1);
     }catch(Throwable $e){
         $known=['R89_PROVIDER_NOT_CONFIGURED','R89_CLOUD_CONTEXT_TOO_LARGE','R89_GEMINI_MODEL_INVALID','R89_PROVIDER_NOT_ALLOWED','R89_CLOUD_PROVIDER_UNAVAILABLE','R89_CLOUD_OUTPUT_INVALID','R89_CLOUD_OUTPUT_CONTRACT_REJECTED'];
         $reason=in_array($e->getMessage(),$known,true)?$e->getMessage():($e instanceof JsonException?'JSON_DECODE_FAILED':($e instanceof \Illuminate\Http\Client\ConnectionException?'TRANSPORT_CONNECTION_FAILED':'UNCLASSIFIED_EXCEPTION'));

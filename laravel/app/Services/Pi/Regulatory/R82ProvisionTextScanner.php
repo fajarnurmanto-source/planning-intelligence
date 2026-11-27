@@ -51,6 +51,24 @@ final class R82ProvisionTextScanner
             $preambleOffset = $found[1][1];
         }
 
+        // Preserve the narrow original reference and optionally the complete
+        // bounded single-page Menimbang text. Never join pages silently.
+        $preambleContext = null;
+        if ($preambleOffset !== null && $preamble !== '') {
+            $normalized = trim(preg_replace('/\s+/u', ' ', $preamble) ?? '');
+            $first = $this->page($ppText, $preambleOffset);
+            $last = $this->page($ppText, $preambleOffset + strlen(rtrim($preamble)) - 1);
+            if ($first === $last && $normalized !== '' && mb_strlen($normalized) <= 1600) {
+                $preambleContext = [
+                    'pdf_page' => $first,
+                    'excerpt' => $normalized,
+                    'excerpt_sha256' => strtoupper(hash('sha256', $normalized)),
+                    'truncated' => false,
+                    'evidence_state' => 'EXTRACTED_PP_PREAMBLE_CONTEXT_FOR_REVIEW',
+                ];
+            }
+        }
+
         $result = [];
         $extracted = 0;
         $seen = [];
@@ -144,6 +162,7 @@ final class R82ProvisionTextScanner
                 'article' => $article,
                 'paragraphs_requested' => $paragraphs,
                 'pp_reference' => $ref,
+                'pp_preamble_context' => $ref !== null && ($preambleContext['pdf_page'] ?? null) === $ref['pdf_page'] ? $preambleContext : null,
                 'uu_passages' => $passages,
                 'article_heading_count' => count($positionList),
                 'evidence_status' => $complete
