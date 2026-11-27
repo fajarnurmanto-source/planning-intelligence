@@ -41,10 +41,11 @@
         "domain failure",
         "contradictory results"
       ],
-      "recovery_result": "PRODUCT_RUNTIME_RECOVERY_PASS",
-      "scope": "cutover tooling contract; not AI autonomous recovery",
+      "recovery_result": "SIMULATED_RECOVERY_PASS",
+      "scope": "Exact marker detector and current owner pre/post contract verified; developer source correction is not autonomous owner recovery.",
       "escalation_condition": "probe lacks exact single success or domain contract fails",
-      "evidence_reference": "original preflight/apply/idempotence receipts; Windows45989010398"
+      "evidence_reference": "original preflight/apply/idempotence receipts; Windows45989010398",
+      "original_runtime_contract": "PASS_NO_NEW_OWNER_FAULT_RECOVERY_INJECTED"
     },
     {
       "failure_class": "APR-BUNDLE-CRLF",
