@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Services\Pi\Regulatory;
 
 use App\Services\Pi\Development\SemanticCandidateProvider;
+use App\Services\Pi\Development\SemanticProviderRecovery;
 use App\Services\PlanningIntelligence\AiProviderCredentialVault;
 
 final class HybridPrimaryLegalAnalysis
@@ -10,7 +11,8 @@ final class HybridPrimaryLegalAnalysis
     public function __construct(private readonly R82NationalEvidencePipeline $pipeline,
         private readonly HybridPrimaryLegalReasoner $reasoner,
         private readonly SemanticCandidateProvider $provider,
-        private readonly AiProviderCredentialVault $vault){}
+        private readonly AiProviderCredentialVault $vault,
+        private readonly SemanticProviderRecovery $recovery){}
 
     public function preview(int $article,string $caseDate,string $knowledgeDate): array
     {
@@ -29,8 +31,10 @@ final class HybridPrimaryLegalAnalysis
         $key=$settings['api_key']??'';$model=$settings['model']??'';
         if(!is_string($key)||trim($key)===''||!is_string($model)||!preg_match('~\A[A-Za-z0-9_.:/-]{1,100}\z~D',$model))return $hold('PROVIDER_NOT_CONFIGURED');
         try{
-            $suggestion=$this->provider->propose($preview['context'],$provider,$model,$key);
-            return $this->reasoner->assess($preview,$suggestion)+['provider_execution'=>'CLOUD_PROVIDER_CALLED','provider'=>$provider,'model'=>$model,'context_sha256'=>$preview['sha256']];
+            $call=$this->recovery->invoke($this->provider,$tenant,$provider,$model,$key,$preview['context']);
+            $metadata=['provider_execution'=>$call['provider_execution'],'provider'=>$provider,'model'=>$model,'context_sha256'=>$preview['sha256'],'recovery'=>$call['recovery']];
+            if($call['state']!=='RESPONSE')return array_replace($hold($call['recovery']['failure_class']),$metadata);
+            return $this->reasoner->assess($preview,$call['proposal'])+$metadata;
         }catch(\Throwable){return array_replace($hold('PROVIDER_OR_VALIDATION_HOLD'),['provider_execution'=>'CLOUD_PROVIDER_ATTEMPTED']);}
     }
 }

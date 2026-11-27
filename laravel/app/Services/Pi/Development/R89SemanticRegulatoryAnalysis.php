@@ -16,6 +16,7 @@ final class R89SemanticRegulatoryAnalysis
         private readonly HybridSemanticReasoner $validator,
         private readonly SemanticCandidateProvider $provider,
         private readonly AiProviderCredentialVault $vault,
+        private readonly SemanticProviderRecovery $recovery,
     ) {}
 
     /** @param array<string,mixed> $filters */
@@ -79,7 +80,14 @@ final class R89SemanticRegulatoryAnalysis
         $result['provider'] = $providerId;
         $result['model'] = $model;
         try {
-            $suggestion = $this->provider->propose($result['preview']['context'], $providerId, $model, $key);
+            $call=$this->recovery->invoke($this->provider,$tenantId,$providerId,$model,$key,$result['preview']['context']);
+            $result['provider_recovery']=$call['recovery'];
+            if($call['state']!=='RESPONSE'){
+                $result['semantic_reasoning']['status']='ABSTAIN_CLOUD_PROVIDER_UNAVAILABLE';
+                $result['semantic_reasoning']['provider_execution']=$call['provider_execution'];
+                return $result;
+            }
+            $suggestion=$call['proposal'];
             $candidate = $preflight;
             $candidate['model_id'] = $providerId.':'.$model;
             $candidate['semantic_relation'] = $suggestion['semantic_relation'] ?? null;

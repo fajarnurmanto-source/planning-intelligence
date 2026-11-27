@@ -151,6 +151,19 @@ try{
   assert.equal(loaded.cloudInitiallyDisabled,true)
   assert.equal(loaded.r88NeedsClick,true)
   console.log('PI_R95_CHROME_R85_R86_AUTHENTICATED_RENDER=PASS')
+  // PER-A authenticated search; do not navigate to external links.
+  await until("!!document.querySelector('button[aria-label=\"Cari di PI (Ctrl+K)\"]')",'PER_SEARCH_READY')
+  await evalPage("document.querySelector('button[aria-label=\"Cari di PI (Ctrl+K)\"]').click()")
+  await until("document.querySelector('dialog[aria-label=\"Pencarian PI\"]')?.open",'PER_SEARCH_OPEN')
+  await evalPage("(()=>{const n=document.querySelector('input[aria-label=\"Kata kunci pencarian\"]');n.value='Perwal 74 2025';n.dispatchEvent(new Event('input',{bubbles:true}));})()")
+  await until("Array.from(document.querySelectorAll('dialog[aria-label=\"Pencarian PI\"] a')).some(a=>a.textContent.includes('Perwal 74/2025')&&a.textContent.includes('tentang'))",'PER_REGULATORY_SEARCH_RESULT')
+  assert.ok(await evalPage("Array.from(document.querySelectorAll('dialog[aria-label=\"Pencarian PI\"] a')).every(a=>a.origin===location.origin||a.hostname==='jdih.jogjakota.go.id')"))
+  await evalPage("document.querySelector('dialog[aria-label=\"Pencarian PI\"]').close()")
+  console.log('PI_PER01_CHROME_AUTHENTICATED_SEARCH=PASS')
+  await until("document.querySelector('#per01-base-title')?.textContent?.includes('tentang')&&document.querySelector('#per01-change-title')?.textContent?.includes('tentang')",'PER_FISCAL_IDENTITY')
+  assert.match(await evalPage("document.querySelector('#per01-base-title').textContent"),/Perwal 74\/2025/)
+  assert.match(await evalPage("document.querySelector('#per01-change-title').textContent"),/Perwal 12\/2026/)
+  console.log('PI_PER01_CHROME_FISCAL_IDENTITIES=PASS')
 
   // R108: actual browser navigation confirms progressive disclosure and
   // task labels while all legacy evidence DOM remains mounted for audit.

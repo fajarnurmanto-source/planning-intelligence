@@ -70,6 +70,7 @@ final class R89SemanticRegulatoryAnalysisTest extends TestCase
     {
         parent::setUp();
         Storage::fake('local');
+        config()->set('cache.default','array');
         // Multiple requests in one test exercise consent/guards, not the rate limiter.
         // The production route retains throttle:2,1 unchanged.
         $this->withoutMiddleware(ThrottleRequests::class);
@@ -226,31 +227,53 @@ final class R89SemanticRegulatoryAnalysisTest extends TestCase
 
     public function test_provider_failure_truncation_or_hallucinated_relation_abstains(): void
     {
-        $this->withoutMiddleware(ThrottleRequests::class);
         $this->login();
-        $sha = $this->digest();
-        $this->configure('deepseek', 'deepseek-flash');
-
-        Http::fake(['https://api.deepseek.com/*' => Http::sequence()
-            ->push([], 503)
-            ->push([
-                'choices' => [['message' => ['content' => $this->reply()], 'finish_reason' => 'length']],
-            ], 200)
-            ->push([
-                'choices' => [['message' => ['content' => $this->reply('LEGAL_COMPLIANCE_APPROVED')], 'finish_reason' => 'stop']],
-            ], 200)]);
-        $this->postJson(self::ANALYZE, $this->consent('deepseek', $sha))->assertOk()
-            ->assertJsonPath('semantic_reasoning.status', 'ABSTAIN_CLOUD_PROVIDER_UNAVAILABLE')
-            ->assertJsonPath('semantic_reasoning.provider_execution', 'CLOUD_PROVIDER_ATTEMPTED');
-
-        $this->postJson(self::ANALYZE, $this->consent('deepseek', $sha))->assertOk()
-            ->assertJsonPath('semantic_reasoning.status', 'ABSTAIN_CLOUD_PROVIDER_UNAVAILABLE');
-
-        $this->postJson(self::ANALYZE, $this->consent('deepseek', $sha))->assertOk()
-            ->assertJsonPath('semantic_reasoning.status', 'ABSTAIN_INVALID_SEMANTIC_PROPOSAL')
-            ->assertJsonPath('semantic_reasoning.candidates', [])
-            ->assertJsonPath('semantic_reasoning.gates.relation_promotion', 'NOT_PERFORMED');
+        $sha=$this->digest();
+        $this->configure('deepseek','deepseek-flash');
+        $this->configure('groq','test-model');
+        $this->configure('openai','gpt-4.1-mini');
+        Http::fake([
+            'https://api.deepseek.com/*'=>Http::response(['error'=>['message'=>'private provider body']],402),
+            'https://api.groq.com/*'=>Http::response(['choices'=>[['message'=>['content'=>$this->reply()],'finish_reason'=>'length']]],200),
+            'https://api.openai.com/*'=>Http::response(['choices'=>[['message'=>['content'=>$this->reply('LEGAL_COMPLIANCE_APPROVED')],'finish_reason'=>'stop']]],200),
+        ]);
+        $this->postJson(self::ANALYZE,$this->consent('deepseek',$sha))->assertOk()
+            ->assertJsonPath('semantic_reasoning.status','ABSTAIN_CLOUD_PROVIDER_UNAVAILABLE')
+            ->assertJsonPath('semantic_reasoning.provider_execution','CLOUD_PROVIDER_ATTEMPTED')
+            ->assertJsonPath('provider_recovery.failure_class','PROVIDER_BALANCE');
+        $this->postJson(self::ANALYZE,$this->consent('deepseek',$sha))->assertOk()
+            ->assertJsonPath('semantic_reasoning.provider_execution','NOT_RUN')
+            ->assertJsonPath('provider_recovery.automatic_retry',false);
+        Http::assertSentCount(1);
+        $this->postJson(self::ANALYZE,$this->consent('groq',$sha))->assertOk()
+            ->assertJsonPath('provider_recovery.failure_class','PROVIDER_OUTPUT_INVALID');
+        $this->postJson(self::ANALYZE,$this->consent('openai',$sha))->assertOk()
+            ->assertJsonPath('semantic_reasoning.status','ABSTAIN_INVALID_SEMANTIC_PROPOSAL')
+            ->assertJsonPath('semantic_reasoning.candidates',[])
+            ->assertJsonPath('semantic_reasoning.gates.relation_promotion','NOT_PERFORMED');
         Http::assertSentCount(3);
+    }
+
+    public function test_rate_limit_suppresses_repeat_but_preview_and_other_provider_remain_available(): void
+    {
+        $this->login();
+        $sha=$this->digest();
+        $this->configure('deepseek','deepseek-flash');
+        $this->configure('gemini','gemini-3.5-flash-lite');
+        Http::fake([
+            'https://api.deepseek.com/*'=>Http::response([],429,['Retry-After'=>'300']),
+            'https://generativelanguage.googleapis.com/*'=>Http::response(['candidates'=>[['content'=>['parts'=>[['text'=>$this->reply()]]],'finishReason'=>'STOP']]],200),
+        ]);
+        $first=$this->postJson(self::ANALYZE,$this->consent('deepseek',$sha))->assertOk()
+            ->assertJsonPath('provider_recovery.failure_class','PROVIDER_RATE_LIMIT');
+        self::assertGreaterThanOrEqual(time()+295,$first->json('provider_recovery.retry_not_before'));
+        $this->postJson(self::ANALYZE,$this->consent('deepseek',$sha))->assertOk()
+            ->assertJsonPath('semantic_reasoning.provider_execution','NOT_RUN');
+        self::assertSame($sha,$this->digest());
+        Http::assertSentCount(1);
+        $this->postJson(self::ANALYZE,$this->consent('gemini',$sha))->assertOk()
+            ->assertJsonPath('semantic_reasoning.provider_execution','CLOUD_PROVIDER_CALLED');
+        Http::assertSentCount(2);
     }
 
     public function test_admin_can_globally_disable_cloud_calls(): void

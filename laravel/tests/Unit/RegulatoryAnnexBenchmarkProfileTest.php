@@ -12,6 +12,8 @@ final class RegulatoryAnnexBenchmarkProfileTest extends TestCase
         self::assertSame(1,$r['counts']['ARTICLE_MARKERS']);
         self::assertSame(1,$r['counts']['TABLE_LAYOUT_MARKERS']);
         self::assertSame(1,$r['counts']['VISUAL_INSPECTION_REQUIRED']);
+        self::assertSame(['PROVISION_STRUCTURE_CANDIDATE','TABLE_RECONSTRUCTION_CANDIDATE','VISUAL_OR_OCR_REQUIRED'],array_column($r['pages'],'processing_route'));
+        self::assertSame(3,array_sum($r['processing_route_counts']));
         self::assertSame(0,$r['gold_records']);
         self::assertNull($r['recall']);
         self::assertSame('DENIED',$r['production_admission']);

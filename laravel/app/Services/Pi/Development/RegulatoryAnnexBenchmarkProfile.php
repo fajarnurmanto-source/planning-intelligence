@@ -21,8 +21,16 @@ final class RegulatoryAnnexBenchmarkProfile
             if($annex)$signals[]='ANNEX_ZONE_CANDIDATE';
             if(!$signals)$signals[]='UNCLASSIFIED';
             foreach($signals as $s)$counts[$s]=($counts[$s]??0)+1;
-            $pages[]=['page'=>$i+1,'text_sha256'=>$p['text_sha256'],'signals'=>$signals,'marker_counts'=>$m];
+            $route=match(true){
+                in_array('VISUAL_INSPECTION_REQUIRED',$signals,true)=>'VISUAL_OR_OCR_REQUIRED',
+                in_array('TABLE_LAYOUT_MARKERS',$signals,true)&&in_array('ARTICLE_MARKERS',$signals,true)=>'MIXED_LAYOUT_REVIEW',
+                in_array('TABLE_LAYOUT_MARKERS',$signals,true)=>'TABLE_RECONSTRUCTION_CANDIDATE',
+                in_array('ARTICLE_MARKERS',$signals,true)=>'PROVISION_STRUCTURE_CANDIDATE',
+                default=>'FORMAT_REVIEW_REQUIRED',
+            };
+            $pages[]=['page'=>$i+1,'text_sha256'=>$p['text_sha256'],'signals'=>$signals,'marker_counts'=>$m,'processing_route'=>$route,'route_verification'=>'NOT_PERFORMED'];
         }
-        return ['schema'=>'PI_RF04_FORMAT_PROFILE_V1','source_sha256'=>$inventory['source_sha256'],'pages'=>$pages,'counts'=>$counts,'gold_records'=>0,'format_verification'=>'NOT_PERFORMED','precision'=>null,'recall'=>null,'production_admission'=>'DENIED','numeric_admission'=>0];
+        $routes=array_count_values(array_column($pages,'processing_route'));
+        return ['schema'=>'PI_RF04_FORMAT_PROFILE_V1','source_sha256'=>$inventory['source_sha256'],'pages'=>$pages,'counts'=>$counts,'processing_route_counts'=>$routes,'gold_records'=>0,'format_verification'=>'NOT_PERFORMED','precision'=>null,'recall'=>null,'production_admission'=>'DENIED','numeric_admission'=>0];
     }
 }

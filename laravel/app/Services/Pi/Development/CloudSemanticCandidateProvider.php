@@ -129,6 +129,13 @@ final class CloudSemanticCandidateProvider implements SemanticCandidateProvider
 
         $this->diagnostic['stage'] = 'HTTP_RESPONSE';
         $this->diagnostic['http_status'] = $response->status();
+        $retryAfter=$response->header('Retry-After');
+        if(is_string($retryAfter)&&preg_match('/^\d{1,10}$/D',trim($retryAfter))){
+            $this->diagnostic['retry_after_seconds']=min(86400,(int)trim($retryAfter));
+        }elseif(is_string($retryAfter)&&strlen($retryAfter)<=128){
+            $date=\DateTimeImmutable::createFromFormat('D, d M Y H:i:s \G\M\T',$retryAfter,new \DateTimeZone('UTC'));
+            if($date&&$date->format('D, d M Y H:i:s \G\M\T')===$retryAfter)$this->diagnostic['retry_after_seconds']=min(86400,max(0,$date->getTimestamp()-time()));
+        }
         $this->diagnostic['finish_reason'] = in_array($finish, ['stop', 'length', 'content_filter', 'tool_calls', 'insufficient_system_resource', 'STOP', 'MAX_TOKENS', 'SAFETY', 'RECITATION'], true) ? $finish : ($finish === null ? null : 'OTHER');
         foreach (['prompt_tokens', 'completion_tokens', 'total_tokens'] as $field) {
             $value = $response->json('usage.'.$field);

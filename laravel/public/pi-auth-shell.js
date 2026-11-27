@@ -44,13 +44,15 @@
     const input=document.createElement('input');input.type='search';input.placeholder='Cari fitur, produk hukum, dokumen…';input.setAttribute('aria-label','Kata kunci pencarian')
     Object.assign(input.style,{width:'100%',padding:'12px',boxSizing:'border-box',fontSize:'16px'})
     const close=document.createElement('button');close.type='button';close.textContent='Tutup';close.onclick=()=>dialog.close()
+    const retry=document.createElement('button');retry.type='button';retry.textContent='Muat ulang katalog';retry.hidden=true;
     const status=document.createElement('p');status.setAttribute('role','status')
     const results=document.createElement('div')
-    dialog.append(heading,input,close,status,results);document.body.append(dialog)
+    dialog.append(heading,input,close,retry,status,results);document.body.append(dialog)
     let catalogue=[],loading=false,catalogueFailed=false
     const normalize=v=>String(v??'').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim()
     const render=()=>{
       results.replaceChildren()
+      retry.hidden=!catalogueFailed||loading;
       const terms=normalize(input.value).split(' ').filter(Boolean)
       if(!terms.length){status.textContent='Ketik kata kunci. Cakupan awal: menu tersedia dan katalog resmi R100.';return}
       const entries=[]
@@ -73,12 +75,17 @@
         a.addEventListener('click',()=>dialog.close());results.append(a)
       }
     }
-    const open=async()=>{
-      if(dialog.open)return
-      dialog.showModal();input.focus();loading=true;render()
+    const reloadCatalogue=async()=>{
+      if(loading)return;
+      loading=true;render()
       try{catalogue=await window.PIRegulatoryIdentity.load();catalogueFailed=false}catch{catalogue=[];catalogueFailed=true}
       finally{loading=false;if(dialog.open)render()}
     }
+    const open=async()=>{
+      if(dialog.open)return
+      dialog.showModal();input.focus();await reloadCatalogue()
+    }
+    retry.onclick=reloadCatalogue;
     search.onclick=open;input.addEventListener('input',render)
     document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();open()}})
     dialog.addEventListener('close',()=>search.focus())
