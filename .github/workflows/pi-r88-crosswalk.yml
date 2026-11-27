@@ -197,6 +197,17 @@ jobs:
           php -d memory_limit=1536M scripts/pi-rf04-corpus-inventory.php "$RUNNER_TEMP/rf04" > "$RUNNER_TEMP/rf04-inventory.json" || true
           php -r '$r=json_decode(file_get_contents($argv[1]),true,64,JSON_THROW_ON_ERROR);foreach($r["documents"] as $id=>$d)echo $id." SHA=".$d["source_sha256"]." PAGES=".$d["inventory"]["expected_pages"]." FORMAT_SIGNALS=".json_encode($d["format_profile"]["counts"])."\n";echo "RF04_PROCESSED=".$r["processed_documents"]."/".$r["expected_documents"]."\nRF04_HOLDS=".json_encode($r["holds"])."\n";exit($r["processed_documents"]===$r["expected_documents"]?0:1);' "$RUNNER_TEMP/rf04-inventory.json"
 
+      - name: RF05 local pinned corpus fail-closed (zero network)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/rf05-empty"
+          set +e
+          php scripts/pi-rf04-corpus-inventory.php "$RUNNER_TEMP/rf05-empty" --local-pins > "$RUNNER_TEMP/rf05-empty.json"
+          rc=$?
+          set -e
+          test "$rc" = 1
+          php -r '$r=json_decode(file_get_contents($argv[1]),true,32,JSON_THROW_ON_ERROR);if($r["source_mode"]!=="LOCAL_PINNED_REPOSITORY"||$r["network_requests"]!==0||$r["processed_documents"]!==0||count($r["holds"])!==8||$r["production_admission"]!=="DENIED")exit(1);echo "RF05_MISSING_PINNED_CORPUS_FAIL_CLOSED=PASS\n";' "$RUNNER_TEMP/rf05-empty.json"
       - name: HRIA isolated exact configuration and vault smoke (zero spend)
         run: php scripts/pi-hria-runtime-context-smoke.php
       - name: RAI live manifestation benchmark CLI syntax
