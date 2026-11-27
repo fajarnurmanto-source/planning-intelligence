@@ -43,8 +43,11 @@
   ],
   "composer_change": false,
   "migration_change": false,
-  "applied": false,
-  "owner_delta_approval": "NOT_RECORDED",
+  "applied": true,
+  "owner_delta_approval": "EXPLICIT_USER_REPLY_APPLY_SIX_GEMINI_FILES",
   "live_api_calls": 0,
-  "production_admission": "DENIED"
+  "production_admission": "DENIED",
+  "owner_cutover": "APPLIED_VERIFIED",
+  "owner_idempotence": "NO_CHANGE_ALREADY_MATCHED",
+  "executor_ci_head": "1adf713ea40a51dedcd5658984cebd09b05ff3bf"
 }

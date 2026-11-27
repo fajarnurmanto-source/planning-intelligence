@@ -30,3 +30,25 @@ Gemini product delta is exactly six files at450cf0b2, isolated from56-file relea
 | Gemini delta | development only |six-file manifest, five tests/35 assertions | separate release pending |
 
 No merge to default, production admission, legal/fiscal conclusion or reviewer decision is authorized by these results.
+
+## Separate Gemini owner cutover receipt
+After explicit owner reply "Terapkan enam file Gemini", the same accepted executor's Gemini6 profile applied exactly the six-file450cf0b2 manifest over accepted49d07c95. No R106 diagnostic file was bundled into this delta. Pre/post Tinker PASS, source/served asset hash PASS, protected files PASS, original PID5704 preserved, normal setup/CSRF and anonymous401 PASS. Backup APR_Gemini6_20261127-232516-814-48f6c949 retained. Repeated apply NO_CHANGE_ALREADY_MATCHED. Original Laravel boot resolves GeminiSemanticBudget and the100 request/300000 reservation-unit defaults with unchanged gates; zero provider calls and zero budget reservations. These are local policy units, not official Google quotas/tokens/costs. New live inference was deliberately not repeated. Candidate fake-provider tests5/35 remain simulation evidence.
+
+Final implementation CI at1adf713e: R7346032826988, R7446032826979, R8846032827011, Windows46032826992 all SUCCESS. Windows log includes PI_GEMINI_EXACT_SIX_ROLLBACK_APPLY_IDEMPOTENCE_DRIFT=PASS and actual Windows release Tinker PASS. R88 logs81frontend pass,130backend/1030assertions and3auth/56assertions; nonblocking RF04 still0/8 and not accepted. No source alteration after these tests except acceptance documentation.
+
+WINDOWS_PLATFORM_PREREQUISITES=PASS
+COMPOSER_LOCKED_INSTALLATION=PASS
+COMPOSER_PLATFORM_REQUIREMENTS=PASS
+LARAVEL_PACKAGE_DISCOVERY=PASS
+ACTUAL_WINDOWS_TINKER=PASS
+CI=PASS_4_OF_4_AT_IMPLEMENTATION_HEAD
+ORIGINAL_RUNTIME_PREFLIGHT=PASS
+PROTECTED_CUTOVER=APPLIED_VERIFIED
+POST_CUTOVER_TINKER=PASS
+AUTHENTICATED_OPERATIONAL_ACCEPTANCE=PASS_FOR_EXERCISED_CORE_WORKFLOWS
+APR_FAILURE_CLASS_LEDGER=UPDATED
+PER_ACCEPTANCE=PARTIAL_VERBATIM_CRITIQUES_AND_FULL_OWNER_FAULT_TESTS_OPEN
+GEMINI_SIX_FILE_DELTA=APPLIED_VERIFIED
+MASTER_ROADMAP=UPDATED
+PROTECTED_DATA_INTEGRITY=PRESERVED
+PRODUCTION_ADMISSION=DENIED
