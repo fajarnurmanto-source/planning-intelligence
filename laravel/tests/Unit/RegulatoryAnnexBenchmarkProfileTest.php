@@ -35,4 +35,26 @@ final class RegulatoryAnnexBenchmarkProfileTest extends TestCase
         $this->expectExceptionMessage('PI_RF05_ROW_LOCATOR_HOLD');
         (new RegulatoryAnnexBenchmarkProfile)->profile($inventory);
     }
+    public function test_second_pass_never_binds_same_page_number_from_different_text(): void
+    {
+        $a="MEMUTUSKAN:\nPasal 1\nKetentuan A.\n\f";
+        $b="MEMUTUSKAN:\nPasal 1\nKetentuan B.\n\f";
+        $inventory=['source_sha256'=>str_repeat('A',64)]+(new FullDocumentInventory)->inventory($a,1);
+        $inventory['layout_candidates']=(new \App\Services\Pi\Development\DocumentLayoutReconstructor)->reconstruct($b,1);
+        $this->expectExceptionMessage('PI_RF05_LAYOUT_PAGE_HASH_DRIFT');
+        (new RegulatoryAnnexBenchmarkProfile)->profile($inventory);
+    }
+
+    public function test_wrong_line_hash_is_held_not_counted_as_bound_candidate(): void
+    {
+        $text="MEMUTUSKAN:\nPasal 1\nKetentuan contoh.\n\f";
+        $inventory=['source_sha256'=>str_repeat('A',64)]+(new FullDocumentInventory)->inventory($text,1);
+        $inventory['layout_candidates']=(new \App\Services\Pi\Development\DocumentLayoutReconstructor)->reconstruct($text,1);
+        $inventory['layout_candidates']['hierarchy_nodes'][0]['line_sha256']=str_repeat('F',64);
+        $r=(new RegulatoryAnnexBenchmarkProfile)->profile($inventory);
+        self::assertSame('LOCATOR_RECONCILIATION_HOLD',$r['adaptive_layout']['pages'][0]['second_pass_route']);
+        self::assertSame([],$r['adaptive_layout']['pages'][0]['hierarchy_locators']);
+        self::assertSame(1,$r['adaptive_layout']['unbound_locator_count']);
+        self::assertSame(0,$r['numeric_admission']);
+    }
 }

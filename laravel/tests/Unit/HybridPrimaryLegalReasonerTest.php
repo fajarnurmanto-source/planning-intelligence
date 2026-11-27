@@ -105,4 +105,17 @@ final class HybridPrimaryLegalReasonerTest extends TestCase
         $this->expectExceptionMessage('HRIA_PP_BODY_EXCERPT_HOLD');
         $this->reasoner()->preview($f,16,'2026-11-26','2026-11-26');
     }
+    public function test_retrieval_abstains_on_duplicate_and_cross_page_body_spans(): void
+    {
+        $scan=(new R82ProvisionTextScanner)->scan(
+            "Menimbang: Pasal 16 perlu aturan.\nMengingat:\nMEMUTUSKAN:\nPasal 7\nPenyediaan fasilitas pemilahan sampah dilakukan bertahap.\nPasal 7\nPenyediaan fasilitas pemilahan sampah dilakukan bertahap.\nPasal 8\nPenyediaan fasilitas\f pemilahan sampah dilakukan bertahap.\nPasal 9\nLainnya.",
+            "Pasal 16\nPenyediaan fasilitas pemilahan sampah diatur dengan peraturan pemerintah.\nPasal 17\nLainnya.",
+            [['article'=>16,'paragraphs'=>[]]]);
+        self::assertSame([],$scan['records'][0]['pp_body_candidates']);
+        $f=$this->fixture();$f['candidates']=$scan['records'];
+        $preview=$this->reasoner()->preview($f,16,'2026-11-26','2026-11-26');
+        self::assertSame(0,$preview['operative_retrieval']['included']);
+        self::assertSame('NOT_PERFORMED',$preview['operative_retrieval']['verification']);
+        self::assertSame('DENIED',$preview['production_admission']);
+    }
 }

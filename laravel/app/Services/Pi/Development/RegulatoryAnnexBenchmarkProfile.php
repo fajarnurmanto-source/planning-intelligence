@@ -37,10 +37,21 @@ final class RegulatoryAnnexBenchmarkProfile
         if($layout!==null){
             if(($layout['schema']??null)!=='PI_RDI_LAYOUT_CANDIDATES_V2'||($layout['pages']??null)!==count($pages)
                 ||($layout['numeric_admission']??null)!==0||($layout['production_admission']??null)!=='DENIED')throw new RuntimeException('PI_RF05_LAYOUT_HOLD');
-            $nodes=[];$fragments=[];
+            if(($layout['page_text_hashes']??null)!==array_column($pages,'text_sha256'))throw new RuntimeException('PI_RF05_LAYOUT_PAGE_HASH_DRIFT');
+            $nodes=[];$fragments=[];$unbound=[];$markerIndex=[];
+            foreach($inventory['pages'] as $page){
+                foreach($page['markers'] as $marker){
+                    $markerIndex[$page['pdf_page']][$marker['line']][$marker['kind']]=$marker['line_sha256'];
+                }
+            }
+            $kinds=['PASAL'=>'ARTICLE','AYAT'=>'PARAGRAPH_MARKER','HURUF'=>'LETTER_MARKER','ANGKA'=>'NUMBER_MARKER'];
             foreach($layout['hierarchy_nodes'] as $node){
                 $p=$node['page']??null;
                 if(!is_int($p)||!isset($pages[$p-1])||!is_int($node['line']??null)||$node['line']<1||!preg_match('/^[A-F0-9]{64}$/D',$node['line_sha256']??''))throw new RuntimeException('PI_RF05_NODE_LOCATOR_HOLD');
+                $kind=$kinds[$node['kind']??'']??null;
+                if($kind===null||($markerIndex[$p][$node['line']][$kind]??null)!==$node['line_sha256']){
+                    $unbound[$p][]=['line'=>$node['line'],'kind'=>'HIERARCHY','reason'=>'INVENTORY_MARKER_NOT_MATCHED'];continue;
+                }
                 $nodes[$p][]=['kind'=>$node['kind'],'line'=>$node['line'],'line_sha256'=>$node['line_sha256'],'state'=>$node['state']];
             }
             foreach($layout['account_fragment_pages'] as $block){
@@ -49,6 +60,10 @@ final class RegulatoryAnnexBenchmarkProfile
                 $fragments[$p]=[];
                 foreach($block['rows'] as $row){
                     if(($row['page']??null)!==$p||!is_int($row['line']??null)||$row['line']<1||!preg_match('/^[A-F0-9]{64}$/D',$row['line_sha256']??'')||($row['state']??null)!=='UNVERIFIED_ROW_FRAGMENT')throw new RuntimeException('PI_RF05_ROW_LOCATOR_HOLD');
+                    $kind=match($row['code_state']??null){'FULL_MARKER'=>'ACCOUNT_FULL_MARKER','SPLIT_UNRESOLVED'=>'ACCOUNT_SPLIT_MARKER',default=>null};
+                    if($kind===null||($markerIndex[$p][$row['line']][$kind]??null)!==$row['line_sha256']){
+                        $unbound[$p][]=['line'=>$row['line'],'kind'=>'FISCAL','reason'=>'INVENTORY_MARKER_NOT_MATCHED'];continue;
+                    }
                     $fragments[$p][]=['line'=>$row['line'],'line_sha256'=>$row['line_sha256'],'code_state'=>$row['code_state']];
                 }
             }
@@ -58,6 +73,7 @@ final class RegulatoryAnnexBenchmarkProfile
                 $n=$nodes[$number]??[];$rows=$fragments[$number]??[];
                 $route=match(true){
                     $p['processing_route']==='VISUAL_OR_OCR_REQUIRED'=>'VISUAL_REQUIRED_HOLD',
+                    !empty($unbound[$number])=>'LOCATOR_RECONCILIATION_HOLD',
                     $rows!==[]&&$n!==[]=>'MIXED_FRAGMENT_REVIEW',
                     $rows!==[]=>'FISCAL_ROW_FRAGMENTS_REVIEW',
                     $n!==[]=>'LEGAL_LAYOUT_NODES_REVIEW',
@@ -66,10 +82,10 @@ final class RegulatoryAnnexBenchmarkProfile
                     $p['processing_route']==='TABLE_RECONSTRUCTION_CANDIDATE'=>'TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD',
                     default=>'UNRESOLVED_FORMAT_HOLD',
                 };
-                $secondary[]=['page'=>$number,'text_sha256'=>$p['text_sha256'],'first_pass_route'=>$p['processing_route'],'second_pass_route'=>$route,'hierarchy_locators'=>$n,'row_locators'=>$rows,'verification'=>'NOT_PERFORMED'];
+                $secondary[]=['page'=>$number,'text_sha256'=>$p['text_sha256'],'first_pass_route'=>$p['processing_route'],'second_pass_route'=>$route,'hierarchy_locators'=>$n,'row_locators'=>$rows,'unbound_locators'=>$unbound[$number]??[],'verification'=>'NOT_PERFORMED'];
             }
         }
         $routes=array_count_values(array_column($pages,'processing_route'));
-        return ['schema'=>'PI_RF04_FORMAT_PROFILE_V1','source_sha256'=>$inventory['source_sha256'],'pages'=>$pages,'counts'=>$counts,'processing_route_counts'=>$routes,'adaptive_layout'=>$secondary===null?null:['pages'=>$secondary,'route_counts'=>array_count_values(array_column($secondary,'second_pass_route')),'state'=>'LAYOUT_CANDIDATES_ONLY'],'gold_records'=>0,'format_verification'=>'NOT_PERFORMED','precision'=>null,'recall'=>null,'production_admission'=>'DENIED','numeric_admission'=>0];
+        return ['schema'=>'PI_RF04_FORMAT_PROFILE_V1','source_sha256'=>$inventory['source_sha256'],'pages'=>$pages,'counts'=>$counts,'processing_route_counts'=>$routes,'adaptive_layout'=>$secondary===null?null:['pages'=>$secondary,'route_counts'=>array_count_values(array_column($secondary,'second_pass_route')),'state'=>'LAYOUT_CANDIDATES_ONLY','binding'=>'SAME_TEXT_PAGE_HASH_AND_INVENTORY_MARKER_LINE_HASH','unbound_locator_count'=>array_sum(array_map(static fn($p)=>count($p['unbound_locators']),$secondary))],'gold_records'=>0,'format_verification'=>'NOT_PERFORMED','precision'=>null,'recall'=>null,'production_admission'=>'DENIED','numeric_admission'=>0];
     }
 }

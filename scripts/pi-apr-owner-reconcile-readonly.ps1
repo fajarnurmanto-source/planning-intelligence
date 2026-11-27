@@ -1,6 +1,6 @@
 #requires -Version 5.1
 # Read-only owner runtime reconciliation and local pinned RF05 acceptance.
-param([Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{40}$')][string]$ExpectedCommit)
+param([Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{40}$')][string]$ExpectedCommit,[switch]$AdaptiveLayout)
 $ErrorActionPreference='Stop'
 $repo=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 $head=([string](& git -C $repo rev-parse HEAD)).Trim()
@@ -34,10 +34,18 @@ $prior=$env:PI_RDI_COMPOSER_AUTOLOAD
 try{
  $env:PI_RDI_COMPOSER_AUTOLOAD=Join-Path $runtime 'vendor\autoload.php'
  $out=Join-Path ([IO.Path]::GetTempPath()) ('pi-rf05-'+[guid]::NewGuid().ToString('N')+'.json')
- $proc=Start-Process -FilePath $php -ArgumentList @('-d','memory_limit=1536M',('"'+(Join-Path $PSScriptRoot 'pi-rf04-corpus-inventory.php')+'"'),('"'+$root+'"'),'--local-pins') -NoNewWindow -Wait -PassThru -RedirectStandardOutput $out -RedirectStandardError ($out+'.stderr.log')
+ $mode=if($AdaptiveLayout){'--adaptive-local-pins'}else{'--local-pins'}
+ $proc=Start-Process -FilePath $php -ArgumentList @('-d','memory_limit=1536M',('"'+(Join-Path $PSScriptRoot 'pi-rf04-corpus-inventory.php')+'"'),('"'+$root+'"'),$mode) -NoNewWindow -Wait -PassThru -RedirectStandardOutput $out -RedirectStandardError ($out+'.stderr.log')
  if($proc.ExitCode -eq 2){Write-Output 'RF05_LOCAL_EXECUTION=HOLD';return}
  $r=Get-Content -LiteralPath $out -Raw -Encoding UTF8|ConvertFrom-Json
  foreach($p in $r.documents.PSObject.Properties){$v=$p.Value;[pscustomobject]@{id=$p.Name;sha=$v.source_sha256;pages=$v.inventory.expected_pages;routes=$v.format_profile.processing_route_counts}|ConvertTo-Json -Depth 8 -Compress|Write-Output}
+ if($AdaptiveLayout){
+  foreach($p in $r.documents.PSObject.Properties){
+   $v=$p.Value.format_profile.adaptive_layout
+   if($null -eq $v){throw 'RF05_ADAPTIVE_RECEIPT_HOLD'}
+   [pscustomobject]@{id=$p.Name;second_pass=$v.route_counts;unbound_locators=$v.unbound_locator_count;binding=$v.binding}|ConvertTo-Json -Depth 8 -Compress|Write-Output
+  }
+ }
  Write-Output ('RF05_PROCESSED='+$r.processed_documents+'/'+$r.expected_documents)
  Write-Output ('RF05_HOLDS='+($r.holds|ConvertTo-Json -Compress))
  Write-Output ('RF05_NETWORK_REQUESTS='+$r.network_requests)

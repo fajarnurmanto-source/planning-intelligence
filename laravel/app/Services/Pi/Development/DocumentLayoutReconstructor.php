@@ -97,6 +97,7 @@ final class DocumentLayoutReconstructor
         }
         unset($node);
         return ['schema'=>'PI_RDI_LAYOUT_CANDIDATES_V2','pages'=>$pages,
+            'page_text_hashes'=>array_map(static fn($page)=>strtoupper(hash('sha256',$page)),$parts),
             'hierarchy_nodes'=>array_values($nodes),'ambiguity_records'=>$issues,
             'ambiguous_node_count'=>count(array_filter($nodes,static fn($n)=>$n['state']==='AMBIGUOUS')),
             'account_fragment_pages'=>$tables,'account_fragments'=>array_sum(array_map(static fn($p)=>count($p['rows']),$tables)),
