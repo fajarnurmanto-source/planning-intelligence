@@ -17,6 +17,8 @@ param(
 Set-StrictMode -Version 2
 $ErrorActionPreference='Stop'
 $baseline='a71bac9836654ecc9f313b19f7142ea7bc0aa0c8'
+$release='49d07c955add998d40693f5d4139a3fe0268def1'
+. (Join-Path $PSScriptRoot 'pi-apr-tinker-contract.ps1')
 $root='D:\Research\PlanningIntelligence\planning-intelligence-v0.0-starter\planning-intelligence-v0.0\laravel'
 $launcher='D:\Research\PlanningIntelligence\PI_UNIFIED_LAUNCHER_R74_20261111'
 $ci=($CiFixtureRoot -ne '')
@@ -133,6 +135,7 @@ $pin=([string](& $git -C $repo rev-parse HEAD)).Trim().ToLowerInvariant()
 if($LASTEXITCODE -ne 0 -or $pin -cne $ExpectedCommit.ToLowerInvariant()){
  throw 'PI_APR_CUTOVER_CANDIDATE_COMMIT_NOT_PINNED'
 }
+if($pin -cne $release){throw 'PI_APR_CUTOVER_RELEASE_SCOPE_PIN_HOLD'}
 $dirty=@(& $git -C $repo status --porcelain)
 if($LASTEXITCODE -ne 0 -or $dirty.Count -gt 0){
  throw 'PI_APR_CUTOVER_QA_WORKTREE_NOT_CLEAN'
@@ -242,6 +245,183 @@ if(-not $ci){
  if($LASTEXITCODE -ne 0 -or $schema -notcontains 'PI_R91_SCHEMA_MINIMUM=REQUIRED_COLUMNS_AND_LEDGER_PASS'){throw 'PI_APR_CUTOVER_SCHEMA_METADATA_HOLD'}
  Write-Output 'PI_APR_CUTOVER_SQLITE_MINIMUM=PASS_READ_ONLY'
  foreach($item in $rows){if($item.Rel -like '*.php'){& $php -l $item.Source|Out-Null;if($LASTEXITCODE -ne 0){throw ('PI_APR_CUTOVER_PHP_LINT_HOLD='+$item.Rel)}}}
+}
+if(-not $ci){
+ # Prove the same command and unchanged case graph BEFORE source writes.
+ $listener=@(Get-NetTCPConnection -LocalPort 8820 -State Listen -ErrorAction SilentlyContinue)
+ if($listener.Count -ne 1){throw 'PI_APR_CUTOVER_SINGLE_8820_LISTENER_REQUIRED'}
+ $p=Get-CimInstance Win32_Process -Filter "ProcessId=$($listener[0].OwningProcess)"
+ if($null -eq $p -or $p.Name -notmatch '^(php|php-cgi)\.exe
+ return
+}
+if($changes.Count -eq 0){
+ Write-Output 'PI_APR_CUTOVER_CUTOVER=NO_CHANGE_ALREADY_MATCHED'
+ return
+}
+$serverPid=0
+if(-not $ci){
+ $listeners=@(Get-NetTCPConnection -LocalPort 8820 -State Listen -ErrorAction SilentlyContinue)
+ if($listeners.Count -ne 1){throw 'PI_APR_CUTOVER_SINGLE_8820_LISTENER_REQUIRED'}
+ $serverPid=[int]$listeners[0].OwningProcess
+ $process=Get-CimInstance Win32_Process -Filter "ProcessId=$serverPid" -ErrorAction Stop
+ if($null -eq $process -or $process.Name -notmatch '^(php|php-cgi)\.exe$'){
+  throw 'PI_APR_CUTOVER_8820_NOT_EXISTING_PHP'
+ }
+ $cached=@(Get-ChildItem -LiteralPath (Join-Path $root 'bootstrap\cache') -File -ErrorAction SilentlyContinue |
+  Where-Object {$_.Name -eq 'config.php' -or $_.Name -like 'routes-*.php'})
+ if($cached.Count -ne 0){throw 'PI_APR_CUTOVER_ORIGINAL_ROUTE_OR_CONFIG_CACHE_HOLD'}
+}
+$protectedSha=@{}
+foreach($rel in $protected){
+ $protectedSha[$rel]=(Get-FileHash -LiteralPath (Join-Path $root $rel) -Algorithm SHA256).Hash
+}
+$launcherSha=(Get-FileHash -LiteralPath $launcherFile -Algorithm SHA256).Hash
+$stamp=(Get-Date -Format 'yyyyMMdd-HHmmss-fff')+'-'+[guid]::NewGuid().ToString('N').Substring(0,8)
+$backup=Join-Path $launcher ('backups\APR_INTEGRATED_'+$stamp)
+$stages=New-Object 'System.Collections.Generic.List[string]'
+$began=$false
+try{
+ New-Item -ItemType Directory -Path (Join-Path $backup 'before') -Force|Out-Null
+ foreach($item in $changes){
+  if($item.Existed){
+   $saved=Join-Path (Join-Path $backup 'before') $item.Rel
+   New-Item -ItemType Directory -Path (Split-Path $saved -Parent) -Force|Out-Null
+   Copy-Item -LiteralPath $item.Target -Destination $saved -ErrorAction Stop
+   if((Get-FileHash -LiteralPath $saved -Algorithm SHA256).Hash -cne $item.OldHash){
+    throw ('PI_APR_CUTOVER_BACKUP_SHA_HOLD='+$item.Rel)
+   }
+  }
+ }
+ $rows|Select-Object Rel,Existed,OldHash,NewHash,Change|
+  ConvertTo-Json -Depth 4|Out-File -LiteralPath (Join-Path $backup 'SOURCE_MANIFEST.json') -Encoding UTF8
+ foreach($item in $changes){
+  New-Item -ItemType Directory -Path (Split-Path $item.Target -Parent) -Force|Out-Null
+  $stage=$item.Target+'.apr-stage-'+[guid]::NewGuid().ToString('N')
+  Copy-Item -LiteralPath $item.Source -Destination $stage -ErrorAction Stop
+  if((Get-FileHash -LiteralPath $stage -Algorithm SHA256).Hash -cne $item.NewHash){
+   throw ('PI_APR_CUTOVER_STAGE_SHA_HOLD='+$item.Rel)
+  }
+  Add-Member -InputObject $item -NotePropertyName Stage -NotePropertyValue $stage -Force
+  $stages.Add($stage)
+ }
+ $began=$true
+ $written=0
+ foreach($item in $changes){
+  if($item.Existed){
+   if((Get-FileHash -LiteralPath $item.Target -Algorithm SHA256).Hash -cne $item.OldHash){
+    throw ('PI_APR_CUTOVER_TARGET_CHANGED_DURING_APPLY='+$item.Rel)
+   }
+   [IO.File]::Replace([string]$item.Stage,[string]$item.Target,
+    [string](Join-Path $backup ('atomic-'+$written)))
+  }else{
+   if(Test-Path -LiteralPath $item.Target){throw ('PI_APR_CUTOVER_ADD_COLLISION='+$item.Rel)}
+   Move-Item -LiteralPath $item.Stage -Destination $item.Target -ErrorAction Stop
+  }
+  $written++
+  if((Get-FileHash -LiteralPath $item.Target -Algorithm SHA256).Hash -cne $item.NewHash){
+   throw ('PI_APR_CUTOVER_APPLIED_SHA_HOLD='+$item.Rel)
+  }
+  if(($CiFailAfterSecondWrite -and $written -eq 2) -or ($CiFailAfterWrite -gt 0 -and $written -eq $CiFailAfterWrite)){
+   throw 'PI_APR_CUTOVER_CI_INJECTED_ROLLBACK'
+  }
+ }
+ if(-not $ci){
+  $probe=Join-Path $repo 'scripts\pi-r108-wave3c-tinker-readonly.php'
+  if(-not (Test-Path -LiteralPath $probe -PathType Leaf)){throw 'PI_APR_CUTOVER_TINKER_PROBE_MISSING'}
+  $php=Join-Path (Split-Path $process.ExecutablePath -Parent) 'php.exe'
+  if(-not (Test-Path -LiteralPath $php -PathType Leaf)){throw 'PI_APR_CUTOVER_EXISTING_PHP_CLI_MISSING'}
+  Invoke-PiAprTinkerProbe -Php $php -AppRoot $root -Probe $probe
+  Write-Output 'PI_APR_CUTOVER_POSTWRITE_TINKER=PASS'
+ }
+ foreach($rel in $protected){
+  if((Get-FileHash -LiteralPath (Join-Path $root $rel) -Algorithm SHA256).Hash -cne $protectedSha[$rel]){
+   throw ('PI_APR_CUTOVER_PROTECTED_HASH_CHANGED='+$rel)
+  }
+ }
+ if((Get-FileHash -LiteralPath $launcherFile -Algorithm SHA256).Hash -cne $launcherSha){
+  throw 'PI_APR_CUTOVER_LAUNCHER_SHA_CHANGED'
+ }
+ if(-not $ci){
+  $after=@(Get-NetTCPConnection -LocalPort 8820 -State Listen -ErrorAction SilentlyContinue)
+  if($after.Count -ne 1 -or [int]$after[0].OwningProcess -ne $serverPid){
+   throw 'PI_APR_CUTOVER_ORIGINAL_PHP_PID_CHANGED'
+  }
+  $setup=Invoke-RestMethod -Uri 'http://127.0.0.1:8820/api/auth/setup-status' -Headers @{Accept='application/json'} -TimeoutSec 12
+  if($setup.needs_setup -ne $false -or -not ($setup.csrf -is [string]) -or [string]::IsNullOrWhiteSpace($setup.csrf)){
+   throw 'PI_APR_CUTOVER_LOGIN_OR_CSRF_REGRESSION'
+  }
+  foreach($url in @('/api/qa-superior-r106/annex-fiscal-review','/api/qa-superior-r106/annex-pdf?source=base','/api/qa-superior-hria/primary-preview','/api/qa-superior-r89/semantic-preview')){
+   $status=0
+   try{
+    $r=Invoke-WebRequest -Uri ('http://127.0.0.1:8820'+$url) -UseBasicParsing -Headers @{Accept='application/json'} -TimeoutSec 12
+    $status=[int]$r.StatusCode
+   }catch [System.Net.WebException]{
+    if($null -eq $_.Exception.Response){throw}
+    $status=[int]$_.Exception.Response.StatusCode
+   }
+   if($status -ne 401){throw ('PI_APR_CUTOVER_NEW_ROUTE_NOT_AUTH_GUARDED='+$url+':'+$status)}
+  }
+  $hasher=[Security.Cryptography.SHA256]::Create()
+  try{
+   foreach($rel in @($replace|Where-Object {$_ -like 'public\*'})){
+    $path=$rel.Substring(7).Replace([char]92,[char]47)
+    $url='http://127.0.0.1:8820/'+$path+'?apr='+[guid]::NewGuid().ToString('N')
+    $r=Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 12 -Headers @{'Cache-Control'='no-cache'}
+    if($r.StatusCode -ne 200){throw ('PI_APR_CUTOVER_ASSET_NOT_200='+$rel)}
+    $served=[BitConverter]::ToString($hasher.ComputeHash($r.RawContentStream.ToArray())).Replace('-','')
+    $source=(Get-FileHash -LiteralPath (Join-Path $root $rel) -Algorithm SHA256).Hash
+    if($served -cne $source){throw ('PI_APR_CUTOVER_HTTP_ASSET_SHA_MISMATCH='+$rel)}
+   }
+  }finally{$hasher.Dispose()}
+  Write-Output ('PI_APR_CUTOVER_ORIGINAL_PHP_PID_PRESERVED='+$serverPid)
+  Write-Output 'PI_APR_CUTOVER_ORIGINAL_LOGIN_CSRF=PASS'
+  Write-Output 'PI_APR_CUTOVER_ANONYMOUS_R106_API_AND_PDF=401'
+  Write-Output 'PI_APR_CUTOVER_LIVE_HTML_JS_CSS_SHA=PASS'
+ }
+ Write-Output ('PI_APR_CUTOVER_BACKUP='+$backup)
+ Write-Output 'PI_APR_CUTOVER_CODE_CUTOVER=APPLIED_VERIFIED'
+ Write-Output 'PI_APR_CUTOVER_OPERATIONAL_AUTHENTICATED_UX=REQUIRES_SEPARATE_RECEIPT'
+ Write-Output 'PI_APR_CUTOVER_SQLITE_ENV_APPKEY_LAUNCHER=UNCHANGED'
+ Write-Output 'PI_APR_CUTOVER_NUMERIC_REVIEW_PRODUCTION_ADMISSION=DENIED'
+}catch{
+ $reason=$_.Exception.Message
+ if($began){
+  foreach($item in $changes){
+   if($item.Existed){
+    $saved=Join-Path (Join-Path $backup 'before') $item.Rel
+    if(-not (Test-Path -LiteralPath $saved -PathType Leaf)){
+     throw ('PI_APR_CUTOVER_MANUAL_RECOVERY_REQUIRED_BACKUP_MISSING='+$item.Rel)
+    }
+    $current=(Get-FileHash -LiteralPath $item.Target -Algorithm SHA256).Hash
+    if($current -cne $item.OldHash -and $current -cne $item.NewHash){
+     throw ('PI_APR_CUTOVER_MANUAL_RECOVERY_REQUIRED_CONCURRENT_CHANGE='+$item.Rel)
+    }
+    Copy-Item -LiteralPath $saved -Destination $item.Target -Force -ErrorAction Stop
+    if((Get-FileHash -LiteralPath $item.Target -Algorithm SHA256).Hash -cne $item.OldHash){
+     throw ('PI_APR_CUTOVER_RESTORE_HASH_ERROR='+$item.Rel)
+    }
+   }elseif(Test-Path -LiteralPath $item.Target -PathType Leaf){
+    if((Get-FileHash -LiteralPath $item.Target -Algorithm SHA256).Hash -cne $item.NewHash){
+     throw ('PI_APR_CUTOVER_MANUAL_RECOVERY_REQUIRED_ADDITION_DRIFT='+$item.Rel)
+    }
+    Remove-Item -LiteralPath $item.Target -Force -ErrorAction Stop
+   }
+  }
+  Write-Output 'PI_APR_CUTOVER_AUTO_ROLLBACK=RESTORED_OLD_CODE_VERIFIED'
+ }
+ throw ('PI_APR_CUTOVER_CUTOVER_ABORTED='+$reason)
+}finally{
+ foreach($stage in $stages){
+  if(Test-Path -LiteralPath $stage -PathType Leaf){
+   Remove-Item -LiteralPath $stage -Force -ErrorAction SilentlyContinue
+  }
+ }
+}
+){throw 'PI_APR_CUTOVER_8820_NOT_EXISTING_PHP'}
+ $php=Join-Path (Split-Path $p.ExecutablePath -Parent) 'php.exe'
+ $probe=Join-Path $repo 'scripts\pi-r108-wave3c-tinker-readonly.php'
+ Invoke-PiAprTinkerProbe -Php $php -AppRoot $root -Probe $probe
+ Write-Output 'PI_APR_CUTOVER_PREWRITE_TINKER=PASS'
 }
 if(-not $Apply){
  Write-Output 'PI_APR_CUTOVER_READ_ONLY_PREFLIGHT=PASS'

@@ -1,0 +1,17 @@
+{
+  "schema": "PI_APR_CUTOVER_HOLD_V1",
+  "release": "49d07c955add998d40693f5d4139a3fe0268def1",
+  "owner_log_only": true,
+  "preflight": "PASS",
+  "source_replacements": 18,
+  "additions": 38,
+  "composer_package_identities": 119,
+  "migrations_line_ending_only": 5,
+  "sqlite_minimum": "PASS",
+  "apply": "ABORTED_TINKER_READ_ONLY_HOLD",
+  "source_rollback": "RESTORED_OLD_CODE_VERIFIED",
+  "confirmed_defect": "TINKER_MARKER_CONTRACT_MISMATCH",
+  "actual_probe_output": "NOT_RETAINED_IN_OWNER_LOG",
+  "original_runtime_deployment": "NOT_COMPLETED",
+  "production_admission": "DENIED"
+}

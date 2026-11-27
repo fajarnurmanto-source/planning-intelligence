@@ -36,6 +36,7 @@ on:
       - 'scripts/pi-r108-wave3c-ci-windows-fixture.ps1'
       - 'scripts/pi-apr-integrated-cutover.ps1'
       - 'scripts/pi-apr-ci-windows-fixture.ps1'
+      - 'scripts/pi-apr-tinker-contract.ps1'
       - 'scripts/pi-r106-windows-extractor-recovery.ps1'
       - 'laravel/resources/pi/official-source-metadata-r100.json'
       - 'laravel/public/official-sources-r100.js'

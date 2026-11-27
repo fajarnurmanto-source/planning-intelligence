@@ -8,7 +8,11 @@ $ErrorActionPreference='Stop'
 if($env:GITHUB_ACTIONS -cne 'true' -or -not $env:RUNNER_TEMP){
  throw 'PI_APR_CUTOVER_CI_FIXTURE_ONLY'
 }
-$repo=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
+$executorRepo=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
+$repo=Join-Path $env:RUNNER_TEMP ('pi-apr-release-'+[guid]::NewGuid().ToString('N'))
+$release='49d07c955add998d40693f5d4139a3fe0268def1'
+& git -C $executorRepo worktree add --detach $repo $release
+if($LASTEXITCODE -ne 0){throw 'PI_APR_CUTOVER_CI_RELEASE_CHECKOUT_HOLD'}
 $git=(Get-Command git.exe -ErrorAction Stop).Source
 $head=([string](& $git -C $repo rev-parse HEAD)).Trim().ToLowerInvariant()
 if($LASTEXITCODE -ne 0){throw 'PI_APR_CUTOVER_CI_SOURCE_COMMIT_UNKNOWN'}
@@ -202,3 +206,36 @@ if($reason -notmatch 'PI_APR_CUTOVER_UNKNOWN_LOCAL_DRIFT_HOLD' -or
  throw 'PI_APR_CUTOVER_CI_UNREVIEWED_DRIFT_NOT_REJECTED'
 }
 Write-Host 'PI_APR_CUTOVER_WINDOWS_UNKNOWN_LOCAL_DRIFT=HOLD_NO_OVERWRITE'
+
+# Real Tinker invocation uses the same validator and exact release checkout.
+. (Join-Path $PSScriptRoot 'pi-apr-tinker-contract.ps1')
+$good='PI_R108_W3C_TINKER_CASE_SIX_RELATIONS_GATES=PASS'
+if(@(Assert-PiAprTinkerResult -ExitCode 0 -Lines @($good)) -notcontains 'PI_APR_CUTOVER_TINKER_CASE_SIX_RELATIONS_GATES=PASS'){throw 'PI_APR_TINKER_SHARED_CONTRACT_HOLD'}
+foreach($case in @(
+ @{Code=0;Lines=@('PI_APR_CUTOVER_TINKER_CASE_SIX_RELATIONS_GATES=PASS')},
+ @{Code=1;Lines=@($good)},
+ @{Code=0;Lines=@($good,$good)},
+ @{Code=0;Lines=@('PI_R108_W3C_TINKER_HOLD_EDGE_E06')}
+)){
+ $rejected=$false
+ try{Assert-PiAprTinkerResult -ExitCode $case.Code -Lines $case.Lines|Out-Null}catch{$rejected=$true}
+ if(-not $rejected){throw 'PI_APR_TINKER_NEGATIVE_CONTRACT_ACCEPTED'}
+}
+Write-Host 'PI_APR_TINKER_SHARED_CONTRACT_NEGATIVE_CONTROLS=PASS'
+# Disposable CI dependencies only; no original machine, no real credentials.
+$env:APP_ENV='testing'
+$env:PI_R89_CLOUD_ENABLED='false'
+$env:PI_REGULATORY_AUTO_ANCESTRY_ENABLED='false'
+$env:CACHE_STORE='array'
+$env:SESSION_DRIVER='array'
+$env:DB_CONNECTION='sqlite'
+$env:DB_DATABASE=':memory:'
+$env:QUEUE_CONNECTION='sync'
+$env:APP_KEY='base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
+$workDir='--working-dir='+(Join-Path $repo 'laravel')
+& composer install $workDir --prefer-dist --no-interaction --no-progress
+if($LASTEXITCODE -ne 0){throw 'PI_APR_TINKER_CI_DEPENDENCIES_HOLD'}
+$php=(Get-Command php.exe -ErrorAction Stop).Source
+$result=@(Invoke-PiAprTinkerProbe -Php $php -AppRoot (Join-Path $repo 'laravel') -Probe (Join-Path $repo 'scripts\pi-r108-wave3c-tinker-readonly.php'))
+if($result -notcontains 'PI_APR_CUTOVER_TINKER_CASE_SIX_RELATIONS_GATES=PASS'){throw 'PI_APR_TINKER_REAL_WINDOWS_HOLD'}
+Write-Host 'PI_APR_TINKER_REAL_WINDOWS_RELEASE_CONTRACT=PASS'
