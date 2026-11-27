@@ -37,6 +37,7 @@ on:
       - 'scripts/pi-apr-integrated-cutover.ps1'
       - 'scripts/pi-apr-ci-windows-fixture.ps1'
       - 'scripts/pi-apr-tinker-contract.ps1'
+      - 'scripts/pi-apr-platform-readonly.php'
       - 'scripts/pi-r106-windows-extractor-recovery.ps1'
       - 'laravel/resources/pi/official-source-metadata-r100.json'
       - 'laravel/public/official-sources-r100.js'
@@ -403,7 +404,8 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
-          extensions: sqlite3
+          extensions: sqlite3, pdo_sqlite, fileinfo, mbstring, dom, xml, xmlwriter, curl, zip, bcmath, intl, openssl, iconv
+          tools: composer:v2
           coverage: none
       - name: PHP readonly SQLite user inventory with temporary CI fixture
         shell: powershell

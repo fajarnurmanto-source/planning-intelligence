@@ -253,6 +253,7 @@ if(-not $ci){
  $p=Get-CimInstance Win32_Process -Filter "ProcessId=$($listener[0].OwningProcess)"
  if($null -eq $p -or $p.Name -notmatch '^(php|php-cgi)\.exe$'){throw 'PI_APR_CUTOVER_8820_NOT_EXISTING_PHP'}
  $php=Join-Path (Split-Path $p.ExecutablePath -Parent) 'php.exe'
+ Assert-PiAprPlatform -Php $php -Lock (Join-Path $repo 'laravel\composer.lock') -Mode runtime
  $probe=Join-Path $repo 'scripts\pi-r108-wave3c-tinker-readonly.php'
  Invoke-PiAprTinkerProbe -Php $php -AppRoot $root -Probe $probe
  Write-Output 'PI_APR_CUTOVER_PREWRITE_TINKER=PASS'

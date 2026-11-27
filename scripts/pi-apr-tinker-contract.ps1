@@ -22,3 +22,18 @@ function Invoke-PiAprTinkerProbe([string]$Php,[string]$AppRoot,[string]$Probe){
  }finally{Pop-Location}
  Assert-PiAprTinkerResult -ExitCode $rc -Lines $lines
 }
+
+# Shared preflight: run the exact PHP executable used by Tinker. No repair of
+# owner php.ini; report missing extensions before touching source.
+function Assert-PiAprPlatform([string]$Php,[string]$Lock,[ValidateSet('runtime','ci')][string]$Mode){
+ $probe=Join-Path $PSScriptRoot 'pi-apr-platform-readonly.php'
+ if(-not (Test-Path -LiteralPath $Php -PathType Leaf) -or -not (Test-Path -LiteralPath $probe -PathType Leaf)){throw 'PI_APR_PLATFORM_PREREQUISITE_HOLD'}
+ $ErrorActionPreference='Continue'
+ $lines=@(& $Php $probe $Lock $Mode 2>&1)
+ $rc=$LASTEXITCODE
+ foreach($line in $lines){
+  $safe=([string]$line).Trim()
+  if($safe -cmatch '^PI_APR_PLATFORM_(?:REQUIRED_EXTENSIONS=[0-9]+|MISSING_EXTENSION=[a-z0-9_-]{1,64}|EXTENSION_PRESENCE=(?:PASS|HOLD)|VERSION_CONSTRAINTS=NOT_ASSESSED)$'){Write-Output $safe}
+ }
+ if($rc -ne 0 -or $lines -cnotcontains 'PI_APR_PLATFORM_EXTENSION_PRESENCE=PASS'){throw 'PI_APR_PLATFORM_EXTENSION_PREFLIGHT_HOLD'}
+}

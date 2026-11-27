@@ -236,6 +236,17 @@ $env:DB_CONNECTION='sqlite'
 $env:DB_DATABASE=':memory:'
 $env:QUEUE_CONNECTION='sync'
 $env:APP_KEY='base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
+$php=(Get-Command php.exe -ErrorAction Stop).Source
+$platformProbe=Join-Path $PSScriptRoot 'pi-apr-platform-readonly.php'
+& $php -l $platformProbe
+if($LASTEXITCODE -ne 0){throw 'PI_APR_PLATFORM_PHP_SYNTAX_HOLD'}
+Assert-PiAprPlatform -Php $php -Lock (Join-Path $repo 'laravel\composer.lock') -Mode ci
+# Missing extension negative control, with a synthetic lock only.
+$fakeLock=Join-Path $fixture 'apr-platform-negative.json'
+[IO.File]::WriteAllText($fakeLock,'{"packages":[],"packages-dev":[],"platform":{"ext-pi_apr_missing_fixture":"*"}}')
+$negative=@(& $php $platformProbe $fakeLock ci)
+if($LASTEXITCODE -ne 1 -or $negative -cnotcontains 'PI_APR_PLATFORM_MISSING_EXTENSION=pi_apr_missing_fixture' -or $negative -cnotcontains 'PI_APR_PLATFORM_EXTENSION_PRESENCE=HOLD'){throw 'PI_APR_PLATFORM_MISSING_EXTENSION_NEGATIVE_HOLD'}
+Write-Host 'PI_APR_PLATFORM_MISSING_EXTENSION_NEGATIVE=PASS'
 $workDir='--working-dir='+(Join-Path $repo 'laravel')
 $oldPreference=$ErrorActionPreference
 try{
@@ -244,7 +255,15 @@ try{
  $composerExit=$LASTEXITCODE
 }finally{$ErrorActionPreference=$oldPreference}
 if($composerExit -ne 0){throw 'PI_APR_TINKER_CI_DEPENDENCIES_HOLD'}
-$php=(Get-Command php.exe -ErrorAction Stop).Source
+# Verify actual installed versions and extensions through Composer, no ignores.
+$oldPreference=$ErrorActionPreference
+try{
+ $ErrorActionPreference='Continue'
+ & composer check-platform-reqs $workDir
+ $platformExit=$LASTEXITCODE
+}finally{$ErrorActionPreference=$oldPreference}
+if($platformExit -ne 0){throw 'PI_APR_TINKER_COMPOSER_PLATFORM_HOLD'}
+Write-Host 'PI_APR_TINKER_COMPOSER_PLATFORM=PASS'
 $result=@(Invoke-PiAprTinkerProbe -Php $php -AppRoot (Join-Path $repo 'laravel') -Probe (Join-Path $repo 'scripts\pi-r108-wave3c-tinker-readonly.php'))
 if($result -notcontains 'PI_APR_CUTOVER_TINKER_CASE_SIX_RELATIONS_GATES=PASS'){throw 'PI_APR_TINKER_REAL_WINDOWS_HOLD'}
 Write-Host 'PI_APR_TINKER_REAL_WINDOWS_RELEASE_CONTRACT=PASS'
