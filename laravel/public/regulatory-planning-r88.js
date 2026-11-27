@@ -9,6 +9,18 @@
   }
   let data = null
   let semanticPreview = null
+  const recoveryMessages = {
+    PROVIDER_BALANCE:'Saldo layanan AI tidak mencukupi. Periksa saldo atau pilih layanan lain dengan persetujuan baru.',
+    PROVIDER_ACCESS:'Akses layanan AI ditolak. Periksa pengaturan API dan izin.',
+    PROVIDER_RATE_LIMIT:'Kuota sementara tercapai. Tunggu sebelum mengajukan analisis baru.',
+    PROVIDER_TRANSIENT:'Layanan AI sedang terganggu. Telaah bukti tetap dapat digunakan.',
+    PROVIDER_OUTPUT_INVALID:'Keluaran AI tidak memenuhi kontrak. Tidak ada hasil yang disahkan.',
+    PROVIDER_TRANSPORT_OR_REQUEST:'Koneksi atau permintaan AI belum berhasil. Periksa layanan sebelum meminta analisis baru.',
+    PROVIDER_PREFLIGHT:'Konfigurasi permintaan AI belum sesuai.',
+    PROVIDER_BUSY:'Analisis lain sedang berlangsung pada layanan ini.',
+    PROVIDER_REQUEST_UNCERTAIN:'Status permintaan sebelumnya belum pasti. Tunggu untuk mencegah pemanggilan ganda.',
+    RECOVERY_GUARD_UNAVAILABLE:'Pengaman operasional tidak tersedia. Pemanggilan AI ditahan.'
+  }
   const resetSemantic = message => {
     semanticPreview = null
     get('r89-run').disabled = true
@@ -136,6 +148,11 @@
   get('r89-run').addEventListener('click', async () => {
     if (!approved.checked || !semanticPreview || !data || !sameFilters()) return
     get('r89-run').disabled = true
+    // Consume this approval even on timeout or rejected response.
+    approved.checked = false
+    approved.disabled = true
+    get('r89-preview').disabled = true
+    get('r89-provider').disabled = true
     get('r89-results').replaceChildren()
     get('r89-status').textContent = 'Memeriksa konfigurasi dan memanggil provider pilihan…'
     try {
@@ -170,6 +187,17 @@
       }
       const reasoning = payload.semantic_reasoning
       get('r89-status').textContent = reasoning.status + ' · ' + reasoning.provider_execution + ' · Legal ' + reasoning.legal_validation_status
+      const recovery=payload.provider_recovery
+      if(recovery && recovery.failure_class){
+        const card=add(get('r89-results'),'article','')
+        add(card,'h3','Analisis AI ditahan')
+        add(card,'p',recoveryMessages[recovery.failure_class] || 'Layanan AI belum dapat digunakan.')
+        if(Number.isInteger(recovery.retry_not_before)&&recovery.retry_not_before>0){
+          add(card,'p','Batas waktu penahanan: '+new Date(recovery.retry_not_before*1000).toLocaleString('id-ID'))
+        }
+        add(card,'p','Tidak ada pemanggilan ulang otomatis. Periksa pratinjau dan beri persetujuan baru untuk analisis berikutnya.')
+        add(card,'p','Telaah bukti dan fitur non-AI tetap tersedia.')
+      }
       if (reasoning.candidates.length > 0) {
         const card = add(get('r89-results'),'article','')
         const candidate = reasoning.candidates[0]
@@ -184,13 +212,18 @@
       data.semantic_analysis = {
         schema:payload.schema,provider:payload.provider,model:payload.model,
         context_sha256:payload.context_sha256,context_class:payload.context_class,
-        source_rights:payload.source_rights
+        source_rights:payload.source_rights,provider_recovery:payload.provider_recovery || null
       }
     } catch(error) {
       get('r89-results').replaceChildren()
       get('r89-status').textContent = 'ABSTAIN · ' + error.message
     } finally {
-      get('r89-run').disabled = !approved.checked || !semanticPreview || !sameFilters()
+      semanticPreview = null
+      approved.checked = false
+      approved.disabled = true
+      get('r89-run').disabled = true
+      get('r89-provider').disabled = false
+      get('r89-preview').disabled = !data || data.result_count !== 1 || !sameFilters()
     }
   })
   get('r88-export').addEventListener('click', () => {

@@ -60,3 +60,12 @@ test('consent and previously previewed context are reset on changed provider or 
   assert.match(app,/semanticPreview = null/)
   assert.match(app,/get\('r89-consent'\)\.checked = false/)
 })
+
+test('APR shows safe escalation and consumes one approval after any attempt', () => {
+  assert.match(app,/PROVIDER_BALANCE:'Saldo/)
+  assert.match(app,/PROVIDER_REQUEST_UNCERTAIN/)
+  assert.match(app,/Tidak ada pemanggilan ulang otomatis/)
+  assert.match(app,/provider_recovery:payload.provider_recovery/)
+  assert.match(app,/Consume this approval/)
+  assert.match(app,/finally \{\s*semanticPreview = null\s*approved.checked = false/)
+})

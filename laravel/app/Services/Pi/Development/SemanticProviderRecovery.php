@@ -13,16 +13,27 @@ final class SemanticProviderRecovery
         $scope='pi:apr:semantic:'.hash('sha256',$tenant.'|'.$provider);
         $lock=null;$acquired=false;
         try{
+            $driver=config('cache.stores.'.config('cache.default').'.driver');
+            if(!in_array($driver,['database','file','redis'],true)&&!($driver==='array'&&app()->environment('testing'))){
+                return $this->hold('RECOVERY_GUARD_UNAVAILABLE',null,0,'CHECK_LOCAL_CACHE_SERVICE',false);
+            }
             $store=Cache::store();
             $lock=$store->lock($scope.':lock',60);
             $acquired=$lock->get();
             if(!$acquired)return $this->hold('PROVIDER_BUSY',null,0,'WAIT_FOR_ACTIVE_REQUEST',false);
             $prior=$store->get($scope);
-            if(is_array($prior)&&is_int($prior['retry_not_before']??null)&&$prior['retry_not_before']>time()){
+            if(is_array($prior)&&is_int($prior['retry_not_before']??null)&&$prior['retry_not_before']>now()->timestamp){
                 return ['state'=>'HOLD','provider_execution'=>'NOT_RUN','recovery'=>$prior];
+            }
+            // Persist a short reservation before egress. If the process dies,
+            // subsequent workers suppress another paid request during this interval.
+            $reservation=$this->hold('PROVIDER_REQUEST_UNCERTAIN',null,60,'WAIT_AND_REQUEST_NEW_APPROVAL',false)['recovery'];
+            if(!$store->put($scope,$reservation,60)||$store->get($scope)!==$reservation){
+                return $this->hold('RECOVERY_GUARD_UNAVAILABLE',null,0,'CHECK_LOCAL_CACHE_SERVICE',false);
             }
             try{
                 $proposal=$adapter->propose($context,$provider,$model,$key);
+                try{$store->forget($scope);}catch(Throwable){}
                 return ['state'=>'RESPONSE','proposal'=>$proposal,'provider_execution'=>'CLOUD_PROVIDER_CALLED','recovery'=>['failure_class'=>null,'automatic_retry'=>false,'fresh_consent_required'=>true,'deterministic_functions_available'=>true]];
             }catch(Throwable){
                 $meta=$adapter instanceof CloudSemanticCandidateProvider?$adapter->diagnostic():[];
@@ -41,8 +52,11 @@ final class SemanticProviderRecovery
                 if($delay>0&&is_int($hint)&&$hint>0)$delay=max($delay,min(86400,$hint));
                 $out=$this->hold($class,is_int($status)?$status:null,$delay,$action,$attempted);
                 if($delay>0){
-                    try{$store->put($scope,$out['recovery'],$delay);}
-                    catch(Throwable){$out['recovery']['state_persistence']='FAILED';}
+                    try{
+                        if(!$store->put($scope,$out['recovery'],$delay)||$store->get($scope)!==$out['recovery'])$out['recovery']['state_persistence']='FAILED';
+                    }catch(Throwable){$out['recovery']['state_persistence']='FAILED';}
+                }else{
+                    try{$store->forget($scope);}catch(Throwable){}
                 }
                 return $out;
             }
@@ -56,7 +70,7 @@ final class SemanticProviderRecovery
     private function hold(string $class,?int $status,int $delay,string $action,bool $attempted): array
     {
         return ['state'=>'HOLD','provider_execution'=>$attempted?'CLOUD_PROVIDER_ATTEMPTED':'NOT_RUN',
-            'recovery'=>['failure_class'=>$class,'http_status'=>$status,'retry_not_before'=>$delay>0?time()+$delay:null,
+            'recovery'=>['failure_class'=>$class,'http_status'=>$status,'retry_not_before'=>$delay>0?now()->timestamp+$delay:null,
                 'operator_action'=>$action,'automatic_retry'=>false,'fresh_consent_required'=>true,'deterministic_functions_available'=>true]];
     }
 }
