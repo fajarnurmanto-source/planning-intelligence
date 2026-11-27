@@ -276,7 +276,7 @@ Push-Location -LiteralPath (Join-Path $repo 'laravel')
 try{
  & $php artisan package:discover --ansi
  if($LASTEXITCODE -ne 0){throw 'PI_APR_PACKAGE_DISCOVERY_HOLD'}
- & $php -r 'require "vendor/autoload.php"; if (!class_exists("Illuminate\Foundation\Application")) exit(1);'
+ & $php artisan --version
  if($LASTEXITCODE -ne 0){throw 'PI_APR_AUTOLOAD_HOLD'}
 }finally{Pop-Location}
 Write-Host 'PI_APR_LOCKED_INSTALL_DISCOVERY_AUTOLOAD=PASS'
