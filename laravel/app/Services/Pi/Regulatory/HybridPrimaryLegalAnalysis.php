@@ -33,6 +33,7 @@ final class HybridPrimaryLegalAnalysis
         try{
             $call=$this->recovery->invoke($this->provider,$tenant,$provider,$model,$key,$preview['context']);
             $metadata=['provider_execution'=>$call['provider_execution'],'provider'=>$provider,'model'=>$model,'context_sha256'=>$preview['sha256'],'recovery'=>$call['recovery']];
+            if(isset($call['resource_budget']))$metadata['resource_budget']=$call['resource_budget'];
             if($call['state']!=='RESPONSE')return array_replace($hold($call['recovery']['failure_class']),$metadata);
             return $this->reasoner->assess($preview,$call['proposal'])+$metadata;
         }catch(\Throwable){return array_replace($hold('PROVIDER_OR_VALIDATION_HOLD'),['provider_execution'=>'CLOUD_PROVIDER_ATTEMPTED']);}

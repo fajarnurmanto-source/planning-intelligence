@@ -25,6 +25,17 @@ final class SemanticProviderRecovery
             if(is_array($prior)&&is_int($prior['retry_not_before']??null)&&$prior['retry_not_before']>now()->timestamp){
                 return ['state'=>'HOLD','provider_execution'=>'NOT_RUN','recovery'=>$prior];
             }
+            $budget=null;$budgetReservation=null;
+            if($provider==='gemini'){
+                $budget=new GeminiSemanticBudget;
+                try{$budgetReservation=$budget->reserve($store,$tenant,$context);}
+                catch(Throwable){return $this->hold('LOCAL_AI_BUDGET_UNAVAILABLE',null,0,'CHECK_LOCAL_AI_BUDGET',false);}
+                if(!$budgetReservation['allowed']){
+                    $out=$this->hold('LOCAL_AI_BUDGET_EXHAUSTED',null,0,'WAIT_FOR_LOCAL_DAILY_BUDGET_OR_ADMIN_POLICY',false);
+                    $out['resource_budget']=$budgetReservation['receipt'];
+                    return $out;
+                }
+            }
             // Persist a short reservation before egress. If the process dies,
             // subsequent workers suppress another paid request during this interval.
             $reservation=$this->hold('PROVIDER_REQUEST_UNCERTAIN',null,60,'WAIT_AND_REQUEST_NEW_APPROVAL',false)['recovery'];
@@ -34,7 +45,12 @@ final class SemanticProviderRecovery
             try{
                 $proposal=$adapter->propose($context,$provider,$model,$key);
                 try{$store->forget($scope);}catch(Throwable){}
-                return ['state'=>'RESPONSE','proposal'=>$proposal,'provider_execution'=>'CLOUD_PROVIDER_CALLED','recovery'=>['failure_class'=>null,'automatic_retry'=>false,'fresh_consent_required'=>true,'deterministic_functions_available'=>true]];
+                $out=['state'=>'RESPONSE','proposal'=>$proposal,'provider_execution'=>'CLOUD_PROVIDER_CALLED','recovery'=>['failure_class'=>null,'automatic_retry'=>false,'fresh_consent_required'=>true,'deterministic_functions_available'=>true]];
+                if($budget!==null){
+                    try{$out['resource_budget']=$budget->observe($store,$budgetReservation,$adapter instanceof CloudSemanticCandidateProvider?$adapter->diagnostic():[]);}
+                    catch(Throwable){$out['resource_budget']=$budgetReservation['receipt']+['usage_persistence'=>'FAILED'];}
+                }
+                return $out;
             }catch(Throwable){
                 $meta=$adapter instanceof CloudSemanticCandidateProvider?$adapter->diagnostic():[];
                 $status=$meta['http_status']??null;
@@ -57,6 +73,10 @@ final class SemanticProviderRecovery
                     }catch(Throwable){$out['recovery']['state_persistence']='FAILED';}
                 }else{
                     try{$store->forget($scope);}catch(Throwable){}
+                }
+                if($budget!==null){
+                    try{$out['resource_budget']=$budget->observe($store,$budgetReservation,$meta);}
+                    catch(Throwable){$out['resource_budget']=$budgetReservation['receipt']+['usage_persistence'=>'FAILED'];}
                 }
                 return $out;
             }

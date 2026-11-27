@@ -72,6 +72,37 @@ final class SemanticProviderRecoveryTest extends TestCase
         self::assertSame('RECOVERY_GUARD_UNAVAILABLE',$this->invokeRecovery()['recovery']['failure_class']);
         Http::assertNothingSent();
     }
+    public function test_gemini_local_budget_persists_and_blocks_before_egress():void
+    {
+        config(['pi_ai_budget.gemini_daily_requests'=>1,'pi_ai_budget.gemini_daily_reservation_units'=>300000]);
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-11-27 10:00:00','UTC'));
+        Http::fake(['https://generativelanguage.googleapis.com/*'=>Http::response([
+            'candidates'=>[['content'=>['parts'=>[['text'=>'{"semantic_relation":"RELATED","semantic_confidence":"LOW","explanation":"Fixture"}']]],'finishReason'=>'STOP']],
+            'usageMetadata'=>['promptTokenCount'=>90,'candidatesTokenCount'=>30,'totalTokenCount'=>120],
+        ],200)]);
+        $first=$this->invokeRecovery('gemini');
+        self::assertSame('RESPONSE',$first['state']);
+        self::assertSame(120,$first['resource_budget']['provider_reported_tokens']);
+        self::assertSame(1,$first['resource_budget']['attempt_reservations']);
+        Cache::purge('file');
+        $hold=$this->invokeRecovery('gemini');
+        self::assertSame('LOCAL_AI_BUDGET_EXHAUSTED',$hold['recovery']['failure_class']);
+        self::assertSame('NOT_RUN',$hold['provider_execution']);
+        Http::assertSentCount(1);
+        self::assertSame('RESPONSE',$this->invokeRecovery('gemini','OTHER-TENANT')['state']);
+        $this->travel(1)->days();
+        self::assertSame('RESPONSE',$this->invokeRecovery('gemini')['state']);
+        Http::assertSentCount(3);
+    }
+
+    public function test_gemini_zero_budget_never_dispatches():void
+    {
+        config(['pi_ai_budget.gemini_daily_requests'=>0]);
+        Http::fake();
+        self::assertSame('LOCAL_AI_BUDGET_EXHAUSTED',$this->invokeRecovery('gemini')['recovery']['failure_class']);
+        Http::assertNothingSent();
+    }
+
     public function test_rate_limit_is_scoped_and_honors_retry_after():void
     {
         Http::fake(['https://api.deepseek.com/*'=>Http::sequence()->push([],429,['Retry-After'=>'300'])->push($this->reply(),200)->push($this->reply(),200)]);

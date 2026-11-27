@@ -82,6 +82,7 @@ final class R89SemanticRegulatoryAnalysis
         try {
             $call=$this->recovery->invoke($this->provider,$tenantId,$providerId,$model,$key,$result['preview']['context']);
             $result['provider_recovery']=$call['recovery'];
+            if(isset($call['resource_budget']))$result['resource_budget']=$call['resource_budget'];
             if($call['state']!=='RESPONSE'){
                 $result['semantic_reasoning']['status']='ABSTAIN_CLOUD_PROVIDER_UNAVAILABLE';
                 $result['semantic_reasoning']['provider_execution']=$call['provider_execution'];

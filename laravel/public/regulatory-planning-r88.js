@@ -19,7 +19,9 @@
     PROVIDER_PREFLIGHT:'Konfigurasi permintaan AI belum sesuai.',
     PROVIDER_BUSY:'Analisis lain sedang berlangsung pada layanan ini.',
     PROVIDER_REQUEST_UNCERTAIN:'Status permintaan sebelumnya belum pasti. Tunggu untuk mencegah pemanggilan ganda.',
-    RECOVERY_GUARD_UNAVAILABLE:'Pengaman operasional tidak tersedia. Pemanggilan AI ditahan.'
+    RECOVERY_GUARD_UNAVAILABLE:'Pengaman operasional tidak tersedia. Pemanggilan AI ditahan.',
+    LOCAL_AI_BUDGET_EXHAUSTED:'Batas penggunaan harian internal PI tercapai. Tunggu pergantian hari UTC atau tinjau kebijakan administrator.',
+    LOCAL_AI_BUDGET_UNAVAILABLE:'Pencatatan anggaran AI internal tidak tersedia. Pemanggilan ditahan.'
   }
   const resetSemantic = message => {
     semanticPreview = null
@@ -198,6 +200,14 @@
         add(card,'p','Tidak ada pemanggilan ulang otomatis. Periksa pratinjau dan beri persetujuan baru untuk analisis berikutnya.')
         add(card,'p','Telaah bukti dan fitur non-AI tetap tersedia.')
       }
+      const budget=payload.resource_budget
+      if(budget?.scope==='PI_LOCAL_TENANT_GEMINI_SEMANTIC_ROUTES_ONLY'){
+        const card=add(get('r89-results'),'article','')
+        add(card,'h3','Penggunaan Gemini di PI')
+        add(card,'p','Reservasi request hari UTC: '+budget.attempt_reservations+' / '+budget.request_limit)
+        add(card,'p','Token dilaporkan provider: '+budget.provider_reported_tokens+' ('+budget.usage_reports+' laporan)')
+        add(card,'p','Ini batas internal PI, bukan kuota atau tagihan Google.')
+      }
       if (reasoning.candidates.length > 0) {
         const card = add(get('r89-results'),'article','')
         const candidate = reasoning.candidates[0]
@@ -212,7 +222,7 @@
       data.semantic_analysis = {
         schema:payload.schema,provider:payload.provider,model:payload.model,
         context_sha256:payload.context_sha256,context_class:payload.context_class,
-        source_rights:payload.source_rights,provider_recovery:payload.provider_recovery || null
+        source_rights:payload.source_rights,provider_recovery:payload.provider_recovery || null,resource_budget:payload.resource_budget || null
       }
     } catch(error) {
       get('r89-results').replaceChildren()
