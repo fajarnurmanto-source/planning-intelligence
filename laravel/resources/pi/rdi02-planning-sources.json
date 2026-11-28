@@ -1,0 +1,32 @@
+{
+  "schema": "PI_RDI02_OFFICIAL_PLANNING_SOURCE_QUEUE_V1",
+  "jurisdiction": "ID-DIY-YOG",
+  "production_admission": "DENIED",
+  "documents": [
+    {
+      "id": "YOG-RPJPD-2025-2045",
+      "detail": "https://peraturan.bpk.go.id/Details/303927/perda-kota-yogyakarta-no-4-tahun-2024",
+      "pdf": "https://peraturan.bpk.go.id/Download/363930/Perda%20Kota%20Jogja%20Nomor%204%20Tahun%202024.pdf"
+    },
+    {
+      "id": "YOG-RPJMD-2025-2029",
+      "detail": "https://peraturan.bpk.go.id/Details/337667/perda-kota-yogyakarta-no-2-tahun-2025",
+      "pdf": "https://peraturan.bpk.go.id/Download/400721/Perda%20Kota%20Jogja%20Nomor%202%20Tahun%202025.pdf"
+    },
+    {
+      "id": "YOG-RKPD-2026",
+      "detail": "https://peraturan.bpk.go.id/Details/330077/perwali-kota-yogyakarta-no-34-tahun-2025",
+      "pdf": "https://peraturan.bpk.go.id/Download/393189/Perwal%20Jogja%20Nomor%2034%20Tahun%202025.pdf"
+    },
+    {
+      "id": "YOG-RENSTRA-PD-2025-2029",
+      "detail": "https://peraturan.bpk.go.id/Details/337650/perwali-kota-yogyakarta-no-47-tahun-2025",
+      "pdf": "https://peraturan.bpk.go.id/Download/400702/Perwal%20Jogja%20Nomor%2047%20Tahun%202025.pdf"
+    },
+    {
+      "id": "YOG-RENJA-PD-2026",
+      "detail": "https://peraturan.bpk.go.id/Details/330171/perwali-kota-yogyakarta-no-42-tahun-2025",
+      "pdf": "https://peraturan.bpk.go.id/Download/392182/Perwal%20Jogja%20Nomor%2042%20Tahun%202025.pdf"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 name: PI R88 crosswalk guards
 on:
   pull_request:
-    paths: ['laravel/**', '.gitattributes', '.github/workflows/pi-r88-crosswalk.yml']
+    paths: ['laravel/**', '.gitattributes', 'scripts/pi-r93-*', 'scripts/pi-r95-*', 'scripts/pi-r97-*', 'scripts/pi-r102-*', 'scripts/pi-r103-*', '.github/workflows/pi-r88-crosswalk.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -21,6 +21,194 @@ jobs:
           node-version: '22'
       - run: mkdir -p laravel/bootstrap/cache laravel/storage/framework/{cache,sessions,views} laravel/storage/logs
       - run: composer install --working-dir=laravel --prefer-dist --no-interaction --no-progress
-      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest'
+      - run: cd laravel && php vendor/bin/phpunit --filter 'R89SemanticRegulatoryAnalysisTest|HybridSemanticReasonerTest|RegulatoryPlanningCrosswalkTest|GovernmentDevelopmentCaseTest|RegulatoryLifecycleTest|PiAffairsNomenclatureTest|R100OfficialSourceMetadataTest|R102PrimaryPdfCandidateIntakeTest|R103BpkMirrorAndFiscalEvidenceTest|R105BpkQuarantineReadOnlyReviewTest|R106NativePdfAnnexIntelligenceTest|R106PdfExtractorRecoveryTest|FullDocumentInventoryTest|DocumentStructureProfileTest|DocumentLayoutReconstructorTest|FiscalRecordReconstructionTest|MultilineFiscalTableReconstructorTest|FiscalOrganizationContextTest|FiscalContextDiagnosticsTest|PlanningPageProfileTest|PlanningNomenclatureEvidenceTest|PlanningSemanticCandidatesTest|PlanningFiscalEvidenceCrosswalkTest|AdaptivePlanningTableEvidenceTest|PlanningHeaderColumnEvidenceTest|RegulatorySeriesFoundationTest|RegulatoryRelationGuardTest|RegulatorySeriesSourceQueueTest|RegulatorySeriesMetadataAcceptanceTest|RegulatoryAnnexBenchmarkProfileTest|RegulatoryAnnexReviewBenchmarkTest|RegulatoryAnnexBenchmarkMetricsTest|ResilientRegulatoryAcquisitionTest|RegulatoryAcquisitionRetryPolicyTest|RegulatoryAcquisitionJobTest|RegulatoryFreshnessAssessmentTest|RegulatoryAcquisitionDatabaseWorkerTest|RegulatoryAlternativeSourceDiscoveryTest|RegulatoryFreshnessObserverTest|RegulatoryManifestationIntakeTest|SemanticProviderRecoveryTest|HybridPrimaryLegalReasonerTest|HriaDelegationBenchmarkTest|HriaNegativeControlsTest'
+
+      - name: RDI inventory CLI syntax and mutation flag refusal
+        shell: bash
+        run: |
+          php -l scripts/pi-rdi-01a-inventory.php
+          if php scripts/pi-rdi-01a-inventory.php --commit; then exit 3; fi
+      - name: R106 read-only source CLI syntax and write flag refusal
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l scripts/pi-r106-native-annex-review.php
+          php -l laravel/app/Services/Pi/Development/NativePdfAnnexIntelligence.php
+          if php scripts/pi-r106-native-annex-review.php --commit > "$RUNNER_TEMP/r106-refuse.txt" 2>&1; then
+            echo PI_R106_CLI_WRITING_FLAG_ACCEPTED >&2; exit 3
+          fi
+          grep -Fxq PI_R106_UNKNOWN_PARAMETER_HOLD "$RUNNER_TEMP/r106-refuse.txt"
+          echo PI_R106_CI_NO_WRITE_FLAG=PASS
+
+      - name: R105 read-only QA CLI refuses mutation flag
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l scripts/pi-r105-review-bpk-quarantine.php
+          php -l laravel/app/Services/Pi/Development/BpkQuarantineReadOnlyReview.php
+          if php scripts/pi-r105-review-bpk-quarantine.php --commit > "$RUNNER_TEMP/pi-r105-unknown.txt" 2>&1; then
+            echo PI_R105_UNSAFE_WRITE_FLAG_ACCEPTED >&2; exit 3
+          fi
+          grep -Fxq PI_R105_UNKNOWN_PARAMETER_HOLD "$RUNNER_TEMP/pi-r105-unknown.txt"
+          echo PI_R105_CI_WRITE_OPTION_NOT_AVAILABLE=PASS
+
+      - name: R102 quarantine CLI dry-run, immutable archive and maintenance fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d)"
+          trap 'rm -rf "$work"' EXIT
+          mkdir -p "$work/quarantine"
+          php -r '$p=$argv[1]; file_put_contents($p,"%PDF-1.7\n".str_repeat("SYNTHETIC CI ONLY\n",20)."%%EOF\n");' "$work/synthetic.pdf"
+          set -- --id=YOG-APBD-DETAIL-2026 --file="$work/synthetic.pdf" \
+            --url=https://jdih.jogjakota.go.id/asset/naskah/2025pw3405074.pdf \
+            --captured-at=2026-11-23T21:00:00+07:00 --staging-root="$work/quarantine"
+          php scripts/pi-r102-stage-primary-pdf.php "$@" > "$work/dry.txt"
+          grep -Fxq PI_R102_DRY_RUN=PASS_NO_WRITE "$work/dry.txt"
+          if find "$work/quarantine" -mindepth 1 -print -quit | grep -q .; then
+            echo PI_R102_DRY_RUN_MUTATED_DISK >&2; exit 3
+          fi
+          php scripts/pi-r102-stage-primary-pdf.php "$@" --commit > "$work/committed.txt"
+          grep -Fxq PI_R102_LOCAL_PDF_CANDIDATE_STAGED=PASS "$work/committed.txt"
+          find "$work/quarantine" -type f -name '*.pdf' | grep -q .
+          find "$work/quarantine" -type f -name '*.receipt.json' | grep -q .
+          printf '<html>Sedang proses maintenance</html>' > "$work/maintenance.html"
+          if php scripts/pi-r102-stage-primary-pdf.php \
+            --id=YOG-APBD-DETAIL-2026 --file="$work/maintenance.html" \
+            --url=https://jdih.jogjakota.go.id/asset/naskah/2025pw3405074.pdf \
+            --captured-at=2026-11-23T21:00:00+07:00 --staging-root="$work/quarantine" \
+            > "$work/rejected.txt" 2>&1; then
+            echo PI_R102_MAINTENANCE_HTML_FALSE_ACCEPT >&2; exit 3
+          fi
+          grep -Eq 'PI_R102_(NON_PDF_OR_MAINTENANCE_HTML_REJECTED|LOCAL_PDF_SIZE_OUTSIDE_GATES)' "$work/rejected.txt"
+          echo PI_R102_CI_OFFLINE_PDF_QUARANTINE_AND_HTML_REJECTION=PASS
+
+          php scripts/pi-r102-stage-primary-pdf.php \
+            --id=YOG-APBD-DETAIL-CHANGE3-2026 --file="$work/synthetic.pdf" \
+            --url='https://peraturan.bpk.go.id/Download/414066/perwalkot%20No.12%20thn%202026.pdf' \
+            --captured-at=2026-11-24T02:10:00+07:00 --staging-root="$work/quarantine" \
+            > "$work/bpk-dry.txt"
+          grep -Fxq PI_R102_DRY_RUN=PASS_NO_WRITE "$work/bpk-dry.txt"
+          grep -Fxq PI_R102_OFFICIAL_ORIGIN_LINK=NOT_AUTHENTICATED "$work/bpk-dry.txt"
+          echo PI_R103_CI_BPK_OFFICIAL_REPUBLICATION_OFFLINE_GUARD=PASS
+
+          php -l scripts/pi-r103-bpk-fetch.php
+          php scripts/pi-r103-bpk-fetch.php \
+            --source=YOG-APBD-DETAIL-2026 --output-dir="$work/quarantine" \
+            > "$work/bpk-preview.txt"
+          grep -Fxq PI_R103_DIRECT_BPK_FETCH=NOT_RUN_DEFAULT_READ_ONLY "$work/bpk-preview.txt"
+          if php scripts/pi-r103-bpk-fetch.php \
+            --source=YOG-APBD-DETAIL-2026 --output-dir="$work/quarantine" --unknown \
+            > "$work/bad-param.txt" 2>&1; then
+            echo PI_R103_UNEXPECTED_PARAMETER_ADMITTED >&2; exit 3
+          fi
+          grep -Fxq PI_R103_UNKNOWN_PARAMETER_HOLD "$work/bad-param.txt"
+          echo PI_R103_CI_NETWORK_FETCH_OPT_IN_AND_READ_ONLY_DEFAULT=PASS
+
+      - name: R103 attempt actual BPK primary PDF acquisition on disposable runner (non-blocking)
+        shell: bash
+        continue-on-error: true
+        timeout-minutes: 5
+        run: |
+          set -uo pipefail
+          mkdir -p "$RUNNER_TEMP/pi-r103-bpk-primary"
+          for source in YOG-APBD-DETAIL-2026 YOG-APBD-DETAIL-CHANGE3-2026; do
+            if php scripts/pi-r103-bpk-fetch.php \
+              "--source=$source" \
+              "--output-dir=$RUNNER_TEMP/pi-r103-bpk-primary" --fetch \
+              > "$RUNNER_TEMP/pi-r103-$source.log" 2>&1; then
+                grep -E '^PI_R103_(SOURCE_ID|BPK_HTTP_200_PDF_BYTES|BPK_SHA256|BPK_BYTES_CANDIDATE_ARCHIVED)=' \
+                  "$RUNNER_TEMP/pi-r103-$source.log"
+            else
+                echo "PI_R103_BPK_DIRECT_ACQUISITION_$source=HOLD_NOT_RETRIEVED"
+                grep -E '^PI_R103_(SOURCE_ID|HTTPS_FETCH_HOLD|HTML_OR_NON_PDF_MIRROR_REJECTED|PDF_FOOTER_MISSING|DOWNLOAD_NOT_PDF)' \
+                  "$RUNNER_TEMP/pi-r103-$source.log" || true
+            fi
+          done
+          echo PI_R103_RUNNER_TEMP_DOWNLOADS=EPHEMERAL_NOT_IMPORTED_TO_OWNER_PI
+
+      - name: R108 Wave3C Laravel Tinker read-only graph acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd laravel
+          php artisan tinker --execute="require base_path('../scripts/pi-r108-wave3c-tinker-readonly.php');" | tee "$RUNNER_TEMP/pi-r108-w3c-tinker.txt"
+          grep -Fxq PI_R108_W3C_TINKER_CASE_SIX_RELATIONS_GATES=PASS "$RUNNER_TEMP/pi-r108-w3c-tinker.txt"
       - run: node --test laravel/tests/frontend/*.test.cjs laravel/tests/js/*.test.cjs
       - run: node scripts/pi-build-regulatory-assets.mjs --check
+      - name: R93 real Laravel routes and in-memory auth/module acceptance
+        run: cd laravel && php vendor/bin/phpunit --filter R93IntegratedAuthModuleAcceptanceTest
+      - name: R93 isolated real HTTP cookies CSRF and zero-spend module checks
+        shell: bash
+        env:
+          APP_ENV: testing
+          APP_DEBUG: 'false'
+          APP_KEY: 'base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
+          APP_URL: 'http://127.0.0.1:19893'
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ${{ runner.temp }}/pi-r93-isolated.sqlite
+          DB_URL: ''
+          SESSION_DRIVER: file
+          CACHE_STORE: array
+          QUEUE_CONNECTION: sync
+          LOG_CHANNEL: stderr
+          PI_R89_CLOUD_ENABLED: 'false'
+          PI_JDIH_BPK_SEARCH_ENABLED: 'false'
+          PI_REGULATORY_AUTO_ANCESTRY_ENABLED: 'false'
+          PI_R93_CI_ORIGIN: 'http://127.0.0.1:19893'
+        run: |
+          set -euo pipefail
+          case "$DB_DATABASE" in
+            "$RUNNER_TEMP/"*.sqlite) ;;
+            *) echo "PI_R93_ISOLATED_DB_PATH_INVALID" >&2; exit 2;;
+          esac
+          if [[ -e "$DB_DATABASE" ]]; then echo PI_R93_TEMP_DB_DIRTY >&2; exit 2; fi
+          touch "$DB_DATABASE"
+          (cd laravel && php artisan migrate --force --no-interaction)
+          php scripts/pi-r93-ci-seed.php
+          (
+            cd laravel
+            php artisan serve --host=127.0.0.1 --port=19893 > "$RUNNER_TEMP/pi-r93-ci-http.log" 2>&1 &
+            server_pid=$!
+            trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+            ready=0
+            for attempt in $(seq 1 60); do
+              if curl --silent --fail --output /dev/null http://127.0.0.1:19893/api/auth/setup-status; then ready=1; break; fi
+              sleep 0.4
+            done
+            if [[ "$ready" != 1 ]]; then echo PI_R93_DISPOSABLE_SERVER_NOT_READY >&2; exit 2; fi
+            echo PI_R93_DISPOSABLE_SERVER=READY
+            node ../scripts/pi-r93-isolated-http-smoke.mjs
+            node ../scripts/pi-r95-isolated-chrome-browser-qa.mjs
+          )
+          echo PI_R93_ORIGINAL_WINDOWS_8820_AND_DB=NOT_ACCESSED
+
+      - name: RF04 actual official PDF acquisition and candidate inventory (disposable)
+        continue-on-error: true
+        timeout-minutes: 12
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq && sudo apt-get install -y poppler-utils
+          mkdir -p "$RUNNER_TEMP/rf04"
+          php -r '$q=json_decode(file_get_contents("laravel/resources/pi/rf04-primary-acquisition.json"),true);foreach($q["documents"] as $d)echo $d["id"]."\t".$d["pdf_url"]."\n";' | while IFS=$'\t' read -r id url; do
+            curl --fail --silent --show-error --proto '=https' --connect-timeout 15 --max-time 90 --max-filesize 83886080 "$url" -o "$RUNNER_TEMP/rf04/$id.pdf" || rm -f "$RUNNER_TEMP/rf04/$id.pdf"
+          done
+          php -d memory_limit=1536M scripts/pi-rf04-corpus-inventory.php "$RUNNER_TEMP/rf04" > "$RUNNER_TEMP/rf04-inventory.json" || true
+          php -r '$r=json_decode(file_get_contents($argv[1]),true,64,JSON_THROW_ON_ERROR);foreach($r["documents"] as $id=>$d)echo $id." SHA=".$d["source_sha256"]." PAGES=".$d["inventory"]["expected_pages"]." FORMAT_SIGNALS=".json_encode($d["format_profile"]["counts"])."\n";echo "RF04_PROCESSED=".$r["processed_documents"]."/".$r["expected_documents"]."\nRF04_HOLDS=".json_encode($r["holds"])."\n";exit($r["processed_documents"]===$r["expected_documents"]?0:1);' "$RUNNER_TEMP/rf04-inventory.json"
+
+      - name: RF05 local pinned corpus fail-closed (zero network)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/rf05-empty"
+          set +e
+          php scripts/pi-rf04-corpus-inventory.php "$RUNNER_TEMP/rf05-empty" --local-pins > "$RUNNER_TEMP/rf05-empty.json"
+          rc=$?
+          set -e
+          test "$rc" = 1
+          php -r '$r=json_decode(file_get_contents($argv[1]),true,32,JSON_THROW_ON_ERROR);if($r["source_mode"]!=="LOCAL_PINNED_REPOSITORY"||$r["network_requests"]!==0||$r["processed_documents"]!==0||count($r["holds"])!==8||$r["production_admission"]!=="DENIED")exit(1);echo "RF05_MISSING_PINNED_CORPUS_FAIL_CLOSED=PASS\n";' "$RUNNER_TEMP/rf05-empty.json"
+      - name: HRIA isolated exact configuration and vault smoke (zero spend)
+        run: php scripts/pi-hria-runtime-context-smoke.php
+      - name: RAI live manifestation benchmark CLI syntax
+        run: php -l scripts/pi-rai-live-manifestation.php

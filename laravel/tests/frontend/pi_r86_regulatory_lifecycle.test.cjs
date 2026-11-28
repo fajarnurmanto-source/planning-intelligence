@@ -11,7 +11,7 @@ const r85Css = fs.readFileSync(path.join(root, 'public/development-case-r85.css'
 
 test('R86 is integrated into the existing R85 PI Superior workspace', () => {
   assert.match(page, /id="r86-lifecycle"/)
-  assert.match(page, /Siklus Pemerintahan &amp; Dasar Regulasi/i)
+  assert.match(page, /DASAR KEWENANGAN/i)
   assert.match(page, /regulatory-lifecycle-r86\.js/)
   assert.match(page, /regulatory-lifecycle-r86\.css/)
   assert.match(page, /regulatory-trace-r70a\.html#r84-review-workspace/)

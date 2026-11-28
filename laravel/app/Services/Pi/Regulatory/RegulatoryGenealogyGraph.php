@@ -204,6 +204,63 @@ final class RegulatoryGenealogyGraph
         ];
     }
 
+    /**
+     * Relation-specific guard for proposed direct edges. The evidence registry
+     * is supplied by the trusted caller, not the AI. A matching locator/hash
+     * establishes an evidence binding, not the truth of the proposed relation.
+     */
+    public function assessProposal(array $nodes,array $evidence,array $proposal,string $caseDate,string $knowledgeDate): array
+    {
+        foreach ([$caseDate,$knowledgeDate] as $date) {
+            $d=\DateTimeImmutable::createFromFormat('!Y-m-d',$date);
+            if (!$d || $d->format('Y-m-d')!==$date) throw new RuntimeException('PI_RF02_DATE_HOLD');
+        }
+        $rules=[
+            'CITES_AS_BASIS'=>[['INSTRUMENT','PROVISION'],['INSTRUMENT','PROVISION'],'REFERENCE_ONLY'],
+            'ISSUED_UNDER_AUTHORITY'=>[['INSTRUMENT'],['PROVISION'],'AUTHORITY_CANDIDATE'],
+            'DELEGATED_BY'=>[['INSTRUMENT','PROVISION'],['PROVISION'],'DELEGATION_CANDIDATE'],
+            'IMPLEMENTS_PROVISION_OF'=>[['INSTRUMENT','PROVISION'],['PROVISION'],'IMPLEMENTATION_CANDIDATE'],
+            'AMENDS'=>[['INSTRUMENT'],['INSTRUMENT'],'CHANGE_INSTRUMENT_ONLY'],
+            'AMENDS_PROVISION_OF'=>[['INSTRUMENT','PROVISION'],['PROVISION','ANNEX'],'SCOPED_CHANGE_CANDIDATE'],
+            'PARTIALLY_REPEALS'=>[['INSTRUMENT','PROVISION'],['PROVISION','ANNEX'],'SCOPED_REPEAL_CANDIDATE'],
+            'REPEALS'=>[['INSTRUMENT'],['INSTRUMENT'],'WHOLE_INSTRUMENT_CANDIDATE'],
+            'REPLACES'=>[['INSTRUMENT'],['INSTRUMENT'],'REPLACEMENT_CANDIDATE'],
+            'TRANSITIONAL_SCOPE'=>[['PROVISION'],['PROVISION','ANNEX'],'TRANSITION_CANDIDATE'],
+            'MEMBER_OF_SERIES'=>[['INSTRUMENT'],['SERIES'],'MEMBERSHIP_ONLY'],
+        ];
+        $type=$proposal['type']??null;$from=$proposal['from']??null;$to=$proposal['to']??null;
+        $eid=$proposal['evidence_id']??null;
+        $result=['schema'=>'PI_RF02_RELATION_GUARD_V1','type'=>$type,'from'=>$from,'to'=>$to,'evidence_id'=>$eid,
+            'state'=>'ABSTAIN','reason'=>null,'semantic_scope'=>null,'inverse_discovery_label'=>null,
+            'transitive_inference_allowed'=>false,'relation_promotion'=>'NOT_PERFORMED','legal_effect'=>'NOT_ASSESSED','production_admission'=>'DENIED'];
+        $hold=static function(string $reason)use($result):array{return array_replace($result,['reason'=>$reason]);};
+        if (!is_string($type)||!isset($rules[$type])||!is_string($from)||!is_string($to)||$from===$to||!isset($nodes[$from],$nodes[$to])) return $hold('UNKNOWN_RELATION_OR_ENDPOINT');
+        [$sourceKinds,$targetKinds,$scope]=$rules[$type];
+        $a=$nodes[$from];$b=$nodes[$to];
+        if (!in_array($a['node_type']??null,$sourceKinds,true)||!in_array($b['node_type']??null,$targetKinds,true)) return $hold('ENDPOINT_TYPE_MISMATCH');
+        if (!is_string($eid)||!isset($evidence[$eid])) return $hold('EVIDENCE_NOT_FOUND');
+        $e=$evidence[$eid];
+        if (($e['from']??null)!==$from||($e['to']??null)!==$to||($e['relation_type']??null)!==$type) return $hold('EVIDENCE_EDGE_MISMATCH');
+        if (!$this->registry->officialUrl($e['source_url']??null)||!is_string($e['source_locator']??null)||trim($e['source_locator'])===''
+            ||!is_string($e['source_sha256']??null)||!preg_match('/^[A-Fa-f0-9]{64}$/D',$e['source_sha256'])
+            ||!is_string($e['excerpt']??null)||trim($e['excerpt'])===''||strlen($e['excerpt'])>16000
+            ||strtoupper(hash('sha256',$e['excerpt']))!==($e['excerpt_sha256']??null)
+            ||($e['status']??null)!=='SOURCE_TEXT_CANDIDATE') return $hold('EVIDENCE_INCOMPLETE');
+        $owner=$a['node_type']==='INSTRUMENT'?$from:($a['owner_id']??null);
+        if (!is_string($owner)||!isset($nodes[$owner])||($e['source_instrument_id']??null)!==$owner) return $hold('SOURCE_OWNER_MISMATCH');
+        foreach (['observed_on','effective_on'] as $k) {
+            $v=$e[$k]??null;
+            if (!is_string($v)) return $hold('TEMPORAL_EVIDENCE_UNKNOWN');
+            $d=\DateTimeImmutable::createFromFormat('!Y-m-d',$v);
+            if (!$d||$d->format('Y-m-d')!==$v) return $hold('TEMPORAL_EVIDENCE_INVALID');
+        }
+        if ($e['observed_on']>$knowledgeDate) return $hold('NOT_KNOWN_AT_CUTOFF');
+        if ($e['effective_on']>$caseDate) return $hold('NOT_YET_EFFECTIVE');
+        if (($proposal['derived_from_path']??false)!==false) return $hold('TRANSITIVE_PROPOSAL_NOT_ALLOWED');
+        return array_replace($result,['state'=>'DIRECT_EVIDENCE_CANDIDATE_REVIEW_REQUIRED','reason'=>null,'semantic_scope'=>$scope,
+            'inverse_discovery_label'=>match($type){'DELEGATED_BY'=>'DELEGATES_TO','AMENDS'=>'AMENDED_BY','AMENDS_PROVISION_OF'=>'PROVISION_AMENDED_BY','IMPLEMENTS_PROVISION_OF'=>'IMPLEMENTED_BY',default=>null}]);
+    }
+
     private function edge(
         array &$edges, string $from, string $to, string $type, string $status,
         ?string $sourceUrl, ?string $locator

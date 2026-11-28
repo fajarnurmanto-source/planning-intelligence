@@ -14,6 +14,7 @@
 .r85-graph h3 { margin:0; padding:15px 17px; background:#143d33; color:#fff; font-size:.95rem; }
 .r85-flow { display:grid; gap:0; padding:8px 16px 16px; }
 .r85-flow-row { display:grid; grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr); align-items:center; gap:8px; padding:11px 0; border-bottom:1px solid #edf2f0; }
+.r85-flow-row > .r85-technical { grid-column:1 / -1; min-width:0; overflow-wrap:anywhere; }
 .r85-flow-row:last-child { border-bottom:0; }
 .r85-node { padding:9px 10px; border-radius:9px; background:#f2f7f5; color:#27483f; font-size:.78rem; line-height:1.35; }
 .r85-node small { display:block; margin-bottom:3px; color:#75857f; font-size:.62rem; text-transform:uppercase; }
@@ -33,7 +34,7 @@
 .r85-guards span { padding:8px 11px; border:1px solid #e4c98e; border-radius:999px; background:#fff8e8; color:#6a501b; font-size:.75rem; font-weight:800; }
 .r85-error { padding:18px; border:1px solid #e2a5a5; border-radius:10px; background:#fff1f1; color:#852f2f; }
 @media (max-width:1050px) { .r85-filters { grid-template-columns:repeat(2,1fr); } .r85-graph-grid,.r85-question-grid { grid-template-columns:1fr; } .r85-question:first-child { grid-column:auto; } .r85-evidence-item { grid-template-columns:48px 1fr; } .r85-verification { justify-items:start; } }
-@media (max-width:680px) { .r85-filters { grid-template-columns:1fr; } .r85-flow-row { grid-template-columns:1fr; } .r85-arrow { transform:rotate(90deg); } .r85-evidence-item { grid-template-columns:minmax(0,1fr); } }
+@media (max-width:680px) { .r85-filters { grid-template-columns:minmax(0,1fr); } .r85-filters > * { min-width:0; max-width:100%; } .r85-filters input,.r85-filters select { width:100%; max-width:100%; min-width:0; box-sizing:border-box; } .r85-flow-row { grid-template-columns:minmax(0,1fr); } .r85-arrow { transform:rotate(90deg); justify-self:center; width:1.5em; height:1.5em; line-height:1.5em; } .r85-evidence-item { grid-template-columns:minmax(0,1fr); } }
 
 
 #r88-crosswalk,#r88-crosswalk article,#r88-crosswalk form > * { min-width:0; overflow-wrap:anywhere; }

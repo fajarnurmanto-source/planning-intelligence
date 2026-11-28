@@ -1,0 +1,171 @@
+{
+  "schema": "PI_ROADMAP_PROGRESS_PROVISIONAL_V1",
+  "as_of": "2026-11-27",
+  "assessed_head": "3b04552a045990f4a69877b12691e39d847c4b90",
+  "operational_baseline": "4c7adadc7b15421a3afea570302c348f3aeb54c8",
+  "method": "PROPOSED_EQUAL_MILESTONE_EQUAL_FOUR_BINARY_CHECKPOINTS",
+  "approval": "NOT_APPROVED_AS_CANONICAL_WEIGHTED_RUBRIC",
+  "scope": "F0-F9 development progress, not commercial readiness or time remaining",
+  "denominator": 40,
+  "credited": 14,
+  "percent": 35,
+  "criteria": [
+    {
+      "id": "F0",
+      "name": "Foundation",
+      "credited": [
+        "Canonical roadmap and single branch governance",
+        "Guarded source cutover and original integrity",
+        "Existing auth and UI baseline"
+      ],
+      "open": [
+        "Comprehensive source-rights and identity coverage"
+      ],
+      "score": 3,
+      "denominator": 4
+    },
+    {
+      "id": "F1",
+      "name": "Evidence",
+      "credited": [
+        "Real pinned PDF acquisition and offline reuse",
+        "Actual source PDF page navigation",
+        "Integrity and missing-source hold demonstrated"
+      ],
+      "open": [
+        "General multi-format ingestion and full searchable provision/rights workflow"
+      ],
+      "score": 3,
+      "denominator": 4
+    },
+    {
+      "id": "F2",
+      "name": "Regulatory",
+      "credited": [
+        "Candidate typed taxonomy/graph/temporal guards with tests"
+      ],
+      "open": [
+        "Complete relevant root discovery and authority/delegation evidence",
+        "Verified amendment/transitional/applicability chains",
+        "Substantive relation and harmonization benchmark"
+      ],
+      "score": 1,
+      "denominator": 4
+    },
+    {
+      "id": "F3",
+      "name": "Planning/Performance",
+      "credited": [
+        "Candidate program/taxonomy crosswalk from real documents",
+        "Actual planning/indicator trace in browser"
+      ],
+      "open": [
+        "Verified N-document N-year OPD crosswalk",
+        "Operational indicator definition/target/realisasi comparability"
+      ],
+      "score": 2,
+      "denominator": 4
+    },
+    {
+      "id": "F4",
+      "name": "Fiscal",
+      "credited": [
+        "Real candidate account fragments with baseline/amendment PDF locators"
+      ],
+      "open": [
+        "Verified regulation-program-budget connection",
+        "KUA-PPAS/RKA/DPA/funding chain and applicable rulepack",
+        "Validated numeric comparison and scenario"
+      ],
+      "score": 1,
+      "denominator": 4
+    },
+    {
+      "id": "F5",
+      "name": "Coherence/Evaluation",
+      "credited": [
+        "Output/outcome distinction and candidate performance evidence trace"
+      ],
+      "open": [
+        "Verified evidence and counter-evidence findings",
+        "Target/actual longitudinal comparison",
+        "Outcome/risk evaluation without unsupported causality"
+      ],
+      "score": 1,
+      "denominator": 4
+    },
+    {
+      "id": "F6",
+      "name": "Superior",
+      "credited": [
+        "Visible integrated development case with candidate cross-domain trace"
+      ],
+      "open": [
+        "Completed case across all five specialized domains",
+        "Persistent authorized reviewer decision and audit history",
+        "Evidence-bound brief/export/reopen acceptance"
+      ],
+      "score": 1,
+      "denominator": 4
+    },
+    {
+      "id": "F7",
+      "name": "Benchmark/Operations",
+      "credited": [
+        "Actual desktop/mobile and authentication core flows",
+        "Guarded deployment, rollback, prerequisite recovery acceptance"
+      ],
+      "open": [
+        "Independent gold benchmark and holdout metrics",
+        "Full security/tenant/recovery operational acceptance"
+      ],
+      "score": 2,
+      "denominator": 4
+    },
+    {
+      "id": "F8",
+      "name": "Productization/Market",
+      "credited": [],
+      "open": [
+        "Real public demo with safe admission",
+        "Complete secure workspace and portability",
+        "Entitlement/metering/licensing/deploy/support acceptance",
+        "Market validation and commercial authorization"
+      ],
+      "score": 0,
+      "denominator": 4
+    },
+    {
+      "id": "F9",
+      "name": "Multi-Pemda decision platform",
+      "credited": [],
+      "open": [
+        "Audited cases across multiple regions/periods",
+        "Validated scenarios and prioritization",
+        "Allocation and delivery trace",
+        "Learning loop and authorized decision outcomes"
+      ],
+      "score": 0,
+      "denominator": 4
+    }
+  ],
+  "gates": {
+    "G1": "OPEN",
+    "G2": "OPEN",
+    "G3": "OPEN",
+    "G4": "OPEN",
+    "G5": "OPEN",
+    "G6": "OPEN",
+    "G7": "OPEN"
+  },
+  "evidence": [
+    "docs/PI_APR_OPERATIONAL_ACCEPTANCE_20261127.md",
+    "docs/PI_MASTER_ROADMAP_CANONICAL_20261108.md",
+    "CI runs 46035096370/46035096252/46035096254/46035096420",
+    "docs/PI_INTELLIGENCE_QUALIFICATION_20261128.md"
+  ],
+  "production_admission": "DENIED",
+  "latest_reassessment": "2026-11-28",
+  "latest_measurement": "docs/PI_INTELLIGENCE_QUALIFICATION_20261128.md",
+  "latest_conclusion": "14/40 retained; measured routing/HRIA partial, not enough to close full milestone checkpoint or G1-G7"
+}

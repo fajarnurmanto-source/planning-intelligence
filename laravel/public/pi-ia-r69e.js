@@ -19,38 +19,50 @@
   // Canonical Laravel equivalents, not claims of complete R70A-D feature parity.
   const laravelHashes = {perubahan:'#r72-title',cakupan:'#r70g-documents',genealogi:'#r74-title',laravel:'#r75-title'}
   const isLaravelActive = key => onLaravel && (location.hash ? laravelHashes[key] === location.hash : key === 'laravel')
+  // R108 work-oriented navigation. "Kasus pembangunan terpadu" is the
+  // unchanged legacy route name, not a user-facing developer milestone.
+  // Internal module entitlements remain enforced by the existing API.
   const spec = [
-    {id:'superior',label:'PI Superior',subtitle:'Pusat keputusan lintas aplikasi',items:[
+    {id:'superior',label:'Beranda kerja',subtitle:'Pekerjaan dan konteks yang sedang ditelaah',items:[
       {label:'Beranda',href:'./index.html',key:'home'},
-      {label:'Kasus pembangunan terpadu',href:'./development-case-r85.html',key:'development-case'},
-      {label:'Agenda review',href:'./index.html#actions-title'},
-      {label:'Analisis AI',href:'./ai-gateway.html'},
+      {label:'Lanjutkan telaah kasus',href:'./development-case-r85.html',key:'development-case'},
     ]},
-    {id:'evidence',label:'Evidence Intelligence',subtitle:'Dokumen, bukti, kode dan provenance',items:[
-      {label:'Dokumen & bukti',href:'./index.html#sources-title'},
-      {label:'Kode & taksonomi',href:'./workspace.html?pi_section=taksonomi',key:'taksonomi'},
+    {id:'planning',label:'Telaah perencanaan',subtitle:'Permasalahan, kewenangan, sasaran dan program',items:[
+      {label:'Ringkasan kasus',href:'./development-case-r85.html#pi-view=ringkasan',key:'ringkasan'},
+      {label:'Permasalahan & kewenangan',href:'./development-case-r85.html#pi-view=kewenangan',key:'kewenangan'},
+      {label:'Program & subkegiatan',href:'./development-case-r85.html#pi-view=rencana',key:'rencana'},
+      {label:'Telaah dasar hukum lanjutan',href:'./regulatory-r69e.html',key:'regulasi',module:'regulatory'},
     ]},
-    {id:'regulatory',label:'Regulatory Intelligence',subtitle:'Dasar hukum dan harmonisasi',items:[
-      {label:'Telaah regulasi',href:'./regulatory-r69e.html',key:'regulasi'},
-      {label:'Jejak norma (Laravel R79)',href:'./regulatory-trace-r70a.html',key:'norma'},
-      {label:'Naskah & PDF (Laravel R78)',href:'./regulatory-sources-r70b.html',key:'naskah'},
-      {label:'Garis waktu (Laravel R72)',href:'./regulatory-laravel-r70g.html#r72-title',key:'perubahan'},
-      {label:'Sasaran Lampiran I/II (R70F)',href:'./regulatory-laravel-r70g.html#r70g-documents',key:'cakupan'},
-      {label:'Genealogi Regulasi (R74)',href:'./regulatory-laravel-r70g.html#r74-title',key:'genealogi'},
-      {label:'Meja Review Terpadu (R75)',href:'./regulatory-laravel-r70g.html#r75-title',key:'laravel'},
+    {id:'fiscal',label:'Anggaran dan pendanaan',subtitle:'Kesesuaian, rekening dan perubahan APBD',items:[
+      {label:'Lampiran APBD & rekening',href:'./development-case-r85.html#pi-view=anggaran',key:'anggaran'},
+      {label:'Telaah anggaran lanjutan',href:'./workspace.html?pi_section=penganggaran',key:'penganggaran',module:'fiscal'},
     ]},
-    {id:'performance',label:'Performance Intelligence',subtitle:'Sasaran, indikator dan target',items:[
-      {label:'Perencanaan',href:'./workspace.html?pi_section=perencanaan',key:'perencanaan'},
-      {label:'Renstra & Renja',href:'./workspace.html?pi_section=renstra',key:'renstra'},
-      {label:'Pohon kinerja',href:'./workspace.html?pi_section=kinerja',key:'kinerja'},
+    {id:'evaluation',label:'Pelaksanaan dan evaluasi',subtitle:'Capaian, kendala dan perbaikan',items:[
+      {label:'Temuan yang perlu ditelaah',href:'./index.html#actions-title',key:'temuan'},
+      {label:'Evaluasi hasil lanjutan',status:'Belum tersedia untuk data kasus ini'},
     ]},
-    {id:'fiscal',label:'Fiscal Intelligence',subtitle:'Alokasi, APBD dan belanja',items:[
-      {label:'Penganggaran & APBD',href:'./workspace.html?pi_section=penganggaran',key:'penganggaran'},
-      {label:'RKA & perubahan anggaran',status:'Dalam pengembangan'},
+    {id:'evidence',label:'Dokumen dan dasar hukum',subtitle:'Berkas, sumber dan riwayat bukti',items:[
+      {label:'Katalog dokumen',href:'./development-case-r85.html#pi-view=dokumen',key:'dokumen'},
+      {label:'Lampiran APBD',href:'./development-case-r85.html#pi-view=anggaran',key:'lampiran'},
+      {label:'Pemeriksaan hukum lanjutan',href:'./regulatory-laravel-r70g.html',key:'regulatory-detail',module:'regulatory'},
     ]},
-    {id:'evaluation',label:'Evaluation Intelligence',subtitle:'Realisasi, hasil dan efektivitas',items:[
-      {label:'Evaluasi hasil',status:'Dalam pengembangan'},
-      {label:'Temuan evaluasi terverifikasi',status:'Dalam pengembangan'},
+    {id:'review',label:'Temuan dan tindak lanjut',subtitle:'Pemeriksaan, rekomendasi dan keputusan manusia',items:[
+      {label:'Ringkasan temuan',href:'./index.html#actions-title',key:'reviews'},
+      {label:'Meja pemeriksa',href:'./regulatory-trace-r70a.html#r84-review-workspace',key:'reviewer',module:'regulatory'},
+      {label:'Rincian hubungan bukti',href:'./development-case-r85.html#pi-view=rinci',key:'rinci'},
+    ]},
+    {id:'specialist',label:'Telaah regulasi lanjutan',subtitle:'Riwayat perubahan dan hubungan ketentuan hukum',items:[
+      {label:'Jejak ketentuan',href:'./regulatory-trace-r70a.html',key:'norma',module:'regulatory'},
+      {label:'Naskah dan PDF regulasi',href:'./regulatory-sources-r70b.html',key:'naskah',module:'regulatory'},
+      {label:'Riwayat perubahan peraturan',href:'./regulatory-laravel-r70g.html#r72-title',key:'perubahan',module:'regulatory'},
+      {label:'Sasaran dan ruang lingkup lampiran',href:'./regulatory-laravel-r70g.html#r70g-documents',key:'cakupan',module:'regulatory'},
+      {label:'Hubungan antar peraturan',href:'./regulatory-laravel-r70g.html#r74-title',key:'genealogi',module:'regulatory'},
+      {label:'Meja telaah terpadu',href:'./regulatory-laravel-r70g.html#r75-title',key:'laravel',module:'regulatory'},
+    ]},
+    {id:'settings',label:'Pengaturan dan bantuan',subtitle:'Layanan AI opsional dan pengaturan lanjutan',items:[
+      {label:'Bantuan analisis AI',href:'./ai-gateway.html',key:'ai'},
+      {label:'Pengaturan AI',href:'./ai-settings.html',key:'ai-settings'},
+      {label:'Paket dan akses layanan',href:'./subscription-r69e.html',key:'subscription'},
     ]},
   ]
   function create(tag,cls,text,parent) {
@@ -67,12 +79,12 @@
     nav.replaceChildren()
     for(let i=0;i<spec.length;i++) {
       const group=spec[i]
-      const locked=group.id!=="superior" && !modulesAllowed.has(group.id)
-      if(i===0) create('div','pi-app-group-label','APLIKASI UTAMA',nav)
-      if(i===1) create('div','pi-app-group-label','5 APLIKASI SPESIALIS',nav)
+      const locked=false // task navigation itself never grants domain access
+      if(i===0) create('div','pi-app-group-label','MULAI PEKERJAAN',nav)
+      if(i===1) create('div','pi-app-group-label','PILIH TAHAP TELAAH',nav)
       const details=create('details','pi-app-group',null,nav)
       details.dataset.piApp=group.id
-      const hasActive=group.items.some(x=>(onWorkspace&&x.key===section)||(onRegulatory&&x.key==='regulasi')||(onTrace&&x.key==='norma')||(onFullSources&&x.key==='naskah')||(onLedger&&x.key==='perubahan')||(onScope&&x.key==='cakupan')||(onDevelopmentCase&&x.key==='development-case')||isLaravelActive(x.key))
+      const hasActive=group.items.some(x=>(onDevelopmentCase&&x.href?.includes('#pi-view=')&&location.hash===x.href.slice(x.href.indexOf('#')))||(onWorkspace&&x.key===section)||(onRegulatory&&x.key==='regulasi')||(onTrace&&x.key==='norma')||(onFullSources&&x.key==='naskah')||(onLedger&&x.key==='perubahan')||(onScope&&x.key==='cakupan')||(onDevelopmentCase&&x.key==='development-case')||isLaravelActive(x.key))
       details.open=!locked && (hasActive || (!onWorkspace&&i===0))
       const summary=create('summary','pi-app-group-summary',null,details)
       create('span','pi-app-group-name',group.label,summary)
@@ -86,21 +98,21 @@
       }
       const list=create('div','pi-app-submenu',null,details)
       const displayItems=group.id==="superior"&&planName==="FREE"
-        ? [...group.items.filter(item=>item.key==="home"||item.key==="development-case"),{label:"Langganan aplikasi",href:"./subscription-r69e.html"}]
+        ? group.items.filter(item=>item.key==="home"||item.key==="development-case")
         : group.items
       for(const item of displayItems) {
-        if(item.href) {
+        if(item.href && (!item.module || modulesAllowed.has(item.module))) {
           const a=create('a','pi-app-item',item.label,list)
           a.href=item.href
-          if((onWorkspace&&item.key===section) || (onRegulatory&&item.key==='regulasi') || (onTrace&&item.key==='norma') || (onFullSources&&item.key==='naskah') || (onLedger&&item.key==='perubahan') || (onScope&&item.key==='cakupan') || (onDevelopmentCase&&item.key==='development-case') || isLaravelActive(item.key) || (!onWorkspace&&!onRegulatory&&!onTrace&&!onFullSources&&!onLedger&&!onScope&&!onLaravel&&!onDevelopmentCase&&item.key==='home'&&location.hash==='')) {
+          if((onDevelopmentCase&&item.href?.includes('#pi-view=')&&location.hash===item.href.slice(item.href.indexOf('#'))) || (onWorkspace&&item.key===section) || (onRegulatory&&item.key==='regulasi') || (onTrace&&item.key==='norma') || (onFullSources&&item.key==='naskah') || (onLedger&&item.key==='perubahan') || (onScope&&item.key==='cakupan') || (onDevelopmentCase&&item.key==='development-case') || isLaravelActive(item.key) || (!onWorkspace&&!onRegulatory&&!onTrace&&!onFullSources&&!onLedger&&!onScope&&!onLaravel&&!onDevelopmentCase&&item.key==='home'&&location.hash==='')) {
             a.classList.add('active')
             a.setAttribute('aria-current','page')
           }
         } else {
           const row=create('div','pi-app-item pi-app-unavailable',null,list)
           create('span','',item.label,row)
-          create('small','',item.status||'Belum tersedia',row)
-          row.title='Fitur belum tersedia di QA ini'
+          create('small','',item.status||(item.module?'Memerlukan akses modul terkait':'Belum tersedia'),row)
+          row.title='Fitur belum tersedia atau akses modul belum diberikan'
         }
       }
       details.addEventListener('toggle',() => {
@@ -109,10 +121,8 @@
       })
     }
     const route=create('div','pi-app-route',null,nav)
-    create('strong','','ALUR ANTAR-APLIKASI',route)
-    create("span","",planName==="FREE"
-      ? "FREE · Regulasi mandiri. Tambahkan modul untuk audit lintas aplikasi."
-      : "Audit lintas modul sesuai langganan · temuan perlu verifikasi",route)
+    create('strong','','CARA MENGGUNAKAN PI',route)
+    create("span","","Pilih pekerjaan, periksa dokumen dan bukti, lalu catat hal yang perlu ditindaklanjuti. Data belum lengkap tidak berarti disetujui.",route)
   }
   function updateLegacyAside(aside) {
     if(!aside)return
@@ -130,7 +140,7 @@
       disclaimer.textContent='Autentikasi server QA aktif · SSO produksi belum aktif'
     const caveat=aside.querySelector('.pi-ux-caveat')
     if(caveat&&caveat.textContent!=='R69E · Login QA aktif; tenant produksi dan SSO belum diaktifkan')
-      caveat.textContent='R69E · Login QA aktif; tenant produksi dan SSO belum diaktifkan'
+      caveat.textContent='Login lokal aktif; SSO dan layanan produksi belum disahkan'
   }
   let scheduled=false
   function patch() {

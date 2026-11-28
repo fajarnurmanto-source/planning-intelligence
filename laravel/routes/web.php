@@ -9,12 +9,15 @@ use App\Http\Controllers\Api\AiReviewBriefController;
 use App\Http\Controllers\Api\AutomatedAncestryController;
 use App\Http\Controllers\Api\EntitlementController;
 use App\Http\Controllers\Api\GovernmentDevelopmentCaseController;
+use App\Http\Controllers\Api\OfficialSourceMetadataController;
 use App\Http\Controllers\Api\NormativePlanningReadinessController;
 use App\Http\Controllers\Api\NormativeRootController;
 use App\Http\Controllers\Api\PlanningLineageController;
 use App\Http\Controllers\Api\PlanningProgramCandidateController;
 use App\Http\Controllers\Api\R82NationalPassageReviewController;
 use App\Http\Controllers\Api\R83NationalPdfReviewController;
+use App\Http\Controllers\Api\R106NativeAnnexController;
+use App\Http\Controllers\Api\R106AnnexPdfController;
 use App\Http\Controllers\Api\R84EvidenceReviewController;
 use App\Http\Controllers\Api\RegulatoryChangeTraceController;
 use App\Http\Controllers\Api\RegulatoryDelegationCoverageController;
@@ -62,10 +65,20 @@ Route::prefix('api')->group(function (): void {
         Route::get('/qa-subscription-r69e/entitlements', EntitlementController::class)
             ->name('pi.entitlements');
         Route::get('/qa-superior-r88/planning-crosswalk', \App\Http\Controllers\Api\RegulatoryPlanningCrosswalkController::class)->name('pi.superior.planning-crosswalk');
+        Route::get('/qa-superior-hria/primary-preview', [\App\Http\Controllers\Api\HybridPrimaryLegalController::class, 'preview'])
+            ->middleware('throttle:4,1')->name('pi.superior.hria-preview');
+        Route::post('/qa-superior-hria/primary-analysis', [\App\Http\Controllers\Api\HybridPrimaryLegalController::class, 'analyze'])
+            ->middleware('throttle:2,1')->name('pi.superior.hria-analysis');
         Route::get('/qa-superior-r89/semantic-preview', [R89SemanticRegulatoryController::class, 'preview'])
             ->middleware('throttle:10,1')->name('pi.superior.semantic-preview');
         Route::post('/qa-superior-r89/semantic-candidates', [R89SemanticRegulatoryController::class, 'analyze'])
             ->middleware('throttle:2,1')->name('pi.superior.semantic-candidates');
+        Route::get('/qa-superior-r106/annex-fiscal-review', R106NativeAnnexController::class)
+            ->middleware('throttle:3,1')->name('pi.superior.r106-native-annex-review');
+        Route::get('/qa-superior-r106/annex-pdf', R106AnnexPdfController::class)
+            ->middleware('throttle:10,1')->name('pi.superior.r106-annex-source-pdf');
+        Route::get('/qa-superior-r100/official-sources', OfficialSourceMetadataController::class)
+            ->middleware('throttle:20,1')->name('pi.superior.official-source-metadata');
         Route::get('/qa-superior-r85/development-case', GovernmentDevelopmentCaseController::class)
             ->name('pi.superior.development-case');
         Route::get('/qa-superior-r86/regulatory-lifecycle', RegulatoryLifecycleController::class)

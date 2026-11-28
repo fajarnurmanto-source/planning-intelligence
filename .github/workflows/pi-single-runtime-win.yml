@@ -1,0 +1,1673 @@
+name: PI existing unified launcher audit safety
+on:
+  pull_request:
+    paths:
+      - 'scripts/pi-audit-existing-launcher.ps1'
+      - 'scripts/pi-r74-ensure-runtime.ps1'
+      - 'scripts/pi-r74-inplace-upgrade.ps1'
+      - 'scripts/pi-r74-windows-acceptance.ps1'
+      - 'scripts/pi-r74-release-parity-readonly.ps1'
+      - 'scripts/pi-r90-cutover-risk-readonly.ps1'
+      - 'scripts/pi-r90-drift-classifier-readonly.ps1'
+      - 'scripts/pi-r91-sqlite-schema-readonly.php'
+      - 'scripts/pi-r74-verify-backup.ps1'
+      - 'scripts/pi-r74-auth-runtime-diagnostic.ps1'
+      - 'scripts/pi-r74-auth-db-readonly.php'
+      - 'scripts/pi-r74-verify-entered-password.php'
+      - 'scripts/pi-r74-credential-parity-local.ps1'
+      - 'scripts/pi-r74-http-auth-parity.ps1'
+      - 'scripts/pi-r74-login-frontend-rollout.ps1'
+      - 'scripts/pi-r94-one-origin-code-cutover.ps1'
+      - 'scripts/pi-r98-r88-registry-repair.ps1'
+      - 'scripts/pi-r100-official-source-cutover.ps1'
+      - 'scripts/pi-r101-r100-safe-owner-rollout.ps1'
+      - 'scripts/pi-r104-owner-bpk-two-pdf-intake.ps1'
+      - 'scripts/pi-r107-one-origin-native-annex-cutover.ps1'
+      - 'scripts/pi-r107-ci-windows-fixture.ps1'
+      - 'scripts/pi-r108-planner-ux-cutover.ps1'
+      - 'scripts/pi-r108-ci-windows-fixture.ps1'
+      - 'scripts/pi-r108-wave2-planner-cutover.ps1'
+      - 'scripts/pi-r108-wave2-ci-windows-fixture.ps1'
+      - 'scripts/pi-r108-wave3a-documents-cutover.ps1'
+      - 'scripts/pi-r108-wave3a-ci-windows-fixture.ps1'
+      - 'scripts/pi-r108-wave3b-regulatory-cutover.ps1'
+      - 'scripts/pi-r108-wave3b-ci-windows-fixture.ps1'
+      - 'scripts/pi-r108-wave3c-performance-cutover.ps1'
+      - 'scripts/pi-r108-wave3c-ci-windows-fixture.ps1'
+      - 'scripts/pi-apr-integrated-cutover.ps1'
+      - 'scripts/pi-apr-ci-windows-fixture.ps1'
+      - 'scripts/pi-apr-tinker-contract.ps1'
+      - 'scripts/pi-apr-gemini-ci-windows-fixture.ps1'
+      - 'scripts/pi-apr-r106-diagnostic-ci-windows-fixture.ps1'
+      - 'scripts/pi-apr-platform-readonly.php'
+      - 'scripts/pi-apr-laravel-prerequisites.ps1'
+      - 'scripts/pi-apr-prerequisites-negative-controls.ps1'
+      - 'scripts/pi-r106-windows-extractor-recovery.ps1'
+      - 'laravel/resources/pi/official-source-metadata-r100.json'
+      - 'laravel/public/official-sources-r100.js'
+      - 'laravel/public/official-sources-r100.css'
+      - 'laravel/public/login.html'
+      - 'laravel/public/login.js'
+      - 'laravel/public/pi-auth-shell.js'
+      - 'laravel/public/regulatory-planning-r88.js'
+      - 'laravel/tests/frontend/csrf-session-controls-r92.test.cjs'
+      - 'scripts/windows/r74/**'
+      - 'docs/PI_R74_ONE_ORIGIN_RUNTIME_ADAPTER_20261122.md'
+      - 'docs/PI_SINGLE_RUNTIME_MANDATE_20261122.md'
+      - '.github/workflows/pi-single-runtime-win.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit-safety:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # R100 must inspect accepted R94 source baseline to prevent owner code drift
+      - name: Validate PowerShell 5.1 syntax
+        shell: powershell
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-audit-existing-launcher.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_EXISTING_LAUNCHER_AUDIT_PARSE_FAILURE'
+          }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-ensure-runtime.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_RUNTIME_ADAPTER_PARSE_FAILURE'
+          }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-inplace-upgrade.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_INPLACE_UPGRADE_PARSE_FAILURE'
+          }
+          Write-Host 'PI_EXISTING_LAUNCHER_AUDIT_PARSE=PASS'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-windows-acceptance.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_ACCEPTANCE_PARSE_FAILURE'
+          }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-release-parity-readonly.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_RELEASE_PARITY_PS51_PARSE_FAILURE'
+          }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r90-cutover-risk-readonly.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R90_CUTOVER_RISK_PS51_PARSE_FAILURE'
+          }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r90-drift-classifier-readonly.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R90_DRIFT_CLASSIFIER_PS51_PARSE_FAILURE'
+          }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r94-one-origin-code-cutover.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R94_CODE_CUTOVER_PS51_PARSE_FAILURE'
+          }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r98-r88-registry-repair.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R98_PS51_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R98_PS51_PARSE=PASS'
+          Write-Host 'PI_R94_CODE_CUTOVER_PS51_PARSE=PASS'
+          Write-Host 'PI_R90_DRIFT_CLASSIFIER_PS51_PARSE=PASS'
+          Write-Host 'PI_R90_CUTOVER_RISK_PS51_PARSE=PASS'
+          Write-Host 'PI_R74_RELEASE_PARITY_PS51_PARSE=PASS'
+          Write-Host 'PI_R74_INPLACE_UPGRADE_PARSE=PASS'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-verify-backup.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_BACKUP_VERIFIER_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R74_BACKUP_VERIFIER_PARSE=PASS'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-auth-runtime-diagnostic.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_AUTH_DIAGNOSTIC_PARSE_FAILURE'
+          }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-credential-parity-local.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_CREDENTIAL_PARITY_PS51_PARSE_FAILURE'
+          }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-http-auth-parity.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_HTTP_AUTH_PARITY_PARSE_FAILURE'
+          }
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r74-login-frontend-rollout.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List
+            throw 'PI_R74_FRONTEND_ROLLOUT_PS51_PARSE_FAILURE'
+          }
+          Write-Host 'PI_R74_FRONTEND_ROLLOUT_PS51_PARSE=PASS'
+          Write-Host 'PI_R74_HTTP_AUTH_PARITY_PARSE=PASS'
+          Write-Host 'PI_R74_CREDENTIAL_PARITY_PS51_PARSE=PASS'
+          Write-Host 'PI_R74_AUTH_DIAGNOSTIC_PARSE=PASS'
+          Write-Host 'PI_R74_ACCEPTANCE_PARSE=PASS'
+      - name: Run read-only inventory on clean runner
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & '.\scripts\pi-audit-existing-launcher.ps1'
+          if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) {
+            throw 'PI_AUDITOR_EXECUTION_FAILED'
+          }
+          Write-Host 'PI_EXISTING_LAUNCHER_AUDIT_EXECUTION=PASS'
+      - name: No duplicate shortcut or service manipulation
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-audit-existing-launcher.ps1' -Raw
+          foreach ($needle in @('PI_DISCOVERY_MUTATION=NONE','CreateShortcut($file.FullName)',
+            'Get-NetTCPConnection','Get-FileHash')) {
+            if (-not $code.Contains($needle)) { throw ('PI_AUDITOR_REQUIRED_GUARD_MISSING: '+$needle) }
+          }
+          foreach ($forbidden in @('Start-Process','Stop-Process','Set-Content',
+            'New-Item','Remove-Item','Save()','artisan migrate','composer install')) {
+            if ($code.Contains($forbidden)) { throw ('PI_AUDITOR_MUTATION_FORBIDDEN: '+$forbidden) }
+          }
+          if (Test-Path 'scripts/pi-windows-app.ps1') {
+            throw 'PI_DUPLICATE_WINDOWS_LAUNCHER_REINTRODUCED'
+          }
+          Write-Host 'PI_EXISTING_ICON_PRESERVED=PASS'
+          Write-Host 'PI_NO_DUPLICATE_LAUNCHER=PASS'
+
+      - name: Validate read-only R74 adapter audit against no listener
+        shell: powershell
+        run: |
+          $candidate = 49397
+          $occupied = Get-NetTCPConnection -LocalPort $candidate -State Listen -ErrorAction SilentlyContinue
+          if ($occupied) { throw 'PI_CI_AUDIT_PORT_UNEXPECTEDLY_OCCUPIED' }
+          $actual = & '.\scripts\pi-r74-ensure-runtime.ps1' -AppRoot $PWD.Path -Port $candidate -Mode Audit
+          if ($actual -notcontains 'PI_R74_AUDIT_MUTATION=NONE' -or
+              $actual -notcontains 'PI_R74_SERVER_ABSENT=YES') {
+            throw 'PI_R74_READ_ONLY_AUDIT_FAILED'
+          }
+          Write-Host 'PI_R74_READ_ONLY_AUDIT=PASS'
+      - name: Single origin and no destructive operator actions
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-r74-ensure-runtime.ps1' -Raw
+          foreach ($needle in @('Test-OwnedOrigin','Test-ExactAsset',
+              'PI_R74_PROBE_HASH_OR_HEALTH_MISMATCH','PI_R74_START_LOCK_TIMEOUT',
+              'PI_R74_AUDIT_MUTATION=NONE','--host=127.0.0.1')) {
+            if (-not $code.Contains($needle)) { throw ('PI_R74_GUARD_MISSING: ' + $needle) }
+          }
+          foreach ($forbidden in @('migrate:fresh','migrate --force','db:wipe',
+              'Remove-Item','Stop-Process','New-Service','Register-ScheduledTask',
+              'CreateShortcut(', 'docker compose')) {
+            if ($code.Contains($forbidden)) { throw ('PI_R74_UNSAFE_ACTION: ' + $forbidden) }
+          }
+          Write-Host 'PI_R74_SOURCE_ONLY_GUARDS=PASS'
+
+      - name: Original R74 file preservation and in-place package guard
+        shell: powershell
+        run: |
+          $installer = Get-Content 'scripts/pi-r74-inplace-upgrade.ps1' -Raw
+          $hidden = Get-Content 'scripts/windows/r74/BUKA-PI-LARAVEL-HIDDEN.cmd' -Raw
+          $manual = Get-Content 'scripts/windows/r74/BUKA-PI-LARAVEL.cmd' -Raw
+          foreach ($needle in @('9FC0BF471E18','D59A6681D3A0','A0238A4B33E5',
+              'PI_R74_UPGRADE=READ_ONLY_PREFLIGHT_PASS','-not $Apply',
+              'ORIGINAL_SHA256.json','PI_R74_MAIN_DB_AND_ENV=UNTOUCHED')) {
+            if (-not $installer.Contains($needle)) { throw ('PI_R74_INSTALL_GUARD_MISSING: ' + $needle) }
+          }
+          foreach ($needle in @('PI-R74-RUNTIME.ps1','-Port 8820 -Mode Ensure',
+              '127.0.0.1:8820')) {
+            if (-not $hidden.Contains($needle)) { throw ('PI_R74_ORIGINAL_CMD_UPGRADE_BAD: ' + $needle) }
+          }
+          if (-not $manual.Contains('BUKA-PI-LARAVEL-HIDDEN.cmd')) {
+            throw 'PI_R74_MANUAL_LAUNCHER_HAS_SECOND_SERVER'
+          }
+          foreach ($forbidden in @('artisan migrate','migrate:fresh','db:wipe',
+              'Stop-Process','New-Service','Register-ScheduledTask','CreateShortcut')) {
+            if ($installer.Contains($forbidden) -or $hidden.Contains($forbidden) -or
+                $manual.Contains($forbidden)) {
+              throw ('PI_R74_UPGRADE_DESTRUCTIVE_ACTION: ' + $forbidden)
+            }
+          }
+          Write-Host 'PI_R74_EXISTING_ICON_AND_8820=PINNED'
+          Write-Host 'PI_R74_GUARDED_INPLACE_PACKAGE=PASS'
+      - name: Fail closed on unavailable owner's original D drive
+        shell: powershell
+        run: |
+          $errors = @()
+          try {
+            & '.\scripts\pi-r74-inplace-upgrade.ps1' -ErrorAction Stop
+          } catch {
+            $errors += [string]$_.Exception.Message
+          }
+          if ($errors.Count -ne 1 -or $errors[0] -notmatch 'PI_R74_ORIGINAL_LAUNCHER_NOT_FOUND') {
+            throw 'PI_R74_MISSING_REAL_APP_DID_NOT_FAIL_CLOSED'
+          }
+          Write-Host 'PI_R74_NO_WINDOWS_OWNER_MUTATION=PASS'
+
+      - name: R74 acceptance defaults to read-only and requires observed owner machine
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-r74-windows-acceptance.ps1' -Raw
+          foreach ($guard in @('PI_R74_ORIGINAL_BACKUP_MANIFEST=VERIFIED',
+              'PI_R74_TWO_CMDS_AND_SUPERVISOR=EXACT_SOURCE_MATCH',
+              'PI_R74_ACCEPTANCE=READ_ONLY_INSTALLED_INTEGRITY_PASS',
+              'if (-not $ExerciseShortcut)',
+              'PI_R74_DESKTOP_SHORTCUT_AND_VBS=UNCHANGED',
+              'PI_R74_AFTER_SECOND_CLICK_SAME_PID=',
+              'PI_R74_LOGIN_AND_RESTART_E2E=REQUIRES_USER_OBSERVATION')) {
+            if (-not $code.Contains($guard)) {
+              throw ('PI_R74_ACCEPTANCE_GUARD_MISSING: '+$guard)
+            }
+          }
+          foreach ($bad in @('Stop-Process','artisan migrate','db:wipe',
+              'Register-ScheduledTask','New-Service','.Save()','Save()')) {
+            if ($code.Contains($bad)) { throw ('PI_R74_ACCEPTANCE_FORBIDDEN: ' + $bad) }
+          }
+          $errText = ''
+          try {
+            & '.\scripts\pi-r74-windows-acceptance.ps1' -ErrorAction Stop | Out-Null
+          } catch {
+            $errText = [string]$_.Exception.Message
+          }
+          if ($errText -notmatch 'PI_R74_EXISTING_LAUNCHER_FOLDER_MISSING') {
+            throw 'PI_R74_ACCEPTANCE_UNEXPECTED_MUTATION_OR_STATE'
+          }
+          if (-not $code.Contains('CreateShortcut($ShortcutPath)')) {
+            throw 'PI_R74_ORIGINAL_SHORTCUT_INSPECTION_MISSING'
+          }
+          Write-Host 'PI_R74_ACCEPTANCE_READ_ONLY_GUARDS=PASS'
+
+      - name: PS5.1 original backup manifest roundtrip and tamper detection
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $temp = Join-Path $env:RUNNER_TEMP ('pi-r74-receipt-' + [guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $temp -Force | Out-Null
+          $names = @('BUKA-PI-HIDDEN.vbs','BUKA-PI-LARAVEL-HIDDEN.cmd','BUKA-PI-LARAVEL.cmd')
+          $expected = @{}
+          $receipt = foreach ($name in $names) {
+            $target = Join-Path $temp $name
+            [IO.File]::WriteAllText($target, ('original-r74-fixture-' + $name))
+            $hash = (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash
+            $expected[$name] = $hash.Substring(0,12)
+            [pscustomobject]@{ File=$name; SHA256=$hash }
+          }
+          # Reproduce production installer's exact PS5.1 serialization.
+          $receipt | ConvertTo-Json | Out-File -LiteralPath (Join-Path $temp 'ORIGINAL_SHA256.json') -Encoding UTF8
+          $verified = @(& '.\scripts\pi-r74-verify-backup.ps1' -BackupRoot $temp -ExpectedSha12 $expected)
+          if ($verified -notcontains 'PI_R74_ORIGINAL_BACKUP_MANIFEST=VERIFIED' -or
+              @($verified | Where-Object { $_ -like 'PI_R74_BACKUP_FILE_VERIFIED=*' }).Count -ne 3) {
+            throw 'PI_R74_RECEIPT_JSON_ROUNDTRIP_FAILED'
+          }
+          Write-Host 'PI_R74_RECEIPT_PS51_ROUNDTRIP=PASS'
+          $tampered = Join-Path $temp $names[0]
+          [IO.File]::AppendAllText($tampered, '-altered')
+          $failure = ''
+          try {
+            & '.\scripts\pi-r74-verify-backup.ps1' -BackupRoot $temp -ExpectedSha12 $expected | Out-Null
+          } catch {
+            $failure = [string]$_.Exception.Message
+          }
+          if ($failure -notmatch 'PI_R74_BACKUP_FILE_FULL_HASH_MISMATCH') {
+            throw 'PI_R74_TAMPERED_BACKUP_NOT_REJECTED'
+          }
+          Write-Host 'PI_R74_TAMPERED_BACKUP_FAIL_CLOSED=PASS'
+
+      - name: R74 recurrent login read-only investigation guards
+        shell: powershell
+        run: |
+          $script = Get-Content 'scripts/pi-r74-auth-runtime-diagnostic.ps1' -Raw
+          $php = Get-Content 'scripts/pi-r74-auth-db-readonly.php' -Raw
+          foreach ($needle in @('PI_R74_8820_PROCESS_USES_RECOVERED_APP_ROOT',
+              'PI_R74_LARAVEL_CONFIG_CACHE_PRESENT',
+              'PI_R74_ENV_DB_URL_OVERRIDE_PRESENT',
+              'PI_R74_NO_ACCOUNT_PASSWORD_OR_DB_MUTATION=YES')) {
+            if (-not $script.Contains($needle)) { throw ('PI_R74_AUTH_DIAG_MISSING: ' + $needle) }
+          }
+          foreach ($needle in @('SQLITE3_OPEN_READONLY','PI_R74_MATCHING_USERNAME_COUNT=',
+              'PI_R74_DB_PROBE_READ_ONLY=YES','PI_R74_ACCOUNT_PASSWORD_SCHEME=')) {
+            if (-not $php.Contains($needle)) { throw ('PI_R74_DB_DIAG_MISSING: ' + $needle) }
+          }
+          foreach ($forbidden in @('Stop-Process','Set-Content','Remove-Item',
+              'Start-Process','artisan migrate','CreateShortcut(','Read-Host')) {
+            if ($script.Contains($forbidden)) { throw ('PI_R74_AUTH_DIAG_MUTATION_FORBIDDEN: ' + $forbidden) }
+          }
+          foreach ($forbidden in @('SQLITE3_OPEN_READWRITE','Hash::make','->save(',
+              'UPDATE users','DELETE FROM users')) {
+            if ($php.Contains($forbidden)) { throw ('PI_R74_DB_PROBE_MUTATION_FORBIDDEN: ' + $forbidden) }
+          }
+          $errText = ''
+          try {
+            & '.\scripts\pi-r74-auth-runtime-diagnostic.ps1' -ErrorAction Stop | Out-Null
+          } catch {
+            $errText = [string]$_.Exception.Message
+          }
+          if ($errText -notmatch 'PI_R74_ORIGINAL_APP_OR_ENV_NOT_FOUND') {
+            throw 'PI_R74_AUTH_DIAG_WRONG_NEGATIVE_GUARD'
+          }
+          Write-Host 'PI_R74_AUTH_DIAG_NO_OWNER_MUTATION=PASS'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: sqlite3, pdo_sqlite, fileinfo, mbstring, dom, xml, xmlwriter, curl, zip, bcmath, intl, openssl, iconv
+          tools: composer:v2
+          coverage: none
+      - name: PHP readonly SQLite user inventory with temporary CI fixture
+        shell: powershell
+        run: |
+          $phpExe = (Get-Command php.exe -ErrorAction SilentlyContinue)
+          if (-not $phpExe) { throw 'PHP_CLI_NOT_PRESENT_ON_WINDOWS_RUNNER' }
+          & $phpExe.Source -l '.\scripts\pi-r74-auth-db-readonly.php'
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R74_AUTH_DB_PHP_LINT_FAILED' }
+          if ((& $phpExe.Source -m) -notcontains 'sqlite3') {
+            throw 'PHP_SQLITE3_EXTENSION_MISSING'
+          }
+          $dir = Join-Path $env:RUNNER_TEMP ('pi-auth-fixture-' + [guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $dir | Out-Null
+          $dbFile = Join-Path $dir 'readonly.sqlite'
+          $fixture = Join-Path $dir 'create-fixture.php'
+          $code = @'
+          <?php
+          $db = new SQLite3($argv[1], SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+          $db->exec("CREATE TABLE users (username TEXT, tenant_id TEXT, role TEXT, password TEXT)");
+          $stmt = $db->prepare("INSERT INTO users VALUES (:u,:t,:r,:p)");
+          $stmt->bindValue(":u", "test.institution", SQLITE3_TEXT);
+          $stmt->bindValue(":t", "ID-DIY-YOG", SQLITE3_TEXT);
+          $stmt->bindValue(":r", "institution_admin", SQLITE3_TEXT);
+          $stmt->bindValue(":p", password_hash("fake-fixture-password-only", PASSWORD_BCRYPT), SQLITE3_TEXT);
+          if (!$stmt->execute()) { exit(3); }
+          $db->close();
+          '@
+          [IO.File]::WriteAllText($fixture, $code)
+          & $phpExe.Source $fixture $dbFile
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R74_AUTH_CI_FIXTURE_SETUP_FAILED' }
+          $before = (Get-FileHash -LiteralPath $dbFile -Algorithm SHA256).Hash
+          $result = @(& $phpExe.Source '.\scripts\pi-r74-auth-db-readonly.php' $dbFile 'test.institution')
+          if ($LASTEXITCODE -ne 0 -or
+              $result -notcontains 'PI_R74_MATCHING_USERNAME_COUNT=1' -or
+              $result -notcontains 'PI_R74_DB_PROBE_READ_ONLY=YES' -or
+              $result -notcontains 'PI_R74_ACCOUNT_TENANT_EXPECTED=YES' -or
+              $result -notcontains 'PI_R74_ACCOUNT_ROLE_EXPECTED=YES') {
+            throw ('PI_R74_AUTH_DB_PROBE_FIXTURE_FAILED: ' + ($result -join ' | '))
+          }
+          $after = (Get-FileHash -LiteralPath $dbFile -Algorithm SHA256).Hash
+          if ($before -ne $after) { throw 'PI_R74_AUTH_DB_PROBE_MUTATED_FIXTURE' }
+          Write-Host 'PI_R74_AUTH_SQLITE_READ_ONLY=PASS'
+
+      - name: R74 bcrypt parity verifies typed password without SQLite writes
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $passwordProbe = Get-Content 'scripts/pi-r74-verify-entered-password.php' -Raw
+          $wrapper = Get-Content 'scripts/pi-r74-credential-parity-local.ps1' -Raw
+          foreach ($needle in @('SQLITE3_OPEN_READONLY','password_verify',
+              'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=')) {
+            if (-not $passwordProbe.Contains($needle)) { throw ('PI_R74_BCRYPT_SOURCE_GUARD_MISSING=' + $needle) }
+          }
+          foreach ($needle in @('Read-Host','-AsSecureString','ZeroFreeBSTR',
+              'RedirectStandardInput = $true','StandardInput.BaseStream','GetBytes($plain)',
+              'PI_R74_CREDENTIAL_PARITY=LOCAL_READ_ONLY')) {
+            if (-not $wrapper.Contains($needle)) { throw ('PI_R74_SECURE_PROMPT_GUARD_MISSING=' + $needle) }
+          }
+          foreach ($bad in @('UPDATE users','DELETE FROM users','SQLITE3_OPEN_READWRITE',
+              'password_hash(', 'file_put_contents(', '->save(')) {
+            if ($passwordProbe.Contains($bad)) { throw ('PI_R74_BCRYPT_PROBE_MUTATION_FORBIDDEN=' + $bad) }
+          }
+          foreach ($bad in @('Start-Process','Stop-Process','Set-Content',
+              'Register-ScheduledTask','artisan migrate')) {
+            if ($wrapper.Contains($bad)) { throw ('PI_R74_SECURE_WRAPPER_MUTATION_FORBIDDEN=' + $bad) }
+          }
+          & php -l 'scripts/pi-r74-verify-entered-password.php'
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R74_BCRYPT_PHP_LINT_FAILED' }
+          $tempDir=Join-Path $env:RUNNER_TEMP ('pi-r74-pass-fixture-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $tempDir | Out-Null
+          $dbPath=Join-Path $tempDir 'fixture.sqlite'
+          $fixturePhp=Join-Path $tempDir 'fixture.php'
+          $fixtureCode=@'
+          <?php
+          $db=new SQLite3($argv[1], SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+          $db->exec("CREATE TABLE users(username TEXT,tenant_id TEXT,role TEXT,password TEXT)");
+          $q=$db->prepare("INSERT INTO users VALUES (:u,:t,:r,:p)");
+          $q->bindValue(":u","qa-only.fixture",SQLITE3_TEXT);
+          $q->bindValue(":t","ID-DIY-YOG",SQLITE3_TEXT);
+          $q->bindValue(":r","institution_admin",SQLITE3_TEXT);
+          $q->bindValue(":p",password_hash("ci-password-not-real",PASSWORD_BCRYPT),SQLITE3_TEXT);
+          if (!$q->execute()) {exit(2);}
+          $db->close();
+          '@
+          [IO.File]::WriteAllText($fixturePhp,$fixtureCode)
+          & php $fixturePhp $dbPath
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R74_BCRYPT_FIXTURE_SETUP_FAILED' }
+          $hashBefore=(Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash
+          function Invoke-FixturePassword([string]$candidate,[string]$targetScript='scripts/pi-r74-verify-entered-password.php') {
+            $info=New-Object System.Diagnostics.ProcessStartInfo
+            $info.FileName=(Get-Command php.exe).Source
+            $info.Arguments=('"{0}" "{1}" "qa-only.fixture"' -f $targetScript,$dbPath)
+            $info.UseShellExecute=$false
+            $info.CreateNoWindow=$true
+            $info.RedirectStandardInput=$true
+            $info.RedirectStandardOutput=$true
+            $info.RedirectStandardError=$true
+            $child=New-Object System.Diagnostics.Process
+            $child.StartInfo=$info
+            try {
+              if (-not $child.Start()) {throw 'PI_R74_FIXTURE_PHP_START_FAILED'}
+              $payload=[System.Text.UTF8Encoding]::new($false).GetBytes($candidate)
+              $raw=$child.StandardInput.BaseStream
+              $raw.Write($payload,0,$payload.Length)
+              $raw.Flush()
+              $raw.Close()
+              [Array]::Clear($payload,0,$payload.Length)
+              $output=$child.StandardOutput.ReadToEnd()
+              $null=$child.StandardError.ReadToEnd()
+              $child.WaitForExit()
+              if ($child.ExitCode -ne 0) {throw 'PI_R74_FIXTURE_PHP_EXIT_ERROR'}
+              return @($output -split '\r?\n' | Where-Object { $_ -ne '' })
+            } finally { $child.Dispose() }
+          }
+          # Test fixture-only transport bytes without touching any real secret.
+          $peek=Join-Path $tempDir 'stdin-inspect-ci-only.php'
+          [IO.File]::WriteAllText($peek,'<?php echo bin2hex(stream_get_contents(STDIN));')
+          $actualHex=((@(Invoke-FixturePassword 'ci-password-not-real' $peek)) -join '').Trim()
+          $expectedHex=[BitConverter]::ToString([Text.Encoding]::UTF8.GetBytes('ci-password-not-real')).Replace('-','').ToLowerInvariant()
+          if ($actualHex -cne $expectedHex -and $actualHex -cne ('efbbbf'+$expectedHex)) {
+            throw ('PI_R74_CI_STDIN_BYTES_UNEXPECTED_EXPECTED='+$expectedHex.Length+',ACTUAL='+$actualHex.Length)
+          }
+          if ($actualHex.StartsWith('efbbbf')) {
+            Write-Host 'PI_R74_CI_WINDOWS_STDIN_UTF8_BOM=DETECTED'
+          } else {
+            Write-Host 'PI_R74_CI_WINDOWS_STDIN_UTF8_BOM=ABSENT'
+          }
+          Write-Host 'PI_R74_CI_TRANSPORT_BYTES_CLASSIFIED=PASS'
+          # Verify the fixture hash directly without using transport code.
+          $direct=Join-Path $tempDir 'direct-check-ci-only.php'
+          [IO.File]::WriteAllText($direct,'<?php $db=new SQLite3($argv[1],SQLITE3_OPEN_READONLY);$hash=$db->querySingle("SELECT password FROM users LIMIT 1");echo password_verify("ci-password-not-real",$hash) ? "MATCH" : "NO_MATCH";')
+          $fixtureParity=(& php $direct $dbPath)
+          if ($fixtureParity -ne 'MATCH') {throw 'PI_R74_TEST_FIXTURE_BCRYPT_HASH_MISMATCH'}
+          Write-Host 'PI_R74_CI_DIRECT_BCRYPT_FIXTURE=PASS'
+          $yes=@(Invoke-FixturePassword 'ci-password-not-real')
+          if ($yes -notcontains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=YES') {
+            throw ('PI_R74_BCRYPT_PARITY_POSITIVE_FAILED: '+($yes -join '|'))
+          }
+          $no=@(Invoke-FixturePassword 'wrong-ci-only')
+          if ($no -notcontains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=NO') {
+            throw ('PI_R74_BCRYPT_PARITY_NEGATIVE_FAILED: '+($no -join '|'))
+          }
+          # Reproduce R87 recovery potential: historical pipeline may have
+          # hashed UTF8 BOM + visibly correct password. Do not mutate main DB.
+          $bomDb=Join-Path $tempDir 'bom-prefixed-fixture.sqlite'
+          $bomFixture=Join-Path $tempDir 'bom-fixture.php'
+          $bomCode=$fixtureCode.Replace(
+            'password_hash("ci-password-not-real",PASSWORD_BCRYPT)',
+            'password_hash("\xEF\xBB\xBFci-password-not-real",PASSWORD_BCRYPT)'
+          )
+          if ($bomCode -ceq $fixtureCode) { throw 'PI_R74_BOM_FIXTURE_NOT_REWRITTEN' }
+          [IO.File]::WriteAllText($bomFixture,$bomCode)
+          & php $bomFixture $bomDb
+          if ($LASTEXITCODE -ne 0) { throw 'PI_R74_BOM_FIXTURE_SETUP_FAILED' }
+          $savedDb=$dbPath
+          try {
+            $dbPath=$bomDb
+            $bomCheck=@(Invoke-FixturePassword 'ci-password-not-real')
+            if ($bomCheck -notcontains 'PI_R74_ENTERED_PASSWORD_MATCHES_RECOVERED_ACCOUNT=NO' -or
+                $bomCheck -notcontains 'PI_R74_R87_RECOVERY_BOM_PREFIX_MATCH=YES') {
+              throw ('PI_R74_BOM_RECOVERY_DETECTION_FAILED: '+($bomCheck -join '|'))
+            }
+          } finally {
+            $dbPath=$savedDb
+          }
+          Write-Host 'PI_R74_R87_BOM_PREFIX_DETECTION_FIXTURE=PASS'
+          $hashAfter=(Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash
+          if ($hashBefore -ne $hashAfter) { throw 'PI_R74_BCRYPT_READONLY_DB_CHANGED' }
+          Write-Host 'PI_R74_BCRYPT_PARITY_POSITIVE=PASS'
+          Write-Host 'PI_R74_BCRYPT_PARITY_NEGATIVE=PASS'
+          Write-Host 'PI_R74_BCRYPT_READONLY_DB_IMMUTABLE=PASS'
+
+      - name: HTTP auth probe original-root and no-credential-exposure source guards
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-r74-http-auth-parity.ps1' -Raw
+          foreach ($needle in @('http://127.0.0.1:8820',
+              'PI_R74_ORIGINAL_SUPERVISOR_MISSING',
+              'PI_R74_HTTP_RUNTIME_IDENTITY=VERIFIED',
+              'PI_R74_HTTP_NEEDS_SETUP=',
+              'PI_R74_HTTP_CSRF_AND_COOKIE_SESSION=AVAILABLE',
+              'if (-not $ExerciseHttpLogin)',
+              'Read-Host', '-AsSecureString',
+              'PI_R74_HTTP_LOGIN_SESSION=AUTHENTICATED',
+              'PI_R74_HTTP_LOGIN_RESULT=INVALID_CREDENTIALS_401',
+              'ZeroFreeBSTR')) {
+            if (-not $code.Contains($needle)) {
+              throw ('PI_R74_HTTP_AUTH_MISSING_GUARD=' + $needle)
+            }
+          }
+          foreach ($danger in @('Stop-Process','Start-Process',
+              'Remove-Item','Set-Content','ReadAllBytes',
+              'migrate','CreateShortcut(', 'api/auth/bootstrap',
+              'Out-File','Add-Content')) {
+            if ($code.Contains($danger)) {
+              throw ('PI_R74_HTTP_AUTH_FORBIDDEN_MUTATION=' + $danger)
+            }
+          }
+          $fail = ''
+          try {
+            & '.\scripts\pi-r74-http-auth-parity.ps1' -ErrorAction Stop | Out-Null
+          } catch {
+            $fail=[string]$_.Exception.Message
+          }
+          if ($fail -notmatch 'PI_R74_ORIGINAL_SUPERVISOR_MISSING') {
+            throw 'PI_R74_HTTP_AUTH_MISSING_OWNER_ROOT_FAIL_CLOSED'
+          }
+          Write-Host 'PI_R74_HTTP_AUTH_DEFAULT_NO_LOGIN=PASS'
+          Write-Host 'PI_R74_HTTP_AUTH_SOURCE_GUARDS=PASS'
+
+      - name: R74 login browser autofill and session continuity regression
+        shell: powershell
+        run: |
+          $html = Get-Content 'laravel/public/login.html' -Raw
+          $js = Get-Content 'laravel/public/login.js' -Raw
+          if ($html -notmatch 'id="password"[^>]*autocomplete="current-password"' -or
+              $html -match 'INSTITUTIONAL ACCESS · R69E QA') {
+            throw 'PI_R74_INITIAL_EXISTING_LOGIN_AUTOFILL_METADATA_INVALID'
+          }
+          foreach ($needle in @("needsSetup ? 'new-password' : 'current-password'",
+              "result.code === 'INVALID_CREDENTIALS'",
+              "el('password').value = ''",
+              "fetch('/api/auth/session'",
+              "credentials: 'same-origin'",
+              "verified.status !== 'AUTHENTICATED'",
+              "location.replace('./index.html')")) {
+            if (-not $js.Contains($needle)) {
+              throw ('PI_R74_LOGIN_FLOW_REQUIRED_GUARD_MISSING: '+$needle)
+            }
+          }
+          foreach ($forbidden in @('console.log(password)', 'localStorage.setItem',
+              'sessionStorage.setItem', 'document.cookie =')) {
+            if ($js.Contains($forbidden)) {
+              throw ('PI_R74_LOGIN_FLOW_UNSAFE_SECRET_STORAGE: '+$forbidden)
+            }
+          }
+          & node --check 'laravel/public/login.js'
+          if ($LASTEXITCODE -ne 0) {
+            throw 'PI_R74_LOGIN_JS_SYNTAX_FAILED'
+          }
+          Write-Host 'PI_R74_LOGIN_INITIAL_AUTOFILL=EXISTING_PASSWORD'
+          Write-Host 'PI_R74_LOGIN_STALE_AUTOFILL_CLEARED=PASS'
+          if ($html -notmatch 'id="toggle-password"' -or
+              $html -notmatch 'id="submit"[^>]*disabled') {
+            throw 'PI_R74_LOGIN_MANUAL_VISIBILITY_OR_READY_GUARD_MISSING'
+          }
+          foreach ($needle in @("if (!initialized) return",
+              "el('toggle-password').addEventListener",
+              "password.type = showing ? 'text' : 'password'",
+              "initialized = true")) {
+            if (-not $js.Contains($needle)) {
+              throw ('PI_R74_LOGIN_INPUT_OBSERVABILITY_GUARD_MISSING=' + $needle)
+            }
+          }
+          Write-Host 'PI_R74_LOGIN_SESSION_CONTINUITY_GUARD=PASS'
+
+      - name: Exercise real R74 frontend installer on Windows temp fixture (apply and rollback)
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $installer='.\scripts\pi-r74-login-frontend-rollout.ps1'
+          $utf8=[System.Text.UTF8Encoding]::new($false)
+          function New-R74Fixture([string]$prefix) {
+            $base=Join-Path $env:RUNNER_TEMP ($prefix+'-'+[guid]::NewGuid().ToString('N'))
+            $app=Join-Path $base 'laravel'
+            $pub=Join-Path $app 'public'
+            $launch=Join-Path $base 'launcher'
+            New-Item -ItemType Directory -Path $pub -Force | Out-Null
+            New-Item -ItemType Directory -Path $launch -Force | Out-Null
+            [IO.File]::WriteAllText((Join-Path $app 'artisan'),'fixture only',$utf8)
+            [IO.File]::WriteAllText((Join-Path $launch 'BUKA-PI-HIDDEN.vbs'),'fixture only',$utf8)
+            $html=Join-Path $pub 'login.html'
+            $js=Join-Path $pub 'login.js'
+            [IO.File]::WriteAllText($html,'<html>original login fixture</html>',$utf8)
+            [IO.File]::WriteAllText($js,'// original login fixture',$utf8)
+            $htmlBlob=([string](& git.exe hash-object --no-filters $html)).Trim()
+            $jsBlob=([string](& git.exe hash-object --no-filters $js)).Trim()
+            if ($htmlBlob -notmatch '^[0-9a-f]{40}$' -or $jsBlob -notmatch '^[0-9a-f]{40}$') {
+              throw 'PI_R74_CI_GIT_BLOB_HASH_FAILED'
+            }
+            return [pscustomobject]@{
+              Base=$base; App=$app; Launcher=$launch; Html=$html; Js=$js;
+              HtmlBlob=$htmlBlob; JsBlob=$jsBlob;
+              HtmlBefore=(Get-FileHash -LiteralPath $html -Algorithm SHA256).Hash;
+              JsBefore=(Get-FileHash -LiteralPath $js -Algorithm SHA256).Hash;
+            }
+          }
+          $fixture=New-R74Fixture 'pi-r74-success'
+          $before=@(& $installer -CiFixtureRoot $fixture.Base -CiHtmlBaselineBlob $fixture.HtmlBlob -CiJsBaselineBlob $fixture.JsBlob)
+          if ($before -notcontains 'PI_R74_LOGIN_FRONTEND_ROLLOUT=READ_ONLY_PREFLIGHT_PASS') {
+            throw 'PI_R74_REAL_INSTALLER_CI_PREFLIGHT_FAILED'
+          }
+          if ((Get-FileHash $fixture.Html -Algorithm SHA256).Hash -ne $fixture.HtmlBefore -or
+              (Get-FileHash $fixture.Js -Algorithm SHA256).Hash -ne $fixture.JsBefore) {
+            throw 'PI_R74_CI_PREFLIGHT_MUTATED_FILES'
+          }
+          $applied=@(& $installer -Apply -CiFixtureRoot $fixture.Base -CiHtmlBaselineBlob $fixture.HtmlBlob -CiJsBaselineBlob $fixture.JsBlob)
+          if ($applied -notcontains 'PI_R74_LOGIN_FRONTEND_ROLLOUT=APPLIED' -or
+              $applied -notcontains 'PI_R74_LOGIN_ALL_TWO_FILES_SHA256=VERIFIED') {
+            throw 'PI_R74_REAL_INSTALLER_CI_APPLY_NOT_CONFIRMED'
+          }
+          foreach($name in @('login.html','login.js')) {
+            $actual=Join-Path (Join-Path $fixture.App 'public') $name
+            $candidate=Join-Path 'laravel/public' $name
+            if ((Get-FileHash $actual -Algorithm SHA256).Hash -ne
+                (Get-FileHash $candidate -Algorithm SHA256).Hash) {
+              throw ('PI_R74_REAL_INSTALLER_CI_APPLIED_WRONG_FILE='+$name)
+            }
+          }
+          $dirs=@(Get-ChildItem (Join-Path $fixture.Launcher 'backups') -Directory)
+          if ($dirs.Count -ne 1) {throw 'PI_R74_REAL_INSTALLER_CI_BACKUP_COUNT_BAD'}
+          $backup=$dirs[0].FullName
+          if ((Get-FileHash (Join-Path $backup 'login.html') -Algorithm SHA256).Hash -ne $fixture.HtmlBefore -or
+              (Get-FileHash (Join-Path $backup 'login.js') -Algorithm SHA256).Hash -ne $fixture.JsBefore -or
+              -not (Test-Path (Join-Path $backup 'ORIGINAL_SHA256.json'))) {
+            throw 'PI_R74_REAL_INSTALLER_CI_ORIGINAL_BACKUP_BAD'
+          }
+          Write-Host 'PI_R74_REAL_INSTALLER_WINDOWS_APPLY=PASS'
+          Write-Host 'PI_R74_REAL_INSTALLER_WINDOWS_BACKUP=PASS'
+          $fault=New-R74Fixture 'pi-r74-rollback'
+          $failure=''
+          try {
+            & $installer -Apply -CiFixtureRoot $fault.Base -CiHtmlBaselineBlob $fault.HtmlBlob -CiJsBaselineBlob $fault.JsBlob -CiSimulateFailureAfterFirstSwap | Out-Null
+          } catch { $failure=[string]$_.Exception.Message }
+          if ($failure -notmatch 'PI_R74_CI_SIMULATED_SECOND_FILE_FAILURE') {
+            throw 'PI_R74_CI_INJECTED_FAULT_NOT_CAUGHT'
+          }
+          if ((Get-FileHash $fault.Html -Algorithm SHA256).Hash -ne $fault.HtmlBefore -or
+              (Get-FileHash $fault.Js -Algorithm SHA256).Hash -ne $fault.JsBefore) {
+            throw 'PI_R74_CI_ROLLBACK_DID_NOT_RESTORE_BOTH'
+          }
+          Write-Host 'PI_R74_REAL_INSTALLER_WINDOWS_ROLLBACK=PASS'
+          $drift=New-R74Fixture 'pi-r74-drift'
+          [IO.File]::AppendAllText($drift.Html,'tamper')
+          $driftHash=(Get-FileHash $drift.Html -Algorithm SHA256).Hash
+          $driftFail=''
+          try {
+            & $installer -Apply -CiFixtureRoot $drift.Base -CiHtmlBaselineBlob $drift.HtmlBlob -CiJsBaselineBlob $drift.JsBlob | Out-Null
+          } catch { $driftFail=[string]$_.Exception.Message }
+          if ($driftFail -notmatch 'PI_R74_LOGIN_ORIGINAL_SOURCE_DRIFT=login.html_STOP' -or
+              (Get-FileHash $drift.Html -Algorithm SHA256).Hash -ne $driftHash -or
+              (Test-Path (Join-Path $drift.Launcher 'backups'))) {
+            throw 'PI_R74_REAL_INSTALLER_CI_DRIFT_DID_NOT_FAIL_CLOSED'
+          }
+          Write-Host 'PI_R74_REAL_INSTALLER_WINDOWS_DRIFT_HOLD=PASS'
+      - name: Protect existing R74 login source during guarded frontend rollout
+        shell: powershell
+        run: |
+          $script=Get-Content 'scripts/pi-r74-login-frontend-rollout.ps1' -Raw
+          foreach ($needle in @('70cac498ee5033d28a1f12898d11975a7379077d',
+              'bd687917ef6274e5099089040535e88b4b4757cb',
+              'PI_R74_LOGIN_ORIGINAL_SOURCE_DRIFT=',
+              'PI_R74_LOGIN_FRONTEND_ROLLOUT=READ_ONLY_PREFLIGHT_PASS',
+              'if (-not $Apply)',
+              'ORIGINAL_SHA256.json',
+              'PI_R74_AUTH_ACCOUNT_DB_APPKEY_SHORTCUT_LAUNCHER=PROTECTED',
+              '[IO.File]::Replace',
+              'PI_R74_LOGIN_FRONTEND_HTTP=UPDATED_AND_VERIFIED',
+              'PI_R74_LOGIN_ORIGINAL_HTTP_HASH_MISMATCH',
+              'PI_R74_LOGIN_ROLLBACK_BOTH_FILES=VERIFIED')) {
+            if (-not $script.Contains($needle)) {
+              throw ('PI_R74_FRONTEND_ROLLOUT_GUARD_MISSING=' + $needle)
+            }
+          }
+          foreach($bad in @('Stop-Process','Start-Process',
+              'artisan migrate','db:wipe','CreateShortcut(','Set-Content',
+              'Remove-Item -Recurse')) {
+            if ($script.Contains($bad)) {
+              throw ('PI_R74_FRONTEND_ROLLOUT_FORBIDDEN=' + $bad)
+            }
+          }
+          $failure=''
+          try {
+            & '.\scripts\pi-r74-login-frontend-rollout.ps1' -ErrorAction Stop | Out-Null
+          } catch {
+            $failure=[string]$_.Exception.Message
+          }
+          if ($failure -notmatch 'PI_R74_LOGIN_MAIN_LARAVEL_MISSING') {
+            throw 'PI_R74_FRONTEND_ROLLOUT_DID_NOT_FAIL_CLOSED_ON_CI'
+          }
+          Write-Host 'PI_R74_FRONTEND_ROLLOUT_SOURCE_GUARDS=PASS'
+          Write-Host 'PI_R74_FRONTEND_ROLLOUT_NO_LOCAL_MUTATION=PASS'
+
+      - name: R74 one-port release source parity is read only and pinned
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-r74-release-parity-readonly.ps1' -Raw
+          foreach ($needle in @('ExpectedCommit',
+              'PI_R74_PARITY_CANDIDATE_HEAD_MISMATCH',
+              'PI_R74_PARITY_CANDIDATE_UNCOMMITTED_CHANGES',
+              'PI_R74_RUNTIME_SOURCE_PARITY=NOT_YET_CONSOLIDATED',
+              'PI_R74_PARITY_DB_ENV_APPKEY_SHORTCUT_PROCESSES=UNTOUCHED',
+              'PI_R74_PARITY_MODE=READ_ONLY_CENSUS_COMPLETE')) {
+            if (-not $code.Contains($needle)) {
+              throw ('PI_R74_CENSUS_GUARD_MISSING='+$needle)
+            }
+          }
+          foreach ($unsafe in @('Start-Process','Stop-Process','Copy-Item',
+              'Remove-Item','Move-Item','Set-Content',
+              'migrate','CreateShortcut(','New-Service',
+              'Register-ScheduledTask')) {
+            if ($code.Contains($unsafe)) {
+              throw ('PI_R74_CENSUS_MUTATION_FORBIDDEN='+$unsafe)
+            }
+          }
+          $failure=''
+          try {
+            & '.\scripts\pi-r74-release-parity-readonly.ps1' -CandidateRepo $PWD.Path -ExpectedCommit '0000000000000000000000000000000000000000' -ErrorAction Stop | Out-Null
+          } catch {
+            $failure = [string]$_.Exception.Message
+          }
+          if ($failure -notmatch 'PI_R74_PARITY_ORIGINAL_LARAVEL_MISSING') {
+            throw 'PI_R74_CENSUS_DID_NOT_HOLD_ON_MISSING_ORIGINAL'
+          }
+          Write-Host 'PI_R74_RELEASE_SOURCE_PARITY_READ_ONLY_GUARDS=PASS'
+
+      - name: R90 cutover risk census prevents uncontrolled main migration
+        shell: powershell
+        run: |
+          $code = Get-Content 'scripts/pi-r90-cutover-risk-readonly.ps1' -Raw
+          foreach ($needle in @('ExpectedCommit',
+              'PI_R90_CANDIDATE_COMMIT_MISMATCH',
+              'PI_R90_CANDIDATE_WORKTREE_NOT_CLEAN',
+              'PI_R90_COMPOSER_SETUP_UNSAFE_FOR_MAIN=YES_DO_NOT_RUN',
+              'PI_R90_SQLITE_SCHEMA_COMPATIBILITY=NOT_YET_PROVEN',
+              'PI_R90_ONE_ORIGIN_CUTOVER=HOLD_PENDING_ISOLATED_ACCEPTANCE',
+              'PI_R90_NO_COPY_NO_MIGRATION_NO_SECRET_ACCESS=VERIFIED',
+              'PI_R90_RUNTIME_FILES_MISSING_ON_MAIN_TOTAL=',
+              'PI_R90_MAIN_ONLY_RUNTIME_FILES=',
+              'TrimStart([char]92,[char]47).Replace([char]92,[char]47)',
+              'PI_R90_CI_FIXTURE_ONLY_ON_GITHUB_WINDOWS')) {
+            if (-not $code.Contains($needle)) {
+              throw ('PI_R90_READONLY_CUTOVER_GUARD_MISSING='+$needle)
+            }
+          }
+          foreach ($danger in @('Start-Process', 'Stop-Process','Copy-Item',
+              'Remove-Item','Move-Item','Set-Content','New-Item',
+              'CreateShortcut(','Invoke-WebRequest','Invoke-RestMethod',
+              'artisan migrate','key:generate --','composer run setup')) {
+            if ($code.Contains($danger)) {
+              throw ('PI_R90_CUTOVER_CENSUS_FORBIDDEN='+$danger)
+            }
+          }
+          $failure = ''
+          try {
+            & '.\scripts\pi-r90-cutover-risk-readonly.ps1' -CandidateRepo $PWD.Path -ExpectedCommit '0000000000000000000000000000000000000000' -ErrorAction Stop | Out-Null
+          } catch {
+            $failure = [string]$_.Exception.Message
+          }
+          if ($failure -notmatch 'PI_R90_LARAVEL_CANDIDATE_OR_MAIN_MISSING') {
+            throw 'PI_R90_READ_ONLY_CUTOVER_MISSING_MAIN_FAIL_OPEN'
+          }
+          Write-Host 'PI_R90_CUTOVER_READ_ONLY_GUARDS=PASS'
+
+      - name: R90 full cutover audit on isolated Windows fixture including backslash paths
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $repo=$PWD.Path
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if ($LASTEXITCODE -ne 0 -or $pin -notmatch '^[0-9a-f]{40}$') {
+            throw 'PI_R90_CI_CANDIDATE_PIN_MISSING'
+          }
+          $root=Join-Path $env:RUNNER_TEMP ('pi-r90-real-audit-'+[guid]::NewGuid().ToString('N'))
+          $main=Join-Path $root 'laravel'
+          $dirs=@('database','app\Http\Controllers\Auth','routes','config','public')
+          foreach ($dir in $dirs) {
+            New-Item -ItemType Directory -Path (Join-Path $main $dir) -Force | Out-Null
+          }
+          # QA-only synthetic files, no production data or secrets.
+          [IO.File]::WriteAllText((Join-Path $main 'artisan'),'ci-only')
+          [IO.File]::WriteAllText((Join-Path $main '.env'),'ci-only-placeholder')
+          [IO.File]::WriteAllText((Join-Path $main 'database\database.sqlite'),'ci-only-placeholder')
+          [IO.File]::WriteAllText((Join-Path $main 'public\ci-main-only.txt'),'ci-only')
+          [IO.File]::WriteAllText((Join-Path $main 'app\Http\Controllers\Auth\SessionController.php'),'<?php // ci-only main variant')
+          Copy-Item -LiteralPath 'laravel/composer.json' -Destination (Join-Path $main 'composer.json')
+          if (Test-Path -LiteralPath 'laravel/composer.lock') {
+            Copy-Item -LiteralPath 'laravel/composer.lock' -Destination (Join-Path $main 'composer.lock')
+          }
+          $watched=@('artisan','.env','database\database.sqlite','public\ci-main-only.txt','composer.json')
+          $before=@{}
+          foreach($name in $watched) {
+            $before[$name]=(Get-FileHash -LiteralPath (Join-Path $main $name) -Algorithm SHA256).Hash
+          }
+          $audit=@(& '.\scripts\pi-r90-cutover-risk-readonly.ps1' -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $root)
+          foreach($needed in @('PI_R90_AUDIT_TARGET=ISOLATED_WINDOWS_CI_FIXTURE',
+              'PI_R90_MODE=READ_ONLY','PI_R90_ONE_ORIGIN_CUTOVER=HOLD_PENDING_ISOLATED_ACCEPTANCE',
+              'PI_R90_NO_COPY_NO_MIGRATION_NO_SECRET_ACCESS=VERIFIED')) {
+            if ($audit -notcontains $needed) {
+              throw ('PI_R90_WINDOWS_FULL_FIXTURE_MISSING='+$needed)
+            }
+          }
+          $missing=@($audit | Where-Object {$_ -match '^PI_R90_RUNTIME_FILES_MISSING_ON_MAIN_TOTAL=\d+$'})
+          if ($missing.Count -ne 1 -or [int]($missing[0].Split('=')[1]) -lt 1) {
+            throw 'PI_R90_WINDOWS_FULL_FIXTURE_MISSING_CENSUS_NOT_EXECUTED'
+          }
+          $mainOnly=@($audit | Where-Object {$_ -match '^PI_R90_MAIN_ONLY_RUNTIME_FILES=\d+$'})
+          if ($mainOnly.Count -ne 1 -or [int]($mainOnly[0].Split('=')[1]) -lt 1 -or
+              $audit -notcontains 'PI_R90_MAIN_ONLY_RUNTIME_SAMPLE=public/ci-main-only.txt') {
+            throw 'PI_R90_WINDOWS_PATH_NORMALIZATION_MAIN_ONLY_NOT_EXECUTED'
+          }
+          $mig=@($audit | Where-Object {$_ -match '^PI_R90_MIGRATION_FILES_TRACKED=\d+$'})
+          if ($mig.Count -ne 1) {throw 'PI_R90_WINDOWS_MIGRATION_CENSUS_NOT_EXECUTED'}
+          foreach($name in $watched) {
+            $after=(Get-FileHash -LiteralPath (Join-Path $main $name) -Algorithm SHA256).Hash
+            if ($after -ne $before[$name]) {throw ('PI_R90_CI_READ_ONLY_FIXTURE_MUTATED='+$name)}
+          }
+          Write-Host 'PI_R90_WINDOWS_FULL_READ_ONLY_CENSUS=PASS'
+          Write-Host 'PI_R90_WINDOWS_PATH_BACKSLASH_NORMALIZATION=PASS'
+          Write-Host 'PI_R90_WINDOWS_MIGRATION_FILENAME_CENSUS=PASS'
+          Write-Host 'PI_R90_CI_FIXTURE_SHA_UNCHANGED=PASS'
+
+      - name: R90 CRLF migration classification and Composer lock package identity fixture
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $script=Get-Content 'scripts/pi-r90-drift-classifier-readonly.ps1' -Raw
+          foreach($needed in @('PI_R90_DRIFT_CANDIDATE_HEAD_MISMATCH',
+              'PI_R90_DRIFT_CANDIDATE_DIRTY',
+              'PI_R90_DRIFT_CI_FIXTURE_NOT_AUTHORIZED',
+              'PI_R90_DRIFT_MIGRATION_',
+              'LINE_ENDING_ONLY','TEXT_CONTENT_DIFFERENT',
+              'PI_R90_LOCK_VERSION_CHANGED_COUNT=',
+              'PI_R90_DRIFT_CLASSIFIER_READ_ONLY=COMPLETE',
+              'PI_R90_CODE_CUTOVER=HOLD_PENDING_ISOLATED_ACCEPTANCE')) {
+            if(-not $script.Contains($needed)) {throw ('PI_R90_DRIFT_SOURCE_GUARD_MISSING='+$needed)}
+          }
+          foreach($forbidden in @('Stop-Process','Start-Process','Copy-Item',
+              'Remove-Item','Move-Item','Set-Content','Invoke-WebRequest',
+              'artisan migrate','artisan key:generate','composer install')) {
+            if($script.Contains($forbidden)) {throw ('PI_R90_DRIFT_MUTATION_FORBIDDEN='+$forbidden)}
+          }
+          $repo=$PWD.Path
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if($LASTEXITCODE -ne 0 -or $pin -notmatch '^[0-9a-f]{40}$') {
+            throw 'PI_R90_DRIFT_FIXTURE_INVALID_SOURCE_PIN'
+          }
+          $root=Join-Path $env:RUNNER_TEMP ('pi-r90-classifier-'+[guid]::NewGuid().ToString('N'))
+          $app=Join-Path $root 'laravel'
+          New-Item -ItemType Directory -Path $app -Force | Out-Null
+          [IO.File]::WriteAllText((Join-Path $app 'artisan'),'ci-only-artisan')
+          $lock=Join-Path $app 'composer.lock'
+          Copy-Item 'laravel/composer.lock' $lock
+          [IO.File]::AppendAllText($lock,[Environment]::NewLine)
+          $sourceRuntime='laravel/app/Models/User.php'
+          $sourceHtaccess='laravel/public/.htaccess'
+          $sourceMig='laravel/database/migrations/0001_01_01_000000_create_users_table.php'
+          $sourceMig2='laravel/database/migrations/0001_01_01_000001_create_cache_table.php'
+          foreach($p in @($sourceRuntime,$sourceMig,$sourceMig2,$sourceHtaccess)){
+            if(-not (Test-Path -LiteralPath $p -PathType Leaf)){
+              throw ('PI_R90_DRIFT_FIXTURE_SOURCE_MISSING='+$p)
+            }
+            $relative=$p.Substring(8).Replace([char]47,[char]92)
+            $destination=Join-Path $app $relative
+            New-Item -ItemType Directory -Path (Split-Path $destination -Parent) -Force | Out-Null
+            $text=[IO.File]::ReadAllText((Resolve-Path $p))
+            if($p -eq $sourceMig2) {
+              $text=$text+[Environment]::NewLine+'// CI synthetic migration source difference'
+            } elseif($text.Contains([string][char]13+[string][char]10)) {
+              $text=$text.Replace(([string][char]13+[string][char]10),([string][char]10))
+            } else {
+              $text=$text.Replace(([string][char]10),([string][char]13+[string][char]10))
+            }
+            [IO.File]::WriteAllText($destination,$text,[System.Text.UTF8Encoding]::new($false))
+          }
+          $guarded=@('artisan','composer.lock','app\Models\User.php','public\.htaccess',
+            'database\migrations\0001_01_01_000000_create_users_table.php',
+            'database\migrations\0001_01_01_000001_create_cache_table.php')
+          $originals=@{}
+          foreach($rel in $guarded) {
+            $originals[$rel]=(Get-FileHash (Join-Path $app $rel) -Algorithm SHA256).Hash
+          }
+          $audit=@(& '.\scripts\pi-r90-drift-classifier-readonly.ps1' -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $root)
+          if($audit -notcontains 'PI_R90_DRIFT_TARGET=ISOLATED_CI' -or
+             $audit -notcontains 'PI_R90_DRIFT_CLASSIFIER_READ_ONLY=COMPLETE' -or
+             $audit -notcontains 'PI_R90_CODE_CUTOVER=HOLD_PENDING_ISOLATED_ACCEPTANCE' -or
+             $audit -notcontains 'PI_R90_LOCK_BYTE_DRIFT_WITH_SAME_PACKAGE_IDENTITIES=YES') {
+            throw 'PI_R90_DRIFT_FIXTURE_NOT_COMPLETE'
+          }
+          if($audit -notcontains 'PI_R90_HTACCESS_CLASSIFICATION=LINE_ENDING_ONLY') {
+            throw 'PI_R90_HTACCESS_TEXT_CRLF_NOT_CLASSIFIED'
+          }
+          foreach($needle in @('PI_R90_DRIFT_RUNTIME_LINE_ENDING_ONLY=',
+              'PI_R90_DRIFT_MIGRATION_LINE_ENDING_ONLY=',
+              'PI_R90_DRIFT_MIGRATION_TEXT_CONTENT_DIFFERENT=')) {
+            $values=@($audit | Where-Object {$_ -like ($needle+'*')})
+            if($values.Count -ne 1 -or [int]($values[0].Split('=')[1]) -lt 1) {
+              throw ('PI_R90_DRIFT_FIXTURE_CLASSIFICATION_NOT_PROVEN='+$needle)
+            }
+          }
+          if($audit -notcontains 'PI_R90_LOCK_VERSION_CHANGED_COUNT=0' -or
+             $audit -notcontains 'PI_R90_LOCK_ADDED=0' -or
+             $audit -notcontains 'PI_R90_LOCK_REMOVED=0') {
+            throw 'PI_R90_DRIFT_FIXTURE_LOCK_PACKAGE_IDS_CHANGED'
+          }
+          foreach($rel in $guarded) {
+            if((Get-FileHash (Join-Path $app $rel) -Algorithm SHA256).Hash -ne $originals[$rel]) {
+              throw ('PI_R90_DRIFT_FIXTURE_MUTATED='+$rel)
+            }
+          }
+          Write-Host 'PI_R90_CRLF_VS_SEMANTIC_MIGRATION_FIXTURE=PASS'
+          Write-Host 'PI_R90_COMPOSER_PACKAGE_IDENTITY_FIXTURE=PASS'
+          Write-Host 'PI_R90_DRIFT_READ_ONLY_SHA256_FIXTURE=PASS'
+
+      - name: R91 original SQLite metadata-only gate using disposable database
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $script=Get-Content 'scripts/pi-r91-sqlite-schema-readonly.php' -Raw
+          foreach($term in @('SQLITE3_OPEN_READONLY',
+             'PI_R91_SQLITE_METADATA_AUDIT=COMPLETE_READ_ONLY',
+             'PI_R91_AUTH_DATA_PASSWORD_SESSION_VALUES=NOT_READ',
+             'PI_R91_EXPECTED_MIGRATION=',
+             'PI_R91_SCHEMA_EQUIVALENCE_BEYOND_MINIMUM=NOT_PROVEN')) {
+            if (-not $script.Contains($term)) {throw ('PI_R91_SOURCE_GUARD_MISSING='+$term)}
+          }
+          foreach($forbidden in @('SQLITE3_OPEN_READWRITE',
+             'UPDATE users','INSERT INTO users','DELETE FROM users',
+             'file_put_contents(', 'password_hash(')) {
+            if ($script.Contains($forbidden)) {throw ('PI_R91_SOURCE_MUTATION_FORBIDDEN='+$forbidden)}
+          }
+          & php -l scripts/pi-r91-sqlite-schema-readonly.php
+          if ($LASTEXITCODE -ne 0) {throw 'PI_R91_PHP_LINT_FAILED'}
+          $dir=Join-Path $env:RUNNER_TEMP ('pi-r91-metadata-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $dir -Force | Out-Null
+          $phpPath=Join-Path $dir 'fixture.php'
+          $dbPath=Join-Path $dir 'fake-for-ci-only.sqlite'
+          $fixturePhp=@'
+          <?php
+          $db=new SQLite3($argv[1],SQLITE3_OPEN_READWRITE|SQLITE3_OPEN_CREATE);
+          $sql=[
+           "CREATE TABLE migrations(migration TEXT,batch INTEGER)",
+           "CREATE TABLE users(id INTEGER,username TEXT,tenant_id TEXT,role TEXT,password TEXT)",
+           "CREATE TABLE sessions(id TEXT,user_id INTEGER,payload TEXT,last_activity INTEGER)",
+           "CREATE TABLE cache(key TEXT,value TEXT,expiration INTEGER)",
+           "CREATE TABLE cache_locks(key TEXT,owner TEXT,expiration INTEGER)",
+           "CREATE TABLE jobs(id INTEGER,queue TEXT,payload TEXT,attempts INTEGER)",
+           "CREATE TABLE job_batches(id TEXT,name TEXT,total_jobs INTEGER)",
+           "CREATE TABLE failed_jobs(id INTEGER,uuid TEXT,exception TEXT)",
+           "CREATE TABLE regulatory_evidence_reviews(id INTEGER,tenant_id TEXT,candidate_id TEXT,review_dimension TEXT,decision TEXT,reason TEXT,source_manifest_sha256 TEXT,candidate_sha256 TEXT,reviewer_id INTEGER,decided_at TEXT,created_at TEXT,updated_at TEXT)"
+          ];
+          foreach($sql as $statement){if(!$db->exec($statement)){exit(2);}}
+          $migrations=[
+           "0001_01_01_000000_create_users_table",
+           "0001_01_01_000001_create_cache_table",
+           "0001_01_01_000002_create_jobs_table",
+           "2026_11_07_033435_add_pi_identity_fields_to_users_table",
+           "2026_11_15_150000_create_regulatory_evidence_reviews_table"
+          ];
+          $stmt=$db->prepare("INSERT INTO migrations(migration,batch) VALUES (:migration,1)");
+          foreach($migrations as $m){$stmt->bindValue(":migration",$m,SQLITE3_TEXT);$stmt->execute();}
+          $db->close();
+          '@
+          [IO.File]::WriteAllText($phpPath,$fixturePhp)
+          & php $phpPath $dbPath
+          if ($LASTEXITCODE -ne 0) {throw 'PI_R91_FIXTURE_CREATION_FAILED'}
+          $hashBefore=(Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash
+          $out=@(& php scripts/pi-r91-sqlite-schema-readonly.php --ci-db $dbPath)
+          if ($LASTEXITCODE -ne 0 -or
+              $out -notcontains 'PI_R91_DATABASE_TARGET=CI_TEMP_FIXTURE' -or
+              $out -notcontains 'PI_R91_SQLITE_METADATA_AUDIT=COMPLETE_READ_ONLY' -or
+              $out -notcontains 'PI_R91_REQUIRED_TABLES_PRESENT=9/9' -or
+              $out -notcontains 'PI_R91_EXPECTED_MIGRATIONS_APPLIED=5' -or
+              $out -notcontains 'PI_R91_SCHEMA_MINIMUM=REQUIRED_COLUMNS_AND_LEDGER_PASS') {
+            throw 'PI_R91_COMPLETE_METADATA_FIXTURE_FAILED'
+          }
+          if ((Get-FileHash -LiteralPath $dbPath -Algorithm SHA256).Hash -ne $hashBefore) {
+            throw 'PI_R91_READ_ONLY_SQLITE_FIXTURE_MUTATED'
+          }
+          $negative=Join-Path $dir 'missing-migration-ci-only.sqlite'
+          Copy-Item -LiteralPath $dbPath -Destination $negative
+          $negativeScript=Join-Path $dir 'remove-ci-only-migration.php'
+          $negativePhp=@'
+          <?php
+          $db=new SQLite3($argv[1], SQLITE3_OPEN_READWRITE);
+          $stmt=$db->prepare("DELETE FROM migrations WHERE migration=:migration");
+          $stmt->bindValue(":migration", "2026_11_15_150000_create_regulatory_evidence_reviews_table", SQLITE3_TEXT);
+          if (!$stmt->execute()) {exit(2);}
+          $db->close();
+          '@
+          [IO.File]::WriteAllText($negativeScript,$negativePhp)
+          & php $negativeScript $negative
+          if ($LASTEXITCODE -ne 0) {throw 'PI_R91_NEGATIVE_FIXTURE_CREATION_FAILED'}
+          $badHash=(Get-FileHash -LiteralPath $negative -Algorithm SHA256).Hash
+          $bad=@(& php scripts/pi-r91-sqlite-schema-readonly.php --ci-db $negative)
+          if ($LASTEXITCODE -ne 0 -or
+              $bad -notcontains 'PI_R91_EXPECTED_MIGRATIONS_NOT_IN_LEDGER=1' -or
+              $bad -notcontains 'PI_R91_SCHEMA_MINIMUM=NOT_YET_VERIFIED') {
+            throw 'PI_R91_NEGATIVE_LEDGER_FAIL_OPEN'
+          }
+          if ((Get-FileHash -LiteralPath $negative -Algorithm SHA256).Hash -ne $badHash) {
+            throw 'PI_R91_NEGATIVE_FIXTURE_MUTATED'
+          }
+          Write-Host 'PI_R91_SQLITE_METADATA_POSITIVE=PASS'
+          Write-Host 'PI_R91_SQLITE_MISSING_MIGRATION_FAIL_CLOSED=PASS'
+          Write-Host 'PI_R91_SQLITE_METADATA_NO_MUTATIONS=PASS'
+
+      - name: R92 Laravel CSRF cookie continuity and semantic consent control
+        shell: powershell
+        run: |
+          & node --check 'laravel/public/pi-auth-shell.js'
+          if ($LASTEXITCODE -ne 0) {
+            throw 'PI_R92_AUTH_SHELL_JS_PARSE_FAILED'
+          }
+          & node --check 'laravel/public/regulatory-planning-r88.js'
+          if ($LASTEXITCODE -ne 0) {
+            throw 'PI_R92_R88_JS_PARSE_FAILED'
+          }
+          & node --test 'laravel/tests/frontend/csrf-session-controls-r92.test.cjs'
+          if ($LASTEXITCODE -ne 0) {
+            throw 'PI_R92_CSRF_CONSENT_BEHAVIOR_TEST_FAILED'
+          }
+          Write-Host 'PI_R92_LOGOUT_AND_R89_POST_CSRF_CONTRACT=PASS'
+
+      - name: R94 actual guarded code-only deploy and rollback on Windows temporary fixture
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $script='.\scripts\pi-r94-one-origin-code-cutover.ps1'
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if ($LASTEXITCODE -ne 0 -or $pin -notmatch '^[0-9a-f]{40}$') {
+            throw 'PI_R94_FIXTURE_BAD_PIN'
+          }
+          $sourceRoot=$PWD.Path
+          $allow=@(
+            'app\Providers\AppServiceProvider.php',
+            'config\pi.php',
+            'routes\web.php',
+            'public\development-case-r85.css',
+            'public\development-case-r85.html',
+            'public\regulatory-laravel-r70g.html',
+            'public\regulatory-lifecycle-r86.css',
+            'public\regulatory-lifecycle-r86.js',
+            'public\pi-auth-shell.js',
+            'app\Http\Controllers\Api\R89SemanticRegulatoryController.php',
+            'app\Http\Controllers\Api\RegulatoryPlanningCrosswalkController.php',
+            'app\Services\Pi\Development\CloudSemanticCandidateProvider.php',
+            'app\Services\Pi\Development\HybridSemanticReasoner.php',
+            'app\Services\Pi\Development\R89SemanticRegulatoryAnalysis.php',
+            'app\Services\Pi\Development\RegulatoryPlanningCrosswalk.php',
+            'app\Services\Pi\Development\SemanticCandidateProvider.php',
+            'public\regulatory-planning-r88.js'
+          )
+          $existing=@($allow | Select-Object -First 9)
+          $protected=@(
+            'artisan','.env','database\database.sqlite',
+            'public\favicon.ico','public\overview-r69c.json',
+            'public\robots.txt','public\uu12-2011-r70a.pdf'
+          )
+          function New-R94Fixture([string]$kind) {
+            $base=Join-Path $env:RUNNER_TEMP ($kind+'-'+[guid]::NewGuid().ToString('N'))
+            $root=Join-Path $base 'laravel'
+            $launcher=Join-Path $base 'launcher'
+            New-Item -ItemType Directory -Path $root -Force | Out-Null
+            New-Item -ItemType Directory -Path $launcher -Force | Out-Null
+            [IO.File]::WriteAllText((Join-Path $launcher 'BUKA-PI-HIDDEN.vbs'),'CI disposable launcher')
+            $hashes=@{}
+            foreach($rel in @($protected)+@($existing)){
+              $dest=Join-Path $root $rel
+              New-Item -ItemType Directory -Path (Split-Path $dest -Parent) -Force | Out-Null
+              [IO.File]::WriteAllText($dest,'CI original baseline only: '+$rel)
+              $hashes[$rel]=(Get-FileHash $dest -Algorithm SHA256).Hash
+            }
+            return [pscustomobject]@{Base=$base;Root=$root;Launcher=$launcher;Hashes=$hashes}
+          }
+          $fixture=New-R94Fixture 'r94-success'
+          $before=@(& $script -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fixture.Base)
+          if($before -notcontains 'PI_R94_CODE_CUTOVER=READ_ONLY_PREFLIGHT_PASS' -or
+             $before -notcontains 'PI_R94_CHANGED_OR_ADDED_COUNT=17') {
+            throw 'PI_R94_CI_READ_ONLY_PREFLIGHT_FAILED'
+          }
+          foreach($rel in $fixture.Hashes.Keys) {
+            if((Get-FileHash (Join-Path $fixture.Root $rel) -Algorithm SHA256).Hash -ne $fixture.Hashes[$rel]) {
+              throw ('PI_R94_CI_PREFLIGHT_MUTATED='+$rel)
+            }
+          }
+          $applied=@(& $script -Apply -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fixture.Base)
+          if($applied -notcontains 'PI_R94_CODE_CUTOVER=APPLIED_VERIFIED' -or
+             $applied -notcontains 'PI_R94_HTTP_VERIFICATION=SKIPPED_IN_DISPOSABLE_CI_FIXTURE' -or
+             $applied -notcontains 'PI_R94_PROTECTED_DATA_ASSET_SHA=UNCHANGED') {
+            throw 'PI_R94_CI_REAL_APPLY_NOT_ACCEPTED'
+          }
+          foreach($rel in $allow) {
+            $live=Join-Path $fixture.Root $rel
+            $candidate=Join-Path (Join-Path $sourceRoot 'laravel') $rel
+            if((Get-FileHash $live -Algorithm SHA256).Hash -ne
+               (Get-FileHash $candidate -Algorithm SHA256).Hash) {
+              throw ('PI_R94_CI_APPLIED_WRONG_SOURCE='+$rel)
+            }
+          }
+          foreach($rel in $protected) {
+            if((Get-FileHash (Join-Path $fixture.Root $rel) -Algorithm SHA256).Hash -ne $fixture.Hashes[$rel]) {
+              throw ('PI_R94_CI_PROTECTED_DATA_MUTATED='+$rel)
+            }
+          }
+          $dirs=@(Get-ChildItem (Join-Path $fixture.Launcher 'backups') -Directory)
+          if($dirs.Count -ne 1 -or
+             -not (Test-Path (Join-Path $dirs[0].FullName 'CODE_MANIFEST.json'))) {
+            throw 'PI_R94_CI_CODE_MANIFEST_BACKUP_MISSING'
+          }
+          Write-Host 'PI_R94_WINDOWS_REAL_CODE_ONLY_APPLY=PASS'
+          Write-Host 'PI_R94_WINDOWS_28_MAIN_ONLY_ASSETS_PRESERVE_SCOPE=PASS'
+          # Reproduce the owner's exact R94->R95 situation: all modules are
+          # already installed and ONLY the mobile CSS needs replacement.
+          $css='public\development-case-r85.css'
+          $liveCss=Join-Path $fixture.Root $css
+          [IO.File]::WriteAllText($liveCss,'CI prior R94 mobile CSS before 390px repair')
+          $incrementalBefore=@(& $script -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fixture.Base)
+          $expectedChange='PI_R94_CODE_CHANGE=public\development-case-r85.css:REPLACE'
+          $allChanges=@($incrementalBefore|Where-Object {$_ -like 'PI_R94_CODE_CHANGE=*'})
+          if($incrementalBefore -notcontains 'PI_R94_CODE_CUTOVER=READ_ONLY_PREFLIGHT_PASS' -or
+             $incrementalBefore -notcontains 'PI_R94_CHANGED_OR_ADDED_COUNT=1' -or
+             $allChanges.Count -ne 1 -or $allChanges[0] -cne $expectedChange) {
+            throw 'PI_R95_WINDOWS_CSS_ONLY_PREFLIGHT_NOT_STRICT'
+          }
+          $incrementalApplied=@(& $script -Apply -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fixture.Base)
+          if($incrementalApplied -notcontains 'PI_R94_CODE_CUTOVER=APPLIED_VERIFIED' -or
+             $incrementalApplied -notcontains 'PI_R94_PROTECTED_DATA_ASSET_SHA=UNCHANGED' -or
+             (Get-FileHash $liveCss -Algorithm SHA256).Hash -ne
+             (Get-FileHash (Join-Path (Join-Path $sourceRoot 'laravel') $css) -Algorithm SHA256).Hash) {
+            throw 'PI_R95_WINDOWS_CSS_ONLY_APPLY_NOT_VERIFIED'
+          }
+          foreach($rel in $protected) {
+            if((Get-FileHash (Join-Path $fixture.Root $rel) -Algorithm SHA256).Hash -ne $fixture.Hashes[$rel]) {
+              throw ('PI_R95_CSS_ONLY_MODIFIED_PROTECTED_ASSET='+$rel)
+            }
+          }
+          $noOpError=''
+          try { & $script -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fixture.Base | Out-Null }
+          catch { $noOpError=[string]$_.Exception.Message }
+          if($noOpError -notmatch 'PI_R94_NO_SOURCE_DIFFERENCE_HOLD'){
+            throw 'PI_R95_REPEATED_DEPLOYMENT_SHOULD_HOLD_NO_CHANGES'
+          }
+          Write-Host 'PI_R95_WINDOWS_EXACTLY_ONE_CSS_INCREMENTAL_APPLY=PASS'
+          Write-Host 'PI_R95_WINDOWS_SECOND_IDENTICAL_APPLY=HOLD_NO_CHANGES'
+          $fault=New-R94Fixture 'r94-rollback'
+          $err=''
+          try {
+            & $script -Apply -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fault.Base -CiFailAfterFirstSwap | Out-Null
+          } catch { $err=[string]$_.Exception.Message }
+          if($err -notmatch 'PI_R94_CI_INJECTED_FIRST_SWAP_FAILURE'){
+            throw 'PI_R94_CI_INJECTED_FAILURE_NOT_CAUGHT'
+          }
+          foreach($rel in $fault.Hashes.Keys) {
+            if((Get-FileHash (Join-Path $fault.Root $rel) -Algorithm SHA256).Hash -ne $fault.Hashes[$rel]) {
+              throw ('PI_R94_CI_ROLLBACK_HASH_MISMATCH='+$rel)
+            }
+          }
+          foreach($rel in @($allow | Select-Object -Skip 9)){
+            if(Test-Path -LiteralPath (Join-Path $fault.Root $rel)){
+              throw ('PI_R94_CI_FAILED_ROLLBACK_NEW_FILE_EXISTS='+$rel)
+            }
+          }
+          Write-Host 'PI_R94_WINDOWS_INJECTED_FAILURE_ROLLBACK=PASS'
+          Write-Host 'PI_R94_WINDOWS_PROTECTED_ORIGINAL_HASHES=PASS'
+
+
+      - name: R98 missing-only registry resource repair and rollback on Windows fixture
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if($LASTEXITCODE -ne 0 -or $pin -notmatch '^[0-9a-f]{40}$') {throw 'PI_R98_PIN_MISSING'}
+          $repo=$PWD.Path
+          $script='.\scripts\pi-r98-r88-registry-repair.ps1'
+          $protected=@('artisan','.env','database\database.sqlite',
+            'public\overview-r69c.json','public\uu12-2011-r70a.pdf')
+          $resources=@('resources\pi\affairs-nomenclature-seed-r87.json',
+            'resources\pi\operational-definitions-r88.json')
+          function New-Fixture([string]$name){
+            $base=Join-Path $env:RUNNER_TEMP ($name+'-'+[guid]::NewGuid().ToString('N'))
+            $app=Join-Path $base 'laravel'
+            $launch=Join-Path $base 'launcher'
+            New-Item -ItemType Directory -Path $app -Force | Out-Null
+            New-Item -ItemType Directory -Path $launch -Force | Out-Null
+            [IO.File]::WriteAllText((Join-Path $launch 'BUKA-PI-HIDDEN.vbs'),'synthetic launcher')
+            $before=@{}
+            foreach($file in $protected){
+              $dest=Join-Path $app $file
+              New-Item -ItemType Directory -Path (Split-Path $dest -Parent) -Force | Out-Null
+              [IO.File]::WriteAllText($dest,'CI fixture protected original '+$file)
+              $before[$file]=(Get-FileHash $dest -Algorithm SHA256).Hash
+            }
+            return [pscustomobject]@{Base=$base;App=$app;Before=$before}
+          }
+          $good=New-Fixture 'pi-r98-success'
+          $pre=@(& $script -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $good.Base)
+          if($pre -notcontains 'PI_R98_MISSING_COUNT=2' -or
+             $pre -notcontains 'PI_R98_DIFFERENT_COUNT=0' -or
+             $pre -notcontains 'PI_R98_REGISTRY_PREFLIGHT=COMPLETE_READ_ONLY') {
+            throw 'PI_R98_BOTH_RESOURCES_MISSING_PREFLIGHT_FAILED'
+          }
+          foreach($file in $resources) {
+            if(Test-Path -LiteralPath (Join-Path $good.App $file)) {
+              throw ('PI_R98_PREFLIGHT_CREATED_SOURCE='+$file)
+            }
+          }
+          $out=@(& $script -Apply -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $good.Base)
+          if($out -notcontains 'PI_R98_REGISTRY_FILES_ADDED=2' -or
+             $out -notcontains 'PI_R98_R88_REGISTRY_FIX=APPLIED_VERIFIED') {
+            throw 'PI_R98_CI_MISSING_REGISTRY_APPLY_FAILED'
+          }
+          foreach($file in $resources) {
+            $original=Join-Path $good.App $file
+            $candidate=Join-Path (Join-Path $repo 'laravel') $file
+            if((Get-FileHash $original -Algorithm SHA256).Hash -ne
+               (Get-FileHash $candidate -Algorithm SHA256).Hash) {
+              throw ('PI_R98_CI_NEW_REGISTRY_HASH_MISMATCH='+$file)
+            }
+          }
+          foreach($file in $protected) {
+            if((Get-FileHash (Join-Path $good.App $file) -Algorithm SHA256).Hash -ne $good.Before[$file]) {
+              throw ('PI_R98_CI_PROTECTED_ORIGINAL_CHANGED='+$file)
+            }
+          }
+          $again=@(& $script -Apply -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $good.Base)
+          if($again -notcontains 'PI_R98_RESOURCE_FIX=NO_CHANGE_ALL_MATCH') {
+            throw 'PI_R98_REPEATED_APPLY_NOT_NOOP'
+          }
+          Write-Host 'PI_R98_CI_TWO_MISSING_REGISTRIES_APPLY=PASS'
+          Write-Host 'PI_R98_CI_PROTECTED_DB_ENV_LAUNCHER_PRESERVED=PASS'
+          Write-Host 'PI_R98_CI_IDEMPOTENT_MATCHING_REGISTRIES=PASS'
+
+          $different=New-Fixture 'pi-r98-different-hold'
+          $regDest=Join-Path $different.App $resources[0]
+          New-Item -ItemType Directory -Path (Split-Path $regDest -Parent) -Force | Out-Null
+          [IO.File]::WriteAllText($regDest,'DIFFERENT original resource must never overwrite')
+          $old=(Get-FileHash $regDest -Algorithm SHA256).Hash
+          $err=''
+          try { & $script -Apply -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $different.Base | Out-Null }
+          catch {$err=[string]$_.Exception.Message}
+          if($err -notmatch 'PI_R98_EXISTING_RESOURCE_DRIFT_HOLD_NO_OVERWRITE' -or
+             (Get-FileHash $regDest -Algorithm SHA256).Hash -ne $old -or
+             (Test-Path -LiteralPath (Join-Path $different.App $resources[1]))) {
+            throw 'PI_R98_DIFFERENT_RESOURCE_OVERWRITTEN_OR_FAIL_OPEN'
+          }
+          Write-Host 'PI_R98_CI_EXISTING_DIFFERENT_SOURCE_HOLD=PASS'
+
+          $fault=New-Fixture 'pi-r98-rollback'
+          $errorText=''
+          try {
+            & $script -Apply -CandidateRepo $repo -ExpectedCommit $pin -CiFixtureRoot $fault.Base -CiFailAfterFirstAdd | Out-Null
+          } catch {$errorText=[string]$_.Exception.Message}
+          if($errorText -notmatch 'PI_R98_CI_INJECTED_FIRST_ADD_FAILURE') {
+            throw 'PI_R98_FAULT_INJECTION_NOT_CAUGHT'
+          }
+          foreach($file in $resources){
+            if(Test-Path -LiteralPath (Join-Path $fault.App $file)){
+              throw ('PI_R98_CI_FAILED_ROLLBACK_LEFT_SOURCE='+$file)
+            }
+          }
+          foreach($file in $protected) {
+            if((Get-FileHash (Join-Path $fault.App $file) -Algorithm SHA256).Hash -ne $fault.Before[$file]) {
+              throw ('PI_R98_CI_ROLLBACK_MODIFIED_PROTECTED='+$file)
+            }
+          }
+          Write-Host 'PI_R98_CI_INJECTED_REGISTRY_ADD_ROLLBACK=PASS'
+
+      - name: R100 official source catalogue actual code-only Windows fixture and rollback
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $sourceRoot=$PWD.Path
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if($LASTEXITCODE -ne 0 -or $pin -notmatch '^[0-9a-f]{40}$') {throw 'PI_R100_CI_BAD_PIN'}
+          $sourceScript='.\scripts\pi-r100-official-source-cutover.ps1'
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            $sourceScript,[ref]$tokens,[ref]$errors
+          ) | Out-Null
+          if($errors.Count -gt 0){
+            $errors|Format-List
+            throw 'PI_R100_PS51_PARSE_FAILED'
+          }
+          Write-Host 'PI_R100_PS51_PARSER=PASS'
+          $base='1046b339ccc432795b1b2fd659cbcd77ffa65e21'
+          $replace=@('config\pi.php','routes\web.php','public\development-case-r85.html')
+          $adds=@(
+            'app\Http\Controllers\Api\OfficialSourceMetadataController.php',
+            'app\Services\Pi\Development\OfficialSourceMetadataCatalogue.php',
+            'resources\pi\official-source-metadata-r100.json',
+            'public\official-sources-r100.css',
+            'public\official-sources-r100.js'
+          )
+          $guard=@('artisan','.env','database\database.sqlite','public\overview-r69c.json',
+            'public\uu12-2011-r70a.pdf','public\development-case-r85.css',
+            'public\regulatory-planning-r88.js',
+            'resources\pi\affairs-nomenclature-seed-r87.json',
+            'resources\pi\operational-definitions-r88.json')
+          function New-R100Fixture([string]$name) {
+            $basePath=Join-Path $env:RUNNER_TEMP ($name+'-'+[guid]::NewGuid().ToString('N'))
+            $app=Join-Path $basePath 'laravel'
+            $launch=Join-Path $basePath 'launcher'
+            New-Item -ItemType Directory -Path $app -Force | Out-Null
+            New-Item -ItemType Directory -Path $launch -Force | Out-Null
+            [IO.File]::WriteAllText((Join-Path $launch 'BUKA-PI-HIDDEN.vbs'),'CI-only launcher')
+            $hashes=@{}
+            foreach($rel in $guard) {
+              $target=Join-Path $app $rel
+              New-Item -ItemType Directory -Path (Split-Path $target -Parent) -Force|Out-Null
+              [IO.File]::WriteAllText($target,'PROTECTED ORIGINAL CI FILE '+$rel)
+              $hashes[$rel]=(Get-FileHash $target -Algorithm SHA256).Hash
+            }
+            foreach($rel in $replace) {
+              $target=Join-Path $app $rel
+              New-Item -ItemType Directory -Path (Split-Path $target -Parent) -Force|Out-Null
+              $gitPath='laravel/'+$rel.Replace([char]92,[char]47)
+              # Fixture must contain byte-exact R94 UTF-8 Git blob, never
+              # OEM-mojibake strings from native PowerShell git stdout.
+              $info=New-Object System.Diagnostics.ProcessStartInfo
+              $info.FileName=(Get-Command git.exe -ErrorAction Stop).Source
+              $info.Arguments='-C "'+$sourceRoot+'" show "'+$base+':'+$gitPath+'"'
+              $info.UseShellExecute=$false
+              $info.RedirectStandardOutput=$true
+              $info.CreateNoWindow=$true
+              $process=[Diagnostics.Process]::Start($info)
+              $output=[IO.File]::Open($target,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write)
+              try {
+                $process.StandardOutput.BaseStream.CopyTo($output)
+                $process.WaitForExit()
+                if($process.ExitCode -ne 0 -or $output.Length -eq 0) {
+                  throw ('PI_R100_CI_RAW_BASELINE_BYTES_NOT_FOUND='+$rel)
+                }
+              } finally {
+                $output.Dispose()
+                $process.Dispose()
+              }
+              $decoded=[IO.File]::ReadAllText($target,[Text.UTF8Encoding]::new($false,$true))
+              if($rel -eq 'public\development-case-r85.html' -and -not $decoded.Contains([string][char]0x00B7)) {
+                throw 'PI_R101_CI_BASELINE_HTML_UTF8_CHARACTER_LOST'
+              }
+              $hashes[$rel]=(Get-FileHash $target -Algorithm SHA256).Hash
+            }
+            return [pscustomobject]@{Base=$basePath;Root=$app;Hash=$hashes}
+          }
+          $good=New-R100Fixture 'r100-good'
+          $pre=@(& $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $good.Base)
+          foreach($rel in $replace) {
+            if($pre -notcontains ('PI_R100_BASELINE_UTF8_VERIFIED='+$rel)) {
+              throw ('PI_R101_RAW_UTF8_R94_BASELINE_NOT_ACCEPTED='+$rel)
+            }
+          }
+          Write-Host 'PI_R101_WINDOWS_R94_BASELINE_RAW_UTF8=PASS'
+          $diff=@($pre|Where-Object {$_ -like 'PI_R100_CHANGE=*'})
+          if($pre -notcontains 'PI_R100_READ_ONLY_PREFLIGHT=PASS' -or
+             $pre -notcontains 'PI_R100_FILES_TO_CHANGE=8' -or $diff.Count -ne 8){
+            throw 'PI_R100_CI_PREFLIGHT_EXPECTED_EIGHT'
+          }
+          foreach($rel in $good.Hash.Keys) {
+            if((Get-FileHash (Join-Path $good.Root $rel) -Algorithm SHA256).Hash -ne $good.Hash[$rel]){
+              throw ('PI_R100_CI_PREFLIGHT_MUTATED_ORIGINAL='+$rel)
+            }
+          }
+          $done=@(& $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $good.Base -Apply)
+          if($done -notcontains 'PI_R100_OFFICIAL_SOURCE_CUTOVER=APPLIED_VERIFIED' -or
+             $done -notcontains 'PI_R100_SQLITE_ENV_APPKEY_LAUNCHER_R88=UNCHANGED'){
+            throw 'PI_R100_CI_EIGHT_FILES_NOT_APPLIED'
+          }
+          foreach($rel in @($replace)+@($adds)) {
+            $live=Join-Path $good.Root $rel
+            $source=Join-Path (Join-Path $sourceRoot 'laravel') $rel
+            if((Get-FileHash $live -Algorithm SHA256).Hash -ne
+               (Get-FileHash $source -Algorithm SHA256).Hash) {
+              throw ('PI_R100_CI_SOURCE_SHA_DIFFERENT='+$rel)
+            }
+          }
+          foreach($rel in $guard) {
+            if((Get-FileHash (Join-Path $good.Root $rel) -Algorithm SHA256).Hash -ne $good.Hash[$rel]) {
+              throw ('PI_R100_CI_PROTECTED_FILE_CHANGED='+$rel)
+            }
+          }
+          $noop=@(& $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $good.Base -Apply)
+          if($noop -notcontains 'PI_R100_CODE_RELEASE=NO_CHANGE'){
+            throw 'PI_R100_CI_SAME_PIN_NOT_IDEMPOTENT'
+          }
+          Write-Host 'PI_R100_WINDOWS_EIGHT_FILES_ACTUAL_APPLY=PASS'
+          Write-Host 'PI_R100_WINDOWS_PROTECTED_DB_AND_R88_SHA=PASS'
+          Write-Host 'PI_R100_WINDOWS_SECOND_APPLY_NOOP=PASS'
+
+          $drift=New-R100Fixture 'r100-drift'
+          $driftPath=Join-Path $drift.Root 'routes\web.php'
+          [IO.File]::AppendAllText($driftPath,([string][char]10)+'UNREVIEWED_LOCAL_ROUTE')
+          $reason=''
+          try { & $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $drift.Base -Apply|Out-Null }
+          catch {$reason=[string]$_.Exception.Message}
+          if($reason -notmatch 'PI_R100_ORIGINAL_CODE_DRIFT_HOLD'){
+            throw 'PI_R100_CI_DRIFT_DID_NOT_HOLD'
+          }
+          foreach($rel in $adds) {
+            if(Test-Path -LiteralPath (Join-Path $drift.Root $rel)) {
+              throw ('PI_R100_CI_DRIFT_CREATED_NEW_SOURCE='+$rel)
+            }
+          }
+          Write-Host 'PI_R100_WINDOWS_UNREVIEWED_ORIGINAL_CHANGE=HOLD'
+
+          $fault=New-R100Fixture 'r100-fault'
+          $failure=''
+          try {
+            & $sourceScript -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $fault.Base -CiFailAfterFirstSwap -Apply | Out-Null
+          } catch {$failure=[string]$_.Exception.Message}
+          if($failure -notmatch 'PI_R100_CI_INJECTED_FIRST_SWAP_FAILURE'){
+            throw 'PI_R100_CI_INJECTED_FAILURE_NOT_CAUGHT'
+          }
+          foreach($rel in $fault.Hash.Keys){
+            if((Get-FileHash (Join-Path $fault.Root $rel) -Algorithm SHA256).Hash -ne $fault.Hash[$rel]){
+              throw ('PI_R100_CI_ROLLBACK_ORIGINAL_SHA_MISMATCH='+$rel)
+            }
+          }
+          foreach($rel in $adds) {
+            if(Test-Path -LiteralPath (Join-Path $fault.Root $rel)){
+              throw ('PI_R100_CI_ROLLBACK_LEFT_NEW_FILE='+$rel)
+            }
+          }
+          Write-Host 'PI_R100_WINDOWS_INJECTED_FIRST_SWAP_ROLLBACK=PASS'
+
+          # R101 owner wrapper must handle a valid source baseline without
+          # Compare-Object, and stop before file writes on actual drift.
+          $wrapper='.\scripts\pi-r101-r100-safe-owner-rollout.ps1'
+          $tokens=$null; $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            $wrapper,[ref]$tokens,[ref]$errors
+          ) | Out-Null
+          if($errors.Count -ne 0){throw 'PI_R101_WRAPPER_PS51_PARSE_FAILED'}
+          $r101good=New-R100Fixture 'pi-r101-owner-wrapper-good'
+          $r101out=@(& $wrapper -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $r101good.Base -Apply)
+          if($r101out -notcontains 'PI_R101_EXACT_EIGHT_FILE_UTF8_PREFLIGHT=PASS' -or
+             $r101out -notcontains 'PI_R101_R100_ONE_ORIGIN_CUTOVER=APPLIED_VERIFIED') {
+            throw 'PI_R101_CI_OWNER_WRAPPER_GOOD_PATH_FAILED'
+          }
+          foreach($rel in $guard) {
+            if((Get-FileHash (Join-Path $r101good.Root $rel) -Algorithm SHA256).Hash -ne $r101good.Hash[$rel]){
+              throw ('PI_R101_CI_WRAPPER_MUTATED_PROTECTED='+$rel)
+            }
+          }
+          Write-Host 'PI_R101_WINDOWS_OWNER_WRAPPER_EIGHT_FILE=PASS'
+
+          $r101drift=New-R100Fixture 'pi-r101-owner-wrapper-drift'
+          $different=Join-Path $r101drift.Root 'public\development-case-r85.html'
+          [IO.File]::AppendAllText($different,([string][char]10)+'UNKNOWN LOCAL HTML CHANGE')
+          $before=(Get-FileHash $different -Algorithm SHA256).Hash
+          $fail=''
+          try {
+            & $wrapper -CandidateRepo $sourceRoot -ExpectedCommit $pin -CiFixtureRoot $r101drift.Base -Apply | Out-Null
+          } catch {$fail=[string]$_.Exception.Message}
+          if($fail -notmatch 'PI_R100_ORIGINAL_CODE_DRIFT_HOLD' -or
+             (Get-FileHash $different -Algorithm SHA256).Hash -ne $before) {
+            throw 'PI_R101_CI_OWNER_WRAPPER_DRIFT_MUST_HOLD'
+          }
+          foreach($rel in $adds) {
+            if(Test-Path -LiteralPath (Join-Path $r101drift.Root $rel)) {
+              throw ('PI_R101_CI_WRAPPER_DRIFT_CREATED_FILE='+$rel)
+            }
+          }
+          Write-Host 'PI_R101_WINDOWS_OWNER_WRAPPER_DRIFT=HOLD_NO_MUTATIONS'
+
+
+      - name: R104 owner two downloaded BPK files SHA-only preflight, ambiguous and HTML rejection
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $qa=$PWD.Path
+          $pin=([string](& git rev-parse HEAD)).Trim()
+          if($LASTEXITCODE -ne 0){throw 'PI_R104_CI_COMMIT_NOT_FOUND'}
+          $script='.\scripts\pi-r104-owner-bpk-two-pdf-intake.ps1'
+          $tokens=$null;$errors=$null
+          [Management.Automation.Language.Parser]::ParseFile(
+            $script,[ref]$tokens,[ref]$errors
+          ) | Out-Null
+          if($errors.Count -ne 0){
+            $errors|Format-List
+            throw 'PI_R104_POWERSHELL51_PARSE_FAILED'
+          }
+          $folder=Join-Path $env:RUNNER_TEMP ('pi-r104-fixture-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $folder -Force | Out-Null
+          $names=@('perwalkot No.12 thn 2026.pdf','Perwal Jogja Nomor 74 Tahun 2025.pdf')
+          $text=('%PDF-1.7'+[string][char]10)+(('R104 CI synthetic bytes only'+[string][char]10)*12)+('%%EOF'+[string][char]10)
+          $bytes=[Text.Encoding]::ASCII.GetBytes($text)
+          if($bytes.Length -lt 128){throw 'PI_R104_CI_FIXTURE_TOO_SHORT'}
+          $hashes=@{}
+          foreach($name in $names){
+            $file=Join-Path $folder $name
+            [IO.File]::WriteAllBytes($file,$bytes)
+            $hashes[$name]=(Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash
+          }
+          $out=@(& $script -ExpectedCommit $pin -DownloadDirectory $folder)
+          if($out -notcontains 'PI_R104_TWO_LOCAL_PDF_HEADER_EOF_SHA256=PASS' -or
+             $out -notcontains 'PI_R104_MODE=READ_ONLY_NO_ARCHIVE' -or
+             @($out|Where-Object {$_ -like 'PI_R104_SOURCE_SHA256=*'}).Count -ne 2){
+            throw 'PI_R104_CI_READ_ONLY_TWO_PDF_CHECK_FAILED'
+          }
+          foreach($name in $names){
+            if((Get-FileHash (Join-Path $folder $name) -Algorithm SHA256).Hash -ne $hashes[$name]){
+              throw ('PI_R104_CI_READ_ONLY_CHANGED_ORIGINAL='+$name)
+            }
+          }
+          Write-Host 'PI_R104_WINDOWS_OWNER_EXACT_FILENAMES_AND_SHA_PREVIEW=PASS'
+          $source=Join-Path $folder 'perwalkot No.12 thn 2026.pdf'
+          [IO.File]::WriteAllText($source,'<html>Fake PDF maintenance</html>')
+          $failed=''
+          try { & $script -ExpectedCommit $pin -DownloadDirectory $folder|Out-Null }
+          catch {$failed=[string]$_.Exception.Message}
+          if($failed -notmatch 'PI_R104_PDF_SIZE_INVALID|PI_R104_NON_PDF_OR_HTML_REJECTED'){
+            throw 'PI_R104_CI_FAKE_HTML_NOT_REJECTED'
+          }
+          Write-Host 'PI_R104_WINDOWS_HTML_AS_PDF=HOLD_NO_ARCHIVE'
+      - name: R106 Windows PowerShell 5.1 safe PDF engine recovery parses without installation
+        shell: powershell
+        run: |
+          $tokens=$null
+          $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            'scripts/pi-r106-windows-extractor-recovery.ps1', [ref]$tokens, [ref]$errors
+          ) | Out-Null
+          if($errors.Count -ne 0){
+            $errors | Format-List
+            throw 'PI_R106_WINDOWS_EXTRACTOR_PS51_PARSE_FAILED'
+          }
+          Write-Host 'PI_R106_WINDOWS_PS51_ENGINE_RECOVERY_PARSE=PASS'
+      - name: R107 one-origin native annex 11-file cutover synthetic apply rollback and drift safety
+        shell: powershell
+        run: |
+          & .\scripts\pi-r107-ci-windows-fixture.ps1
+          if($LASTEXITCODE -ne 0){throw 'PI_R107_WINDOWS_FIXTURE_FAILURE'}
+      - name: R108 guarded planner-first UX six-file Windows cutover, rollback and drift prevention
+        shell: powershell
+        run: |
+          & .\scripts\pi-r108-ci-windows-fixture.ps1
+          if($LASTEXITCODE -ne 0){throw 'PI_R108_WINDOWS_FIXTURE_FAILURE'}
+      - name: R108 Wave2 planner context and status six-file Windows rollback/drift safety
+        shell: powershell
+        run: |
+          & .\scripts\pi-r108-wave2-ci-windows-fixture.ps1
+          if($LASTEXITCODE -ne 0){throw 'PI_R108_W2_WINDOWS_FIXTURE_FAILURE'}
+      - name: R108 Wave3A grouped evidence source-only rollback and drift safety
+        shell: powershell
+        run: |
+          & .\scripts\pi-r108-wave3a-ci-windows-fixture.ps1
+          & .\scripts\pi-r108-wave3b-ci-windows-fixture.ps1
+          if($LASTEXITCODE -ne 0){throw 'PI_R108_W3A_WINDOWS_FIXTURE_FAILURE'}
+
+      - name: R108 Wave3C performance source-only cutover rollback and drift safety
+        shell: powershell
+        run: |
+          & .\scripts\pi-r108-wave3c-ci-windows-fixture.ps1
+          if($LASTEXITCODE -ne 0){throw 'PI_R108_W3C_WINDOWS_FIXTURE_FAILURE'}
+
+      - name: APR exact 56-file protected cutover and rollback fixture
+        shell: powershell
+        run: |
+          & '.\scripts\pi-apr-ci-windows-fixture.ps1'
+
+      - name: Separate Gemini six-file release rollback and drift guard
+        shell: powershell
+        run: |
+          & scripts/pi-apr-gemini-ci-windows-fixture.ps1
+
+      - name: Separate R106 diagnostic exact-one rollback and drift guard
+        shell: powershell
+        run: |
+          & scripts/pi-apr-r106-diagnostic-ci-windows-fixture.ps1

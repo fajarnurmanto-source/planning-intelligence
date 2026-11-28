@@ -1,0 +1,51 @@
+{
+  "schema": "PI_RF04_PRIMARY_ACQUISITION_V1",
+  "documents": [
+    {
+      "id": "PERMENDAGRI-10-2023",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/324630/Permendagri%20Nomor%2010%20Tahun%202023.pdf",
+      "lane": "SERIES"
+    },
+    {
+      "id": "PERMENDAGRI-12-2024",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/364721/Permendagri%20No.%2012%20Tahun%202024.pdf",
+      "lane": "SERIES"
+    },
+    {
+      "id": "PERMENDAGRI-10-2025",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/383215/Permendagri%20Nomor%2010%20Tahun%202025.pdf",
+      "lane": "SERIES"
+    },
+    {
+      "id": "PERMENDAGRI-4-2026",
+      "pdf_url": "https://peraturan.go.id/files/permendagri-no-4-tahun-2026.pdf",
+      "lane": "HOLDOUT_CANDIDATE"
+    },
+    {
+      "id": "PERMENDAGRI-14-2026",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/421769/permendagri_no_14_tahun_2026.pdf",
+      "lane": "SERIES",
+      "observed_pages": 116
+    },
+    {
+      "id": "PERMENDAGRI-1-2023",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/301556/Permendagri%20Nomor%201%20Tahun%202023.pdf",
+      "lane": "HOLDOUT_CANDIDATE",
+      "observed_pages": 74
+    },
+    {
+      "id": "UU-23-2014",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/28013/UU%20Nomor%2023%20Tahun%202014.pdf",
+      "lane": "HOLDOUT_CANDIDATE",
+      "observed_pages": 460
+    },
+    {
+      "id": "UU-17-2019",
+      "pdf_url": "https://peraturan.bpk.go.id/Download/113525/UU%20Nomor%2017%20Tahun%202019.pdf",
+      "lane": "RELATION_SOURCE",
+      "observed_pages": 90
+    }
+  ],
+  "missing_direct_pdf_links": [],
+  "production_admission": "DENIED"
+}

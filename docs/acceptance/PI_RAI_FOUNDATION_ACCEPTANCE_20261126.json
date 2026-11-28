@@ -1,0 +1,68 @@
+{
+  "schema": "PI_RAI_FOUNDATION_ACCEPTANCE_V1",
+  "baseline": "d1ab2322b1c73e78dbf30b3b91aaa32f589df66d",
+  "decision": "PASS_BOUNDED_CANDIDATE_FOUNDATION",
+  "owner_log_only": true,
+  "independent_receipt_read": false,
+  "ci": [
+    {
+      "id": 45746050824,
+      "name": "PI Regulatory R74 taxonomy and genealogy",
+      "conclusion": "success"
+    },
+    {
+      "id": 45746050741,
+      "name": "PI Laravel regulatory excerpt R73",
+      "conclusion": "success"
+    },
+    {
+      "id": 45746050664,
+      "name": "PI existing unified launcher audit safety",
+      "conclusion": "success"
+    },
+    {
+      "id": 45746050697,
+      "name": "PI R88 crosswalk guards",
+      "conclusion": "success"
+    }
+  ],
+  "local": {
+    "documents": 8,
+    "holds": 0,
+    "transport_calls": 0,
+    "receipt_sha256": "F3A487FEE7FB41C6E446BC1FE20F6A486D7000915BC665FE56DAFC0ADB1DE988"
+  },
+  "live": {
+    "instrument_id": "UU-23-2014",
+    "metadata_sha256": "FBF8AECD2713F595D1700350D768E7F2A37E5E552F35C0D3BD16715852340C4F",
+    "canonical_pin": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+    "receipt_sha256": "058AD1EA6CEA5A1172DA18CD289D8DED19F1B06DF0A3D21D878283DDED12EC6E",
+    "components": [
+      {
+        "role": "BODY_CANDIDATE",
+        "sha256": "1D0D4F82B605406A59D7B18B1FE7C88454A373BEE08E8C0FA07AA16A6B8BAD8D",
+        "url": "https://www.peraturan.go.id/files/uu23-2014bt.pdf"
+      },
+      {
+        "role": "EXPLANATION_CANDIDATE",
+        "sha256": "C42EA9183366F95A264FDA471E5532D1DF861D19FA538EE55F9CE663C545300B",
+        "url": "https://www.peraturan.go.id/files/uu23-2014pjl.pdf"
+      }
+    ],
+    "holds": 0,
+    "local_transport_calls": 0
+  },
+  "open": [
+    "component coverage and content equivalence",
+    "actual automated worker failover during primary outage",
+    "production queue and scheduler activation",
+    "freshness live observation and amendment census",
+    "hybrid synchronization",
+    "atomic publication and durable provenance hardening",
+    "G1-G7"
+  ],
+  "legal_effect": "NOT_ASSESSED",
+  "production_admission": "DENIED",
+  "next_product_track": "USER_SPECIFIED_UI_AND_FEATURE_REVISIONS",
+  "next_foundation_track": "RF05_DOCUMENT_STRUCTURE_AND_MANIFESTATION_RECONCILIATION"
+}

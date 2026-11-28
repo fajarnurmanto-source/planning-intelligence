@@ -1,0 +1,51 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Read the original Laravel configuration and bind only the framework services
+ * needed for a local credential-vault read and bounded HTTP request.
+ * Do not bootstrap routes, console commands, database or application providers.
+ */
+function piHriaRuntimeContext(string $runtime,string $qa): \Illuminate\Foundation\Application
+{
+    $app=new \Illuminate\Foundation\Application($runtime);
+    (new \Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables)->bootstrap($app);
+    // Avoid recursive config discovery (Windows path/case differences).
+    // Use Laravel's own cache path and environment resolver, then exact files.
+    if($app->configurationIsCached()){
+        $values=require $app->getCachedConfigPath();
+        if(!is_array($values))throw new RuntimeException('HRIA_CONFIG_CACHE_HOLD');
+        $values=array_intersect_key($values,array_flip(['app','filesystems','pi']));
+    }else{
+        $values=[];
+        foreach(['app','filesystems','pi'] as $name){
+            $path=$app->configPath($name.'.php');
+            if(!is_file($path))throw new RuntimeException('HRIA_EXACT_CONFIG_FILE_HOLD');
+            $values[$name]=require $path;
+            if(!is_array($values[$name]))throw new RuntimeException('HRIA_EXACT_CONFIG_SCHEMA_HOLD');
+        }
+    }
+    $app->instance('config',new \Illuminate\Config\Repository($values));
+    // Register only the facade container, not package discovery or alias loading.
+    // RegisterFacades invokes PackageManifest::aliases(), which may write
+    // bootstrap/cache/packages.php and fails on a read-only owner runtime.
+    \Illuminate\Support\Facades\Facade::clearResolvedInstances();
+    \Illuminate\Support\Facades\Facade::setFacadeApplication($app);
+    $config=$app->make('config');
+    if($config->get('pi.tenant_id')!=='ID-DIY-YOG')throw new RuntimeException('HRIA_TENANT_HOLD');
+    if(!is_string($config->get('app.key'))||trim($config->get('app.key'))==='')throw new RuntimeException('HRIA_APP_ENCRYPTION_CONFIG_HOLD');
+    $disk=$config->get('filesystems.disks.local');
+    if(!is_array($disk)||($disk['driver']??null)!=='local'||!is_string($disk['root']??null))throw new RuntimeException('HRIA_VAULT_DISK_CONFIG_HOLD');
+    $root=realpath($disk['root']);
+    $storage=realpath($app->storagePath());
+    if(!$root||!$storage||!str_starts_with(strtolower(str_replace('\\','/',$root).'/'),strtolower(rtrim(str_replace('\\','/',$storage),'/').'/')))throw new RuntimeException('HRIA_VAULT_DISK_SCOPE_HOLD');
+    // No filesystem routes, service-provider boot, writes or database access.
+    $app->register(\Illuminate\Encryption\EncryptionServiceProvider::class);
+    $app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
+    $app->singleton(\Illuminate\Http\Client\Factory::class,static fn()=>new \Illuminate\Http\Client\Factory);
+    foreach(['regulatory-genealogy-r74.json','regulatory-delegation-coverage-r80.json'] as $name){
+        $file=$qa.'/resources/pi/'.$name;
+        if(!is_file($file)||!is_readable($file))throw new RuntimeException('HRIA_QA_REGISTRY_HOLD');
+    }
+    return $app;
+}

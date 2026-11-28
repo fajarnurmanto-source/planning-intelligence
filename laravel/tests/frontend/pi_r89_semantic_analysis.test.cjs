@@ -34,7 +34,8 @@ test('GET preview is read-only and visible before any consented cloud request', 
 test('cloud inference requires selected provider, exact context hash, consent and authenticated CSRF', () => {
   assert.match(app,/method:'POST'/)
   assert.match(app,/\/api\/auth\/session/)
-  assert.match(app,/'X-PI-CSRF':session\.csrf/)
+  assert.match(app,/'X-CSRF-TOKEN':session\.csrf/)
+  assert.doesNotMatch(app,/X-PI-CSRF/)
   assert.match(app,/provider:get\('r89-provider'\)\.value/)
   assert.match(app,/approved_cloud_metadata:true/)
   assert.match(app,/approved_provider_charges:true/)
@@ -58,4 +59,13 @@ test('consent and previously previewed context are reset on changed provider or 
   assert.match(app,/get\('r88-controls'\)\.addEventListener\('change'/)
   assert.match(app,/semanticPreview = null/)
   assert.match(app,/get\('r89-consent'\)\.checked = false/)
+})
+
+test('APR shows safe escalation and consumes one approval after any attempt', () => {
+  assert.match(app,/PROVIDER_BALANCE:'Saldo/)
+  assert.match(app,/PROVIDER_REQUEST_UNCERTAIN/)
+  assert.match(app,/Tidak ada pemanggilan ulang otomatis/)
+  assert.match(app,/provider_recovery:payload.provider_recovery/)
+  assert.match(app,/Consume this approval/)
+  assert.match(app,/finally \{\s*semanticPreview = null\s*approved.checked = false/)
 })

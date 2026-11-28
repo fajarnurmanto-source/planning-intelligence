@@ -1,0 +1,1007 @@
+{
+  "schema": "PI_RF05_INDEPENDENT_PAGE_REFERENCE_V1",
+  "reference_method": "INDEPENDENT_PHYSICAL_PDF_REVIEW",
+  "reference_identity": "AI_ASSISTED_NOT_HUMAN_CERTIFIED",
+  "pages": [
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 18,
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Form 4 target-alignment table is legible in the physical render, while direct Poppler text is substantially garbled/rotated; requires visual interpretation. Not fiscal expenditure rows.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 1
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 102,
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Statistics performance/indicator target matrix is visible, but direct text extraction is garbled and insufficient to reconstruct row content. Requires visual interpretation; numbered cells are not clauses.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 2
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 6,
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Physical page contains substantive Pasal 8, Pasal 9 and Pasal 10, plus continuation of previous ayat; native text agrees.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 3
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 74,
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Social-service indicator target table is visible; direct text is severely garbled. Requires visual interpretation, not an account-coded expenditure fragment.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 4
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 93,
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Population/family-planning performance table is visible, but direct native text is substantially garbled and insufficient. Requires visual interpretation.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 5
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 48,
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Numeracy performance indicator table is visible, while direct extracted text is garbled and insufficient. Requires visual interpretation; no fiscal account expenditure rows.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 6
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 55,
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Education climate indicator/percentage matrix is visible; extracted native text is garbled rather than sufficient semantic table text. Requires visual interpretation.",
+      "split": "HOLDOUT",
+      "sample_rank": 7
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 96,
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Digital government performance indicator target matrix is visible, while direct extracted text is insufficient/garbled. Requires visual interpretation.",
+      "split": "HOLDOUT",
+      "sample_rank": 8
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 82,
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Social rehabilitation indicator and target rows are legible visually but direct text is largely garbled. Requires visual interpretation, not account expenditure rows.",
+      "split": "HOLDOUT",
+      "sample_rank": 9
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 95,
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Communication/informatics indicator target table is legible in render but direct extraction is garbled and insufficient. Requires visual interpretation.",
+      "split": "HOLDOUT",
+      "sample_rank": 10
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 122,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Readable priority-policy/legal-basis matrix for health, spatial planning and social matters. Citations and numbered table items are not articulated clauses; no account expenditure rows.",
+      "split": "HOLDOUT",
+      "sample_rank": 11
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2023",
+      "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+      "pdf_page": 99,
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Cooperatives/SME performance indicator target table is visible, while direct native text is garbled and insufficient. Requires visual interpretation.",
+      "split": "HOLDOUT",
+      "sample_rank": 12
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 22,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Education performance indicators and numerical targets in a nonfiscal table; native text is usable despite OCR/watermark noise. No articulated legal clauses or expenditure account rows.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 1
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 51,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Keterangan explains form columns 1-9 in a numbered list; table guidance rather than articulated Pasal/ayat content or expenditure rows.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 2
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 50,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Blank/template program consistency form between RPJMD/RPD and RKPD with placeholder rows; no fiscal account expenditure records.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 3
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 16,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Kalimantan macroeconomic development targets in a nonfiscal province matrix plus short explanatory introduction; not articulated legal clauses.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 4
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 36,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Public information/communication performance indicator and target table. Numbered rows are matrix entries, not provisions or fiscal account rows.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 5
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 32,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Environment and population-administration performance indicator target tables. Usable text, no fiscal expenditure-account rows or articulated legal clauses.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 6
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 18,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Papua macro development indicator targets in a provincial matrix with short explanatory introduction; nonfiscal, not provisions.",
+      "split": "HOLDOUT",
+      "sample_rank": 7
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 23,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Health performance indicators/units/targets table. Native extraction is usable despite OCR noise; numbers are table entries rather than legal clauses.",
+      "split": "HOLDOUT",
+      "sample_rank": 8
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 6,
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Substantive Pasal 7 and Pasal 8 with ayat, followed by Pasal 9 change conditions. Render and extracted text agree on clause structure.",
+      "split": "HOLDOUT",
+      "sample_rank": 9
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 60,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Keterangan numbered instructions explain planning form columns and funding-source checkboxes. General form guidance, no account-coded expenditure records or article-specific explanation.",
+      "split": "HOLDOUT",
+      "sample_rank": 10
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 1,
+      "expected_class": "HEADING",
+      "review_state": "REVIEWED",
+      "review_reference": "Predominantly regulation title, invocation, Menimbang and Mengingat preamble. Citations do not make substantive articulated clauses.",
+      "split": "HOLDOUT",
+      "sample_rank": 11
+    },
+    {
+      "document_id": "PERMENDAGRI-12-2024",
+      "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+      "pdf_page": 64,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Form 1 change-basis template with economic/financial categories and blank columns. A generic form, not actual account-coded expenditure rows.",
+      "split": "HOLDOUT",
+      "sample_rank": 12
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 41,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Asta Cita/urusan/program/subactivity nomenclature matrix. Hierarchical program codes are not fiscal expenditure-account rows; no Pasal clauses.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 1
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 7,
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Continuation of numbered ayat and letters plus substantive Pasal 8 and Pasal 9. Physical render and native text agree.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 2
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 99,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "RKP/RKPD development-indicator alignment template with targets. Includes economic indicators but no account-coded expenditure records or articulated legal clauses.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 3
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 3,
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Continuation of general-definition article, numbered definitions 3-18 including Bappeda, RPJPD, RPJMD and RKPD. Substantive legal definition clauses.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 4
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 111,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "RPJMD/RKPD purpose-and-target consistency form plus Keterangan column guidance. Numbered fields are not legal provisions; no expenditure rows.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 5
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 48,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Nomenclature matrix aligns Asta Cita with program/subactivity codes for youth, statistics and other affairs; codes are not expenditure accounts.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 6
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 81,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Annex narrative guidance concerning MCP, APIP review, PKK and Posyandu, in numbered explanatory paragraphs; not Pasal/ayat or article-specific explanation and not expenditure-account rows.",
+      "split": "HOLDOUT",
+      "sample_rank": 7
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 62,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Asta Cita/urusan/program/subactivity authority/nomenclature matrix, including labor and empowerment. Program codes are not fiscal expenditure-account rows.",
+      "split": "HOLDOUT",
+      "sample_rank": 8
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 50,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Nomenclature alignment matrix for library programs/subactivities. No fiscal expenditure-account rows or articulated Pasal clauses.",
+      "split": "HOLDOUT",
+      "sample_rank": 9
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 57,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Nomenclature matrix for transmigration and political/government affairs; hierarchical codes identify programs/subactivities, not expenditure-account rows.",
+      "split": "HOLDOUT",
+      "sample_rank": 10
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 20,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "National-priority activity matrix with numbered table entries. No articulated clauses or fiscal expenditure-account records.",
+      "split": "HOLDOUT",
+      "sample_rank": 11
+    },
+    {
+      "document_id": "PERMENDAGRI-10-2025",
+      "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+      "pdf_page": 19,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Priority-program table continuation, explanatory narrative, and priority-activity table. General narrative and table entries, not articulated legal clauses.",
+      "split": "HOLDOUT",
+      "sample_rank": 12
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 21,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Annex narrative/list describes review, monitoring and audit activities of regional heads. General supervisory guidance, not articulated Pasal/ayat or fiscal expenditure-account records.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 1
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 19,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Strategic-program target/focus matrix concerning inflation and village cooperatives. Numbered cells and budget references are not expenditure-account rows or clauses.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 2
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 16,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Strategic-program target/focus matrix for food security and health. General supervision matrix, not fiscal account-coded expenditure records or provisions.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 3
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 11,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Technical-supervision matrix for health targets/focus. Numbered table-cell lists are not provisions or expenditure-account rows.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 4
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 10,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Technical-supervision introduction and education/health target-focus matrix. Substantial nonfiscal matrix, not a heading-only page or articulated clauses.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 5
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 2,
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Preamble/legal citations followed by substantive Pasal 1 definition of planning supervision. Provision precedence applies because real clause content is present.",
+      "split": "DEVELOPMENT",
+      "sample_rank": 6
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 17,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Strategic-program supervision target/focus matrix for health insurance and free nutritious meals. Budget mentions do not form expenditure-account rows.",
+      "split": "HOLDOUT",
+      "sample_rank": 7
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 18,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Strategic-program target/focus matrix for education and economic growth. Table-cell numbering is not articulated legal provisions; no expenditure account records.",
+      "split": "HOLDOUT",
+      "sample_rank": 8
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 14,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Thematic-supervision explanatory introduction and poverty-program matrix. Legal citations are contextual, not article-specific clauses; no expenditure-account rows.",
+      "split": "HOLDOUT",
+      "sample_rank": 9
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 15,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Strategic-program target/focus matrix for poverty, schools and housing. Nonfiscal supervision matrix despite budget references.",
+      "split": "HOLDOUT",
+      "sample_rank": 10
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 8,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Annex title/introduction plus substantial general-supervision aspect/target/focus matrix. Not predominantly heading-only; no articulated Pasal clauses or expenditure accounts.",
+      "split": "HOLDOUT",
+      "sample_rank": 11
+    },
+    {
+      "document_id": "PERMENDAGRI-4-2026",
+      "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+      "pdf_page": 12,
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Government-affair supervision target/focus matrix for health, public works and spatial planning. Numbered cells are not provisions or fiscal expenditure rows.",
+      "split": "HOLDOUT",
+      "sample_rank": 12
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 3,
+      "sample_rank": 1,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 1 definitions and numbered legal terms; native text preserves substantive clauses."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 93,
+      "sample_rank": 2,
+      "split": "DEVELOPMENT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "RKPD chapter-content guidance, national targets and planning narrative; readable native text, no articulated article or fiscal account rows."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 6,
+      "sample_rank": 3,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 5, 6 and 7 with substantive evaluation and planning obligations; native text preserves ayat."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 66,
+      "sample_rank": 4,
+      "split": "DEVELOPMENT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Nonfiscal planning table: Asta Cita, urusan, indicators, program and subkegiatan codes. No expenditure-account rows; native column text is usable."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 86,
+      "sample_rank": 5,
+      "split": "DEVELOPMENT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Annex narrative guidance on youth, sawah and salt production; numbered recommendations are not article clauses. Native narrative is readable."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 20,
+      "sample_rank": 6,
+      "split": "DEVELOPMENT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "National-priority activity table with sequential row numbers, not legal clauses or fiscal accounts; native text readable."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 94,
+      "sample_rank": 7,
+      "split": "HOLDOUT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Narrative outline of seven RKPD chapters and their contents, not operative Pasal clauses; native text readable."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 103,
+      "sample_rank": 8,
+      "split": "HOLDOUT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Blank macro-indicator alignment form with targets and explanatory notes; nonfiscal form, native text usable."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 81,
+      "sample_rank": 9,
+      "split": "HOLDOUT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Annex policy narrative and numbered recommendations for social protection and environment; not articulated Pasal clauses or account rows."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 109,
+      "sample_rank": 10,
+      "split": "HOLDOUT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Explanatory notes for planning-form columns including pagu and Papua receipts; no actual fiscal account rows; native notes readable."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 29,
+      "sample_rank": 11,
+      "split": "HOLDOUT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Program Strategis Nasional project/activity table; numbered cells are nonfiscal project lists, not provisions."
+    },
+    {
+      "document_id": "PERMENDAGRI-14-2026",
+      "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+      "pdf_page": 92,
+      "sample_rank": 12,
+      "split": "HOLDOUT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "RKPD chapter outline with explanatory content; substantive general guidance, not a predominantly empty heading page or articulated article."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 37,
+      "sample_rank": 1,
+      "split": "DEVELOPMENT",
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered staff-analysis form body visible; native extraction contains only page/header/footer (72 chars), so visual interpretation is required."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 45,
+      "sample_rank": 2,
+      "split": "DEVELOPMENT",
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Berita Daerah template body visible; direct text only header/footer (72 chars), insufficient for body."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 72,
+      "sample_rank": 3,
+      "split": "DEVELOPMENT",
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered signature-authority examples and Plt instructions visible; direct text only header/footer (73 chars), body unavailable natively."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 21,
+      "sample_rank": 4,
+      "split": "DEVELOPMENT",
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Surat Tugas form with emblem and assignment fields; direct text only header/footer (72 chars), not a blank page."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 36,
+      "sample_rank": 5,
+      "split": "DEVELOPMENT",
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Laporan template with narrative sections and signature block; native text only header/footer (73 chars)."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 57,
+      "sample_rank": 6,
+      "split": "DEVELOPMENT",
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered envelope designs and address examples; direct text only header/footer (72 chars), substantial visual body."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 17,
+      "sample_rank": 7,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 61-65 on classification, signing and delegation; substantial legal clauses preserved in native text."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 15,
+      "sample_rank": 8,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Continuation of ayat plus Pasal 51-53 governing envelopes, folders and language; native text substantive and legible."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 44,
+      "sample_rank": 9,
+      "split": "HOLDOUT",
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Lembaran Daerah form body visible; direct text only header/footer (73 chars), insufficient for body."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 6,
+      "sample_rank": 10,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered continuation list and substantial Pasal 15 ayat defining official document types; native text preserves legal content."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 13,
+      "sample_rank": 11,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 41-45 on coordination initials and signatures; substantive native article text available."
+    },
+    {
+      "document_id": "PERMENDAGRI-1-2023",
+      "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+      "pdf_page": 52,
+      "sample_rank": 12,
+      "split": "HOLDOUT",
+      "expected_class": "VISUAL",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered official letterhead examples with emblems and addresses; native text only header/footer (73 chars)."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 343,
+      "sample_rank": 1,
+      "split": "DEVELOPMENT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered nonfiscal authority matrix for industrial relations and wage-setting; native column text readable. Table numbers are not clauses."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 115,
+      "sample_rank": 2,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 209-211 on regional government apparatus and coordination; native legal clauses preserved."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 308,
+      "sample_rank": 3,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Article-specific explanation of ayat and Pasal 376 on education; substantive explanation plus Cukup jelas, native text readable."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 75,
+      "sample_rank": 4,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 122-124 on DPRD immunity and rights; substantial clauses, no account-coded rows."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 173,
+      "sample_rank": 5,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Continuation ayat and Pasal 324 on regional tax/retribution draft evaluation; native text preserves legal obligations."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 426,
+      "sample_rank": 6,
+      "split": "DEVELOPMENT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered nonfiscal authority matrix for veterinary health across government levels; native text usable, not fiscal accounts."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 350,
+      "sample_rank": 7,
+      "split": "HOLDOUT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered nonfiscal authority matrix concerning special child-protection service institutions; native text usable."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 179,
+      "sample_rank": 8,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 335-337 on regional enterprises, profit and restructuring; legal provisions, not fiscal account rows."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 141,
+      "sample_rank": 9,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered continuation and Pasal 262-263 on regional development plans; articulated clauses preserved natively."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 162,
+      "sample_rank": 10,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered continuation and Pasal 308-310 on assets, APBD and KUA/PPAS; substantial clauses, no tabular account rows."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 302,
+      "sample_rank": 11,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Article-specific explanation Pasal 354-357, including substantive interpretation of effectiveness; native text readable."
+    },
+    {
+      "document_id": "UU-23-2014",
+      "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+      "pdf_page": 211,
+      "sample_rank": 12,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 409-411 on repeal, implementation and effective date; actual clauses despite references to other laws."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 78,
+      "sample_rank": 1,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered article-specific explanations of angka/huruf and Pasal 46-48 on water uses; native body usable despite minor recognition noise."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 77,
+      "sample_rank": 2,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 44-45 explanation of changing water-source conditions; substantive article-specific native explanation."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 38,
+      "sample_rank": 3,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 59-61 on payment, funding and public rights; substantial native legal clauses."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 80,
+      "sample_rank": 4,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered continuation of article-specific huruf and ayat explanations about water as medium/material; native body usable."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 88,
+      "sample_rank": 5,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 62 ayat/huruf explanation on access and public interest; substantial native article-specific explanation."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 66,
+      "sample_rank": 6,
+      "split": "DEVELOPMENT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 21 explanation on social/environmental/economic functions and management; native text substantive."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 54,
+      "sample_rank": 7,
+      "split": "HOLDOUT",
+      "expected_class": "OTHER",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered general explanatory narrative on water-management planning and use; no articulated article-specific explanation on this page."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 23,
+      "sample_rank": 8,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 30-33 with substantive water-use obligations and prohibitions; native text usable despite recognition noise."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 11,
+      "sample_rank": 9,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered continuation of government powers plus Pasal 12-13; substantive native articulated clauses."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 89,
+      "sample_rank": 10,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 63-70 explanations including participation examples and Cukup jelas; article-specific legal explanation."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 70,
+      "sample_rank": 11,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered Pasal 27-29 explanations including detailed water zoning; native substantive explanation usable."
+    },
+    {
+      "document_id": "UU-17-2019",
+      "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+      "pdf_page": 69,
+      "sample_rank": 12,
+      "split": "HOLDOUT",
+      "expected_class": "PROVISION",
+      "review_state": "REVIEWED",
+      "review_reference": "Rendered continuation of ayat explanations and Pasal 25-26, including conservation and recharge definitions; native body usable."
+    }
+  ],
+  "definitions": {
+    "schema": "PI_RF05_BLIND_OPERATIONAL_DEFINITIONS_V1",
+    "reference_identity": "AI_ASSISTED_NOT_HUMAN_CERTIFIED",
+    "prediction_access": "NONE",
+    "definitions": {
+      "PROVISION": "Substantial articulated legal clauses (Pasal, ayat, huruf, angka), including clause continuation and article-specific explanation; not mere citation or a numbered cell.",
+      "ACCOUNT_FRAGMENT": "Substantial tabular fiscal/account-coded expenditure rows. Nonfiscal tables or generic numbered lists excluded.",
+      "MIXED": "Both substantial legal clause content and fiscal account-coded row content on the same physical page.",
+      "HEADING": "Predominantly document title, preamble, contents, annex divider or section heading; no substantive clause or fiscal row content.",
+      "VISUAL": "Image/scanned content requires visual/OCR interpretation and direct extracted text is insufficient; must inspect rendered page. A genuinely blank page is OTHER.",
+      "OTHER": "Nonfiscal tables, forms, authority matrices, general narrative explanation or truly blank page not meeting other classes."
+    },
+    "precedence": [
+      "MIXED",
+      "ACCOUNT_FRAGMENT",
+      "PROVISION",
+      "HEADING",
+      "VISUAL",
+      "OTHER"
+    ],
+    "review_procedure": "Read physical page rendering and independently extracted native Poppler page text. No adaptive receipt/prediction access. Freeze labels before evaluator.",
+    "split": "Within each document hash-ranked sample, ranks1-6 DEVELOPMENT and7-12 HOLDOUT; selected before predictions and tuning."
+  },
+  "classifier_freeze": {
+    "schema": "PI_RF05_CLASSIFIER_FREEZE_V1",
+    "frozen_at": "2026-11-28T04:00:37.564Z",
+    "development_pages": 48,
+    "holdout_pages": 48,
+    "holdout_opened": false,
+    "files": {
+      "laravel/app/Services/Pi/Development/FullDocumentInventory.php": "96f1e3e1587468f17fe559a2d6268df20e5b6b16f82d3021d507701d7c117543",
+      "laravel/app/Services/Pi/Development/RegulatoryAnnexBenchmarkProfile.php": "624841797023d7fd0f59e95a5263fe33003228d62e0d1706f8c7e353aa2efa76",
+      "laravel/app/Services/Pi/Development/DocumentLayoutReconstructor.php": "b7b5e46fe7a7404e017d384b21f566bb4952dc6b7448022e05bb184978609b06"
+    }
+  },
+  "reviewers": [
+    "Independent AI agent A: individual physical PNGs plus direct extraction",
+    "Independent AI agent B: physical contact sheets plus direct extraction"
+  ],
+  "reference_certification": "NOT_HUMAN_CERTIFIED"
+}

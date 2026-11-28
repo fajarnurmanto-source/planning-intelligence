@@ -31,3 +31,24 @@
 @media(min-width:851px){.sidebar{padding-bottom:16px}.sidebar .pi-app-subtitle{display:block}}
 @media(max-width:850px){.sidebar .pi-app-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.sidebar .pi-app-group-label{grid-column:1/-1}}
 @media(max-width:500px){.sidebar .pi-app-menu{display:flex}}
+
+/* R108 task-first navigation: domain engines remain internal. */
+.pi-app-group{background:#112631;border-color:#2b434a}
+.pi-app-group[open]{background:#173940;border-color:#4d8874}
+.pi-app-group-summary{min-height:43px;padding:11px 12px}
+.pi-app-group-name{font-size:12px;font-weight:750;letter-spacing:0}
+.pi-app-submenu>.pi-app-item{font-size:11px;line-height:1.35;padding:10px 9px}
+.pi-app-group-label{font-size:10px;letter-spacing:.4px}
+.pi-app-subtitle{font-size:10px}
+.pi-app-route{font-size:10px}
+.pi-app-route strong{font-size:9px}
+.pi-app-unavailable{opacity:.8}
+
+/* PER01: keep authenticated header inside actual mobile viewport. */
+@media(max-width:700px){
+ .pi-user-bar{flex-shrink:1;min-width:0;max-width:100%;white-space:normal;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+ .pi-user-bar>span{min-width:0;overflow-wrap:anywhere;flex:1 1 70px}
+ .pi-user-bar button{flex:0 0 auto;white-space:nowrap;padding:5px 6px}
+ .topbar{height:auto;min-height:50px;gap:6px;flex-wrap:wrap;padding-block:6px}
+ .topbar>span{min-width:0;overflow-wrap:anywhere}
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "PI_APR_WAVE1A_ACCEPTANCE_V1",
+  "baseline": "131fbde33e6942a7984c6e15afb5f1bed6a5000a",
+  "ci_runs": [
+    45949037986,
+    45949037935,
+    45949038085,
+    45949037932
+  ],
+  "ci": "PASS_4_OF_4",
+  "recovery": "SIMULATED_RECOVERY_PASS",
+  "frontend": {
+    "pass": 74,
+    "fail": 0,
+    "authenticated_search": "PASS",
+    "fiscal_identity": "PASS",
+    "desktop1440": "PASS",
+    "mobile390": "PASS",
+    "planning_trace": "NOT_TESTED_SPECIFICALLY"
+  },
+  "rf04_runner": {
+    "processed": 0,
+    "expected": 8,
+    "state": "HOLD_NONBLOCKING"
+  },
+  "original_runtime": "NOT_ACCESSED",
+  "production_admission": "DENIED"
+}

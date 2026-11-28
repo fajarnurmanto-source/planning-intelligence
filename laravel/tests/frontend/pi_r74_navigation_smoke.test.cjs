@@ -55,20 +55,20 @@ function mount(pathname, hash) {
 
 test('Genealogy and Review have separate direct links', () => {
   const ui = mount('/index.html', '')
-  assert.equal(ui.item('Genealogi Regulasi (R74)')?.href, './regulatory-laravel-r70g.html#r74-title')
-  assert.equal(ui.item('Meja Review Terpadu (R75)')?.href, './regulatory-laravel-r70g.html#r75-title')
+  assert.equal(ui.item('Hubungan antar peraturan')?.href, './regulatory-laravel-r70g.html#r74-title')
+  assert.equal(ui.item('Meja telaah terpadu')?.href, './regulatory-laravel-r70g.html#r75-title')
 })
 
 test('Direct genealogy link activates R74, not R75', () => {
   const ui = mount('/regulatory-laravel-r70g.html', '#r74-title')
-  assert.equal(ui.item('Genealogi Regulasi (R74)')?.classList.contains('active'), true)
-  assert.equal(ui.item('Meja Review Terpadu (R75)')?.classList.contains('active'), false)
+  assert.equal(ui.item('Hubungan antar peraturan')?.classList.contains('active'), true)
+  assert.equal(ui.item('Meja telaah terpadu')?.classList.contains('active'), false)
 })
 
 test('Direct review link activates R75, not R74', () => {
   const ui = mount('/regulatory-laravel-r70g.html', '#r75-title')
-  assert.equal(ui.item('Genealogi Regulasi (R74)')?.classList.contains('active'), false)
-  assert.equal(ui.item('Meja Review Terpadu (R75)')?.classList.contains('active'), true)
+  assert.equal(ui.item('Hubungan antar peraturan')?.classList.contains('active'), false)
+  assert.equal(ui.item('Meja telaah terpadu')?.classList.contains('active'), true)
 })
 
 test('Switching hash updates active item and never duplicates navigation', () => {
@@ -76,13 +76,13 @@ test('Switching hash updates active item and never duplicates navigation', () =>
   assert.equal(typeof ui.events.hashchange, 'function')
   ui.location.hash = '#r74-title'
   ui.events.hashchange()
-  assert.equal(ui.item('Genealogi Regulasi (R74)')?.classList.contains('active'), true)
-  assert.equal(ui.item('Meja Review Terpadu (R75)')?.classList.contains('active'), false)
-  assert.equal(ui.links().filter(x => x.textContent === 'Genealogi Regulasi (R74)').length, 1)
+  assert.equal(ui.item('Hubungan antar peraturan')?.classList.contains('active'), true)
+  assert.equal(ui.item('Meja telaah terpadu')?.classList.contains('active'), false)
+  assert.equal(ui.links().filter(x => x.textContent === 'Hubungan antar peraturan').length, 1)
   ui.location.hash = '#r75-title'
   ui.events.hashchange()
-  assert.equal(ui.item('Genealogi Regulasi (R74)')?.classList.contains('active'), false)
-  assert.equal(ui.item('Meja Review Terpadu (R75)')?.classList.contains('active'), true)
+  assert.equal(ui.item('Hubungan antar peraturan')?.classList.contains('active'), false)
+  assert.equal(ui.item('Meja telaah terpadu')?.classList.contains('active'), true)
 })
 
 test('Retired R70A-D menu links resolve to honest Laravel equivalents', () => {
@@ -90,8 +90,8 @@ test('Retired R70A-D menu links resolve to honest Laravel equivalents', () => {
   const html = fs.readFileSync(path.resolve(__dirname, '../../public/regulatory-laravel-r70g.html'), 'utf8')
   const mappings = [
     
-    ['Garis waktu (Laravel R72)', 'r72-title'],
-    ['Sasaran Lampiran I/II (R70F)', 'r70g-documents']
+    ['Riwayat perubahan peraturan', 'r72-title'],
+    ['Sasaran dan ruang lingkup lampiran', 'r70g-documents']
   ]
   for (const [label, anchor] of mappings) {
     const target = ui.item(label)?.href
@@ -106,10 +106,10 @@ test('Retired R70A-D menu links resolve to honest Laravel equivalents', () => {
 
 test('Every Laravel consolidation menu section has one active state', () => {
   const labels = [
-    ['#r72-title', 'Garis waktu (Laravel R72)'],
-    ['#r70g-documents', 'Sasaran Lampiran I/II (R70F)'],
-    ['#r74-title', 'Genealogi Regulasi (R74)'],
-    ['#r75-title', 'Meja Review Terpadu (R75)']
+    ['#r72-title', 'Riwayat perubahan peraturan'],
+    ['#r70g-documents', 'Sasaran dan ruang lingkup lampiran'],
+    ['#r74-title', 'Hubungan antar peraturan'],
+    ['#r75-title', 'Meja telaah terpadu']
   ]
   for (const [hash, label] of labels) {
     const ui = mount('/regulatory-laravel-r70g.html', hash)
@@ -129,18 +129,18 @@ test('New navigation refuses to represent unavailable legacy parity as complete'
 
 test('R78 full-source page is selected from the canonical sidebar', () => {
   const home = mount('/index.html', '')
-  assert.equal(home.item('Naskah & PDF (Laravel R78)')?.href, './regulatory-sources-r70b.html')
+  assert.equal(home.item('Naskah dan PDF regulasi')?.href, './regulatory-sources-r70b.html')
   const snapshot = mount('/regulatory-sources-r70b.html', '')
-  assert.equal(snapshot.item('Naskah & PDF (Laravel R78)')?.classList.contains('active'), true)
+  assert.equal(snapshot.item('Naskah dan PDF regulasi')?.classList.contains('active'), true)
   assert.equal(snapshot.links().filter(x => x.classList.contains('active')).length, 1)
 })
 
 
 test('R79 Laravel native trace appears in Regulatory sidebar and has honest caution', () => {
   const home = mount('/index.html', '')
-  assert.equal(home.item('Jejak norma (Laravel R79)')?.href, './regulatory-trace-r70a.html')
+  assert.equal(home.item('Jejak ketentuan')?.href, './regulatory-trace-r70a.html')
   const trace = mount('/regulatory-trace-r70a.html', '')
-  assert.equal(trace.item('Jejak norma (Laravel R79)')?.classList.contains('active'), true)
+  assert.equal(trace.item('Jejak ketentuan')?.classList.contains('active'), true)
   assert.equal(trace.links().filter(x => x.classList.contains('active')).length, 1)
   const html = fs.readFileSync(path.resolve(__dirname, '../../public/regulatory-trace-r70a.html'), 'utf8')
   assert.ok(html.includes('kesetaraan parsial'))

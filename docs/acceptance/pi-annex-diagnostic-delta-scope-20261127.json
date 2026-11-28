@@ -1,0 +1,14 @@
+{
+  "schema": "PI_SEPARATE_DIAGNOSTIC_DELTA_V1",
+  "baseline": "49d07c955add998d40693f5d4139a3fe0268def1",
+  "files": [
+    {
+      "path": "laravel/public/native-annex-r106.js",
+      "sha256": "48F886DA4BFE6CD1F77A7621A17E5E96038DC276148810E20E60826D4EA67F1A"
+    }
+  ],
+  "applied": false,
+  "changes": "Safe HTTP 401/403/419/422/429/503 classification; bounded numeric Retry-After; no automatic retry, server body, cookies or secrets",
+  "fixture_tests": 6,
+  "production_admission": "DENIED"
+}

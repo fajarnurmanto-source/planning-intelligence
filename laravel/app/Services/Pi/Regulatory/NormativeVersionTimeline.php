@@ -122,6 +122,67 @@ final class NormativeVersionTimeline
         ];
     }
 
+    /**
+     * Period selection is not a validity finding. The observation cutoff is
+     * separate from case date and target year; no implicit supersession.
+     */
+    public function resolveSeries(array $series,array $members,int $targetYear,string $caseDate,string $knowledgeDate): array
+    {
+        $this->assertDate($caseDate);
+        $this->assertDate($knowledgeDate);
+        if ($targetYear<1900 || $targetYear>2200 || count($members)>500
+            || !is_string($series['id']??null) || !preg_match('/^[A-Z0-9:-]{4,160}$/D',$series['id'])
+            || !in_array($series['cadence']??null,['ANNUAL','MULTI_YEAR','IRREGULAR'],true)) {
+            throw new InvalidArgumentException('PI_REG_SERIES_INPUT_HOLD');
+        }
+        $registry=new RegulatoryTaxonomyRegistry();
+        $records=[];$seen=[];$eligible=[];$unknown=[];
+        foreach ($members as $member) {
+            $id=$registry->canonicalIdentity($member);
+            if (isset($seen[$id]) || ($member['series_id']??null)!==$series['id']
+                || !is_int($member['target_start_year']??null) || !is_int($member['target_end_year']??null)
+                || $member['target_start_year']<1900 || $member['target_end_year']>2200
+                || $member['target_start_year']>$member['target_end_year']
+                || ($series['cadence']==='ANNUAL' && $member['target_start_year']!==$member['target_end_year'])
+                || !$registry->officialUrl($member['source_url']??null)
+                || !is_string($member['source_locator']??null) || trim($member['source_locator'])==='') {
+                throw new InvalidArgumentException('PI_REG_SERIES_MEMBER_HOLD');
+            }
+            $seen[$id]=true;
+            foreach (['observed_on','effective_on','repealed_on'] as $date) {
+                $v=$member[$date]??null;
+                if ($v!==null) {
+                    if (!is_string($v)) throw new InvalidArgumentException('PI_REG_SERIES_DATE_HOLD');
+                    $this->assertDate($v);
+                }
+            }
+            $observed=$member['observed_on']??null;
+            $effective=$member['effective_on']??null;
+            $repealed=$member['repealed_on']??null;
+            if ($effective!==null && $repealed!==null && $repealed<$effective) throw new InvalidArgumentException('PI_REG_SERIES_INTERVAL_HOLD');
+            $matches=$member['target_start_year']<=$targetYear && $targetYear<=$member['target_end_year'];
+            $state=match(true) {
+                !$matches=>'OTHER_TARGET_PERIOD',
+                $observed===null=>'OBSERVATION_DATE_UNKNOWN',
+                $observed>$knowledgeDate=>'NOT_KNOWN_AT_CUTOFF',
+                $effective===null=>'EFFECTIVE_DATE_UNKNOWN',
+                $effective>$caseDate=>'NOT_YET_EFFECTIVE',
+                $repealed!==null && $repealed<=$caseDate=>'REPEAL_DATE_NOT_AFTER_CASE',
+                default=>'TEMPORAL_CANDIDATE_REVIEW_REQUIRED'
+            };
+            if ($state==='TEMPORAL_CANDIDATE_REVIEW_REQUIRED') $eligible[]=$id;
+            if (in_array($state,['OBSERVATION_DATE_UNKNOWN','EFFECTIVE_DATE_UNKNOWN'],true)) $unknown[]=$id;
+            $records[]=['canonical_id'=>$id,'state'=>$state,'target_start_year'=>$member['target_start_year'],'target_end_year'=>$member['target_end_year'],'observed_on'=>$observed,'effective_on'=>$effective,'repealed_on'=>$repealed,'source_url'=>$member['source_url'],'source_locator'=>$member['source_locator']];
+        }
+        $state=match(true){
+            count($eligible)>1=>'MULTIPLE_CANDIDATES_HOLD',
+            count($unknown)>0=>'UNKNOWN_TEMPORAL_EVIDENCE_HOLD',
+            count($eligible)===1=>'ONE_CANDIDATE_REVIEW_REQUIRED',
+            default=>'DISCOVERY_REQUIRED'
+        };
+        return ['schema'=>'PI_REGULATORY_SERIES_SELECTION_V1','series_id'=>$series['id'],'target_year'=>$targetYear,'case_date'=>$caseDate,'knowledge_date'=>$knowledgeDate,'state'=>$state,'candidate_ids'=>$eligible,'unknown_ids'=>$unknown,'records'=>$records,'implicit_amendments'=>0,'implicit_repeals'=>0,'census_complete'=>false,'legal_conclusion'=>'NOT_ASSESSED','production_admission'=>'DENIED'];
+    }
+
     private function assertDate(string $date): void
     {
         $parsed = DateTimeImmutable::createFromFormat('!Y-m-d', $date);

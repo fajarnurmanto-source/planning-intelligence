@@ -1,0 +1,170 @@
+{
+  "schema": "PI_APR_FAILURE_CLASS_LEDGER_V1",
+  "items": [
+    {
+      "failure_class": "APR-RUNTIME-DIRECTORIES",
+      "root_cause": "Fresh release checkout had no bootstrap/cache before Composer post-autoload package discovery",
+      "root_cause_verification": "Windows failed job140467390905 plus successful fresh isolated Windows installation after resolver",
+      "product_native_detector": "Invoke-PiAprLaravelPrerequisites in shared CI and original cutover workflow",
+      "diagnostic_output": "PI_APR_RUNTIME_DIRECTORY_MISSING/NOT_WRITABLE/COLLISION/RECEIPT_HOLD",
+      "recovery_policy": "Create six allowlisted work directories and private write probe only under an isolated root; never edit ACL or PHP configuration on owner",
+      "recovery_authorization": "isolated engineering authorized; owner resolver read-only",
+      "bounds": "six directories, one local probe per directory, no network or package updates",
+      "integrity_verification": "lock unchanged, protected owner source cutover checks",
+      "negative_controls": [
+        "missing",
+        "ACL denial with fixture ACL restoration",
+        "collision",
+        "malformed receipt",
+        "repair without isolation",
+        "idempotence"
+      ],
+      "recovery_result": "SIMULATED_RECOVERY_PASS",
+      "original_owner_repair": "NOT_NEEDED_NOT_PERFORMED",
+      "escalation_condition": "owner missing directory, unsafe root, reparse path, denied permission",
+      "evidence_reference": "Windows45989010398; local PS5.1 negative controls"
+    },
+    {
+      "failure_class": "APR-TINKER-CONTRACT",
+      "root_cause": "consumer expected a marker different from unchanged producer; later inline-shell quoting risk removed through native Artisan entrypoint",
+      "root_cause_verification": "shared exact marker validator and actual pinned release Tinker Windows PASS",
+      "product_native_detector": "Assert-PiAprTinkerResult shared pre/post source writes",
+      "diagnostic_output": "PI_APR_TINKER_*_HOLD",
+      "recovery_policy": "fail closed before write or rollback after write, no marker substitution",
+      "recovery_authorization": "same previously approved49d07c95 release",
+      "bounds": "one prewrite and one postwrite probe; no provider or DB mutation",
+      "integrity_verification": "original56-file apply verified and PID5704 retained",
+      "negative_controls": [
+        "wrong marker",
+        "duplicate marker",
+        "nonzero exit",
+        "domain failure",
+        "contradictory results"
+      ],
+      "recovery_result": "SIMULATED_RECOVERY_PASS",
+      "scope": "Exact marker detector and current owner pre/post contract verified; developer source correction is not autonomous owner recovery.",
+      "escalation_condition": "probe lacks exact single success or domain contract fails",
+      "evidence_reference": "original preflight/apply/idempotence receipts; Windows45989010398",
+      "original_runtime_contract": "PASS_NO_NEW_OWNER_FAULT_RECOVERY_INJECTED"
+    },
+    {
+      "failure_class": "APR-BUNDLE-CRLF",
+      "root_cause": "packer compared mixed LF/CRLF Windows checkout strings as exact bundle content",
+      "root_cause_verification": "local frontend79/80 initial,81/81 after canonicalization and added controls",
+      "product_native_detector": "existing deterministic bundle --check",
+      "diagnostic_output": "BUNDLE_DRIFT",
+      "recovery_policy": "canonicalize only CRLF to LF while preserving full content comparison; do not rebuild owner bundles",
+      "recovery_authorization": "development tooling only",
+      "bounds": "local deterministic build check; no network",
+      "integrity_verification": "no generated asset changed",
+      "negative_controls": [
+        "all CRLF fixture",
+        "unbundled content alteration rejected"
+      ],
+      "recovery_result": "SIMULATED_RECOVERY_PASS",
+      "escalation_condition": "non-EOL content difference requires rebuild/source review",
+      "evidence_reference": "pi_apr_bundle_line_endings.test.cjs"
+    },
+    {
+      "failure_class": "APR-R106-HTTP-DIAGNOSTIC-COLLAPSE",
+      "root_cause": "all non401 failed HTTP responses were rendered as one generic PDF/feature error",
+      "root_cause_verification": "source branch inspected; original first failure status not captured and cannot be retrospectively inferred",
+      "product_native_detector": "candidate UI now classifies401/403/419/422/429/503 and bounded numeric Retry-After",
+      "diagnostic_output": "safe HTTP status and user action only, never raw response body or secrets",
+      "recovery_policy": "keep data cleared; restore button; no automatic retry; existing throttle remains",
+      "recovery_authorization": "source/test candidate only; one-file diagnostic scope NOT_APPLIED",
+      "bounds": "one request per user click; Retry-After displayed only1..3600seconds",
+      "integrity_verification": "six error-class frontend controls pass; original later click produced six rows and both PDFs",
+      "negative_controls": [
+        "401",
+        "403",
+        "419",
+        "422",
+        "429",
+        "503"
+      ],
+      "recovery_result": "SOURCE_IMPLEMENTED",
+      "original_first_failure_root_cause": "NOT_PROVEN",
+      "escalation_condition": "unclassified failure remains after explicit bounded user retry; never claim source absence from UI alone",
+      "evidence_reference": "r106-http-failure-classification.test.cjs; actual browser session"
+    },
+    {
+      "failure_class": "APR-PROVIDER-RECOVERY",
+      "root_cause": "provider outages/auth/rate limits or uncertain delivery",
+      "root_cause_verification": "existing fake HTTP tests and file-cache controls; no new live faults on owner",
+      "product_native_detector": "SemanticProviderRecovery and existing HRIA/R89 guarded adapters",
+      "diagnostic_output": "provider-class cooldown/authorization/uncertainty holds",
+      "recovery_policy": "bounded cooldown, no automatic paid retry/substitution, fresh consent",
+      "recovery_authorization": "fake provider in isolated tests only",
+      "bounds": "zero paid calls; tenant scoped locks and local ledger",
+      "integrity_verification": "release49 tests3/24, Gemini candidate5/35",
+      "negative_controls": [
+        "402",
+        "access denial",
+        "rate limit",
+        "transport",
+        "invalid response",
+        "lock/cache",
+        "uncertainty",
+        "budget exhaustion"
+      ],
+      "recovery_result": "SIMULATED_RECOVERY_PASS",
+      "escalation_condition": "unsupported cache, corrupt ledger, unapproved egress, exhausted budget",
+      "evidence_reference": "existing SemanticProviderRecoveryTest and accepted CI130tests"
+    },
+    {
+      "failure_class": "APR-NATIVE-TEXT-SPARSE-FRAGMENTED",
+      "root_cause": "Forms may expose only footer text; garbled glyphs produced a false legal route on development page102",
+      "product_native_detector": "FullDocumentInventory native_text_quality",
+      "diagnostic_output": "SPARSE_OR_FRAGMENTED_REQUIRES_VISUAL",
+      "recovery_policy": "Explicit visual hold; preserve original first-pass counts and physical text hashes",
+      "bounds": "No OCR or unsupported cell inference",
+      "recovery_result": "REAL_PINNED_CORPUS_MEASURED",
+      "evidence_reference": "pi-rf05-real-corpus-20261128.json"
+    },
+    {
+      "failure_class": "APR-HRIA-WINDOWS-LINE-ENDINGS",
+      "root_cause": "CRLF made anchored Pasal headings unmatched: actual benchmark0/7",
+      "product_native_detector": "Existing scanner and pinned-PDF batch benchmark",
+      "recovery_policy": "Normalize CRLF/CR at scanner boundary, retain form-feed physical pages",
+      "negative_controls": [
+        "CRLF/LF identical output",
+        "duplicate/cross-page PP spans held",
+        "excerpt hash drift"
+      ],
+      "recovery_result": "REAL_PINNED_BENCHMARK_7_OF_7_CLASSIFICATION_SUBSTANTIVE_PARTIAL",
+      "evidence_reference": "pi-hria-real-benchmark-20261128.json"
+    },
+    {
+      "failure_class": "APR-AI-CONTEXT-BUDGET-PREFLIGHT",
+      "root_cause": "Encoded oversized Gemini context reserved local quota before adapter refusal",
+      "product_native_detector": "GeminiSemanticBudget encoded byte preflight",
+      "diagnostic_output": "LOCAL_AI_CONTEXT_TOO_LARGE",
+      "recovery_policy": "Hold before reservation; require new reduced approved preview, never silently clip evidence",
+      "negative_controls": [
+        "6000-byte exact boundary",
+        "multibyte overflow",
+        "subsequent valid request retains quota"
+      ],
+      "recovery_result": "SIMULATED_RECOVERY_PASS",
+      "evidence_reference": "pi-p2-quota-preflight-20261128.json"
+    },
+    {
+      "failure_class": "APR-CATALOG-TENANT-CONTRACT",
+      "root_cause": "Frontend accepted HTTP200 catalog without matching tenant identity; API omitted authenticated tenant_id",
+      "product_native_detector": "Shared session-bound PIRegulatoryIdentity contract",
+      "recovery_policy": "Reject foreign/malformed catalog and clear failed promise; explicit reload or login redirect on401",
+      "recovery_result": "SIMULATED_UI_INTERCEPTION_PASS",
+      "evidence_reference": "pi-residual-ui-qualification-20261128.json"
+    },
+    {
+      "failure_class": "APR-MOBILE-ROTATED-HITBOX",
+      "root_cause": "Rotated auto-stretched arrow intercepted the technical evidence disclosure tap",
+      "product_native_detector": "Real product browser normal pointer interaction390px",
+      "recovery_policy": "Intrinsic arrow dimensions and full-row disclosure, no forced click",
+      "recovery_result": "SIMULATED_UI_INTERCEPTION_PASS",
+      "evidence_reference": "pi-residual-ui-qualification-20261128.json"
+    }
+  ],
+  "production_admission": "DENIED"
+}

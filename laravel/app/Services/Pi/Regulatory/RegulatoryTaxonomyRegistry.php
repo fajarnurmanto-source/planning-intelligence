@@ -147,6 +147,36 @@ final class RegulatoryTaxonomyRegistry
         return $data;
     }
 
+    /**
+     * Issuer-qualified identity for the successor overlay. Legacy seed keys remain
+     * read-only aliases; never infer an issuer from a generic instrument kind.
+     */
+    public function canonicalIdentity(array $instrument): string
+    {
+        foreach (['jurisdiction','issuer','kind','number','year'] as $field) {
+            if (!array_key_exists($field,$instrument)) {
+                throw new RuntimeException('PI_REG_IDENTITY_INCOMPLETE:'.$field);
+            }
+        }
+        if (!is_string($instrument['jurisdiction']) || !preg_match('/^ID(?:-[A-Z0-9]+)*$/D',$instrument['jurisdiction'])
+            || !is_string($instrument['issuer']) || !preg_match('/^[A-Z0-9]+(?:-[A-Z0-9]+)*$/D',$instrument['issuer'])
+            || !is_string($instrument['kind']) || !preg_match('/^[A-Z_]{2,50}$/D',$instrument['kind'])
+            || !is_string($instrument['number']) || !preg_match('/^[A-Z0-9]+(?:[.\/-][A-Z0-9]+)*$/D',$instrument['number'])
+            || !is_int($instrument['year']) || $instrument['year'] < 1900 || $instrument['year'] > 2200) {
+            throw new RuntimeException('PI_REG_IDENTITY_INVALID');
+        }
+        return implode(':',[$instrument['jurisdiction'],$instrument['issuer'],$instrument['kind'],$instrument['number'],(string)$instrument['year']]);
+    }
+
+    /** Functional classification is independent of formal legal rank. */
+    public function functionalRoles(array $roles): array
+    {
+        $allowed=['FOUNDATIONAL','FRAMEWORK','IMPLEMENTING','TECHNICAL','PERIODIC','TRANSITIONAL','AMENDING','REPEALING','OPERATIONAL'];
+        if (!array_is_list($roles) || !$roles || count($roles)>count($allowed)) throw new RuntimeException('PI_REG_ROLE_HOLD');
+        foreach ($roles as $role) if (!in_array($role,$allowed,true)) throw new RuntimeException('PI_REG_ROLE_HOLD');
+        return array_values(array_unique($roles));
+    }
+
     public function officialUrl(mixed $url): bool
     {
         if (!is_string($url) || strlen($url) > 600) {

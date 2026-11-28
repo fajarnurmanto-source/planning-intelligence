@@ -12,6 +12,22 @@ return [
     'planning_lineage' => [
         'registry_path' => resource_path('pi/official-planning-lineage-r70j.json'),
     ],
+    // R107: explicit source-only in-place rollout enables read-only annex
+    // only when the owner R104 isolated archive is present in the SAME
+    // Windows user profile. R105 verifies all byte/receipt pins per request.
+    // Environment settings may explicitly disable this without modifying code.
+    'native_annex' => [
+        'enabled' => env('PI_R106_NATIVE_ANNEX_ENABLED',
+            PHP_OS_FAMILY === 'Windows'
+            && is_dir((string) (getenv('LOCALAPPDATA') ?: '').DIRECTORY_SEPARATOR
+                .'PlanningIntelligence'.DIRECTORY_SEPARATOR.'R104_BPK_PDF_QUARANTINE')),
+        'quarantine_root' => env('PI_R106_QUARANTINE_ROOT',
+            (getenv('LOCALAPPDATA') ?: '').DIRECTORY_SEPARATOR
+            .'PlanningIntelligence'.DIRECTORY_SEPARATOR.'R104_BPK_PDF_QUARANTINE'),
+    ],
+    'official_sources' => [
+        'registry_path' => resource_path('pi/official-source-metadata-r100.json'),
+    ],
     'development_case' => [
         'registry_path' => resource_path('pi/development-case-r85.json'),
     ],
@@ -32,7 +48,7 @@ return [
     // Admin can globally disable R89. Cloud requests additionally require
     // tenant-scoped credentials, exact preview approval and explicit consent.
     'semantic_cloud' => [
-        'enabled' => env('PI_R89_CLOUD_ENABLED', true),
+        'enabled' => env('PI_R89_CLOUD_ENABLED', false),
     ],
     'regulatory' => [
         'ledger_path' => env('PI_REGULATORY_LEDGER_PATH'),

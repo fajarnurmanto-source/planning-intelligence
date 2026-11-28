@@ -1,0 +1,25 @@
+{
+  "schema": "PI_R106_DIAGNOSTIC_OWNER_RECEIPT_V1",
+  "as_of": "2026-11-28",
+  "owner_authorization": "Explicit user reply: Terapkan satu file R106",
+  "candidate_sha": "4c7adadc7b15421a3afea570302c348f3aeb54c8",
+  "baseline_sha": "49d07c955add998d40693f5d4139a3fe0268def1",
+  "profile": "R106Diagnostic1",
+  "allowlist": [
+    "public/native-annex-r106.js"
+  ],
+  "state": "APPLIED_VERIFIED",
+  "preflight": "PASS_READ_ONLY",
+  "tinker_pre": "PASS",
+  "tinker_post": "PASS",
+  "live_asset_sha": "PASS",
+  "original_php_pid_preserved": 5704,
+  "csrf_login": "PASS",
+  "anonymous_api_pdf_status": 401,
+  "sqlite_env_appkey_launcher": "UNCHANGED",
+  "idempotence": "NO_CHANGE_ALREADY_MATCHED",
+  "backup": "D:/Research/PlanningIntelligence/PI_UNIFIED_LAUNCHER_R74_20261111/backups/APR_R106Diagnostic1_20261128-110501-481-75325568",
+  "owner_authenticated_diagnostic_ui": "NOT_RUN",
+  "candidate_core_intelligence_deployed": false,
+  "production_admission": "DENIED"
+}

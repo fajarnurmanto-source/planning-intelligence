@@ -1,0 +1,8 @@
+.r106-panel .r106-warning{font-size:.91rem;line-height:1.55}
+.r106-panel .r106-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:14px 0}
+.r106-panel .r106-links{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:12px 0}
+.r106-panel .r106-table-wrap{max-width:100%;overflow-x:auto}
+.r106-panel table{border-collapse:collapse;width:100%;min-width:630px;font-size:.86rem}
+.r106-panel th,.r106-panel td{text-align:left;border-bottom:1px solid #d7dce1;padding:10px 8px}
+.r106-panel td{font-variant-numeric:tabular-nums}
+.r106-panel td:first-child{font-family:ui-monospace,monospace;font-size:.8rem;white-space:nowrap}

@@ -19,14 +19,46 @@
       return null
     }
   }
+  // Planner labels are a PRESENTATION of the original machine statuses.
+  // The unmodified raw status stays available in an audit disclosure.
+  const statusLabels=Object.freeze({
+    REVIEW_READY_WITH_ABSTENTIONS:'Siap ditelaah · beberapa bukti belum cukup',
+    MIXED_VERIFIED_SOURCE_AND_CANDIDATE_RELATION:'Sumber ditemukan · hubungan perlu pemeriksaan',
+    CANDIDATE:'Kandidat · belum disahkan',
+    CANDIDATE_REQUIRES_LEGAL_REVIEW:'Hubungan perlu pemeriksaan hukum',
+    DOCUMENTARY_SEQUENCE_REVIEW_REQUIRED:'Urutan dokumen perlu diperiksa',
+    OUTPUT_TRACE_CANDIDATE_NUMERIC_BLOCKED:'Jejak keluaran ditemukan · angka belum boleh dibandingkan',
+    TRACE_AVAILABLE_DECISION_ABSTAIN:'Jejak tersedia · keputusan belum dapat diambil',
+    VERIFIED:'Sumber telah diperiksa',
+    VERIFIED_SOURCE:'Sumber telah diperiksa',
+    VERIFIED_SOURCE_BYTES:'Berkas cocok dengan arsip · keabsahan hukum belum dinilai',
+    SOURCE_LOCATED_NOT_HASH_PINNED:'Lokasi sumber ditemukan · berkas belum diverifikasi',
+    LOCAL_QA_OBSERVATION_NOT_SOURCE_PINNED:'Catatan uji lokal · belum menjadi bukti dokumen',
+    NOT_ASSESSED:'Belum dinilai',
+    BLOCKED:'Belum diizinkan',
+    NO_ACTIVE_DECISION:'Belum ada keputusan pemeriksa',
+    DENIED:'Tidak diizinkan',
+    HIGH:'Tinggi',MEDIUM:'Sedang',LOW:'Rendah'
+  })
+  const nodeLabels=Object.freeze({"RegulationVersion":"Versi regulasi","Provision":"Ketentuan pasal","Authority":"Kewenangan","GovernmentAffair":"Urusan pemerintahan","PlanningArtifactVersion":"Dokumen perencanaan","ProcessStage":"Tahap proses","ProcessEvent":"Peristiwa proses","PlanningProgram":"Program","Indicator":"Indikator","BudgetArtifact":"Dokumen anggaran","EvidenceLocator":"Lokasi bukti","ReviewDecision":"Keputusan pemeriksa"})
+  const relationLabels=Object.freeze({"IMPLEMENTS_PROVISION_OF_CANDIDATE":"Diduga melaksanakan ketentuan","INFORMS_MUNICIPAL_AUTHORITY_CANDIDATE":"Rujukan kewenangan kota","ISSUES_ARTIFACT":"Menerbitkan dokumen","ADMINISTRATIVE_RESPONSIBILITY_CANDIDATE":"Rujukan tanggung jawab administratif","CLASSIFIES_PROGRAM_CANDIDATE":"Kandidat klasifikasi program","GUIDES_ANNUAL_PLAN_CANDIDATE":"Rujukan rencana tahunan","CONTAINS_PROVISION":"Memuat ketentuan","GUIDES_AGENCY_STRATEGIC_PLAN_CANDIDATE":"Rujukan Renstra perangkat daerah","GUIDES_AGENCY_ANNUAL_PLAN_CANDIDATE":"Rujukan Renja perangkat daerah","STRATEGIC_PLAN_CONTAINS_PROGRAM_CANDIDATE":"Kandidat program dalam Renstra","ANNUAL_PLAN_CONTAINS_PROGRAM_CANDIDATE":"Kandidat program dalam Renja","MEASURED_BY_CANDIDATE":"Kandidat indikator pengukuran","BUDGETED_IN_CANDIDATE":"Kandidat penganggaran","RKPD_TO_BUDGET_PROCESS_GUIDANCE":"Rujukan proses RKPD ke anggaran","MATERIALIZES_ANNUAL_PLANNING_STAGE":"Dokumen tahap perencanaan tahunan","PRECEDES_DOCUMENTARY_STAGE":"Urutan tahap dokumen","ESTABLISHES_VERSION":"Menetapkan versi dokumen","AVAILABLE_FOR_HUMAN_REVIEW_NO_DECISION":"Tersedia untuk telaah, belum diputuskan"})
+  const explainStatus=code=>statusLabels[code]||'Perlu pemeriksaan lanjutan'
+  const technical=(parent,code,refs)=> {
+    const details=add(parent,'details','r85-technical')
+    add(details,'summary','','Lihat jejak bukti teknis')
+    add(details,'code','r85-edge-ref',refs||'Identitas bukti tidak tersedia')
+    add(details,'code','r85-edge-ref','Status sistem: '+code)
+  }
   const fail = message => {
+    byId('pi-performance-evidence')?.replaceChildren(add(document.createDocumentFragment(),'p','','Bukti kasus belum tersedia. Belum dapat disimpulkan.'))
     for (const id of ['r85-questions', 'r85-graphs', 'r85-evidence', 'r85-guards']) {
       const target = byId(id)
       target.replaceChildren(add(document.createDocumentFragment(), 'p', 'r85-error', message))
     }
     byId('r85-case-label').textContent = 'Kasus tidak tersedia'
     byId('r85-case-summary').textContent = 'Pemeriksaan dihentikan untuk mencegah tampilan data tanpa kontrak.'
-    byId('r85-case-status').textContent = '● ABSTAIN'
+    byId('r85-case-status').textContent = '● Belum dapat disimpulkan'
+    document.dispatchEvent(new CustomEvent('pi:case-state',{detail:{ready:false}}))
   }
   const assertData = data => {
     const caseData = data.case
@@ -63,16 +95,18 @@
     fillSelect('r85-year', available.years, selected.year)
     fillSelect('r85-topic', available.topics, selected.topic, value => value === 'PERSAMPAHAN' ? 'Persampahan' : value)
     fillSelect('r85-case', available.cases, selected.case, value => value.label)
+    document.dispatchEvent(new CustomEvent('pi:case-state',{detail:{ready:true}}))
   }
   const renderQuestions = caseData => {
     const container = byId('r85-questions')
     container.replaceChildren()
     for (const item of caseData.questions) {
       const card = add(container, 'article', 'r85-question')
-      add(card, 'span', 'r85-status', item.status.replaceAll('_', ' '))
+      const badge=add(card, 'span', 'r85-status', explainStatus(item.status))
+      badge.title='Status sumber: '+item.status
       add(card, 'h3', '', item.question)
       add(card, 'p', '', item.answer)
-      add(card, 'code', 'r85-edge-ref', `Relasi: ${item.edge_ids.join(' · ')}`)
+      technical(card,item.status,`Relasi: ${item.edge_ids.join(' · ')}`)
     }
   }
   const renderGraphs = caseData => {
@@ -90,54 +124,123 @@
         const to = nodes.get(edge.to)
         const row = add(flow, 'div', 'r85-flow-row')
         const fromBox = add(row, 'div', 'r85-node')
-        add(fromBox, 'small', '', from.type)
+        add(fromBox, 'small', '', nodeLabels[from.type]||'Jenis bukti perlu diperiksa')
         add(fromBox, 'span', '', from.label)
         add(row, 'span', 'r85-arrow', '→')
         const toBox = add(row, 'div', 'r85-node')
-        add(toBox, 'small', '', to.type)
+        add(toBox, 'small', '', nodeLabels[to.type]||'Jenis bukti perlu diperiksa')
         add(toBox, 'span', '', to.label)
-        add(row, 'code', 'r85-relation', `${id} · ${edge.relation} · ${edge.status}`)
+        add(row, 'p', 'r85-relation', (relationLabels[edge.relation]||'Hubungan perlu diperiksa')+' · '+explainStatus(edge.status))
+        technical(row,edge.status,`${id} · ${edge.relation} · ${from.type} → ${to.type}`)
       }
     }
   }
   const renderEvidence = caseData => {
     const container = byId('r85-evidence')
     container.replaceChildren()
+    const nodeLabels=new Map(caseData.nodes.map(node=>[node.id,node.label]))
     for (const edge of caseData.edges) {
       const source = edge.provenance
       const item = add(container, 'article', 'r85-evidence-item')
-      add(item, 'code', '', edge.id)
+      add(item, 'code', '', 'Bukti '+edge.id)
       const relation = add(item, 'div')
-      add(relation, 'strong', '', edge.relation)
-      add(relation, 'p', '', `${edge.from} → ${edge.to}`)
+      add(relation, 'strong', '', (nodeLabels.get(edge.from)||edge.from)+' → '+(nodeLabels.get(edge.to)||edge.to))
+      add(relation, 'p', '', 'Hubungan kandidat untuk diperiksa; bukan kesimpulan otomatis.')
       const proof = add(item, 'div')
       const href = allowedSource(source.source_url)
       if (!href) throw new Error('Origin sumber tidak diizinkan')
-      const anchor = add(proof, 'a', '', `${source.source_id} · buka sumber ↗`)
+      const anchor = add(proof, 'a', '', 'Buka dokumen sumber')
       anchor.href = href
       if (href !== './overview-r69c.json') {
         anchor.target = '_blank'
         anchor.rel = 'noopener noreferrer'
       }
-      add(proof, 'p', '', source.locator)
-      add(proof, 'span', 'r85-hash', source.source_sha256 ? `SHA-256 ${source.source_sha256}` : 'SHA-256 belum tersedia')
+      const technicalSource=add(proof,'details','r85-technical')
+      add(technicalSource,'summary','','Lihat identitas sumber')
+      add(technicalSource,'p','',source.locator)
+      add(technicalSource,'code','r85-edge-ref',edge.id+' · '+edge.relation+' · '+edge.from+' → '+edge.to)
+      add(technicalSource,'code','r85-edge-ref',source.source_id+' · '+source.version+' · '+source.as_of_date)
+      add(technicalSource,'span','r85-hash',source.source_sha256 ? 'SHA-256 '+source.source_sha256 : 'SHA-256 belum tersedia')
       const status = add(item, 'div', 'r85-verification')
-      add(status, 'span', '', source.verification_status.replaceAll('_', ' '))
-      add(status, 'span', source.uncertainty === 'HIGH' ? 'high' : '', `Ketidakpastian ${source.uncertainty}`)
-      add(status, 'small', '', `${source.version} · ${source.as_of_date}`)
+      const sourceBadge=add(status, 'span', '', explainStatus(source.verification_status))
+      sourceBadge.title='Status sumber: '+source.verification_status
+      add(status, 'span', source.uncertainty === 'HIGH' ? 'high' : '', `Ketidakpastian ${explainStatus(source.uncertainty)}`)
+      add(status, 'small', '', source.as_of_date)
     }
+    const cards=new Map(caseData.edges.map((edge,index)=>[edge.id,container.children[index]]))
+    const used=new Set()
+    container.replaceChildren()
+    const grouped=[]
+    for(const graph of caseData.graphs){
+      const ids=graph.edge_ids.filter(id=>cards.has(id)&&!used.has(id))
+      ids.forEach(id=>used.add(id))
+      if(ids.length)grouped.push({title:graph.label,ids})
+    }
+    const remaining=caseData.edges.map(edge=>edge.id).filter(id=>!used.has(id))
+    if(remaining.length)grouped.push({title:'Bukti lain untuk diperiksa',ids:remaining})
+    add(container,'p','r85-evidence-summary',caseData.edges.length+' hubungan bukti dalam '+grouped.length+' kelompok. Pilih kelompok untuk melihat sumber dan status pemeriksaannya.')
+    for(const group of grouped){
+      const details=add(container,'details','r85-evidence-group')
+      add(details,'summary','r85-evidence-group-heading',group.title+' · '+group.ids.length+' hubungan')
+      const rows=add(details,'div','r85-evidence-rows')
+      group.ids.forEach(id=>rows.append(cards.get(id)))
+    }
+  }
+
+  // R108 W3C: read-only presentation of the already authenticated R85 graph.
+  // No numeric inference, causal claim, new source, or SCP-01 engine admission.
+  const renderPerformance = caseData => {
+    const root=byId('pi-performance-evidence')
+    if(!root)return
+    root.replaceChildren()
+    const nodes=new Map(caseData.nodes.map(n=>[n.id,n]))
+    const edges=new Map(caseData.edges.map(e=>[e.id,e]))
+    const lanes=[
+      ['Arah kebijakan dan sasaran',['E06','E08','E09']],
+      ['Program dan subkegiatan',['E10','E11']],
+      ['Indikator keluaran',['E12']]
+    ]
+    for(const [label,ids] of lanes){
+      const card=add(root,'article','pi-performance-card')
+      add(card,'h4','',label)
+      for(const id of ids){
+        const e=edges.get(id)
+        const from=nodes.get(e?.from),to=nodes.get(e?.to)
+        if(!e||!from||!to)continue
+        add(card,'p','',from.label+' → '+to.label)
+        add(card,'small','',explainStatus(e.provenance.verification_status)+' · Hubungan perlu telaah')
+        const audit=add(card,'details','r85-technical')
+        add(audit,'summary','','Sumber dan status hubungan')
+        add(audit,'p','',e.provenance.locator+' · '+e.provenance.version)
+        add(audit,'code','r85-edge-ref',e.id+' · '+e.status+' · '+e.provenance.as_of_date)
+        const href=allowedSource(e.provenance.source_url)
+        if(href && href!=='./overview-r69c.json'){
+          const link=add(audit,'a','','Buka sumber resmi')
+          link.href=href;link.target='_blank';link.rel='noopener noreferrer'
+        }
+      }
+      if(!card.querySelector('details'))add(card,'p','','Belum tersedia bukti hubungan.')
+    }
+    const gaps=add(root,'article','pi-performance-card')
+    add(gaps,'h4','','Nilai dan hasil yang belum dapat dinilai')
+    for(const name of ['Sasaran substantif','Baseline','Target dan satuan','Realisasi','Outcome dan dampak']){
+      add(gaps,'p','',name+': belum tersedia bukti nilai pada kasus ini.')
+    }
+    add(gaps,'small','','Keluaran tidak membuktikan outcome. Anggaran bukan realisasi kinerja.')
+    const link=add(gaps,'a','','Periksa dokumen dan bukti')
+    link.href='#pi-view=dokumen'
   }
   const renderGuards = interpretation => {
     const guards = byId('r85-guards')
     guards.replaceChildren()
     const labels = [
-      `Harmonisasi hukum: ${interpretation.legal_harmonization}`,
-      `Keselarasan substantif: ${interpretation.substantive_alignment}`,
-      `Perbandingan angka: ${interpretation.numeric_comparison}`,
-      `Keputusan review: ${interpretation.review_decision}`,
-      `Promosi produksi: ${interpretation.production_admission}`,
+      `Harmonisasi hukum: ${explainStatus(interpretation.legal_harmonization)}`,
+      `Keselarasan substansi: ${explainStatus(interpretation.substantive_alignment)}`,
+      `Perbandingan angka: ${explainStatus(interpretation.numeric_comparison)}`,
+      `Keputusan pemeriksa: ${explainStatus(interpretation.review_decision)}`,
+      `Penggunaan resmi: ${explainStatus(interpretation.production_admission)}`,
     ]
-    for (const label of labels) add(guards, 'span', '', label.replaceAll('_', ' '))
+    for (const label of labels) add(guards, 'span', '', label)
   }
   async function load(filters = {}) {
     try {
@@ -148,12 +251,14 @@
       const caseData = assertData(data)
       byId('r85-case-label').textContent = caseData.label
       byId('r85-case-summary').textContent = caseData.summary
-      byId('r85-case-status').textContent = `● ${caseData.case_status.replaceAll('_', ' ')}`
+      byId('r85-case-status').textContent = `● ${explainStatus(caseData.case_status)}`
+      byId('r85-case-status').title = 'Status sistem: '+caseData.case_status
       renderFilters(data)
       renderQuestions(caseData)
       renderGraphs(caseData)
       renderEvidence(caseData)
       renderGuards(data.interpretation)
+      renderPerformance(caseData)
     } catch (error) {
       fail(`Tidak dapat menampilkan kasus: ${String(error.message || error)}.`)
     }
@@ -161,6 +266,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     byId('r85-filters').addEventListener('submit', event => {
       event.preventDefault()
+      byId('pi-performance-evidence')?.replaceChildren(add(document.createDocumentFragment(),'p','','Memuat kembali bukti kasus…'))
       load({
         jurisdiction: byId('r85-jurisdiction').value,
         year: byId('r85-year').value,

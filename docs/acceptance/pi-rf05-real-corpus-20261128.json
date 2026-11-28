@@ -1,0 +1,3772 @@
+{
+  "schema": "PI_RF05_REAL_CORPUS_QUALIFICATION_V1",
+  "as_of": "2026-11-28",
+  "starting_head": "fed19ebfec6d65d96b0802a01eb5d9a59304a712",
+  "before": {
+    "schema": "PI_RF05_ADAPTIVE_COMPARISON_V1",
+    "expected_documents": 8,
+    "processed_documents": 8,
+    "document_holds": [],
+    "corpus_complete": true,
+    "physical_pages": 1119,
+    "second_pass_pages": 1119,
+    "first_pass": {
+      "FORMAT_REVIEW_REQUIRED": 422,
+      "PROVISION_STRUCTURE_CANDIDATE": 415,
+      "TABLE_RECONSTRUCTION_CANDIDATE": 282
+    },
+    "second_pass": {
+      "SECTION_HEADING_REVIEW": 15,
+      "LEGAL_LAYOUT_NODES_REVIEW": 363,
+      "UNRESOLVED_FORMAT_HOLD": 454,
+      "HEADING_STRUCTURE_REVIEW": 17,
+      "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 269,
+      "FISCAL_ROW_FRAGMENTS_REVIEW": 1
+    },
+    "prior_format_review_pages": 422,
+    "more_specific_candidate_routes": 88,
+    "still_requires_alternative_or_visual": 334,
+    "bound_line_locators": 4186,
+    "unbound_locators": 0,
+    "page_and_line_hash_reconciliation": "PASS_FOR_RETURNED_LOCATORS",
+    "documents": [
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+        "physical_pages": 74,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 56,
+          "PROVISION_STRUCTURE_CANDIDATE": 18
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 2,
+          "LEGAL_LAYOUT_NODES_REVIEW": 10,
+          "UNRESOLVED_FORMAT_HOLD": 56,
+          "HEADING_STRUCTURE_REVIEW": 6
+        },
+        "prior_format_review_pages": 56,
+        "more_specific_candidate_routes": 1,
+        "still_requires_alternative_or_visual": 55,
+        "bound_line_locators": 179,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+        "physical_pages": 146,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 87,
+          "PROVISION_STRUCTURE_CANDIDATE": 7,
+          "TABLE_RECONSTRUCTION_CANDIDATE": 52
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 1,
+          "LEGAL_LAYOUT_NODES_REVIEW": 60,
+          "UNRESOLVED_FORMAT_HOLD": 44,
+          "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 41
+        },
+        "prior_format_review_pages": 87,
+        "more_specific_candidate_routes": 43,
+        "still_requires_alternative_or_visual": 44,
+        "bound_line_locators": 394,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+        "physical_pages": 133,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 122,
+          "PROVISION_STRUCTURE_CANDIDATE": 9,
+          "TABLE_RECONSTRUCTION_CANDIDATE": 2
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 2,
+          "LEGAL_LAYOUT_NODES_REVIEW": 10,
+          "UNRESOLVED_FORMAT_HOLD": 119,
+          "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 2
+        },
+        "prior_format_review_pages": 122,
+        "more_specific_candidate_routes": 3,
+        "still_requires_alternative_or_visual": 119,
+        "bound_line_locators": 138,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+        "physical_pages": 78,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 36,
+          "PROVISION_STRUCTURE_CANDIDATE": 3,
+          "TABLE_RECONSTRUCTION_CANDIDATE": 39
+        },
+        "second_pass": {
+          "UNRESOLVED_FORMAT_HOLD": 29,
+          "LEGAL_LAYOUT_NODES_REVIEW": 8,
+          "SECTION_HEADING_REVIEW": 1,
+          "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 39,
+          "HEADING_STRUCTURE_REVIEW": 1
+        },
+        "prior_format_review_pages": 36,
+        "more_specific_candidate_routes": 7,
+        "still_requires_alternative_or_visual": 29,
+        "bound_line_locators": 74,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+        "physical_pages": 116,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 58,
+          "PROVISION_STRUCTURE_CANDIDATE": 11,
+          "TABLE_RECONSTRUCTION_CANDIDATE": 47
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 3,
+          "LEGAL_LAYOUT_NODES_REVIEW": 11,
+          "UNRESOLVED_FORMAT_HOLD": 45,
+          "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 46,
+          "FISCAL_ROW_FRAGMENTS_REVIEW": 1,
+          "HEADING_STRUCTURE_REVIEW": 10
+        },
+        "prior_format_review_pages": 58,
+        "more_specific_candidate_routes": 13,
+        "still_requires_alternative_or_visual": 45,
+        "bound_line_locators": 172,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+        "physical_pages": 22,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 16,
+          "PROVISION_STRUCTURE_CANDIDATE": 6
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 2,
+          "LEGAL_LAYOUT_NODES_REVIEW": 6,
+          "UNRESOLVED_FORMAT_HOLD": 14
+        },
+        "prior_format_review_pages": 16,
+        "more_specific_candidate_routes": 2,
+        "still_requires_alternative_or_visual": 14,
+        "bound_line_locators": 76,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "UU-17-2019",
+        "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+        "physical_pages": 90,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 16,
+          "PROVISION_STRUCTURE_CANDIDATE": 74
+        },
+        "second_pass": {
+          "UNRESOLVED_FORMAT_HOLD": 41,
+          "LEGAL_LAYOUT_NODES_REVIEW": 48,
+          "SECTION_HEADING_REVIEW": 1
+        },
+        "prior_format_review_pages": 16,
+        "more_specific_candidate_routes": 5,
+        "still_requires_alternative_or_visual": 11,
+        "bound_line_locators": 516,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "UU-23-2014",
+        "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+        "physical_pages": 460,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 31,
+          "PROVISION_STRUCTURE_CANDIDATE": 287,
+          "TABLE_RECONSTRUCTION_CANDIDATE": 142
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 3,
+          "LEGAL_LAYOUT_NODES_REVIEW": 210,
+          "UNRESOLVED_FORMAT_HOLD": 106,
+          "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 141
+        },
+        "prior_format_review_pages": 31,
+        "more_specific_candidate_routes": 14,
+        "still_requires_alternative_or_visual": 17,
+        "bound_line_locators": 2637,
+        "unbound_locators": 0
+      }
+    ],
+    "network_requests": 0,
+    "accuracy": null,
+    "accuracy_reason": "COVERAGE_IS_NOT_ACCURACY",
+    "gold_gate": "NOT_PASSED",
+    "numeric_admission": 0,
+    "production_admission": "DENIED",
+    "state": "MEASURED_COMPLETE_CORPUS",
+    "corpus_receipt_sha256": "6110FAEF6FBD091A1B5674038F6D9D45321A180E5D133B0EF6C02302DE7607C6"
+  },
+  "after": {
+    "schema": "PI_RF05_ADAPTIVE_COMPARISON_V1",
+    "expected_documents": 8,
+    "processed_documents": 8,
+    "document_holds": [],
+    "corpus_complete": true,
+    "physical_pages": 1119,
+    "second_pass_pages": 1119,
+    "first_pass": {
+      "FORMAT_REVIEW_REQUIRED": 422,
+      "PROVISION_STRUCTURE_CANDIDATE": 415,
+      "TABLE_RECONSTRUCTION_CANDIDATE": 282
+    },
+    "second_pass": {
+      "SECTION_HEADING_REVIEW": 15,
+      "LEGAL_LAYOUT_NODES_REVIEW": 360,
+      "UNRESOLVED_FORMAT_HOLD": 232,
+      "HEADING_STRUCTURE_REVIEW": 17,
+      "VISUAL_REQUIRED_HOLD": 122,
+      "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 245,
+      "FISCAL_ROW_FRAGMENTS_REVIEW": 1,
+      "EXPLANATION_PROVISION_REVIEW": 127
+    },
+    "prior_format_review_pages": 422,
+    "more_specific_candidate_routes": 95,
+    "still_requires_alternative_or_visual": 327,
+    "bound_line_locators": 4186,
+    "unbound_locators": 0,
+    "page_and_line_hash_reconciliation": "PASS_FOR_RETURNED_LOCATORS",
+    "documents": [
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "source_sha256": "B6D39CE7B3CA9BE4F212542E91D4FBDCE6CABAC1AD1146C8850C528D1D53BF12",
+        "physical_pages": 74,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 56,
+          "PROVISION_STRUCTURE_CANDIDATE": 18
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 2,
+          "LEGAL_LAYOUT_NODES_REVIEW": 10,
+          "UNRESOLVED_FORMAT_HOLD": 1,
+          "HEADING_STRUCTURE_REVIEW": 6,
+          "VISUAL_REQUIRED_HOLD": 55
+        },
+        "prior_format_review_pages": 56,
+        "more_specific_candidate_routes": 1,
+        "still_requires_alternative_or_visual": 55,
+        "bound_line_locators": 179,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "source_sha256": "34F62EAC70104C2BAC1F3BCFA78ABB843891834D9279AFB62EC137C477930CD9",
+        "physical_pages": 146,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 87,
+          "PROVISION_STRUCTURE_CANDIDATE": 7,
+          "TABLE_RECONSTRUCTION_CANDIDATE": 52
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 1,
+          "LEGAL_LAYOUT_NODES_REVIEW": 57,
+          "UNRESOLVED_FORMAT_HOLD": 4,
+          "VISUAL_REQUIRED_HOLD": 67,
+          "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 17
+        },
+        "prior_format_review_pages": 87,
+        "more_specific_candidate_routes": 42,
+        "still_requires_alternative_or_visual": 45,
+        "bound_line_locators": 394,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "source_sha256": "31CA28DDFA4CA837E8209A6C72F82159FB88AE7F3E82A2A3C83FD23524660274",
+        "physical_pages": 133,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 122,
+          "PROVISION_STRUCTURE_CANDIDATE": 9,
+          "TABLE_RECONSTRUCTION_CANDIDATE": 2
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 2,
+          "LEGAL_LAYOUT_NODES_REVIEW": 10,
+          "UNRESOLVED_FORMAT_HOLD": 119,
+          "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 2
+        },
+        "prior_format_review_pages": 122,
+        "more_specific_candidate_routes": 3,
+        "still_requires_alternative_or_visual": 119,
+        "bound_line_locators": 138,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "source_sha256": "CF9891D778902550A1D764BAFA2EB6EC9C83B544096320582248768709B05A47",
+        "physical_pages": 78,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 36,
+          "PROVISION_STRUCTURE_CANDIDATE": 3,
+          "TABLE_RECONSTRUCTION_CANDIDATE": 39
+        },
+        "second_pass": {
+          "UNRESOLVED_FORMAT_HOLD": 29,
+          "LEGAL_LAYOUT_NODES_REVIEW": 8,
+          "SECTION_HEADING_REVIEW": 1,
+          "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 39,
+          "HEADING_STRUCTURE_REVIEW": 1
+        },
+        "prior_format_review_pages": 36,
+        "more_specific_candidate_routes": 7,
+        "still_requires_alternative_or_visual": 29,
+        "bound_line_locators": 74,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "source_sha256": "6175D5DFDEAFF3BEBBC16D32B1A8B3612624B733459C72647535BF08388778CB",
+        "physical_pages": 116,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 58,
+          "PROVISION_STRUCTURE_CANDIDATE": 11,
+          "TABLE_RECONSTRUCTION_CANDIDATE": 47
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 3,
+          "LEGAL_LAYOUT_NODES_REVIEW": 11,
+          "UNRESOLVED_FORMAT_HOLD": 45,
+          "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 46,
+          "FISCAL_ROW_FRAGMENTS_REVIEW": 1,
+          "HEADING_STRUCTURE_REVIEW": 10
+        },
+        "prior_format_review_pages": 58,
+        "more_specific_candidate_routes": 13,
+        "still_requires_alternative_or_visual": 45,
+        "bound_line_locators": 172,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "source_sha256": "B158864A86D4E8CCD9211857BC3F9CD1694B0350A7563C20D78D4E2057A7B089",
+        "physical_pages": 22,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 16,
+          "PROVISION_STRUCTURE_CANDIDATE": 6
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 2,
+          "LEGAL_LAYOUT_NODES_REVIEW": 6,
+          "UNRESOLVED_FORMAT_HOLD": 14
+        },
+        "prior_format_review_pages": 16,
+        "more_specific_candidate_routes": 2,
+        "still_requires_alternative_or_visual": 14,
+        "bound_line_locators": 76,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "UU-17-2019",
+        "source_sha256": "C01F4282E40BFDCA649B9407A4F51A64A9B1ACAA21836B585D6ADE4081C6F3AB",
+        "physical_pages": 90,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 16,
+          "PROVISION_STRUCTURE_CANDIDATE": 74
+        },
+        "second_pass": {
+          "UNRESOLVED_FORMAT_HOLD": 6,
+          "LEGAL_LAYOUT_NODES_REVIEW": 48,
+          "SECTION_HEADING_REVIEW": 1,
+          "EXPLANATION_PROVISION_REVIEW": 35
+        },
+        "prior_format_review_pages": 16,
+        "more_specific_candidate_routes": 10,
+        "still_requires_alternative_or_visual": 6,
+        "bound_line_locators": 516,
+        "unbound_locators": 0
+      },
+      {
+        "document_id": "UU-23-2014",
+        "source_sha256": "D8C3CCE843167BDF132CC8C2F843C51B4E7A78969327D496586088DE35CA27FD",
+        "physical_pages": 460,
+        "first_pass": {
+          "FORMAT_REVIEW_REQUIRED": 31,
+          "PROVISION_STRUCTURE_CANDIDATE": 287,
+          "TABLE_RECONSTRUCTION_CANDIDATE": 142
+        },
+        "second_pass": {
+          "SECTION_HEADING_REVIEW": 3,
+          "LEGAL_LAYOUT_NODES_REVIEW": 210,
+          "UNRESOLVED_FORMAT_HOLD": 14,
+          "EXPLANATION_PROVISION_REVIEW": 92,
+          "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD": 141
+        },
+        "prior_format_review_pages": 31,
+        "more_specific_candidate_routes": 17,
+        "still_requires_alternative_or_visual": 14,
+        "bound_line_locators": 2637,
+        "unbound_locators": 0
+      }
+    ],
+    "network_requests": 0,
+    "accuracy": null,
+    "accuracy_reason": "COVERAGE_IS_NOT_ACCURACY",
+    "gold_gate": "NOT_PASSED",
+    "numeric_admission": 0,
+    "production_admission": "DENIED",
+    "state": "MEASURED_COMPLETE_CORPUS",
+    "corpus_receipt_sha256": "60C9DEB5B4461FDBFED110D093B58EE039FC26570B89E2CEEFDBC758C7468898"
+  },
+  "development_before": {
+    "schema": "PI_RF05_PAGE_ROUTING_BENCHMARK_V1",
+    "scope": "PAGE_ROUTING_ONLY_NOT_EXTRACTION_ACCURACY",
+    "reference_verification": "DECLARED_INDEPENDENT_REVIEW_NOT_AUTHENTICATED_BY_ENGINE",
+    "reference_identity": "AI_ASSISTED_NOT_HUMAN_CERTIFIED",
+    "human_certified_gold": "NOT_VERIFIED",
+    "reviewed_pages": 48,
+    "reviewed_documents": 8,
+    "expected_documents": 8,
+    "processed_documents": 8,
+    "document_processing_holds": 0,
+    "processed_physical_pages": 1119,
+    "corpus_complete": true,
+    "correct": 10,
+    "mismatched": 2,
+    "abstained": 36,
+    "accuracy_including_abstention": 0.20833333333333334,
+    "coverage": 0.25,
+    "routing_coverage": 0.25,
+    "visual_routes": 0,
+    "extraction_route_abstentions": 36,
+    "deterministic_candidate_route_coverage": 0.25,
+    "extraction_accuracy": null,
+    "extraction_accuracy_reason": "ROUTING_REFERENCE_IS_NOT_CELL_OR_PROVISION_GOLD",
+    "critical_errors": 0,
+    "critical_error_policy": "FISCAL_ROUTE_FOR_REFERENCE_WITHOUT_FISCAL_ACCOUNTS",
+    "unrepresented_reference_classes": [
+      "ACCOUNT_FRAGMENT",
+      "MIXED",
+      "HEADING"
+    ],
+    "per_class": {
+      "PROVISION": {
+        "tp": 10,
+        "fp": 1,
+        "fn": 6,
+        "support": 16,
+        "precision": 0.9090909090909091,
+        "recall": 0.625
+      },
+      "ACCOUNT_FRAGMENT": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0,
+        "precision": null,
+        "recall": null
+      },
+      "MIXED": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0,
+        "precision": null,
+        "recall": null
+      },
+      "HEADING": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 0,
+        "support": 0,
+        "precision": 0,
+        "recall": null
+      },
+      "VISUAL": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 11,
+        "support": 11,
+        "precision": null,
+        "recall": 0
+      },
+      "OTHER": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 21,
+        "support": 21,
+        "precision": null,
+        "recall": 0
+      }
+    },
+    "rows": [
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 18,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 102,
+        "expected": "VISUAL",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 74,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 93,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 48,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 22,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 51,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 50,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 16,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 36,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 32,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 41,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 7,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 99,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 3,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 111,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 48,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 21,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 19,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 16,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 11,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 10,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 2,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 3,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 93,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 66,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 86,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 20,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 37,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 45,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 72,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 21,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 36,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 57,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 343,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 115,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 308,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 75,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 173,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 426,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 78,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 77,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 38,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 80,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 88,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 66,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      }
+    ],
+    "state": "MEASURED_REVIEW_SAMPLE_ONLY",
+    "gold_gate": "NOT_PASSED",
+    "numeric_admission": 0,
+    "legal_effect": "NOT_ASSESSED",
+    "production_admission": "DENIED",
+    "corpus_receipt_sha256": "6110FAEF6FBD091A1B5674038F6D9D45321A180E5D133B0EF6C02302DE7607C6",
+    "reference_receipt_sha256": "A8C3795A2B5B6E9DC4D855F03A9BEC6BE7C08A04CC439A2D04B7E003E53EF1AA"
+  },
+  "development_after": {
+    "schema": "PI_RF05_PAGE_ROUTING_BENCHMARK_V1",
+    "scope": "PAGE_ROUTING_ONLY_NOT_EXTRACTION_ACCURACY",
+    "reference_verification": "DECLARED_INDEPENDENT_REVIEW_NOT_AUTHENTICATED_BY_ENGINE",
+    "reference_identity": "AI_ASSISTED_NOT_HUMAN_CERTIFIED",
+    "human_certified_gold": "NOT_VERIFIED",
+    "reviewed_pages": 48,
+    "reviewed_documents": 8,
+    "expected_documents": 8,
+    "processed_documents": 8,
+    "document_processing_holds": 0,
+    "processed_physical_pages": 1119,
+    "corpus_complete": true,
+    "correct": 26,
+    "mismatched": 1,
+    "abstained": 21,
+    "accuracy_including_abstention": 0.5416666666666666,
+    "coverage": 0.5625,
+    "routing_coverage": 0.5625,
+    "visual_routes": 10,
+    "extraction_route_abstentions": 31,
+    "deterministic_candidate_route_coverage": 0.3541666666666667,
+    "extraction_accuracy": null,
+    "extraction_accuracy_reason": "ROUTING_REFERENCE_IS_NOT_CELL_OR_PROVISION_GOLD",
+    "critical_errors": 0,
+    "critical_error_policy": "FISCAL_ROUTE_FOR_REFERENCE_WITHOUT_FISCAL_ACCOUNTS",
+    "unrepresented_reference_classes": [
+      "ACCOUNT_FRAGMENT",
+      "MIXED",
+      "HEADING"
+    ],
+    "per_class": {
+      "PROVISION": {
+        "tp": 16,
+        "fp": 0,
+        "fn": 0,
+        "support": 16,
+        "precision": 1,
+        "recall": 1
+      },
+      "ACCOUNT_FRAGMENT": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0,
+        "precision": null,
+        "recall": null
+      },
+      "MIXED": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0,
+        "precision": null,
+        "recall": null
+      },
+      "HEADING": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 0,
+        "support": 0,
+        "precision": 0,
+        "recall": null
+      },
+      "VISUAL": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 1,
+        "support": 11,
+        "precision": 1,
+        "recall": 0.9090909090909091
+      },
+      "OTHER": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 21,
+        "support": 21,
+        "precision": null,
+        "recall": 0
+      }
+    },
+    "rows": [
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 18,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 102,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 74,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 93,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 48,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 22,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 51,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 50,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 16,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 36,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 32,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 41,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 7,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 99,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 3,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 111,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 48,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 21,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 19,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 16,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 11,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 10,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 2,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 3,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 93,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 66,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 86,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 20,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 37,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 45,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 72,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 21,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 36,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 57,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 343,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 115,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 308,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 75,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 173,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 426,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 78,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 77,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 38,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 80,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 88,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 66,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      }
+    ],
+    "state": "MEASURED_REVIEW_SAMPLE_ONLY",
+    "gold_gate": "NOT_PASSED",
+    "numeric_admission": 0,
+    "legal_effect": "NOT_ASSESSED",
+    "production_admission": "DENIED",
+    "corpus_receipt_sha256": "60C9DEB5B4461FDBFED110D093B58EE039FC26570B89E2CEEFDBC758C7468898",
+    "reference_receipt_sha256": "A8C3795A2B5B6E9DC4D855F03A9BEC6BE7C08A04CC439A2D04B7E003E53EF1AA"
+  },
+  "holdout_before": {
+    "schema": "PI_RF05_PAGE_ROUTING_BENCHMARK_V1",
+    "scope": "PAGE_ROUTING_ONLY_NOT_EXTRACTION_ACCURACY",
+    "reference_verification": "DECLARED_INDEPENDENT_REVIEW_NOT_AUTHENTICATED_BY_ENGINE",
+    "reference_identity": "AI_ASSISTED_NOT_HUMAN_CERTIFIED",
+    "human_certified_gold": "NOT_VERIFIED",
+    "reviewed_pages": 48,
+    "reviewed_documents": 8,
+    "expected_documents": 8,
+    "processed_documents": 8,
+    "document_processing_holds": 0,
+    "processed_physical_pages": 1119,
+    "corpus_complete": true,
+    "correct": 8,
+    "mismatched": 6,
+    "abstained": 34,
+    "accuracy_including_abstention": 0.16666666666666666,
+    "coverage": 0.2916666666666667,
+    "routing_coverage": 0.2916666666666667,
+    "visual_routes": 0,
+    "extraction_route_abstentions": 34,
+    "deterministic_candidate_route_coverage": 0.2916666666666667,
+    "extraction_accuracy": null,
+    "extraction_accuracy_reason": "ROUTING_REFERENCE_IS_NOT_CELL_OR_PROVISION_GOLD",
+    "critical_errors": 0,
+    "critical_error_policy": "FISCAL_ROUTE_FOR_REFERENCE_WITHOUT_FISCAL_ACCOUNTS",
+    "unrepresented_reference_classes": [
+      "ACCOUNT_FRAGMENT",
+      "MIXED"
+    ],
+    "per_class": {
+      "PROVISION": {
+        "tp": 8,
+        "fp": 1,
+        "fn": 7,
+        "support": 15,
+        "precision": 0.8888888888888888,
+        "recall": 0.5333333333333333
+      },
+      "ACCOUNT_FRAGMENT": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0,
+        "precision": null,
+        "recall": null
+      },
+      "MIXED": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0,
+        "precision": null,
+        "recall": null
+      },
+      "HEADING": {
+        "tp": 0,
+        "fp": 5,
+        "fn": 1,
+        "support": 1,
+        "precision": 0,
+        "recall": 0
+      },
+      "VISUAL": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 7,
+        "support": 7,
+        "precision": null,
+        "recall": 0
+      },
+      "OTHER": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 25,
+        "support": 25,
+        "precision": null,
+        "recall": 0
+      }
+    },
+    "rows": [
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 55,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 96,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 82,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 95,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 122,
+        "expected": "OTHER",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 99,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 18,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 23,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 60,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 1,
+        "expected": "HEADING",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 64,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 81,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 62,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 50,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 57,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 20,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 19,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 17,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 18,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 14,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 15,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 8,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "SECTION_HEADING_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 12,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 94,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 103,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 81,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 109,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 29,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 92,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 17,
+        "expected": "PROVISION",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 15,
+        "expected": "PROVISION",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 44,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 13,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 52,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 350,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 179,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 141,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 162,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 302,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 211,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 54,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 23,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 11,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 89,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 70,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 69,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      }
+    ],
+    "state": "MEASURED_REVIEW_SAMPLE_ONLY",
+    "gold_gate": "NOT_PASSED",
+    "numeric_admission": 0,
+    "legal_effect": "NOT_ASSESSED",
+    "production_admission": "DENIED",
+    "corpus_receipt_sha256": "6110FAEF6FBD091A1B5674038F6D9D45321A180E5D133B0EF6C02302DE7607C6",
+    "reference_receipt_sha256": "33F49BA12B700ADBA74DF67C0E64DB1BC65871A41BBDA4F05E673AD33E8B872D"
+  },
+  "holdout_after": {
+    "schema": "PI_RF05_PAGE_ROUTING_BENCHMARK_V1",
+    "scope": "PAGE_ROUTING_ONLY_NOT_EXTRACTION_ACCURACY",
+    "reference_verification": "DECLARED_INDEPENDENT_REVIEW_NOT_AUTHENTICATED_BY_ENGINE",
+    "reference_identity": "AI_ASSISTED_NOT_HUMAN_CERTIFIED",
+    "human_certified_gold": "NOT_VERIFIED",
+    "reviewed_pages": 48,
+    "reviewed_documents": 8,
+    "expected_documents": 8,
+    "processed_documents": 8,
+    "document_processing_holds": 0,
+    "processed_physical_pages": 1119,
+    "corpus_complete": true,
+    "correct": 17,
+    "mismatched": 6,
+    "abstained": 25,
+    "accuracy_including_abstention": 0.3541666666666667,
+    "coverage": 0.4791666666666667,
+    "routing_coverage": 0.4791666666666667,
+    "visual_routes": 5,
+    "extraction_route_abstentions": 30,
+    "deterministic_candidate_route_coverage": 0.375,
+    "extraction_accuracy": null,
+    "extraction_accuracy_reason": "ROUTING_REFERENCE_IS_NOT_CELL_OR_PROVISION_GOLD",
+    "critical_errors": 0,
+    "critical_error_policy": "FISCAL_ROUTE_FOR_REFERENCE_WITHOUT_FISCAL_ACCOUNTS",
+    "unrepresented_reference_classes": [
+      "ACCOUNT_FRAGMENT",
+      "MIXED"
+    ],
+    "per_class": {
+      "PROVISION": {
+        "tp": 12,
+        "fp": 1,
+        "fn": 3,
+        "support": 15,
+        "precision": 0.9230769230769231,
+        "recall": 0.8
+      },
+      "ACCOUNT_FRAGMENT": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0,
+        "precision": null,
+        "recall": null
+      },
+      "MIXED": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0,
+        "precision": null,
+        "recall": null
+      },
+      "HEADING": {
+        "tp": 0,
+        "fp": 5,
+        "fn": 1,
+        "support": 1,
+        "precision": 0,
+        "recall": 0
+      },
+      "VISUAL": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 2,
+        "support": 7,
+        "precision": 1,
+        "recall": 0.7142857142857143
+      },
+      "OTHER": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 25,
+        "support": 25,
+        "precision": null,
+        "recall": 0
+      }
+    },
+    "rows": [
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 55,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 96,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 82,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 95,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 122,
+        "expected": "OTHER",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 99,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 18,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 23,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 60,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 1,
+        "expected": "HEADING",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 64,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 81,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 62,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 50,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 57,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 20,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 19,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 17,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 18,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 14,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 15,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 8,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "SECTION_HEADING_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 12,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 94,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 103,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 81,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 109,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 29,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 92,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 17,
+        "expected": "PROVISION",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 15,
+        "expected": "PROVISION",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 44,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 13,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 52,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 350,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 179,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 141,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 162,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 302,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 211,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 54,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 23,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 11,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 89,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 70,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 69,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      }
+    ],
+    "state": "MEASURED_REVIEW_SAMPLE_ONLY",
+    "gold_gate": "NOT_PASSED",
+    "numeric_admission": 0,
+    "legal_effect": "NOT_ASSESSED",
+    "production_admission": "DENIED",
+    "corpus_receipt_sha256": "60C9DEB5B4461FDBFED110D093B58EE039FC26570B89E2CEEFDBC758C7468898",
+    "reference_receipt_sha256": "33F49BA12B700ADBA74DF67C0E64DB1BC65871A41BBDA4F05E673AD33E8B872D"
+  },
+  "combined_after": {
+    "schema": "PI_RF05_PAGE_ROUTING_BENCHMARK_V1",
+    "scope": "PAGE_ROUTING_ONLY_NOT_EXTRACTION_ACCURACY",
+    "reference_verification": "DECLARED_INDEPENDENT_REVIEW_NOT_AUTHENTICATED_BY_ENGINE",
+    "reference_identity": "AI_ASSISTED_NOT_HUMAN_CERTIFIED",
+    "human_certified_gold": "NOT_VERIFIED",
+    "reviewed_pages": 96,
+    "reviewed_documents": 8,
+    "expected_documents": 8,
+    "processed_documents": 8,
+    "document_processing_holds": 0,
+    "processed_physical_pages": 1119,
+    "corpus_complete": true,
+    "correct": 43,
+    "mismatched": 7,
+    "abstained": 46,
+    "accuracy_including_abstention": 0.4479166666666667,
+    "coverage": 0.5208333333333334,
+    "routing_coverage": 0.5208333333333334,
+    "visual_routes": 15,
+    "extraction_route_abstentions": 61,
+    "deterministic_candidate_route_coverage": 0.3645833333333333,
+    "extraction_accuracy": null,
+    "extraction_accuracy_reason": "ROUTING_REFERENCE_IS_NOT_CELL_OR_PROVISION_GOLD",
+    "critical_errors": 0,
+    "critical_error_policy": "FISCAL_ROUTE_FOR_REFERENCE_WITHOUT_FISCAL_ACCOUNTS",
+    "unrepresented_reference_classes": [
+      "ACCOUNT_FRAGMENT",
+      "MIXED"
+    ],
+    "per_class": {
+      "PROVISION": {
+        "tp": 28,
+        "fp": 1,
+        "fn": 3,
+        "support": 31,
+        "precision": 0.9655172413793104,
+        "recall": 0.9032258064516129
+      },
+      "ACCOUNT_FRAGMENT": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0,
+        "precision": null,
+        "recall": null
+      },
+      "MIXED": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0,
+        "precision": null,
+        "recall": null
+      },
+      "HEADING": {
+        "tp": 0,
+        "fp": 6,
+        "fn": 1,
+        "support": 1,
+        "precision": 0,
+        "recall": 0
+      },
+      "VISUAL": {
+        "tp": 15,
+        "fp": 0,
+        "fn": 3,
+        "support": 18,
+        "precision": 1,
+        "recall": 0.8333333333333334
+      },
+      "OTHER": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 46,
+        "support": 46,
+        "precision": null,
+        "recall": 0
+      }
+    },
+    "rows": [
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 18,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 102,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 74,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 93,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 48,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 55,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 96,
+        "expected": "VISUAL",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 82,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 95,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 122,
+        "expected": "OTHER",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2023",
+        "pdf_page": 99,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 22,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 51,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 50,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 16,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 36,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 32,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 18,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 23,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 60,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 1,
+        "expected": "HEADING",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-12-2024",
+        "pdf_page": 64,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 41,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 7,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 99,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 3,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 111,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 48,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 81,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 62,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 50,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 57,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 20,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-10-2025",
+        "pdf_page": 19,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 21,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 19,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 16,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 11,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 10,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 2,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 17,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 18,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 14,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 15,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 8,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "SECTION_HEADING_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-4-2026",
+        "pdf_page": 12,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 3,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 93,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 66,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 86,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 20,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 94,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 103,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 81,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 109,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 29,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-14-2026",
+        "pdf_page": 92,
+        "expected": "OTHER",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 37,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 45,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 72,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 21,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 36,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 57,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 17,
+        "expected": "PROVISION",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 15,
+        "expected": "PROVISION",
+        "observed": "HEADING",
+        "route": "HEADING_STRUCTURE_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MISMATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 44,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 6,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 13,
+        "expected": "PROVISION",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "PERMENDAGRI-1-2023",
+        "pdf_page": 52,
+        "expected": "VISUAL",
+        "observed": "VISUAL",
+        "route": "VISUAL_REQUIRED_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 343,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 115,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 308,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 75,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 173,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 426,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 350,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 179,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 141,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 162,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 302,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-23-2014",
+        "pdf_page": 211,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 78,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 77,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 38,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 80,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 88,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 66,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 54,
+        "expected": "OTHER",
+        "observed": null,
+        "route": "UNRESOLVED_FORMAT_HOLD",
+        "critical_error": false,
+        "extraction_state": "ABSTAIN_NO_DETERMINISTIC_EXTRACTION",
+        "state": "ABSTAIN"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 23,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 11,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "LEGAL_LAYOUT_NODES_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 89,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 70,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      },
+      {
+        "document_id": "UU-17-2019",
+        "pdf_page": 69,
+        "expected": "PROVISION",
+        "observed": "PROVISION",
+        "route": "EXPLANATION_PROVISION_REVIEW",
+        "critical_error": false,
+        "extraction_state": "UNVERIFIED_CANDIDATE_ONLY",
+        "state": "MATCH"
+      }
+    ],
+    "state": "MEASURED_REVIEW_SAMPLE_ONLY",
+    "gold_gate": "NOT_PASSED",
+    "numeric_admission": 0,
+    "legal_effect": "NOT_ASSESSED",
+    "production_admission": "DENIED",
+    "corpus_receipt_sha256": "60C9DEB5B4461FDBFED110D093B58EE039FC26570B89E2CEEFDBC758C7468898",
+    "reference_receipt_sha256": "FAFFF20B834B46E71310D1C2711049DA12249AF1B9CE459990FB78AD24F9FAB3"
+  },
+  "reference": "docs/acceptance/pi-rf05-independent-reference-20261128.json",
+  "source_freeze": {
+    "schema": "PI_RF05_CLASSIFIER_FREEZE_V1",
+    "frozen_at": "2026-11-28T04:00:37.564Z",
+    "development_pages": 48,
+    "holdout_pages": 48,
+    "holdout_opened": false,
+    "files": {
+      "laravel/app/Services/Pi/Development/FullDocumentInventory.php": "96f1e3e1587468f17fe559a2d6268df20e5b6b16f82d3021d507701d7c117543",
+      "laravel/app/Services/Pi/Development/RegulatoryAnnexBenchmarkProfile.php": "624841797023d7fd0f59e95a5263fe33003228d62e0d1706f8c7e353aa2efa76",
+      "laravel/app/Services/Pi/Development/DocumentLayoutReconstructor.php": "b7b5e46fe7a7404e017d384b21f566bb4952dc6b7448022e05bb184978609b06"
+    }
+  },
+  "missing_formats": [
+    "ACCOUNT_FRAGMENT has zero independent sample support",
+    "MIXED has zero independent sample support",
+    "HEADING has only one reference page",
+    "No cell/hierarchy/organization/numeric gold established"
+  ],
+  "acceptance": "PARTIAL_MEASURED_NOT_G1_ACCEPTED",
+  "production_admission": "DENIED"
+}
