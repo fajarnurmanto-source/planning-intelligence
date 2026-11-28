@@ -19,8 +19,8 @@ const make=(tag,cls,text,parent)=>{
 const safeSections=['ringkasan','kewenangan','rencana','anggaran','dokumen','rinci']
 const config=[
  {id:'ringkasan',title:'Ringkasan dan hal yang perlu ditelaah',short:'Ringkasan',desc:'Pertanyaan inti, kebutuhan bukti dan batas kesimpulan'},
- {id:'kewenangan',title:'Permasalahan dan kewenangan',short:'Kewenangan',desc:'Dasar kewenangan serta tahapan yang berkaitan'},
- {id:'rencana',title:'Rencana, program dan subkegiatan',short:'Perencanaan',desc:'Kesesuaian program, indikator dan hubungan antar dokumen'},
+ {id:'kewenangan',title:'Norma induk dan kewenangan',short:'Kewenangan',desc:'Periksa norma induk yang relevan, delegasi, perubahan, transisi dan keberlakuan pada tanggal kasus. Daftar sumber bukan bukti seluruh norma telah ditemukan.'},
+ {id:'rencana',title:'Rencana, program dan subkegiatan',short:'Perencanaan',desc:'Telusuri dokumen, OPD, periode, program dan definisi indikator. Keselarasan belum dapat diputuskan tanpa dasar hukum yang terverifikasi.'},
  {id:'anggaran',title:'Anggaran dan perubahan',short:'Anggaran',desc:'Lampiran APBD, rekening dan sumber perbandingan'},
  {id:'dokumen',title:'Dokumen dan bukti',short:'Dokumen',desc:'Katalog resmi, halaman dan jejak sumber'},
  {id:'rinci',title:'Rincian hubungan bukti',short:'Rincian',desc:'Graf hubungan yang bisa diperiksa saat diperlukan'}
@@ -35,14 +35,15 @@ function initCase(){
  if(!main||!filters)return
  const byId=id=>document.getElementById(id)
  const assignments={
-  ringkasan:[byId('r85-questions')?.closest('section.panel'),byId('r85-guards')?.closest('section.panel')],
+  ringkasan:[byId('r85-questions')?.closest('section.panel')],
   kewenangan:[byId('r86-lifecycle')],
   rencana:[byId('r88-crosswalk')],
   anggaran:[byId('r106-annex-review')],
   dokumen:[byId('r100-official-sources'),byId('r85-evidence')?.closest('section.panel')],
   rinci:[byId('r85-graphs')?.closest('section.panel')]
  }
- const expected=Object.values(assignments).flat()
+ const guardPanel=byId('r85-guards')?.closest('section.panel')
+ const expected=[...Object.values(assignments).flat(),guardPanel]
  if(expected.some(x=>!x)||new Set(expected).size!==expected.length){
   // Never hide any original work if the source structure changed.
   return
@@ -55,7 +56,7 @@ function initCase(){
  shell.setAttribute('aria-labelledby','pi-r108-workflow-title')
  make('p','pi-r108-overline','RUANG KERJA TELAAH',shell)
  make('h2','', 'Apa yang ingin Anda periksa?',shell).id='pi-r108-workflow-title'
- make('p','pi-r108-intro','Pilih pekerjaan. Informasi lanjutan dibuka saat dibutuhkan, tanpa kehilangan sumber dan konteks kasus.',shell)
+ make('p','pi-r108-intro','Mulai dari konteks dan bukti, lalu norma induk, rencana dan anggaran. Tahap lain tetap dapat dibuka untuk mengumpulkan bukti. Urutan ini bukan tanda bahwa pemeriksaan sebelumnya telah lulus.',shell)
  const context=make('p','pi-r108-context','Menyiapkan konteks kasus…',shell)
  const contextHint=make('p','pi-r108-hint',
   'Kasus contoh: Pengelolaan Persampahan Kota Yogyakarta, tahun 2026. Data belum mencakup semua kasus daerah.',shell)
@@ -90,7 +91,7 @@ function initCase(){
  const nav=make('nav','pi-r108-tabs',null,shell)
  nav.setAttribute('aria-label','Bagian pekerjaan telaah')
  const buttons={}
- for(const section of config){
+ for(const section of ['ringkasan','dokumen','kewenangan','rencana','anggaran','rinci'].map(id=>config.find(s=>s.id===id))){
   const btn=make('a','pi-r108-tab',section.short,nav)
   btn.href='#pi-view='+section.id
   btn.dataset.view=section.id
@@ -102,16 +103,18 @@ function initCase(){
  const sub=make('p','','',info)
  const action=make('a','pi-r108-next-step','',info)
  const nextSteps={
-  ringkasan:['Lanjut: Telaah kewenangan','kewenangan'],
+  ringkasan:['Lanjut: Periksa dokumen dan bukti','dokumen'],
   kewenangan:['Lanjut: Telaah perencanaan','rencana'],
   rencana:['Lanjut: Telaah anggaran','anggaran'],
-  anggaran:null,
-  dokumen:['Kembali ke ringkasan','ringkasan'],
-  rinci:['Kembali ke ringkasan','ringkasan']
+  anggaran:['Lanjut: Telusuri hubungan bukti dan batas evaluasi','rinci'],
+  dokumen:['Lanjut: Telaah kewenangan','kewenangan'],
+  rinci:['Kembali ke ringkasan untuk telaah manusia','ringkasan']
  }
  document.body.classList.add('pi-r108-case')
  const first=byId('r88-crosswalk')
  first.parentNode.insertBefore(shell,first)
+ // Material limitations must remain visible on every view, not just the summary.
+ first.parentNode.insertBefore(guardPanel,first)
  const shortcuts={
   'r106-annex-review':'anggaran','r88-crosswalk':'rencana',
   'r86-lifecycle':'kewenangan','r100-official-sources':'dokumen',
@@ -166,11 +169,11 @@ function initHome(){
  document.body.classList.add('pi-r108-home')
  make('p','pi-r108-hint','Pilihan di bawah membuka kasus contoh Persampahan Kota Yogyakarta 2026. Belum tersedia daftar pekerjaan lintas perangkat daerah.',section)
  const tasks=[
-  ['Menelaah permasalahan dan kewenangan','Memeriksa persoalan, aturan dan perangkat daerah terkait.','./development-case-r85.html#pi-view=kewenangan'],
-  ['Memeriksa program dan subkegiatan','Menelusuri hubungan sasaran, program, kegiatan dan indikator.','./development-case-r85.html#pi-view=rencana'],
-  ['Memeriksa anggaran dan perubahan','Membaca rekening, lampiran APBD dan sumbernya.','./development-case-r85.html#pi-view=anggaran'],
-  ['Mencari dokumen dan bukti','Membuka katalog, sumber dan halaman rujukan.','./development-case-r85.html#pi-view=dokumen'],
-  ['Melihat temuan untuk ditindaklanjuti','Meninjau temuan dan batas kesimpulan yang tersedia.','./index.html#actions-title']
+  ['Mencari dokumen dan bukti','Evidence: periksa sumber resmi, halaman, versi dan status bukti.','./development-case-r85.html#pi-view=dokumen'],
+  ['Menelaah norma induk dan kewenangan','Regulatory: telusuri dasar kewenangan, delegasi, perubahan dan masa berlaku.','./development-case-r85.html#pi-view=kewenangan'],
+  ['Memeriksa program dan subkegiatan','Performance: telusuri sasaran, indikator, OPD dan dokumen perencanaan.','./development-case-r85.html#pi-view=rencana'],
+  ['Memeriksa anggaran dan perubahan','Fiscal: baca rekening dan lampiran. Hubungan serta angka masih perlu verifikasi.','./development-case-r85.html#pi-view=anggaran'],
+  ['Melihat temuan dan batas evaluasi','Evaluation: tinjau temuan yang tersedia. Evaluasi realisasi dan outcome belum lengkap pada kasus ini.','./index.html#actions-title']
  ]
  for(const [label,desc,href] of tasks){
   const a=make('a','pi-r108-task-card',null,choices)

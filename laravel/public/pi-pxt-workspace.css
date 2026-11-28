@@ -34,3 +34,8 @@
 .pi-pxt-workspace button:disabled{opacity:.65;cursor:not-allowed}
 @media(max-width:850px){.pi-pxt-workspace .hero,.pi-pxt-workspace .pi-r108-case .hero{grid-template-columns:minmax(0,1fr)}.pi-pxt-workspace .hero-side{display:block}}
 @media(max-width:700px){.pi-pxt-workspace .r85-filters,.pi-pxt-workspace .r86-controls{grid-template-columns:minmax(0,1fr)}.pi-pxt-workspace .r86-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pi-pxt-workspace .panel{padding:14px}.pi-pxt-workspace .pi-r108-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.pi-pxt-workspace .r85-guard-panel{padding:16px 18px;margin:12px 0 20px;border-left:4px solid #C6A36B;box-shadow:none}
+.pi-pxt-workspace .r85-guard-panel h2{font-size:17px;margin:6px 0 8px}
+.pi-pxt-workspace .pi-normative-notice{font-size:13px;line-height:1.6;color:var(--pi-secondary);margin:8px 0 12px;max-width:95ch}
+.pi-pxt-workspace .r85-guards span{border-radius:8px;line-height:1.4}

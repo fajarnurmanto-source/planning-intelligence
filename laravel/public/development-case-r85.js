@@ -52,6 +52,7 @@
       || !Array.isArray(caseData.nodes)
       || !Array.isArray(caseData.edges)
       || data.interpretation?.legal_harmonization !== 'NOT_ASSESSED'
+      || data.interpretation?.substantive_alignment !== 'NOT_ASSESSED'
       || data.interpretation?.numeric_comparison !== 'BLOCKED'
       || data.interpretation?.review_decision !== 'NO_ACTIVE_DECISION'
       || data.interpretation?.production_admission !== 'DENIED') throw new Error('Kontrak kasus atau gerbang keamanan tidak cocok')
