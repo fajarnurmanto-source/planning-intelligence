@@ -142,16 +142,16 @@
     root.replaceChildren()
 
     const trace = add(root, 'section', 'r70l-trace')
-    add(trace, 'strong', '', 'NORMA INDUK → DELEGASI → PEDOMAN TAHUNAN → RKPD KOTA (KANDIDAT)')
+    add(trace, 'strong', '', 'Jejak rujukan norma dan pedoman tahunan — belum lengkap')
     add(trace, 'p', '', 'Permendagri 86/2017 Pasal 76 memberi dasar penetapan pedoman RKPD melalui peraturan menteri. Konsiderans Permendagri 10/2025 merujuk pasal tersebut. Rantai rujukan ini ditemukan dalam naskah resmi; kesimpulan pemenuhan RKPD belum dinilai.')
-    add(trace, 'small', '', 'DELEGATION SOURCE REFERENCE CONFIRMED · LEGAL REVIEW REQUIRED')
+    add(trace, 'small', '', 'Rujukan tekstual ditemukan; delegasi dan penerapannya masih memerlukan telaah hukum.')
 
     const timeline = data.version_timeline
     const version = add(root, 'section', 'r70l-version')
-    add(version, 'strong', '', 'KALKULASI TANGGAL KASUS: ' + timeline.as_of_date + ' · ' + timeline.status)
+    add(version, 'strong', '', 'Tanggal acuan registri: ' + timeline.as_of_date + ' · Rantai perubahan belum lengkap')
     for (const record of timeline.instrument_states) {
-      add(version, 'p', '', record.instrument_id + ': ' + record.date_state +
-        ' · Sensus amendemen: ' + record.amendment_census)
+      add(version, 'p', '', record.instrument_id + ': status tanggal tercatat dalam registri; keberlakuan substantif belum disimpulkan.')
+      const detail=add(version,'details','pi-reg-audit');add(detail,'summary','','Lihat status teknis versi');add(detail,'code','',record.date_state+' · '+record.amendment_census)
     }
     add(version, 'small', '', 'Peristiwa amendemen terverifikasi dalam registry: ' +
       timeline.verified_change_event_count + '. Angka nol hanya berarti belum ada event yang diadmit, BUKAN bukti bahwa tak pernah ada perubahan.')
@@ -181,7 +181,11 @@
     for (const norm of data.provisions) {
       const card = add(normList, 'article', 'r70l-norm')
       add(card, 'strong', '', norm.locator)
-      add(card, 'span', 'r70l-role', norm.role.replaceAll('_', ' '))
+      const roleLabels={DELEGATION_FOR_ANNUAL_RKPD_GUIDELINE:'Rujukan delegasi pedoman tahunan',EXPLICIT_LEGAL_BASIS_REFERENCE:'Rujukan eksplisit dasar hukum',SIMULTANEOUS_DRAFTING_REQUIREMENT:'Ketentuan penyusunan simultan',MUNICIPAL_RKPD_NATIONAL_AND_PROVINCIAL_REFERENCE:'Rujukan nasional dan provinsi untuk RKPD kota',PROVINCIAL_DIY_EXCEPTION:'Pengecualian untuk Provinsi DIY',MUNICIPAL_RKPD_TO_BUDGET_PROCESS:'Rujukan proses RKPD ke anggaran'}
+      add(card, 'span', 'r70l-role', roleLabels[norm.role]||'Perlu telaah ketentuan')
+      const doc=data.instruments.find(i=>i.id===norm.instrument_id)
+      link(card,'Buka naskah resmi ketentuan ini',doc.official_pdf_url)
+      const detail=add(card,'details','pi-reg-audit');add(detail,'summary','','Lihat identitas ketentuan');add(detail,'code','',norm.id+' · '+norm.role)
       add(card, 'p', '', norm.summary)
     }
 
@@ -192,12 +196,11 @@
     link(applicability, 'Lihat RKPD Kota Yogyakarta 2026 ↗', data.case.planning_document_source)
 
     const guard = add(root, 'section', 'r70l-stop')
-    add(guard, 'strong', '', 'ABSTAIN · NORMATIVE-ROOT GATE BELUM LULUS')
+    add(guard, 'strong', '', 'Belum dapat menyimpulkan norma induk dan keberlakuan')
     add(guard, 'p', '', 'Rantai amendemen/pencabutan belum diperiksa secara menyeluruh; hash PDF belum ditangkap; keselarasan nyata RKPD dengan ketentuan induk dan dokumen nasional/provinsi belum diuji. Tampilkan rujukan sebagai bukti awal saja.')
-    add(guard, 'small', '', 'AMENDMENT_CHAIN_INCOMPLETE · MAPPING_CANDIDATE · NUMERIC BLOCKED · PRODUCTION DENIED')
-    add(root, 'p', 'r70j-digest', 'SHA-256 registri metadata R70L (BUKAN HASH PDF): ' + data.source_registry_sha256)
-    $('r70l-status').textContent = '2 peraturan resmi · 6 ketentuan · kalkulasi versi ' +
-      timeline.status + ' · keselarasan ABSTAIN.'
+    add(guard, 'small', '', 'Hubungan masih kandidat. Perbandingan angka dan keputusan produksi belum diizinkan.')
+    const audit=add(root,'details','pi-reg-audit');add(audit,'summary','','Identitas registri dan batas teknis');add(audit,'code','','AMENDMENT_CHAIN_INCOMPLETE · MAPPING_CANDIDATE · NUMERIC BLOCKED · PRODUCTION DENIED');add(audit, 'p', 'r70j-digest', 'SHA-256 registri metadata R70L (BUKAN HASH PDF): ' + data.source_registry_sha256)
+    $('r70l-status').textContent = data.instruments.length+' peraturan · '+data.provisions.length+' ketentuan kandidat · rantai perubahan belum lengkap.'
   }
 
   async function get(url) {
@@ -210,11 +213,19 @@
       response.status === 503 ? 'Sumber norma induk gagal diverifikasi.' : 'HTTP ' + response.status)
     return response.json()
   }
-  document.addEventListener('DOMContentLoaded', () => get('/api/qa-regulatory-r70l/normative-root')
-    .then(render)
-    .catch(error => {
-      $('r70l-results').replaceChildren()
-      $('r70l-status').dataset.error = 'true'
-      $('r70l-status').textContent = 'R70L ditahan: ' + error.message
-    }))
+  let loading=false
+  async function reload(){
+    if(loading)return
+    loading=true
+    const target=$('r70l-results'),status=$('r70l-status'),button=$('r70l-reload')
+    target.replaceChildren();target.setAttribute('aria-busy','true')
+    status.dataset.error='false';status.textContent='Memeriksa rujukan norma…'
+    if(button)button.disabled=true
+    try{render(await get('/api/qa-regulatory-r70l/normative-root'))}
+    catch(error){
+      target.replaceChildren();status.dataset.error='true'
+      status.textContent=error?.message==='Sesi berakhir'?'Sesi masuk berakhir. Masuk kembali.':error?.message==='Akses tenant ditolak.'?'Akses dasar hukum tidak diberikan.':'Dasar hukum belum dapat diperiksa. Periksa ketersediaan sumber atau pilih Periksa ulang dasar hukum.'
+    }finally{loading=false;target.setAttribute('aria-busy','false');if(button)button.disabled=false}
+  }
+  document.addEventListener('DOMContentLoaded',()=>{$('r70l-reload')?.addEventListener('click',reload);void reload()})
 })()
