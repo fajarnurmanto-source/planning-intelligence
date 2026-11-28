@@ -1,0 +1,25 @@
+/* PI-PXT-01. Local-first, independent brand and semantic tokens. */
+:root{
+ --pi-navy:#142A40;--pi-teal:#147D78;--pi-gold:#C6A36B;
+ --pi-bg:#F4F6F9;--pi-surface:#FFFFFF;--pi-border:#DCE2E9;
+ --pi-text:#172535;--pi-secondary:#526577;--pi-success:#087550;
+ --pi-warning:#80570E;--pi-error:#B23A43;--pi-action:#106B66;
+ --pi-action-hover:#0B5552;--pi-tint:#EAF5F2;--pi-warning-bg:#FFF4DF;
+ --pi-font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ --pi-space-1:4px;--pi-space-2:8px;--pi-space-3:12px;--pi-space-4:16px;--pi-space-5:24px;--pi-space-6:32px;
+ --pi-radius-sm:8px;--pi-radius-md:14px;--pi-radius-lg:22px;
+ --pi-shadow:0 12px 34px rgba(20,42,64,.08);--pi-glass:#FFFFFF;
+ --pi-motion:160ms ease;
+}
+@supports ((backdrop-filter:blur(12px)) or (-webkit-backdrop-filter:blur(12px))){
+ :root{--pi-glass:rgba(255,255,255,.9)}
+ .pi-glass{background:var(--pi-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+}
+.pi-pxt :focus-visible{outline:3px solid var(--pi-action);outline-offset:3px}
+.pi-pxt [hidden]{display:none!important}
+.pi-pxt button,.pi-pxt input,.pi-pxt select{font:inherit}
+.pi-pxt .pi-mark{display:block;flex:none;width:44px;height:44px}
+.pi-pxt .pi-skip{position:absolute;left:12px;top:12px;z-index:100;transform:translateY(-200%);padding:12px;background:var(--pi-navy);color:white;border-radius:8px}
+.pi-pxt .pi-skip:focus{transform:none}
+@media(prefers-reduced-motion:reduce){.pi-pxt *, .pi-pxt *::before,.pi-pxt *::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+@media(forced-colors:active){.pi-pxt :focus-visible{outline:3px solid Highlight}.pi-pxt .pi-glass{backdrop-filter:none}}

@@ -88,7 +88,8 @@
       details.open=!locked && (hasActive || (!onWorkspace&&i===0))
       const summary=create('summary','pi-app-group-summary',null,details)
       create('span','pi-app-group-name',group.label,summary)
-      create('span','pi-app-group-chevron','⌄',summary)
+      const chevron=create('span','pi-app-group-chevron','⌄',summary)
+      chevron.setAttribute('aria-hidden','true')
       create('small','pi-app-subtitle',group.subtitle,details)
       if(locked){
         details.classList.add("is-locked")

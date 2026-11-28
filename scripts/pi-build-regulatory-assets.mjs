@@ -20,6 +20,7 @@ const css = [
   'regulatory-scope-r70d.css', 'regulatory-laravel-r70g.css',
   'regulatory-change-trace-r72.css', 'regulatory-genealogy-r74.css',
   'planning-lineage-r70j.css', 'regulatory-review-r75.css',
+  'pi-design-tokens.css', 'pi-pxt-regulatory.css',
 ]
 const outputs = [
   {names: js, name:'regulatory-workbench-r87.bundle.js', type:'js'},

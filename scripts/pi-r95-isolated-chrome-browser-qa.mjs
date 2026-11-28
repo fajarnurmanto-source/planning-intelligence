@@ -125,6 +125,21 @@ try{
     width:1440,height:900,deviceScaleFactor:1,mobile:false,
   })
   await navigate('/login.html')
+  // PXT actual browser, isolated account only. No visual mock or production auth.
+  await until("document.querySelector('#submit')?.disabled===false",'PXT_LOGIN_READY')
+  async function pxtCheck(path,mobile){
+    await send('Emulation.setDeviceMetricsOverride',{width:mobile?390:1440,height:mobile?844:900,deviceScaleFactor:1,mobile})
+    await navigate(path)
+    await until("document.body.classList.contains('pi-pxt') && getComputedStyle(document.body).colorScheme==='light'",'PXT_LIGHT_READY')
+    const metrics=await evalPage("({width:innerWidth,doc:document.documentElement.scrollWidth,mark:document.querySelector('.pi-mark')?.naturalWidth,focus:getComputedStyle(document.body).colorScheme})")
+    assert.ok(metrics.width>=(mobile?385:1300)&&metrics.width<=(mobile?400:1440),'PXT_VIEWPORT_'+JSON.stringify(metrics))
+    assert.ok(metrics.doc<=metrics.width+3,'PXT_OVERFLOW_'+JSON.stringify(metrics))
+    assert.ok(metrics.mark>0,'PXT_LOGOMARK_MISSING')
+  }
+  await pxtCheck('/login.html',false)
+  await pxtCheck('/login.html',true)
+  await pxtCheck('/login.html',false)
+  await until("document.querySelector('#submit')?.disabled===false",'PXT_LOGIN_DESKTOP_READY')
   const logged=await evalPage("(async function(){"+
     "const s=await fetch('/api/auth/setup-status',{credentials:'same-origin'});"+
     "const d=await s.json();"+
@@ -135,7 +150,19 @@ try{
   assert.equal(logged.setup,200)
   assert.equal(logged.needs_setup,false)
   assert.equal(logged.status,200)
-  await navigate('/development-case-r85.html')
+  for(const mobile of [false,true]){
+    await pxtCheck('/index.html',mobile)
+    await until("document.querySelectorAll('.pi-r108-task-card').length===5 && !!document.querySelector('.pi-user-bar')",'PXT_DASHBOARD_AUTHENTICATED')
+    assert.ok(await evalPage("document.documentElement.scrollWidth<=innerWidth+3"))
+    assert.ok(await evalPage("Array.from(document.querySelectorAll('.pi-r108-task-card')).every(a=>a.origin===location.origin)"))
+    await evalPage("document.querySelector('button[aria-label=\"Cari di PI (Ctrl+K)\"]').click()")
+    await until("document.querySelector('dialog[aria-label=\"Pencarian PI\"]')?.open",'PXT_DASHBOARD_SEARCH')
+    assert.equal(await evalPage("getComputedStyle(document.querySelector('dialog[aria-label=\"Pencarian PI\"]')).backgroundColor"),'rgb(255, 255, 255)')
+    await evalPage("document.querySelector('dialog[aria-label=\"Pencarian PI\"]').close()")
+  }
+  console.log('PI_PXT_LOGIN_DASHBOARD_LIGHT_DESKTOP_MOBILE=PASS')
+  await send('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false})
+  await pxtCheck('/development-case-r85.html',false)
   await until("document.querySelector('#r86-status')?.textContent?.includes('Registry R86 siap')","R86_CATALOGUE")
   await until("document.querySelector('#r85-questions')?.querySelectorAll('article').length > 0","R85_CASE")
   const loaded=await evalPage("({"+
@@ -178,6 +205,9 @@ try{
   assert.equal(ux.tabs,6,'PI_R108_SIX_WORK_STAGES_MISSING')
   assert.match(ux.title,/ingin Anda periksa/i)
   assert.equal(ux.current,'ringkasan')
+  assert.ok(await evalPage("Array.from(document.querySelectorAll('.pi-r108-tab')).map(e=>e.dataset.view).join(',')==='ringkasan,dokumen,kewenangan,rencana,anggaran,rinci'"))
+  assert.ok(await evalPage("document.querySelector('.pi-r108-next-step').getAttribute('href')==='#pi-view=dokumen'"))
+  assert.ok(await evalPage("document.querySelector('.pi-normative-notice')?.textContent.includes('RPJPD dan RPJMD bukan norma hukum tertinggi') && document.querySelector('#r85-guards').getBoundingClientRect().height>0"))
   assert.equal(ux.annexHidden,true)
   assert.equal(ux.regulatoryHidden,true)
   assert.ok(ux.menu.includes('Telaah perencanaan'))
@@ -192,6 +222,8 @@ try{
   assert.match(fiscal.code,/Periksa lampiran/)
   assert.equal(fiscal.current,'anggaran')
   assert.equal(fiscal.other,true)
+  assert.ok(await evalPage("document.querySelector('#r85-guards').getBoundingClientRect().height>0 && document.querySelector('#r85-guards').textContent.includes('Perbandingan angka: Belum diizinkan')"))
+  console.log('PI_PXT_ROADMAP_NORMATIVE_FIRST_PERSISTENT_GATES=PASS')
   await evalPage("location.hash='pi-view=dokumen'")
   await until("document.querySelector('#r100-official-sources')?.hidden === false",'R108_DOCUMENT_SELECTED')
   assert.equal(await evalPage("document.querySelector('#r106-annex-review')?.hidden"),true)
@@ -281,6 +313,11 @@ try{
   assert.equal(preview.runDisabled,true)
   assert.equal(preview.consentChecked,false)
   console.log('PI_R95_CHROME_R89_PREVIEW_WITHOUT_PAID_PROVIDER=PASS')
+  assert.ok(await evalPage("document.querySelector('#r88-context').textContent.includes('2026') && !!document.querySelector('.pi-crosswalk-gaps') && document.querySelector('.pi-crosswalk-summary').textContent.includes('Tidak ada kesetaraan')"))
+  await evalPage("(()=>{const y=document.querySelector('#r88-controls select[name=year]');y.value='2027';y.dispatchEvent(new Event('change',{bubbles:true}))})()")
+  assert.ok(await evalPage("!document.querySelector('#r88-results').children.length && document.querySelector('#r88-export').disabled && document.querySelector('#r89-consent').disabled && document.querySelector('#r89-data').hidden && document.querySelector('#r89-run').disabled"))
+  await evalPage("(()=>{const y=document.querySelector('#r88-controls select[name=year]');y.value='2026';y.dispatchEvent(new Event('change',{bubbles:true}))})()")
+  console.log('PI_PXT_F3_CONTEXT_INVALIDATION_AND_CONSENT_OFF=PASS')
 
   await until("document.querySelector('#r100-count-metadata')?.textContent === '18'",'R100_INDEX_READY')
   const sourceState=await evalPage("({"+
@@ -344,12 +381,19 @@ try{
   assert.ok(phone.r85Visible&&!phone.r86Visible&&!phone.r88Visible&&!phone.r89Visible&&!phone.r100Visible,
     'PI_R108_MOBILE_WORKFLOW_DETAILS_MUST_BE_COLLAPSED_'+JSON.stringify(phone))
   console.log('PI_R95_CHROME_MOBILE_390PX_NO_OVERFLOW=PASS')
+  await until("document.querySelector('.pi-nav-toggle')?.hidden===false && document.querySelector('#pi-primary-nav')?.hidden===true",'PXT_MOBILE_NAV_COLLAPSED')
+  await evalPage("document.querySelector('.pi-nav-toggle').click()")
+  assert.ok(await evalPage("document.querySelector('.pi-nav-toggle').getAttribute('aria-expanded')==='true' && !document.querySelector('#pi-primary-nav').hidden"))
+  await evalPage("document.querySelector('.pi-nav-toggle').click()")
+  assert.ok(await evalPage("document.querySelector('#pi-primary-nav').hidden && document.querySelector('.pi-nav-toggle').getAttribute('aria-expanded')==='false'"))
+  assert.ok(await evalPage("getComputedStyle(document.body).colorScheme==='light' && !!window.PIGlossary && document.querySelector('.pi-mark').naturalWidth>0"))
+  console.log('PI_PXT_WORKSPACE_LIGHT_MOBILE_NAV_GLOSSARY=PASS')
 
   // Re-select 2027 and observe ABSTAIN; do not consent or call paid provider.
   await evalPage("(()=>{const y=document.querySelector('#r88-controls select[name=year]');"+
     "y.value='2027';y.dispatchEvent(new Event('change',{bubbles:true}));"+
     "document.querySelector('#r88-controls').requestSubmit()})()")
-  await until("document.querySelector('#r88-status')?.textContent?.includes('ABSTAIN')","R88_2027_ABSTAIN")
+  await until("document.querySelector('#r88-results')?.getAttribute('aria-busy')==='false' && document.querySelector('#r88-status')?.textContent?.includes('ABSTAIN') && document.querySelector('#r88-context')?.textContent?.includes('2027')","R88_2027_ABSTAIN")
   const abstain=await evalPage("({"+
     "runDisabled:document.querySelector('#r89-run')?.disabled,"+
     "previewDisabled:document.querySelector('#r89-preview')?.disabled,"+
@@ -389,6 +433,16 @@ try{
   assert.equal(await evalPage("document.querySelectorAll('details[data-pi-regulatory-task][open]').length"),1)
   await navigate('/regulatory-laravel-r70g.html#r74-title')
   await until("document.getElementById('r74-title').closest('details').open",'W3B_DIRECT_GENEALOGY')
+  await until("document.querySelector('#r70l-results').getAttribute('aria-busy')==='false' && document.querySelector('#r74-results').getAttribute('aria-busy')==='false'",'PXT_REGULATORY_READY')
+  const reg=await evalPage("({root:document.querySelector('#r70l-status').textContent,graph:document.querySelector('#r74-status').textContent,nodes:document.querySelectorAll('.r74-node').length,norms:document.querySelectorAll('.r70l-norm').length,bound:document.querySelector('.pi-normative-boundary').textContent,light:getComputedStyle(document.querySelector('.r74-panel')).backgroundColor})")
+  assert.equal(reg.light,'rgb(255, 255, 255)')
+  assert.match(reg.bound,/Rantai norma induk, perubahan dan keberlakuan/)
+  if(reg.norms){assert.equal(reg.norms,6);assert.match(reg.root,/rantai perubahan belum lengkap/)}else assert.match(reg.root,/belum dapat diperiksa|Akses dasar hukum tidak diberikan/)
+  if(reg.nodes)assert.match(reg.graph,/Jejak parsial/);else assert.match(reg.graph,/belum dapat diperiksa|belum tersedia/)
+  await evalPage("(()=>{const x=document.querySelector('#r74-lens');x.value='thematic';x.dispatchEvent(new Event('change',{bubbles:true}))})()")
+  assert.ok(await evalPage("document.querySelector('#r74-direction').disabled && !document.querySelector('#r74-results').children.length && document.querySelector('#r74-lens-note').textContent.includes('bukan hierarki')"))
+  console.log('PI_PXT_REGULATORY_CONTEXT_AND_LENS='+JSON.stringify({nodes:reg.nodes,norms:reg.norms}))
+  console.log('PI_PXT_REGULATORY_ROOT_LENS_AND_GATES=PASS')
   assert.equal(await evalPage("!!document.getElementById('r74-form')&&!!document.getElementById('r70o-form')"),true)
   await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true})
   await navigate('/regulatory-laravel-r70g.html#r72-title')
@@ -396,6 +450,26 @@ try{
   assert.ok(await evalPage("document.documentElement.scrollWidth<=innerWidth+3"),'W3B mobile overflow')
   assert.equal(externalRequests,0,'W3B external request')
   console.log('PI_R108_W3B_CHROME_TASK_GROUPS_AND_DEEP_LINKS=PASS')
+  for(const mobile of [false,true]){
+    await pxtCheck('/regulatory-sources-r70b.html',mobile)
+    await until("document.querySelector('#r70b-sources')?.getAttribute('aria-busy')==='false'",'PXT_EVIDENCE_READY')
+    const state=await evalPage("({cards:document.querySelectorAll('.r70b-item').length,state:document.querySelector('#r70b-state').textContent,verified:document.querySelector('#r70b-verified').textContent,pdfs:document.querySelectorAll('.r70b-actions a[href*=\"/api/qa-regulatory-r70b/pdf\"]').length,notice:document.querySelector('.notice').textContent})")
+    if(state.cards===7){
+      assert.equal(Number(state.verified),state.pdfs)
+      assert.match(state.state,/Pemeriksaan hukum dan angka tetap ditahan/)
+      assert.ok(await evalPage("Array.from(document.querySelectorAll('.r70b-provenance')).every(e=>!e.open)"))
+    }else{
+      assert.equal(state.cards,0);assert.equal(state.verified,'—');assert.equal(state.pdfs,0)
+      assert.match(state.state,/belum dapat diperiksa|Akses daftar sumber tidak diberikan/)
+    }
+    assert.match(state.notice,/bukan versi hukum terkonsolidasi/)
+    await evalPage("document.querySelector('#r70b-reload').click()")
+    await until("document.querySelector('#r70b-sources')?.getAttribute('aria-busy')==='false'",'PXT_EVIDENCE_RELOAD')
+    assert.ok(await evalPage("document.documentElement.scrollWidth<=innerWidth+3"))
+    console.log('PI_PXT_EVIDENCE_BROWSER_STATE='+JSON.stringify({mobile,cards:state.cards,verified:state.verified}))
+  }
+  assert.equal(externalRequests,0,'PXT evidence no egress')
+  console.log('PI_PXT_EVIDENCE_RESPONSIVE_AND_SAFE_STATE=PASS')
   console.log('PI_R95_CHROME_RESPONSIVE_AUTHENTICATED_ACCEPTANCE=PASS')
 } finally {
   try{ws?.close()}catch{}
