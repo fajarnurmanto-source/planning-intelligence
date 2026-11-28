@@ -222,6 +222,13 @@ try{
   assert.match(fiscal.code,/Periksa lampiran/)
   assert.equal(fiscal.current,'anggaran')
   assert.equal(fiscal.other,true)
+  assert.ok(await evalPage("document.querySelectorAll('.pi-fiscal-chain li').length===6 && document.querySelector('.pi-fiscal-boundary').textContent.includes('Selisih nol') && document.querySelector('#r106-rows').children.length===0"))
+  await evalPage("document.querySelector('#r106-run').click()")
+  await until("!document.querySelector('#r106-run').disabled",'PXT_FISCAL_READONLY_CHECK')
+  const annex=await evalPage("({rows:document.querySelector('#r106-rows').children.length,links:document.querySelectorAll('#r106-rows a').length,status:document.querySelector('#r106-status').textContent,summary:document.querySelector('#r106-summary').textContent})")
+  if(annex.rows===6){assert.equal(annex.links,12);assert.match(annex.summary,/bukan total anggaran yang berlaku/)}else{assert.equal(annex.rows,0);assert.equal(annex.links,0);assert.equal(annex.summary,'');assert.match(annex.status,/ditahan|belum dapat diperiksa|tidak dapat diselesaikan/)}
+  console.log('PI_PXT_FISCAL_CONTEXT_AND_SAFE_STATE='+JSON.stringify({rows:annex.rows,links:annex.links}))
+  console.log('PI_PXT_FISCAL_SCOPE_AND_PROVENANCE=PASS')
   assert.ok(await evalPage("document.querySelector('#r85-guards').getBoundingClientRect().height>0 && document.querySelector('#r85-guards').textContent.includes('Perbandingan angka: Belum diizinkan')"))
   console.log('PI_PXT_ROADMAP_NORMATIVE_FIRST_PERSISTENT_GATES=PASS')
   await evalPage("location.hash='pi-view=dokumen'")

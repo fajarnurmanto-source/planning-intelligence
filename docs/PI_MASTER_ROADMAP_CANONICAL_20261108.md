@@ -776,3 +776,6 @@ CD-20261128-PI-PXT-D3 — F3/SPC-01/SCP-01: D2 R88 46105809756 actual 100/100 fr
 
 
 CD-20261128-PI-PXT-D3-LOCK — Correct disabled-form serialization in new D3 run guard before acceptance; named field values remain available during locking. Simulated explicit single POST and context change before POST tests added, plus actual browser 2027 completed-context hold assertion. No live call, no admission. CI pending.
+
+
+CD-20261128-PI-PXT-D4 — F4/SRA-01/SOT-01: D3 R88 actual 106/106 frontend, context invalidation and 2027 abstain/preview guards PASS; R73/R74 PASS, Windows initially running. Existing R106 page shows scoped two-version candidate reconciliation, explicit missing RKPD/KUA-PPAS/RKA/APBD/DPA/realisasi links, before/after III, row-specific source PDF links and excerpts; no claim current effective budget or efficiency. Client validates exact source pins, identity and page, duplicate/amount/total/row consistency and non-admission gates before render. Explicit retry only, no stale or partial evidence. Synthetic contract tests and isolated browser read-only endpoint/hold test; actual owner acceptance open. No backend change, Work branch mutation, provider call or gate promotion. 14/40 provisional unchanged, CI pending.

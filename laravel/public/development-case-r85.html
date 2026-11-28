@@ -156,22 +156,36 @@
         </section>
         <section class="panel r106-panel" id="r106-annex-review" aria-labelledby="r106-title">
           <div class="panel-heading"><div><span class="section-number">06 · LAMPIRAN APBD</span>
-            <h2 id="r106-title">Pemeriksaan lampiran APBD secara lokal</h2>
-            <p class="r106-warning">PI memeriksa dua berkas PDF terverifikasi SHA-256 dan memulihkan kode rekening yang terpotong pada subkegiatan 2.11.11.2.01.0004. Bukti ini belum menjadi keputusan fiskal atau hukum.</p>
+            <h2 id="r106-title">Telaah bukti rekening dan versi APBD</h2>
+            <p class="r106-warning">Lingkup tetap: kasus persampahan Kota Yogyakarta, APBD 2026, subkegiatan 2.11.11.2.01.0004. Pemeriksaan dua naskah ini menghasilkan kandidat rekening, bukan penetapan anggaran berlaku, kewenangan OPD, atau realisasi.</p>
           </div></div>
+          <section class="pi-fiscal-boundary" aria-label="Lingkup dan kekurangan bukti fiskal">
+            <h3>Jejak dokumen yang masih perlu dihubungkan</h3>
+            <p>Urutan telaah, bukan status kelulusan. Tahapan lain tidak otomatis terpenuhi karena dua lampiran cocok.</p>
+            <ol class="pi-fiscal-chain">
+              <li><strong>RKPD</strong><span>Hubungan substantif perlu telaah</span></li>
+              <li><strong>KUA–PPAS</strong><span>Bukti pengikatan belum diterima</span></li>
+              <li><strong>RKA / RAPBD</strong><span>Rincian pembanding belum diterima</span></li>
+              <li><strong>APBD</strong><span>Naskah awal dan perubahan III: kandidat</span></li>
+              <li><strong>DPA</strong><span>Belum terverifikasi</span></li>
+              <li><strong>Realisasi</strong><span>Belum terverifikasi</span></li>
+            </ol>
+            <p>Versi lanjutan Perwal 13/15 tahun 2026, identitas organisasi, sumber dana, dan kewenangan masih memerlukan pembuktian. Selisih nol pada dua naskah tidak membuktikan tidak ada perubahan pada seluruh tahun anggaran.</p>
+            <a href="#pi-view=rencana">Periksa hubungan rencana dan nomenklatur</a> · <a href="#pi-view=dokumen">Periksa dokumen dan bukti</a>
+          </section>
           <div class="r106-actions">
             <button type="button" id="r106-run" class="primary-btn">Periksa lampiran dari arsip lokal</button>
             <p id="r106-status" role="status" aria-live="polite">Pilih pemeriksaan lampiran. Bukti harus tersedia dalam arsip lokal; pemeriksaan tidak mengubah dokumen.</p>
           </div>
           <p id="r106-summary" aria-live="polite"></p>
           <div id="r106-source-links" class="r106-links" aria-label="Lihat halaman PDF sumber"></div>
-          <div class="r106-table-wrap">
-            <table aria-label="Perbandingan enam rekening">
-              <thead><tr><th>Kode rekening lengkap</th><th id="per01-base-title">Perwal 74/2025 · judul belum terverifikasi</th><th id="per01-change-title">Perwal 12/2026 · judul belum terverifikasi</th><th>Selisih</th><th>Halaman bukti</th><th>Status</th></tr></thead>
+          <div class="r106-table-wrap" tabindex="0" role="region" aria-label="Tabel kandidat rekening; geser mendatar bila diperlukan">
+            <table aria-label="Rekonsiliasi kandidat enam rekening, dalam rupiah"><caption>Nominal hasil ekstraksi (Rp) · belum disahkan</caption>
+              <thead><tr><th>Kode rekening lengkap</th><th id="per01-base-title">Perwal 74/2025 · judul belum terverifikasi</th><th>Perubahan III · sebelum</th><th id="per01-change-title">Perwal 12/2026 · judul belum terverifikasi</th><th>Selisih tercetak III</th><th>Halaman bukti</th><th>Status</th></tr></thead>
               <tbody id="r106-rows"></tbody>
             </table>
           </div>
-          <p class="r106-warning">Lampiran, keaslian naskah, Perwal 13/15 tahun 2026, RKA/DPA dan realisasi masih memerlukan review. Penerimaan angka dan produksi tetap ditolak.</p>
+          <p class="r106-warning">Angka hanya kandidat text layer. Periksa kutipan dan halaman PDF setiap rekening; kecocokan hash tidak mengesahkan keaslian atau kelengkapan hukum. Penerimaan angka dan produksi tetap ditolak.</p>
         </section>
         <footer class="page-footer">Planning Intelligence · Telaah Pembangunan<span>Kota Yogyakarta 2026 · Bukti publik dan akses lokal terbatas; keputusan manusia tetap wajib.</span></footer>
       </div>
