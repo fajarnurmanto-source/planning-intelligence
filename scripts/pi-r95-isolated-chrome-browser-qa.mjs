@@ -435,6 +435,26 @@ try{
   assert.ok(await evalPage("document.documentElement.scrollWidth<=innerWidth+3"),'W3B mobile overflow')
   assert.equal(externalRequests,0,'W3B external request')
   console.log('PI_R108_W3B_CHROME_TASK_GROUPS_AND_DEEP_LINKS=PASS')
+  for(const mobile of [false,true]){
+    await pxtCheck('/regulatory-sources-r70b.html',mobile)
+    await until("document.querySelector('#r70b-sources')?.getAttribute('aria-busy')==='false'",'PXT_EVIDENCE_READY')
+    const state=await evalPage("({cards:document.querySelectorAll('.r70b-item').length,state:document.querySelector('#r70b-state').textContent,verified:document.querySelector('#r70b-verified').textContent,pdfs:document.querySelectorAll('.r70b-actions a[href*=\"/api/qa-regulatory-r70b/pdf\"]').length,notice:document.querySelector('.notice').textContent})")
+    if(state.cards===7){
+      assert.equal(Number(state.verified),state.pdfs)
+      assert.match(state.state,/Pemeriksaan hukum dan angka tetap ditahan/)
+      assert.ok(await evalPage("Array.from(document.querySelectorAll('.r70b-provenance')).every(e=>!e.open)"))
+    }else{
+      assert.equal(state.cards,0);assert.equal(state.verified,'—');assert.equal(state.pdfs,0)
+      assert.match(state.state,/belum dapat diperiksa|Akses daftar sumber tidak diberikan/)
+    }
+    assert.match(state.notice,/bukan versi hukum terkonsolidasi/)
+    await evalPage("document.querySelector('#r70b-reload').click()")
+    await until("document.querySelector('#r70b-sources')?.getAttribute('aria-busy')==='false'",'PXT_EVIDENCE_RELOAD')
+    assert.ok(await evalPage("document.documentElement.scrollWidth<=innerWidth+3"))
+    console.log('PI_PXT_EVIDENCE_BROWSER_STATE='+JSON.stringify({mobile,cards:state.cards,verified:state.verified}))
+  }
+  assert.equal(externalRequests,0,'PXT evidence no egress')
+  console.log('PI_PXT_EVIDENCE_RESPONSIVE_AND_SAFE_STATE=PASS')
   console.log('PI_R95_CHROME_RESPONSIVE_AUTHENTICATED_ACCEPTANCE=PASS')
 } finally {
   try{ws?.close()}catch{}
