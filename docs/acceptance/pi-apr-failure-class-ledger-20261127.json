@@ -111,6 +111,59 @@
       "recovery_result": "SIMULATED_RECOVERY_PASS",
       "escalation_condition": "unsupported cache, corrupt ledger, unapproved egress, exhausted budget",
       "evidence_reference": "existing SemanticProviderRecoveryTest and accepted CI130tests"
+    },
+    {
+      "failure_class": "APR-NATIVE-TEXT-SPARSE-FRAGMENTED",
+      "root_cause": "Forms may expose only footer text; garbled glyphs produced a false legal route on development page102",
+      "product_native_detector": "FullDocumentInventory native_text_quality",
+      "diagnostic_output": "SPARSE_OR_FRAGMENTED_REQUIRES_VISUAL",
+      "recovery_policy": "Explicit visual hold; preserve original first-pass counts and physical text hashes",
+      "bounds": "No OCR or unsupported cell inference",
+      "recovery_result": "REAL_PINNED_CORPUS_MEASURED",
+      "evidence_reference": "pi-rf05-real-corpus-20261128.json"
+    },
+    {
+      "failure_class": "APR-HRIA-WINDOWS-LINE-ENDINGS",
+      "root_cause": "CRLF made anchored Pasal headings unmatched: actual benchmark0/7",
+      "product_native_detector": "Existing scanner and pinned-PDF batch benchmark",
+      "recovery_policy": "Normalize CRLF/CR at scanner boundary, retain form-feed physical pages",
+      "negative_controls": [
+        "CRLF/LF identical output",
+        "duplicate/cross-page PP spans held",
+        "excerpt hash drift"
+      ],
+      "recovery_result": "REAL_PINNED_BENCHMARK_7_OF_7_CLASSIFICATION_SUBSTANTIVE_PARTIAL",
+      "evidence_reference": "pi-hria-real-benchmark-20261128.json"
+    },
+    {
+      "failure_class": "APR-AI-CONTEXT-BUDGET-PREFLIGHT",
+      "root_cause": "Encoded oversized Gemini context reserved local quota before adapter refusal",
+      "product_native_detector": "GeminiSemanticBudget encoded byte preflight",
+      "diagnostic_output": "LOCAL_AI_CONTEXT_TOO_LARGE",
+      "recovery_policy": "Hold before reservation; require new reduced approved preview, never silently clip evidence",
+      "negative_controls": [
+        "6000-byte exact boundary",
+        "multibyte overflow",
+        "subsequent valid request retains quota"
+      ],
+      "recovery_result": "SIMULATED_RECOVERY_PASS",
+      "evidence_reference": "pi-p2-quota-preflight-20261128.json"
+    },
+    {
+      "failure_class": "APR-CATALOG-TENANT-CONTRACT",
+      "root_cause": "Frontend accepted HTTP200 catalog without matching tenant identity; API omitted authenticated tenant_id",
+      "product_native_detector": "Shared session-bound PIRegulatoryIdentity contract",
+      "recovery_policy": "Reject foreign/malformed catalog and clear failed promise; explicit reload or login redirect on401",
+      "recovery_result": "SIMULATED_UI_INTERCEPTION_PASS",
+      "evidence_reference": "pi-residual-ui-qualification-20261128.json"
+    },
+    {
+      "failure_class": "APR-MOBILE-ROTATED-HITBOX",
+      "root_cause": "Rotated auto-stretched arrow intercepted the technical evidence disclosure tap",
+      "product_native_detector": "Real product browser normal pointer interaction390px",
+      "recovery_policy": "Intrinsic arrow dimensions and full-row disclosure, no forced click",
+      "recovery_result": "SIMULATED_UI_INTERCEPTION_PASS",
+      "evidence_reference": "pi-residual-ui-qualification-20261128.json"
     }
   ],
   "production_admission": "DENIED"

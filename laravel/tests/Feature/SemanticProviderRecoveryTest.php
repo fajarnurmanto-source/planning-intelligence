@@ -103,6 +103,46 @@ final class SemanticProviderRecoveryTest extends TestCase
         Http::assertNothingSent();
     }
 
+    public function test_oversized_gemini_context_does_not_consume_local_budget():void
+    {
+        config(['pi_ai_budget.gemini_daily_requests'=>1,'pi_ai_budget.gemini_daily_reservation_units'=>300000]);
+        Http::fake(['https://generativelanguage.googleapis.com/*'=>Http::response([
+            'candidates'=>[['content'=>['parts'=>[['text'=>'{"semantic_relation":"RELATED","semantic_confidence":"LOW","explanation":"Fixture"}']]],'finishReason'=>'STOP']],
+        ],200)]);
+        $context=['evidence'=>str_repeat('a',6000)];
+        $hold=(new SemanticProviderRecovery)->invoke(new CloudSemanticCandidateProvider,self::TENANT,'gemini','test-model',self::KEY,$context);
+        self::assertSame('LOCAL_AI_CONTEXT_TOO_LARGE',$hold['recovery']['failure_class']);
+        self::assertSame('NOT_RUN',$hold['provider_execution']);
+        Http::assertNothingSent();
+        $accepted=$this->invokeRecovery('gemini');
+        self::assertSame('RESPONSE',$accepted['state']);
+        self::assertSame(1,$accepted['resource_budget']['attempt_reservations']);
+        self::assertSame(0,$accepted['resource_budget']['remaining_requests']);
+        self::assertGreaterThan(0,$accepted['resource_budget']['remaining_reservation_units']);
+        Http::assertSentCount(1);
+    }
+
+    public function test_gemini_budget_uses_encoded_utf8_bytes_and_accepts_exact_context_limit():void
+    {
+        config(['pi_ai_budget.gemini_daily_requests'=>3,'pi_ai_budget.gemini_daily_reservation_units'=>300000]);
+        $budget=new \App\Services\Pi\Development\GeminiSemanticBudget;
+        $context=['evidence'=>str_repeat('a',5985)]; // JSON encoding adds fifteen bytes.
+        self::assertSame(6000,strlen(json_encode($context,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES)));
+        $reservation=$budget->reserve(Cache::store(),self::TENANT,$context);
+        self::assertTrue($reservation['allowed']);
+        self::assertSame(10496,$reservation['receipt']['reserved_units']);
+        self::assertSame(2,$reservation['receipt']['remaining_requests']);
+        self::assertSame(289504,$reservation['receipt']['remaining_reservation_units']);
+        try {
+            $budget->reserve(Cache::store(),self::TENANT,['evidence'=>str_repeat('界',2100)]);
+            self::fail('Multibyte context exceeds the encoded byte cap');
+        } catch (\RuntimeException $error) {
+            self::assertSame('PI_AI_CONTEXT_LIMIT_HOLD',$error->getMessage());
+        }
+        $next=$budget->reserve(Cache::store(),self::TENANT,['small'=>true]);
+        self::assertSame(2,$next['receipt']['attempt_reservations']);
+        self::assertSame(1,$next['receipt']['remaining_requests']);
+    }
     public function test_rate_limit_is_scoped_and_honors_retry_after():void
     {
         Http::fake(['https://api.deepseek.com/*'=>Http::sequence()->push([],429,['Retry-After'=>'300'])->push($this->reply(),200)->push($this->reply(),200)]);

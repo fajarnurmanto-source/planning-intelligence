@@ -29,7 +29,10 @@ final class SemanticProviderRecovery
             if($provider==='gemini'){
                 $budget=new GeminiSemanticBudget;
                 try{$budgetReservation=$budget->reserve($store,$tenant,$context);}
-                catch(Throwable){return $this->hold('LOCAL_AI_BUDGET_UNAVAILABLE',null,0,'CHECK_LOCAL_AI_BUDGET',false);}
+                catch(Throwable $error){
+                    if($error->getMessage()==='PI_AI_CONTEXT_LIMIT_HOLD')return $this->hold('LOCAL_AI_CONTEXT_TOO_LARGE',null,0,'REDUCE_CONTEXT_AND_APPROVE_NEW_PREVIEW',false);
+                    return $this->hold('LOCAL_AI_BUDGET_UNAVAILABLE',null,0,'CHECK_LOCAL_AI_BUDGET',false);
+                }
                 if(!$budgetReservation['allowed']){
                     $out=$this->hold('LOCAL_AI_BUDGET_EXHAUSTED',null,0,'WAIT_FOR_LOCAL_DAILY_BUDGET_OR_ADMIN_POLICY',false);
                     $out['resource_budget']=$budgetReservation['receipt'];

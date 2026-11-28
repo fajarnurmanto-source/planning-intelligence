@@ -34,6 +34,7 @@ final class R100OfficialSourceMetadataTest extends TestCase
         $response = $this->getJson(self::URL)
             ->assertOk()->assertHeader('Cache-Control', 'no-store, private')
             ->assertJsonPath('schema', 'PI_R100_OFFICIAL_SOURCE_METADATA_READ_MODEL_V1')
+            ->assertJsonPath('tenant_id', config('pi.tenant_id'))
             ->assertJsonPath('jurisdiction_id', 'ID-DIY-YOG')
             ->assertJsonPath('counts.indexed_official_metadata', 18)
             ->assertJsonPath('counts.displayed', 18)

@@ -18,6 +18,9 @@ final class GeminiSemanticBudget
         $unitsLimit=config('pi_ai_budget.gemini_daily_reservation_units',300000);
         if(!is_int($limit)||$limit<0||$limit>100000||!is_int($unitsLimit)||$unitsLimit<0||$unitsLimit>1000000000)throw new RuntimeException('PI_AI_BUDGET_CONFIG_HOLD');
         $raw=json_encode($context,JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+        // Reject impossible contexts before reserving any local request/units.
+        // Keep the adapter's encoded UTF-8 byte cap; never truncate approved evidence.
+        if(strlen($raw)>6000)throw new RuntimeException('PI_AI_CONTEXT_LIMIT_HOLD');
         // Conservative local scheduling units only, not a tokenizer or official limit.
         $units=strlen($raw)+4096+400;
         $state=$store->get($key);
@@ -50,6 +53,7 @@ final class GeminiSemanticBudget
     {
         return ['scope'=>'PI_LOCAL_TENANT_GEMINI_SEMANTIC_ROUTES_ONLY','utc_day'=>$day,'request_limit'=>$limit,'reservation_unit_limit'=>$unitsLimit,
             'attempt_reservations'=>$state['requests'],'reserved_units'=>$state['reserved_units'],'provider_reported_tokens'=>$state['reported_tokens'],
-            'usage_reports'=>$state['usage_reports'],'unit_method'=>'CONTEXT_UTF8_BYTES_PLUS_FIXED_4496','provider_quota'=>'NOT_VERIFIED','billing'=>'NOT_VERIFIED'];
+            'usage_reports'=>$state['usage_reports'],'remaining_requests'=>max(0,$limit-$state['requests']),
+            'remaining_reservation_units'=>max(0,$unitsLimit-$state['reserved_units']),'unit_method'=>'CONTEXT_UTF8_BYTES_PLUS_FIXED_4496','provider_quota'=>'NOT_VERIFIED','billing'=>'NOT_VERIFIED'];
     }
 }

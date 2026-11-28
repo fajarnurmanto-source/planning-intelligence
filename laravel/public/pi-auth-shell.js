@@ -1,14 +1,20 @@
 /* R69E inline account menu. Backend authorizes every resource. */
 (() => {
-  let cataloguePromise
+  let cataloguePromise, sessionPromise
+  const activeSession=()=>{
+    if(!sessionPromise)sessionPromise=fetch('/api/auth/session',{credentials:'same-origin',cache:'no-store',headers:{Accept:'application/json'}})
+      .then(async r=>{if(!r.ok){location.replace('./login.html');throw Error('Sesi tidak tersedia')}const user=await r.json();if(typeof user.tenant_id!=='string'||!user.tenant_id.trim())throw Error('Identitas institusi tidak tersedia');return user})
+      .catch(e=>{sessionPromise=null;throw e})
+    return sessionPromise
+  }
   window.PIRegulatoryIdentity=Object.freeze({
     label(doc){
       const kinds={PERWAL:'Perwal',PERDA:'Perda',KEPWAL:'Kepwal'}
       return (kinds[doc.instrument]||doc.instrument)+' '+doc.number+'/'+doc.year+' tentang '+doc.title
     },
     load(){
-      if(!cataloguePromise)cataloguePromise=fetch('/api/qa-superior-r100/official-sources',{credentials:'same-origin',cache:'no-store',headers:{Accept:'application/json'}})
-        .then(async r=>{if(!r.ok)throw Error('Katalog tidak tersedia');const d=await r.json();if(d.schema!=='PI_R100_OFFICIAL_SOURCE_METADATA_READ_MODEL_V1'||d.interpretation?.production_admission!=='DENIED'||!Array.isArray(d.documents))throw Error('Kontrak katalog tidak sesuai');return d.documents})
+      if(!cataloguePromise)cataloguePromise=activeSession().then(user=>fetch('/api/qa-superior-r100/official-sources',{credentials:'same-origin',cache:'no-store',headers:{Accept:'application/json'}})
+        .then(async r=>{if(!r.ok){if(r.status===401){sessionPromise=null;location.replace('./login.html')}throw Error('Katalog tidak tersedia')}const d=await r.json();if(d.schema!=='PI_R100_OFFICIAL_SOURCE_METADATA_READ_MODEL_V1'||d.tenant_id!==user.tenant_id||d.interpretation?.production_admission!=='DENIED'||!Array.isArray(d.documents)||!d.documents.every(doc=>doc&&['id','instrument','title','official_url'].every(k=>typeof doc[k]==='string'&&doc[k].trim())&&(Number.isInteger(doc.number)&&doc.number>0||typeof doc.number==='string'&&/^[0-9]+$/.test(doc.number))&&Number.isInteger(doc.year)))throw Error('Kontrak katalog tidak sesuai');return d.documents}))
         .catch(e=>{cataloguePromise=null;throw e})
       return cataloguePromise
     },
@@ -18,9 +24,7 @@
     }
   })
   async function setup() {
-    const response = await fetch('/api/auth/session', {cache:'no-store'})
-    if (!response.ok) {location.replace('./login.html');return}
-    const user = await response.json()
+    const user = await activeSession()
     const menu = document.createElement('div')
     menu.className = 'pi-user-bar'
     const identity = document.createElement('span')

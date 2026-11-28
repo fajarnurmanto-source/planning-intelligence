@@ -13,6 +13,7 @@ final class RegulatoryAnnexReviewBenchmark
     private const CLASSES=['PROVISION','ACCOUNT_FRAGMENT','MIXED','HEADING','VISUAL','OTHER'];
     private const ROUTES=[
         'LEGAL_LAYOUT_NODES_REVIEW'=>'PROVISION',
+        'EXPLANATION_PROVISION_REVIEW'=>'PROVISION',
         'FISCAL_ROW_FRAGMENTS_REVIEW'=>'ACCOUNT_FRAGMENT',
         'MIXED_FRAGMENT_REVIEW'=>'MIXED',
         'SECTION_HEADING_REVIEW'=>'HEADING',
@@ -48,7 +49,7 @@ final class RegulatoryAnnexReviewBenchmark
         $docs=$this->documents($corpus);
         if(($reference['schema']??null)!=='PI_RF05_INDEPENDENT_PAGE_REFERENCE_V1'||($reference['reference_method']??null)!=='INDEPENDENT_PHYSICAL_PDF_REVIEW'
             ||!is_array($reference['pages']??null)||!array_is_list($reference['pages'])||count($reference['pages'])>10000)throw new RuntimeException('PI_RF05_REFERENCE_CONTRACT_HOLD');
-        $metrics=[];$rows=[];$seen=[];$correct=0;$abstain=0;
+        $metrics=[];$rows=[];$seen=[];$correct=0;$abstain=0;$visualRoutes=0;$criticalErrors=0;
         foreach(self::CLASSES as $class)$metrics[$class]=['tp'=>0,'fp'=>0,'fn'=>0,'support'=>0];
         foreach($reference['pages'] as $r){
             $id=$r['document_id']??null;$n=$r['pdf_page']??null;$expected=$r['expected_class']??null;
@@ -59,10 +60,13 @@ final class RegulatoryAnnexReviewBenchmark
             $seen[$id][$n]=true;
             $route=$docs[$id]['pages'][$n-1]['second_pass_route'];
             $pred=self::ROUTES[$route];
+            if($pred==='VISUAL')$visualRoutes++;
+            $critical=in_array($pred,['ACCOUNT_FRAGMENT','MIXED'],true)&&!in_array($expected,['ACCOUNT_FRAGMENT','MIXED'],true);
+            if($critical)$criticalErrors++;
             $metrics[$expected]['support']++;
             if($pred===$expected){$correct++;$metrics[$expected]['tp']++;}
             else{$metrics[$expected]['fn']++;if($pred===null)$abstain++;else $metrics[$pred]['fp']++;}
-            $rows[]=['document_id'=>$id,'pdf_page'=>$n,'expected'=>$expected,'observed'=>$pred,'state'=>$pred===null?'ABSTAIN':($pred===$expected?'MATCH':'MISMATCH')];
+            $rows[]=['document_id'=>$id,'pdf_page'=>$n,'expected'=>$expected,'observed'=>$pred,'route'=>$route,'critical_error'=>$critical,'extraction_state'=>$pred===null||$pred==='VISUAL'?'ABSTAIN_NO_DETERMINISTIC_EXTRACTION':'UNVERIFIED_CANDIDATE_ONLY','state'=>$pred===null?'ABSTAIN':($pred===$expected?'MATCH':'MISMATCH')];
         }
         foreach($metrics as &$m){
             $m['precision']=$m['tp']+$m['fp']>0?$m['tp']/($m['tp']+$m['fp']):null;
@@ -71,11 +75,59 @@ final class RegulatoryAnnexReviewBenchmark
         unset($m);
         $total=count($rows);
         return ['schema'=>'PI_RF05_PAGE_ROUTING_BENCHMARK_V1','scope'=>'PAGE_ROUTING_ONLY_NOT_EXTRACTION_ACCURACY',
-            'reference_verification'=>'DECLARED_INDEPENDENT_REVIEW_NOT_AUTHENTICATED_BY_ENGINE','reviewed_pages'=>$total,
+            'reference_verification'=>'DECLARED_INDEPENDENT_REVIEW_NOT_AUTHENTICATED_BY_ENGINE',
+            'reference_identity'=>$reference['reference_identity']??'UNSPECIFIED_DECLARED_REFERENCE',
+            'human_certified_gold'=>'NOT_VERIFIED','reviewed_pages'=>$total,
+            'reviewed_documents'=>count($seen),'expected_documents'=>$corpus['expected_documents']??count($docs),
+            'processed_documents'=>count($docs),'document_processing_holds'=>count($corpus['holds']??[]),
+            'processed_physical_pages'=>array_sum(array_map(static fn($d)=>count($d['pages']),$docs)),
+            'corpus_complete'=>count($docs)===($corpus['expected_documents']??count($docs))&&count($corpus['holds']??[])===0,
             'correct'=>$correct,'mismatched'=>$total-$correct-$abstain,'abstained'=>$abstain,
             'accuracy_including_abstention'=>$total>0?$correct/$total:null,'coverage'=>$total>0?($total-$abstain)/$total:null,
+            'routing_coverage'=>$total>0?($total-$abstain)/$total:null,
+            'visual_routes'=>$visualRoutes,'extraction_route_abstentions'=>$abstain+$visualRoutes,
+            'deterministic_candidate_route_coverage'=>$total>0?($total-$abstain-$visualRoutes)/$total:null,
+            'extraction_accuracy'=>null,'extraction_accuracy_reason'=>'ROUTING_REFERENCE_IS_NOT_CELL_OR_PROVISION_GOLD',
+            'critical_errors'=>$criticalErrors,'critical_error_policy'=>'FISCAL_ROUTE_FOR_REFERENCE_WITHOUT_FISCAL_ACCOUNTS',
+            'unrepresented_reference_classes'=>array_keys(array_filter($metrics,static fn($m)=>$m['support']===0)),
             'per_class'=>$metrics,'rows'=>$rows,'state'=>$total===0?'HOLD_NO_GOLD':'MEASURED_REVIEW_SAMPLE_ONLY',
             'gold_gate'=>'NOT_PASSED','numeric_admission'=>0,'legal_effect'=>'NOT_ASSESSED','production_admission'=>'DENIED'];
+    }
+
+    /** Coverage measurement with the original physical-page denominator retained. */
+    public function comparisonSummary(array $corpus):array
+    {
+        $docs=$this->documents($corpus);$rows=[];$first=[];$second=[];$total=0;$priorReview=0;$refined=0;$bound=0;$unbound=0;
+        $specific=['EXPLANATION_PROVISION_REVIEW','LEGAL_LAYOUT_NODES_REVIEW','FISCAL_ROW_FRAGMENTS_REVIEW','MIXED_FRAGMENT_REVIEW','SECTION_HEADING_REVIEW','HEADING_STRUCTURE_REVIEW'];
+        $kinds=['PASAL'=>'ARTICLE','AYAT'=>'PARAGRAPH_MARKER','HURUF'=>'LETTER_MARKER','ANGKA'=>'NUMBER_MARKER'];
+        foreach($docs as $id=>$doc){
+            $source=$corpus['documents'][$id];$inventory=$source['inventory']['pages']??[];
+            if(count($inventory)!==count($doc['pages']))throw new RuntimeException('PI_RF05_SUMMARY_PAGE_DENOMINATOR_HOLD');
+            $a=[];$b=[];$old=0;$better=0;$docBound=0;$docUnbound=0;
+            foreach($doc['pages'] as $i=>$page){
+                $inv=$inventory[$i];
+                if(($inv['pdf_page']??null)!==$page['page']||($inv['text_sha256']??null)!==($page['text_sha256']??null))throw new RuntimeException('PI_RF05_SUMMARY_PAGE_HASH_HOLD');
+                $markers=[];foreach($inv['markers'] as $m)$markers[$m['line'].'|'.$m['kind']]=$m['line_sha256'];
+                foreach(array_merge($page['hierarchy_locators'],$page['row_locators']) as $loc){
+                    $kind=isset($loc['kind'])?($kinds[$loc['kind']]??null):match($loc['code_state']??null){'FULL_MARKER'=>'ACCOUNT_FULL_MARKER','SPLIT_UNRESOLVED'=>'ACCOUNT_SPLIT_MARKER',default=>null};
+                    if($kind===null||($markers[$loc['line'].'|'.$kind]??null)!==$loc['line_sha256'])throw new RuntimeException('PI_RF05_SUMMARY_LINE_HASH_HOLD');
+                    $docBound++;
+                }
+                $docUnbound+=count($page['unbound_locators']);$f=$page['first_pass_route'];$r=$page['second_pass_route'];
+                $a[$f]=($a[$f]??0)+1;$b[$r]=($b[$r]??0)+1;
+                if($f==='FORMAT_REVIEW_REQUIRED'){$old++;if(in_array($r,$specific,true))$better++;}
+            }
+            foreach($a as $k=>$n)$first[$k]=($first[$k]??0)+$n;foreach($b as $k=>$n)$second[$k]=($second[$k]??0)+$n;
+            $total+=count($doc['pages']);$priorReview+=$old;$refined+=$better;$bound+=$docBound;$unbound+=$docUnbound;
+            $rows[]=['document_id'=>$id,'source_sha256'=>$doc['sha'],'physical_pages'=>count($doc['pages']),'first_pass'=>$a,'second_pass'=>$b,'prior_format_review_pages'=>$old,'more_specific_candidate_routes'=>$better,'still_requires_alternative_or_visual'=>$old-$better,'bound_line_locators'=>$docBound,'unbound_locators'=>$docUnbound];
+        }
+        $complete=count($docs)===($corpus['expected_documents']??count($docs))&&count($corpus['holds']??[])===0;
+        return ['schema'=>'PI_RF05_ADAPTIVE_COMPARISON_V1','expected_documents'=>$corpus['expected_documents']??count($docs),'processed_documents'=>count($docs),'document_holds'=>$corpus['holds']??[],
+            'corpus_complete'=>$complete,'physical_pages'=>$total,'second_pass_pages'=>array_sum($second),'first_pass'=>$first,'second_pass'=>$second,
+            'prior_format_review_pages'=>$priorReview,'more_specific_candidate_routes'=>$refined,'still_requires_alternative_or_visual'=>$priorReview-$refined,
+            'bound_line_locators'=>$bound,'unbound_locators'=>$unbound,'page_and_line_hash_reconciliation'=>'PASS_FOR_RETURNED_LOCATORS',
+            'documents'=>$rows,'network_requests'=>0,'accuracy'=>null,'accuracy_reason'=>'COVERAGE_IS_NOT_ACCURACY','gold_gate'=>'NOT_PASSED','numeric_admission'=>0,'production_admission'=>'DENIED',
+            'state'=>$complete?'MEASURED_COMPLETE_CORPUS':'HOLD_INCOMPLETE_CORPUS'];
     }
 
     private function documents(array $corpus):array

@@ -24,6 +24,22 @@ final class HybridPrimaryLegalReasonerTest extends TestCase
             'candidates'=>$scan['records']];
     }
 
+    public function test_native_windows_poppler_crlf_preserves_evidence_and_context_hashes(): void
+    {
+        $pp = "Menimbang: Pasal 16 perlu aturan.\nMengingat:\nMEMUTUSKAN:\nPasal 7\nPenyediaan fasilitas pemilahan sampah dilakukan bertahap.\nPasal 8\nLainnya.";
+        $uu = "Pasal 16\nPenyediaan fasilitas pemilahan sampah diatur dengan peraturan pemerintah.\n\f\nPasal 17\nLainnya.";
+        $scanner = new R82ProvisionTextScanner;
+        $cases = [['article'=>16,'paragraphs'=>[]]];
+        $lf = $scanner->scan($pp, $uu, $cases);
+        $crlf = $scanner->scan(str_replace("\n", "\r\n", $pp), str_replace("\n", "\r\n", $uu), $cases);
+        self::assertSame(1, $lf['extracted']);
+        self::assertNotEmpty($lf['records'][0]['pp_body_candidates']);
+        self::assertSame($lf, $crlf);
+        $a = $this->fixture(); $a['candidates'] = $lf['records'];
+        $b = $this->fixture(); $b['candidates'] = $crlf['records'];
+        self::assertSame($this->reasoner()->preview($a,16,'2026-11-26','2026-11-26')['sha256'],
+            $this->reasoner()->preview($b,16,'2026-11-26','2026-11-26')['sha256']);
+    }
     private function reasoner(): HybridPrimaryLegalReasoner
     {
         return new HybridPrimaryLegalReasoner(new RegulatoryGenealogyGraph(new RegulatoryTaxonomyRegistry()));
@@ -117,5 +133,19 @@ final class HybridPrimaryLegalReasonerTest extends TestCase
         self::assertSame(0,$preview['operative_retrieval']['included']);
         self::assertSame('NOT_PERFORMED',$preview['operative_retrieval']['verification']);
         self::assertSame('DENIED',$preview['production_admission']);
+    }
+
+    public function test_bounded_crossreference_query_keeps_complete_pp_paragraph_and_physical_locator():void
+    {
+        $pp="Menimbang: Pasal 16 perlu aturan.\nMengingat:\nMEMUTUSKAN:\nPasal 7\n(1) Penyediaan fasilitas pemilahan sampah dilakukan bertahap.\n(2) ".str_repeat('Uraian berbeda tanpa topik. ',40)."\f lanjut belum lengkap.\nPasal 8\nLainnya.";
+        $uu="Pasal 13\nPenyediaan fasilitas pemilahan sampah merupakan kewajiban pengelola.\nPasal 16\nKetentuan lebih lanjut mengenai Pasal 13 diatur dengan peraturan pemerintah.\nPasal 17\nLainnya.";
+        $scan=(new R82ProvisionTextScanner)->scan($pp,$uu,[['article'=>16,'paragraphs'=>[]]]);
+        $c=$scan['records'][0]['pp_body_candidates'];self::assertCount(1,$c);
+        self::assertSame(7,$c[0]['article']);self::assertSame(1,$c[0]['paragraph']);self::assertSame(1,$c[0]['pdf_page']);
+        self::assertFalse($c[0]['truncated']);self::assertStringNotContainsString('lanjut',$c[0]['excerpt']);
+        self::assertSame(strtoupper(hash('sha256',$c[0]['excerpt'])),$c[0]['excerpt_sha256']);
+        $f=$this->fixture();$f['candidates']=$scan['records'];$preview=$this->reasoner()->preview($f,16,'2026-11-26','2026-11-26');
+        self::assertSame(1,$preview['operative_retrieval']['included']);self::assertSame(1,$preview['context']['evidence'][3]['paragraph']);
+        self::assertLessThanOrEqual(6000,strlen(json_encode($preview['context'],JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES)));
     }
 }

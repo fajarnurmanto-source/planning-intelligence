@@ -57,4 +57,15 @@ final class RegulatoryAnnexBenchmarkProfileTest extends TestCase
         self::assertSame(1,$r['adaptive_layout']['unbound_locator_count']);
         self::assertSame(0,$r['numeric_admission']);
     }
+
+    public function test_explanation_detail_gets_separate_review_route_without_invented_operative_parent():void
+    {
+        $text="MEMUTUSKAN:\nPasal 1\n(1) Ketentuan pertama\n\fPENJELASAN\nPasal 1\nAyat (1)\nKetentuan ini menjelaskan penggunaan fasilitas pemilahan secara bertahap.\n\f";
+        $i=['source_sha256'=>str_repeat('A',64)]+(new FullDocumentInventory)->inventory($text,2);
+        $i['layout_candidates']=(new \App\Services\Pi\Development\DocumentLayoutReconstructor)->reconstruct($text,2);
+        $r=(new RegulatoryAnnexBenchmarkProfile)->profile($i);
+        self::assertSame('EXPLANATION_PROVISION_REVIEW',$r['adaptive_layout']['pages'][1]['second_pass_route']);
+        self::assertSame([],$r['adaptive_layout']['pages'][1]['hierarchy_locators']);
+        self::assertSame(0,$r['numeric_admission']);self::assertSame('DENIED',$r['production_admission']);
+    }
 }

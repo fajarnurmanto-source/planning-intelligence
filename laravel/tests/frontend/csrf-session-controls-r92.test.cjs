@@ -41,7 +41,7 @@ test('R92 logout sends Laravel CSRF header and session cookies without exposing 
     calls.push({url, options})
     if (url === '/api/auth/session') {
       return {ok:true, json:async()=>({
-        username:'ci-user', role:'institution_admin', csrf:'ci-only-csrf-token',
+        username:'ci-user', tenant_id:'ID-DIY-YOG', role:'institution_admin', csrf:'ci-only-csrf-token',
       })}
     }
     if (url === '/api/auth/logout') {

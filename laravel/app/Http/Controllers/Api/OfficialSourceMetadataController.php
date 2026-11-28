@@ -25,6 +25,7 @@ final class OfficialSourceMetadataController extends Controller
                 (string) config('pi.official_sources.registry_path')
             ))->read($filters['lane'] ?? null);
 
+            $result['tenant_id'] = $request->user()->tenant_id;
             return response()->json($result)->header('Cache-Control', 'no-store, private');
         } catch (Throwable) {
             return response()->json([

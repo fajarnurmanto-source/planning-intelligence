@@ -1,0 +1,1051 @@
+{
+  "schema": "PI_RESIDUAL_UI_QUALIFICATION_V1",
+  "as_of": "2026-11-28",
+  "summary": {
+    "schema": "PI_P1_RESIDUAL_BROWSER_FIXTURE_ACCEPTANCE_V1",
+    "scope": "REAL_PRODUCT_HTML_JS_BROWSER_WITH_ISOLATED_HTTP_FIXTURES_NOT_OWNER_AUTH_ACCEPTANCE",
+    "original_runtime": "UNTOUCHED_BY_P1_WORKSTREAM",
+    "before": {
+      "tests": 16,
+      "passed": 10,
+      "failed": [
+        {
+          "viewport": 1440,
+          "scenario": "session-expired-catalog",
+          "error": null
+        },
+        {
+          "viewport": 1440,
+          "scenario": "foreign-success-contract",
+          "error": null
+        },
+        {
+          "viewport": 1440,
+          "scenario": "PER-B-planning-journey",
+          "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Rincian', exact: true })\u001b[22m\n"
+        },
+        {
+          "viewport": 390,
+          "scenario": "session-expired-catalog",
+          "error": null
+        },
+        {
+          "viewport": 390,
+          "scenario": "foreign-success-contract",
+          "error": null
+        },
+        {
+          "viewport": 390,
+          "scenario": "PER-B-planning-journey",
+          "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Rincian', exact: true })\u001b[22m\n"
+        }
+      ],
+      "page_errors": [],
+      "external_requests": 0
+    },
+    "after": {
+      "tests": 16,
+      "passed": 16,
+      "failed": [],
+      "page_errors": [],
+      "external_requests": 0
+    },
+    "actual_owner_auth_acceptance": "NOT_RUN_NOT_IMPLIED",
+    "browser_sandbox": true,
+    "raw_receipt": "residual-ui-accepted-raw.json",
+    "raw_sha256": "1c84644c4d746c9c282cee251ffe3b7d20538c7cb519ff7f124b48626b109349",
+    "frontend": {
+      "tests": 81,
+      "pass": 81,
+      "fail": 0,
+      "receipt": "residual-frontend-tests.txt"
+    },
+    "backend_r100": {
+      "tests": 2,
+      "assertions": 176,
+      "status": "PASS"
+    },
+    "failure_classes": [
+      {
+        "id": "CATALOG_HTTP200_TENANT_MISMATCH",
+        "root": "Catalog schema/gates validated but tenant was ignored; old API omitted authenticated tenant identity",
+        "recovery": "Add authenticated tenant_id to existing controller, bind catalog to shared session before rendering; reject malformed items; never reuse rejected promise",
+        "negative_controls": "Foreign-tenant200, invalidschema200, malformedrow,401sessionexpiry,403denial,503manualreload",
+        "limitation": "HTTPfixtures; does not demonstrate actualbackend tenantleak"
+      },
+      {
+        "id": "MOBILE_ROTATED_ARROW_HITBOX",
+        "root": "Grid-stretched arrow rotated90degrees overlays technicaldisclosure hitarea",
+        "recovery": "Boundarrow1.5em/center; technicaldisclosure spansfullrow; normalclickverified390and1440",
+        "limitation": "Productregistryfixture; independent ownerworkflowremaining"
+      }
+    ],
+    "screenshots_inspected": [
+      "residual-ui-final-1440-planning.png",
+      "residual-ui-qualified-390-planning.png"
+    ],
+    "test_harness_corrections": [
+      "Use actual accessible navigation href #pi-view=rinci rather than exact link name Rincian (actual aria-label differs)",
+      "Observe401redirect after catalogrequest instead of waiting for removed dialog",
+      "Normalize rendered labels to lowercase because CSS text-transform uppercase affects innerText; assert both Indonesian labels"
+    ],
+    "source_sha256": {
+      "pi-auth-shell.js": "8f7cda09c7404fa6b60b3e27bc60bd6ce2448028f7ec8e526668f86b140d64a7",
+      "development-case-r85.js": "52138d33877a67d8dbf346e609fd3aee2a9d7a73d4adb0c53e093bef19bba483",
+      "regulatory-laravel-r70g.html": "e8967841c9b3b9d2c5e5a66225466c1078f5ac5fd7ef74e72c6be161b1b442ac",
+      "development-case-r85.html": "7c704758db0976abb314528f336d993aded935239a165e6499025b6ce237a4b2",
+      "planner-workflow-r108.js": "2af9472a45b288cc7b263647c71a8b1c52c2e9da07614b83047c70cb7fe303a8",
+      "development-case-r85.css": "ed5f322639e948cced1b16c5bceb05d88fc180fded32d14ea9a00d0ab893a9c2"
+    },
+    "legal_effect": "NOT_ASSESSED",
+    "numeric_comparison": "BLOCKED",
+    "production_admission": "DENIED"
+  },
+  "raw": {
+    "schema": "PI_RESIDUAL_UI_INTERCEPTION_V1",
+    "started_at": "2026-11-28T04:08:09.243Z",
+    "scope": "REAL_PRODUCT_HTML_JS_BROWSER_WITH_ISOLATED_HTTP_FIXTURES_NOT_OWNER_AUTH_ACCEPTANCE",
+    "browser_sandbox": true,
+    "original_8820": "UNTOUCHED",
+    "external_requests": [],
+    "tests": [
+      {
+        "viewport": 1440,
+        "scenario": "available",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 200
+          }
+        ],
+        "errors": [],
+        "before_reload": "Cari di PI\nTutup\n\n1 hasil ditampilkan · indeks awal, bukan seluruh isi PDF\n\nPerwal 74/2025 tentang Dokumen katalog pengujian · Metadata resmi · UI-LOCAL-CATALOG",
+        "pass": true,
+        "layout": {
+          "viewport": 1440,
+          "document": 1440,
+          "dialog": 640
+        }
+      },
+      {
+        "viewport": 1440,
+        "scenario": "temporary-503-reload",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 200
+          }
+        ],
+        "errors": [],
+        "before_reload": "Cari di PI\nTutupMuat ulang katalog\n\n0 hasil ditampilkan · katalog tidak tersedia",
+        "after_reload": "Cari di PI\nTutup\n\n1 hasil ditampilkan · indeks awal, bukan seluruh isi PDF\n\nPerwal 74/2025 tentang Dokumen katalog pengujian · Metadata resmi · UI-LOCAL-CATALOG",
+        "pass": true,
+        "feature_search_available": true,
+        "layout": {
+          "viewport": 1440,
+          "document": 1440,
+          "dialog": 640
+        }
+      },
+      {
+        "viewport": 1440,
+        "scenario": "invalid-contract-reload",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 200
+          }
+        ],
+        "errors": [],
+        "before_reload": "Cari di PI\nTutupMuat ulang katalog\n\n0 hasil ditampilkan · katalog tidak tersedia",
+        "after_reload": "Cari di PI\nTutup\n\n1 hasil ditampilkan · indeks awal, bukan seluruh isi PDF\n\nPerwal 74/2025 tentang Dokumen katalog pengujian · Metadata resmi · UI-LOCAL-CATALOG",
+        "pass": true,
+        "feature_search_available": true,
+        "layout": {
+          "viewport": 1440,
+          "document": 1440,
+          "dialog": 640
+        }
+      },
+      {
+        "viewport": 1440,
+        "scenario": "session-expired-initial",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 401
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/setup-status",
+            "status": 503
+          }
+        ],
+        "errors": [],
+        "pass": true,
+        "observed": "Redirected to login before search"
+      },
+      {
+        "viewport": 1440,
+        "scenario": "session-expired-catalog",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 401
+          },
+          {
+            "path": "/api/auth/setup-status",
+            "status": 503
+          }
+        ],
+        "errors": [],
+        "pass": true,
+        "observed": "Catalog401 redirects to login, clearing catalogue"
+      },
+      {
+        "viewport": 1440,
+        "scenario": "tenant-denied",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 403
+          }
+        ],
+        "errors": [],
+        "before_reload": "Cari di PI\nTutupMuat ulang katalog\n\n0 hasil ditampilkan · katalog tidak tersedia",
+        "pass": true,
+        "feature_search_available": true,
+        "layout": {
+          "viewport": 1440,
+          "document": 1440,
+          "dialog": 640
+        }
+      },
+      {
+        "viewport": 1440,
+        "scenario": "foreign-success-contract",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 200
+          }
+        ],
+        "errors": [],
+        "before_reload": "Cari di PI\nTutupMuat ulang katalog\n\n0 hasil ditampilkan · katalog tidak tersedia",
+        "pass": true,
+        "security_boundary": "Malformed cross-tenant HTTP200 fixture; not proof backend leaks",
+        "feature_search_available": true,
+        "layout": {
+          "viewport": 1440,
+          "document": 1440,
+          "dialog": 640
+        }
+      },
+      {
+        "viewport": 1440,
+        "scenario": "PER-B-planning-journey",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-superior-r85/development-case",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-superior-r86/regulatory-lifecycle",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 503
+          }
+        ],
+        "classification": "PRODUCT_REGISTRY_BROWSER_FIXTURE",
+        "graph_labels_indonesian": true,
+        "provenance_collapsed": true,
+        "raw_audit_visible": true,
+        "evidence_groups": 22,
+        "layout": {
+          "viewport": 1440,
+          "document": 1440
+        },
+        "pass": true
+      },
+      {
+        "viewport": 390,
+        "scenario": "available",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 200
+          }
+        ],
+        "errors": [],
+        "before_reload": "Cari di PI\nTutup\n\n1 hasil ditampilkan · indeks awal, bukan seluruh isi PDF\n\nPerwal 74/2025 tentang Dokumen katalog pengujian · Metadata resmi · UI-LOCAL-CATALOG",
+        "pass": true,
+        "layout": {
+          "viewport": 390,
+          "document": 390,
+          "dialog": 356
+        }
+      },
+      {
+        "viewport": 390,
+        "scenario": "temporary-503-reload",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 200
+          }
+        ],
+        "errors": [],
+        "before_reload": "Cari di PI\nTutupMuat ulang katalog\n\n0 hasil ditampilkan · katalog tidak tersedia",
+        "after_reload": "Cari di PI\nTutup\n\n1 hasil ditampilkan · indeks awal, bukan seluruh isi PDF\n\nPerwal 74/2025 tentang Dokumen katalog pengujian · Metadata resmi · UI-LOCAL-CATALOG",
+        "pass": true,
+        "feature_search_available": true,
+        "layout": {
+          "viewport": 390,
+          "document": 390,
+          "dialog": 356
+        }
+      },
+      {
+        "viewport": 390,
+        "scenario": "invalid-contract-reload",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 200
+          }
+        ],
+        "errors": [],
+        "before_reload": "Cari di PI\nTutupMuat ulang katalog\n\n0 hasil ditampilkan · katalog tidak tersedia",
+        "after_reload": "Cari di PI\nTutup\n\n1 hasil ditampilkan · indeks awal, bukan seluruh isi PDF\n\nPerwal 74/2025 tentang Dokumen katalog pengujian · Metadata resmi · UI-LOCAL-CATALOG",
+        "pass": true,
+        "feature_search_available": true,
+        "layout": {
+          "viewport": 390,
+          "document": 390,
+          "dialog": 356
+        }
+      },
+      {
+        "viewport": 390,
+        "scenario": "session-expired-initial",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 401
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/setup-status",
+            "status": 503
+          }
+        ],
+        "errors": [],
+        "pass": true,
+        "observed": "Redirected to login before search"
+      },
+      {
+        "viewport": 390,
+        "scenario": "session-expired-catalog",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 401
+          },
+          {
+            "path": "/api/auth/setup-status",
+            "status": 503
+          }
+        ],
+        "errors": [],
+        "pass": true,
+        "observed": "Catalog401 redirects to login, clearing catalogue"
+      },
+      {
+        "viewport": 390,
+        "scenario": "tenant-denied",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 403
+          }
+        ],
+        "errors": [],
+        "before_reload": "Cari di PI\nTutupMuat ulang katalog\n\n0 hasil ditampilkan · katalog tidak tersedia",
+        "pass": true,
+        "feature_search_available": true,
+        "layout": {
+          "viewport": 390,
+          "document": 390,
+          "dialog": 356
+        }
+      },
+      {
+        "viewport": 390,
+        "scenario": "foreign-success-contract",
+        "classification": "SIMULATED_UI_INTERCEPTION",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r72/change-trace",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r71/normative-readiness",
+            "status": 503
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r74/taxonomy",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70j/lineage-candidates",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-planning-r70k/program-candidate",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70g/laravel-read-model",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-regulatory-r70l/normative-root",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 200
+          }
+        ],
+        "errors": [],
+        "before_reload": "Cari di PI\nTutupMuat ulang katalog\n\n0 hasil ditampilkan · katalog tidak tersedia",
+        "pass": true,
+        "security_boundary": "Malformed cross-tenant HTTP200 fixture; not proof backend leaks",
+        "feature_search_available": true,
+        "layout": {
+          "viewport": 390,
+          "document": 390,
+          "dialog": 356
+        }
+      },
+      {
+        "viewport": 390,
+        "scenario": "PER-B-planning-journey",
+        "api": [
+          {
+            "path": "/api/qa-subscription-r69e/entitlements",
+            "status": 200
+          },
+          {
+            "path": "/api/auth/session",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-superior-r85/development-case",
+            "status": 200
+          },
+          {
+            "path": "/api/qa-superior-r86/regulatory-lifecycle",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 503
+          },
+          {
+            "path": "/api/qa-superior-r100/official-sources",
+            "status": 503
+          }
+        ],
+        "classification": "PRODUCT_REGISTRY_BROWSER_FIXTURE",
+        "graph_labels_indonesian": true,
+        "provenance_collapsed": true,
+        "raw_audit_visible": true,
+        "evidence_groups": 22,
+        "layout": {
+          "viewport": 390,
+          "document": 390
+        },
+        "pass": true
+      }
+    ],
+    "source_sha256": {
+      "pi-auth-shell.js": "8f7cda09c7404fa6b60b3e27bc60bd6ce2448028f7ec8e526668f86b140d64a7",
+      "development-case-r85.js": "52138d33877a67d8dbf346e609fd3aee2a9d7a73d4adb0c53e093bef19bba483",
+      "regulatory-laravel-r70g.html": "e8967841c9b3b9d2c5e5a66225466c1078f5ac5fd7ef74e72c6be161b1b442ac",
+      "development-case-r85.html": "7c704758db0976abb314528f336d993aded935239a165e6499025b6ce237a4b2",
+      "planner-workflow-r108.js": "2af9472a45b288cc7b263647c71a8b1c52c2e9da07614b83047c70cb7fe303a8",
+      "development-case-r85.css": "ed5f322639e948cced1b16c5bceb05d88fc180fded32d14ea9a00d0ab893a9c2"
+    },
+    "fixture_origin": "http://127.0.0.1:54915",
+    "ended_at": "2026-11-28T04:08:30.445Z"
+  },
+  "owner_runtime": "ONLY_SEPARATE_APPROVED_R106Diagnostic1_APPLIED_BY_PARENT",
+  "acceptance": "SIMULATED_UI_INTERCEPTION_PASS_NOT_OWNER_AUTH_ACCEPTANCE",
+  "production_admission": "DENIED"
+}

@@ -1,0 +1,17 @@
+# PI state capsule — 28 November 2026
+
+Development repository: C:/Users/fajar/.codex/worktrees/pi-r87-lean-runtime/PI_GITHUB_BRIDGE_20261108. Branch codex/pi-single-runtime-windows-app-20261122; PR78 draft. Starting HEAD fed19ebfec6d65d96b0802a01eb5d9a59304a712. Current implementation commit is the Git commit containing this capsule; use git log rather than inferring the original runtime from branch HEAD.
+
+Completed: real8PDF/1119page adaptive batch; independent AI-assisted96page reference with48development/48holdout; sparse-native visual hold and separate explanation route; exact physical-page denominator/locator checks. Holdout match8→17/48, still25abstentions/6mismatch.95of422 prior format-review pages more specific,327stillalternative/visual. No certified gold or general extraction-accuracy claim.
+
+HRIA: actual Windows CRLF failure repaired;7mandate classifications+2negatives PASS,7bounded PP-body previews;14retrieved candidates,6article overlaps on independent candidate reference across6/7cases. UU21 remains realPPdelegation but not preamble-cited. Substantive semantics/currentvalidity/harmonization NOT_ASSESSED. Gemini oversized context rejected before local quota reservation; fakeHTTP only. No provider egress.
+
+P1: session-bound catalog and authenticated tenant_id, strict row contract and401redirect; mobile arrow hitbox fixed. Real product browser16/16isolated response fixtures PASS,1440/390,sandbox active, no external requests.244backendtests/2216assertions and87frontend+JS PASS. Original raw failures/attempts/PNG files retained. Fixture success is not owner authenticated acceptance.
+
+Owner runtime original8820/PID5704: previous Integrated56+Gemini6 retained. Only separately authorized R106Diagnostic1 exactonefile4c7adadc applied this batch; backup APR_R106Diagnostic1_20261128-110501-481-75325568; pre/postTinker,servedSHA,CSRF,anonymous401,protectedfiles,idempotencePASS. No database/config/account/session/launcher edits. New core/catalog/HRIA/budget/CSS candidate changes are NOT deployed. Ownerauthenticated diagnostic UI remains NOT_RUN. Pinned diagnostic checkout C:/Users/fajar/.codex/worktrees/pi-r106-diagnostic-pinned/PI_GITHUB_BRIDGE_20261108 retained for exact rollback/review.
+
+Main report docs/PI_INTELLIGENCE_QUALIFICATION_20261128.md; all compact receipts docs/acceptance/*20261128.json; independent HRIA reference *20261127.json. Raw local evidence qualification/intelligence-20261127; manifest hashes retained. Reproduce offline CLI and browser per report. Historical snapshots, DBclones,backups and unrelated untracked diagnostics preserved.
+
+Next: independent unseen page sample for remaining formats (prior holdout now consumed), human-certified hierarchy/cell/numeric references, improve remaining lexical relevance without hardcoded legal mappings, deeper planning/fiscal context evidence, owner authenticated UI on accepted newrelease only after separate scoped approval. P2 evidence-bound result reuse and external model capability verification still open. Do not reapplyIntegrated56/Gemini6 or deploy development HEAD as an owner bundle. Do not auto-merge.
+
+Progress14/40=35% provisional; allG1-G7OPEN. LEGAL_HARMONIZATION/LEGAL_EFFECT=NOT_ASSESSED; NUMERIC_COMPARISON=BLOCKED; FISCAL_ADMISSION=ZERO; REVIEW_DECISION=NO_ACTIVE_DECISION; RELATION_PROMOTION=NOT_PERFORMED; PRODUCTION_ADMISSION=DENIED. PublishedCI must be checked against exact implementation SHA onPR78; CI PDF acquisition is nonblocking and any0/8 is not accepted as corpus success.

@@ -1,0 +1,34 @@
+{
+  "schema": "PI_P2_QUOTA_PREFLIGHT_QUALIFICATION_V1",
+  "as_of": "2026-11-28",
+  "before": {
+    "schema": "PI_P2_QUOTA_PREFLIGHT_RED_V1",
+    "starting_head": "fed19ebfec6d65d96b0802a01eb5d9a59304a712",
+    "status": "EXPECTED_FAILURE_CONFIRMED",
+    "tests": 2,
+    "assertions": 4,
+    "failures": 1,
+    "errors": 1,
+    "failure": "Expected LOCAL_AI_CONTEXT_TOO_LARGE, actual PROVIDER_PREFLIGHT after quota reservation",
+    "error": "remaining_requests absent from receipt",
+    "scope": "Laravel PHPUnit in-memory database and fake HTTP; no provider egress",
+    "root_cause": "Existing recovery reserves Gemini request and scheduling units before adapter rejects encoded contexts over 6000 bytes"
+  },
+  "after": {
+    "tests": 7,
+    "assertions": 51,
+    "result": "PASS",
+    "scope": "SIMULATED_HTTP_IN_MEMORY_TEST_DATABASE"
+  },
+  "improvement": "Contexts above encoded 6000-byte cap do not reserve requests or units; receipt includes remaining local policy units",
+  "provider_egress": 0,
+  "provider_quota": "NOT_VERIFIED",
+  "billing": "NOT_VERIFIED",
+  "context_truncation": "NOT_PERFORMED",
+  "unimplemented": [
+    "Evidence-bound result reuse beyond existing preview binding",
+    "External model capability verification",
+    "Measured live token savings"
+  ],
+  "production_admission": "DENIED"
+}

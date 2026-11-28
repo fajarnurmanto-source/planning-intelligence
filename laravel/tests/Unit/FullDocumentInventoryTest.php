@@ -29,4 +29,14 @@ final class FullDocumentInventoryTest extends TestCase
         $r=(new FullDocumentInventory)->inventory("Pasal 1\f\f",2);
         self::assertSame(1,$r['no_text_pages']);
     }
+
+    public function test_visual_footer_and_fragmented_glyphs_are_not_usable_native_text(): void
+    {
+        $text="2023, No.144\n-37-\nwww.peraturan.go.id\n\f.. c ~ ~8 8 !;\n f. -\n .l! c ~\n\fPasal 1\nKetentuan berlaku\n\f";
+        $r=(new FullDocumentInventory)->inventory($text,3);
+        self::assertSame('SPARSE_OR_FRAGMENTED_REQUIRES_VISUAL',$r['pages'][0]['native_text_quality']['state']);
+        self::assertSame('SPARSE_OR_FRAGMENTED_REQUIRES_VISUAL',$r['pages'][1]['native_text_quality']['state']);
+        self::assertSame('UNVERIFIED_TEXT_AVAILABLE',$r['pages'][2]['native_text_quality']['state']);
+        self::assertSame(strtoupper(hash('sha256',explode("\f",$text)[0])),$r['pages'][0]['text_sha256']);
+    }
 }

@@ -47,13 +47,16 @@ final class HybridPrimaryLegalReasoner
         foreach($retrieved as $candidate){
             if(!is_array($candidate)||($candidate['evidence_state']??null)!=='PP_BODY_LEXICAL_CANDIDATE_FOR_REVIEW'||($candidate['truncated']??true)
                 ||!is_int($candidate['article']??null)||$candidate['article']<1||$candidate['article']>999||isset($seenArticles[$candidate['article']])
-                ||!is_int($candidate['pdf_page']??null)||$candidate['pdf_page']<1||!is_string($candidate['excerpt']??null)||mb_strlen($candidate['excerpt'])>700
-                ||!preg_match('/^Pasal\h+'.preg_quote((string)$candidate['article'],'/').'\b/u',$candidate['excerpt'])
+                ||!is_int($candidate['pdf_page']??null)||$candidate['pdf_page']<1||!is_string($candidate['excerpt']??null)||mb_strlen($candidate['excerpt'])>1200
+                || !(isset($candidate['paragraph'])
+                    ? (is_int($candidate['paragraph']) && $candidate['paragraph'] >= 1 && $candidate['paragraph'] <= 99
+                        && preg_match('/^\(\h*'.preg_quote((string)$candidate['paragraph'],'/').'\h*\)/u',$candidate['excerpt']))
+                    : preg_match('/^Pasal\h+'.preg_quote((string)$candidate['article'],'/').'\b/u',$candidate['excerpt']))
                 ||strtoupper(hash('sha256',$candidate['excerpt']))!==($candidate['excerpt_sha256']??null))throw new RuntimeException('HRIA_PP_BODY_EXCERPT_HOLD');
             $seenArticles[$candidate['article']]=true;
             $src=$sources['PP-81-2012'];
             $next=$ctx;
-            $next['evidence'][]=['id'=>'P'.(count($ctx['evidence'])+1),'instrument_id'=>'PP-81-2012','source_url'=>$src['acquisition_url'],'source_sha256'=>$src['pdf_sha256'],'pdf_page'=>$candidate['pdf_page'],'excerpt'=>$candidate['excerpt'],'excerpt_sha256'=>$candidate['excerpt_sha256'],'role'=>'PP_BODY_LEXICAL_CANDIDATE','article'=>$candidate['article']];
+            $next['evidence'][]=['id'=>'P'.(count($ctx['evidence'])+1),'instrument_id'=>'PP-81-2012','source_url'=>$src['acquisition_url'],'source_sha256'=>$src['pdf_sha256'],'pdf_page'=>$candidate['pdf_page'],'excerpt'=>$candidate['excerpt'],'excerpt_sha256'=>$candidate['excerpt_sha256'],'role'=>'PP_BODY_LEXICAL_CANDIDATE','article'=>$candidate['article'],'paragraph'=>$candidate['paragraph']??null];
             if(strlen(json_encode($next,JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES))<=6000){$ctx=$next;$included++;}
         }
         $raw=json_encode($ctx,JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);

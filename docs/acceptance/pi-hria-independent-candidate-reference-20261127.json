@@ -1,0 +1,403 @@
+{
+  "schema": "pi.hria.independent-candidate-reference.v1",
+  "frozen_at_utc": "2026-11-27T22:57:25.1184779Z",
+  "independence": "Source text and three rendered physical pages read before benchmark output; no engine predictions used",
+  "identity": "AI_ASSISTED_CANDIDATE_REFERENCE_NOT_HUMAN_CERTIFIED",
+  "source_pins": {
+    "UU_18_2008": "DC7735DB65D6DEDC650FF78C36B6C6F076CF931861B005EDAB03F30E513026F4",
+    "PP_81_2012": "542CE23457FE19529887D3B0BD4B14FAAE7F6F1E269CBFC5B840E117B2CDEE53"
+  },
+  "excerpt_hash_encoding": "UTF-8; exact independently extracted excerpt.Trim(); physical page furniture retained",
+  "positive_count": 7,
+  "negative_count": 2,
+  "cases": [
+    {
+      "article": 11,
+      "reference_class": "POSITIVE_PREAMBLE_MANDATE_WITH_SUBSTANTIVE_CANDIDATES",
+      "uu": {
+        "article": 11,
+        "physical_start": 8,
+        "excerpt": "Pasal 11\n\n(1) Setiap orang berhak:\n    a. mendapatkan pelayanan dalam pengelolaan sampah\n       secara baik dan berwawasan lingkungan dari\n       Pemerintah, pemerintah daerah, dan/atau pihak\n       lain yang diberi tanggung jawab untuk itu;\n    b. berpartisipasi   dalam     proses pengambilan\n       keputusan, penyelenggaraan, dan pengawasan di\n       bidang pengelolaan sampah;\n    c. memperoleh informasi yang benar, akurat, dan\n       tepat waktu mengenai penyelenggaraan pengelolaan\n       sampah;\n    d. mendapatkan pelindungan dan kompensasi karena\n       dampak negatif dari kegiatan tempat pemrosesan\n       akhir sampah; dan\n    e. memperoleh pembinaan agar dapat melaksanakan\n       pengelolaan sampah secara baik dan berwawasan\n       lingkungan.\n\n(2) Ketentuan lebih lanjut mengenai tata cara penggunaan\n    hak sebagaimana dimaksud pada ayat (1) diatur\n    dengan peraturan pemerintah dan peraturan daerah\n    sesuai dengan kewenangannya.\n\n\n\n                                       Bagian Kedua . . .\n\f                    -9-\n\n               Bagian Kedua\n                Kewajiban",
+        "excerpt_sha256": "8b15ea4aec3bc8f5920c48cf6c174b6a86a63f4324a0695a0f42ca0014bf27db"
+      },
+      "pp_body_candidates": [
+        {
+          "article": 34,
+          "physical_start": 14,
+          "excerpt": "Pasal 34\n(1) Pemerintah provinsi dan pemerintah kabupaten/kota menyediakan\n    informasi mengenai pengelolaan sampah rumah tangga dan sampah\n    sejenis sampah rumah tangga.\n(2) Informasi pengelolaan sampah sebagaimana dimaksud pada ayat (1)\n    paling sedikit memberikan informasi mengenai:\n   a.   sumber sampah;\n   b.   timbulan sampah;\n\n\n                                                    www.djpp.depkumham.go.id\n\f                                   15                    2012, No.188\n\n\n\n    c.   komposisi sampah;\n    d.   karakteristik sampah;\n    e.   fasilitas pengelolaan sampah rumah tangga dan sampah sejenis\n         sampah rumah tangga; dan\n    f.   informasi lain terkait pengelolaan sampah rumah tangga dan\n         sampah sejenis sampah rumah tangga yang diperlukan dalam\n         rangka pengelolaan sampah.\n(3) Informasi sebagaimana dimaksud pada ayat (1) terhubung sebagai\n    satu jejaring sistem informasi pengelolaan sampah rumah tangga dan\n    sampah sejenis sampah rumah tangga yang dikoordinasikan oleh\n    menteri yang menyelengarakan urusan pemerintahan di bidang\n    perlindungan dan pengelolaan lingkungan hidup.\n(4) Informasi sebagaimana dimaksud pada ayat (3) harus dapat diakses\n    oleh setiap orang.\n                                 BAB VII\n                         PERAN MASYARAKAT",
+          "excerpt_sha256": "fdd274e02408c3ae1c49d5f392104d3926acbe0bd4bd2fe27ecd566ea7caa4db"
+        },
+        {
+          "article": 35,
+          "physical_start": 15,
+          "excerpt": "Pasal 35\n(1) Masyarakat berperan serta dalam proses pengambilan keputusan,\n    penyelenggaraan, dan pengawasan dalam kegiatan pengelolaan\n    sampah rumah tangga dan sampah sejenis sampah rumah tangga\n    yang diselenggarakan oleh Pemerintah dan/atau pemerintah daerah.\n(2) Peran serta masyarakat sebagaimana dimaksud pada ayat (1) dapat\n    berupa:\n    a.   pemberian usul, pertimbangan, dan/atau saran kepada\n         Pemerintah dan/atau pemerintah daerah dalam kegiatan\n         pengelolaan sampah;\n    b.   pemberian saran dan pendapat dalam perumusan kebijakan dan\n         strategi pengelolaan sampah rumah tangga dan sampah sejenis\n         sampah rumah tangga;\n    c.   pelaksanaan kegiatan penanganan sampah rumah tangga dan\n         sampah sejenis sampah rumah tangga yang dilakukan secara\n         mandiri dan/atau bermitra dengan pemerintah kabupaten/kota;\n         dan/atau\n    d.   pemberian    pendidikan   dan pelatihan, kampanye, dan\n         pendampingan oleh kelompok masyarakat kepada anggota\n         masyarakat dalam pengelolaan sampah untuk mengubah\n         perilaku anggota masyarakat.\n(3) Peran serta masyarakat sebagaimana dimaksud pada ayat (2) huruf a\n    dan huruf b disampaikan melalui forum yang keanggotaannya terdiri\n    atas pihak-pihak terkait.\n\n\n                                                   www.djpp.depkumham.go.id\n\f2012, No.188                          16\n\n\n\n                                   BAB VIII\n                                 PEMBINAAN",
+          "excerpt_sha256": "8f341233a261c76e5e6ca2eb8e38d7bbb2049862ae3c1d335f7ce181256f9057"
+        },
+        {
+          "article": 31,
+          "physical_start": 13,
+          "excerpt": "Pasal 31\n(1) Pemerintah kabupaten/kota secara sendiri atau secara bersama dapat\n    memberikan kompensasi sebagai akibat dampak negatif yang\n    ditimbulkan oleh kegiatan pemrosesan akhir sampah.\n(2) Dampak negatif yang ditimbulkan oleh kegiatan pemrosesan akhir\n    sampah sebagaimana dimaksud pada ayat (1) diakibatkan oleh:\n    a.   pencemaran air;\n    b.   pencemaran udara;\n    c.   pencemaran tanah;\n    d.   longsor;\n    e.   kebakaran;\n    f.   ledakan gas metan; dan/atau\n    g.   hal lain yang menimbulkan dampak negatif.\n(3) Bentuk kompensasi sebagaimana dimaksud pada ayat (1) berupa:\n    a.   relokasi penduduk;\n    b.   pemulihan lingkungan;\n    c.   biaya kesehatan dan pengobatan;\n    d.   penyediaan fasilitas sanitasi dan kesehatan; dan/atau\n    e.   kompensasi dalam bentuk lain.",
+          "excerpt_sha256": "4a479288f1032457bd656b517f5983d8bca172792795c7f52af9df06c7d8025f"
+        }
+      ],
+      "subject": "Setiap orang; Pemerintah dan pemerintah daerah",
+      "object": "Hak pelayanan, partisipasi, informasi, pelindungan/kompensasi dan pembinaan",
+      "scope": "Tata cara penggunaan hak; PP dan Perda sesuai kewenangan",
+      "authority": "Presiden menerbitkan PP; pembagian kewenangan PP/Perda tidak disatukan",
+      "time": "Pinned historical text only; current validity and as-of applicability NOT_ASSESSED",
+      "exceptions": "PP31 membatasi pemberi kompensasi pada kabupaten/kota; tidak membuktikan seluruh hak telah diimplementasikan",
+      "candidate_relation": "SEMANTIC_ALIGNMENT_CANDIDATE",
+      "preamble_relation": "CITES_AS_BASIS",
+      "delegation_relation": "DELEGATES_TO",
+      "implementation_relation": "NOT_PROMOTED"
+    },
+    {
+      "article": 16,
+      "reference_class": "POSITIVE_PREAMBLE_MANDATE_WITH_SUBSTANTIVE_CANDIDATES",
+      "uu": {
+        "article": 16,
+        "physical_start": 9,
+        "excerpt": "Pasal 16\n\nKetentuan lebih lanjut mengenai tata cara penyediaan\nfasilitas pemilahan sampah sebagaimana dimaksud dalam\nPasal 13, tata cara pelabelan atau penandaan sebagaimana\ndimaksud dalam Pasal 14, dan          kewajiban produsen\nsebagaimana dimaksud dalam Pasal 15 diatur dengan\nperaturan pemerintah.\n\n\n                                                  BAB V . . .\n\f                   - 10 -\n\n                  BAB V\n                PERIZINAN",
+        "excerpt_sha256": "ebfbb0b36ce4cc44aa424ee6a0b0f4f7c3d25fdd2bffa3e332bd966abf99e252"
+      },
+      "pp_body_candidates": [
+        {
+          "article": 12,
+          "physical_start": 5,
+          "excerpt": "Pasal 12\nProdusen wajib melakukan pembatasan timbulan sampah dengan:\na.   menyusun rencana dan/atau program pembatasan timbulan sampah\n     sebagai bagian dari usaha dan/atau kegiatannya; dan/atau\nb.   menghasilkan produk dengan menggunakan kemasan yang mudah\n     diurai oleh proses alam dan yang menimbulkan sampah sesedikit\n     mungkin.\n\n\n\n                                                   www.djpp.depkumham.go.id\n\f2012, No.188                       6",
+          "excerpt_sha256": "609187da95ad52558ffd65327b4c68310c24c27616fd147c291b1b180e83c5d8"
+        },
+        {
+          "article": 13,
+          "physical_start": 6,
+          "excerpt": "Pasal 13\n(1) Produsen wajib melakukan pendauran ulang sampah dengan:\n     a.   menyusun program pendauran ulang sampah sebagai bagian dari\n          usaha dan/atau kegiatannya;\n     b.   menggunakan bahan baku produksi yang dapat didaur ulang;\n          dan/atau\n     c.   menarik kembali sampah dari produk dan kemasan produk\n          untuk didaur ulang.\n(2) Dalam melakukan pendauran ulang sampah sebagaimana dimaksud\n    pada ayat (1), produsen dapat menunjuk pihak lain.\n(3) Pihak lain, dalam melakukan pendauran ulang sebagaimana\n    dimaksud pada ayat (2), wajib memiliki izin usaha dan/atau kegiatan.\n(4) Dalam hal pendauran ulang sampah untuk menghasilkan kemasan\n    pangan, pelaksanaan pendauran ulang wajib mengikuti ketentuan\n    peraturan perundangan-undangan di bidang pengawasan obat dan\n    makanan.",
+          "excerpt_sha256": "45b255d2af281c981bded84104179d53d71614ada8c26ff66840adccbe61f1fb"
+        },
+        {
+          "article": 14,
+          "physical_start": 6,
+          "excerpt": "Pasal 14\nProdusen wajib melakukan pemanfaatan kembali sampah dengan:\na.   menyusun rencana dan/atau program pemanfaatan kembali sampah\n     sebagai bagian dari usaha dan/atau kegiatannya sesuai dengan\n     kebijakan dan strategi pengelolaan sampah;\nb.   menggunakan bahan baku produksi yang dapat diguna ulang;\n     dan/atau\nc.   menarik kembali sampah dari produk dan kemasan produk untuk\n     diguna ulang.",
+          "excerpt_sha256": "834299218065a0a591f7197fc9d7d7bb772a509adc61bf3beb660605f64afdc8"
+        },
+        {
+          "article": 15,
+          "physical_start": 6,
+          "excerpt": "Pasal 15\n(1) Penggunaan bahan baku produksi dan kemasan yang dapat diurai\n    oleh proses alam, yang menimbulkan sesedikit mungkin sampah, dan\n    yang dapat didaur ulang dan/atau diguna ulang sebagaimana\n    dimaksud dalam Pasal 12 sampai dengan Pasal 14 dilakukan secara\n    bertahap persepuluh tahun melalui peta jalan.\n(2) Pentahapan sebagaimana dimaksud pada ayat (1) diatur oleh menteri\n    yang menyelenggarakan urusan pemerintahan di bidang perlindungan\n    dan pengelolaan lingkungan hidup.\n(3) Dalam menetapkan peta jalan sebagaimana dimaksud pada ayat (1)\n    menteri yang menyelenggarakan urusan pemerintahan di bidang\n    perlindungan dan pengelolaan lingkungan hidup berkoordinasi\n    dengan menteri yang menyelenggarakan urusan pemerintahan di\n\n\n\n                                                     www.djpp.depkumham.go.id\n\f                                    7                       2012, No.188\n\n\n\n     bidang perindustrian dan melakukan konsultasi publik dengan\n     produsen.\n(4) Ketentuan lebih lanjut mengenai tata cara pengurangan sampah\n    diatur dengan peraturan menteri yang menyelenggarakan urusan\n    pemerintahan di bidang perlindungan dan pengelolaan lingkungan\n    hidup setelah berkoordinasi dengan menteri yang menyelenggarakan\n    urusan pemerintahan di bidang perindustrian dan melakukan\n    konsultasi publik dengan produsen.\n                              Bagian Kedua\n                            Penanganan Sampah",
+          "excerpt_sha256": "aeec804773688201e2658a809421093ef1b70e0f8f343c4ca631d28226cf0ea5"
+        },
+        {
+          "article": 17,
+          "physical_start": 7,
+          "excerpt": "Pasal 17\n(1) Pemilahan sampah sebagaimana dimaksud dalam Pasal 16 huruf a\n    dilakukan oleh:\n     a.   setiap orang pada sumbernya;\n     b.   pengelola kawasan permukiman, kawasan komersial, kawasan\n          industri, kawasan khusus, fasilitas umum, fasilitas sosial, dan\n          fasilitas lainnya; dan\n     c.   pemerintah kabupaten/kota.\n(2) Pemilahan sebagaimana dimaksud pada ayat (1) dilakukan melalui\n    kegiatan pengelompokan sampah menjadi paling sedikit 5 (lima) jenis\n    sampah yang terdiri atas:\n     a.   sampah yang mengandung bahan berbahaya dan beracun serta\n          limbah bahan berbahaya dan beracun;\n     b.   sampah yang mudah terurai;\n     c.   sampah yang dapat digunakan kembali;\n     d.   sampah yang dapat didaur ulang; dan\n     e.   sampah lainnya.\n\n\n\n\n                                                      www.djpp.depkumham.go.id\n\f2012, No.188                           8\n\n\n\n(3) Pengelola kawasan permukiman, kawasan komersial, kawasan\n    industri, kawasan khusus, fasilitas umum, fasilitas sosial, dan\n    fasilitas lainnya dalam melakukan pemilahan sampah wajib\n    menyediakan sarana pemilahan sampah skala kawasan.\n(4) Pemerintah kabupaten/kota menyediakan sarana pemilahan sampah\n    skala kabupaten/kota.\n(5) Pemilahan sampah sebagaimana dimaksud pada ayat (3) dan ayat (4)\n    harus menggunakan sarana yang memenuhi persyaratan:\n   a.   jumlah sarana sesuai jenis pengelompokan sampah sebagaimana\n        dimaksud pada ayat (2);\n   b.   diberi label atau tanda; dan\n   c.   bahan, bentuk, dan warna wadah.",
+          "excerpt_sha256": "95d43d024cc9b1577eb1a1e53d7c6b69fe477207786158fd209efc247e077d3f"
+        }
+      ],
+      "subject": "Pengelola kawasan dan produsen",
+      "object": "Fasilitas pemilahan, pelabelan/penandaan dan kewajiban produsen",
+      "scope": "Rujukan UU13–15; PP17(3–5), PP12–15",
+      "authority": "Presiden menerbitkan PP; pembagian kewenangan PP/Perda tidak disatukan",
+      "time": "Pinned historical text only; current validity and as-of applicability NOT_ASSESSED",
+      "exceptions": "PP15 bertahap persepuluh tahun; PP13(4) tunduk pengawasan pangan; kelengkapan implementasi belum dinilai",
+      "candidate_relation": "SEMANTIC_ALIGNMENT_CANDIDATE",
+      "preamble_relation": "CITES_AS_BASIS",
+      "delegation_relation": "DELEGATES_TO",
+      "implementation_relation": "NOT_PROMOTED"
+    },
+    {
+      "article": 20,
+      "reference_class": "POSITIVE_PREAMBLE_MANDATE_WITH_SUBSTANTIVE_CANDIDATES",
+      "uu": {
+        "article": 20,
+        "physical_start": 11,
+        "excerpt": "Pasal 20\n\n(1) Pengurangan sampah sebagaimana dimaksud dalam\n    Pasal 19 huruf a meliputi kegiatan:\n    a. pembatasan timbulan sampah;\n    b. pendauran ulang sampah; dan/atau\n    c. pemanfaatan kembali sampah.\n\n(2) Pemerintah dan pemerintah daerah wajib melakukan\n    kegiatan sebagaimana dimaksud pada ayat (1) sebagai\n    berikut:\n    a. menetapkan target pengurangan sampah secara\n       bertahap dalam jangka waktu tertentu;\n    b. memfasilitasi penerapan teknologi yang ramah\n       lingkungan;\n    c. memfasilitasi penerapan label produk yang ramah\n       lingkungan;\n    d. memfasilitasi kegiatan mengguna ulang dan\n       mendaur ulang; dan\n    e. memfasilitasi  pemasaran    produk-produk   daur\n       ulang.\n\n(3) Pelaku   usaha   dalam     melaksanakan kegiatan\n    sebagaimana dimaksud pada ayat (1) menggunakan\n    bahan produksi yang menimbulkan sampah sesedikit\n    mungkin, dapat diguna ulang, dapat didaur ulang,\n    dan/atau mudah diurai oleh proses alam.\n\n(4) Masyarakat dalam melakukan kegiatan pengurangan\n    sampah sebagaimana dimaksud pada ayat (1)\n    menggunakan bahan yang dapat diguna ulang, didaur\n    ulang, dan/atau mudah diurai oleh proses alam.\n\n(5) Ketentuan lebih lanjut mengenai pengurangan sampah\n    sebagaimana dimaksud pada ayat (1), ayat (2), ayat (3),\n    dan ayat (4) diatur dengan peraturan pemerintah.\n\n\n\n                                              Pasal 21 . . .\n\f                    - 12 -",
+        "excerpt_sha256": "871a7eabdc1b3c7fe6b07c921f07e9c9c8e65c58e21a913fee2300d23f85a4cd"
+      },
+      "pp_body_candidates": [
+        {
+          "article": 11,
+          "physical_start": 5,
+          "excerpt": "Pasal 11\n(1) Pengurangan sampah meliputi:\n     a.   pembatasan timbulan sampah;\n     b.   pendauran ulang sampah; dan/atau\n     c.   pemanfaatan kembali sampah.\n(2) Pengurangan sampah sebagaimana dimaksud pada ayat (1) dilakukan\n    dengan cara:\n     a.   menggunakan bahan yang dapat diguna ulang, bahan yang dapat\n          didaur ulang, dan/atau bahan yang mudah diurai oleh proses\n          alam; dan/atau\n     b.   mengumpulkan dan menyerahkan kembali sampah dari produk\n          dan/atau kemasan yang sudah digunakan.\n(3) Ketentuan lebih lanjut mengenai tata cara mengumpulkan dan\n    menyerahkan kembali sampah diatur dengan peraturan menteri yang\n    menyelenggarakan urusan pemerintahan di bidang perlindungan dan\n    pengelolaan lingkungan hidup.",
+          "excerpt_sha256": "3da73a1a141e4b6cad5c20326099ee2d9b0e001a8f0ea7b960861170dcc5ce1a"
+        },
+        {
+          "article": 12,
+          "physical_start": 5,
+          "excerpt": "Pasal 12\nProdusen wajib melakukan pembatasan timbulan sampah dengan:\na.   menyusun rencana dan/atau program pembatasan timbulan sampah\n     sebagai bagian dari usaha dan/atau kegiatannya; dan/atau\nb.   menghasilkan produk dengan menggunakan kemasan yang mudah\n     diurai oleh proses alam dan yang menimbulkan sampah sesedikit\n     mungkin.\n\n\n\n                                                   www.djpp.depkumham.go.id\n\f2012, No.188                       6",
+          "excerpt_sha256": "609187da95ad52558ffd65327b4c68310c24c27616fd147c291b1b180e83c5d8"
+        },
+        {
+          "article": 13,
+          "physical_start": 6,
+          "excerpt": "Pasal 13\n(1) Produsen wajib melakukan pendauran ulang sampah dengan:\n     a.   menyusun program pendauran ulang sampah sebagai bagian dari\n          usaha dan/atau kegiatannya;\n     b.   menggunakan bahan baku produksi yang dapat didaur ulang;\n          dan/atau\n     c.   menarik kembali sampah dari produk dan kemasan produk\n          untuk didaur ulang.\n(2) Dalam melakukan pendauran ulang sampah sebagaimana dimaksud\n    pada ayat (1), produsen dapat menunjuk pihak lain.\n(3) Pihak lain, dalam melakukan pendauran ulang sebagaimana\n    dimaksud pada ayat (2), wajib memiliki izin usaha dan/atau kegiatan.\n(4) Dalam hal pendauran ulang sampah untuk menghasilkan kemasan\n    pangan, pelaksanaan pendauran ulang wajib mengikuti ketentuan\n    peraturan perundangan-undangan di bidang pengawasan obat dan\n    makanan.",
+          "excerpt_sha256": "45b255d2af281c981bded84104179d53d71614ada8c26ff66840adccbe61f1fb"
+        },
+        {
+          "article": 14,
+          "physical_start": 6,
+          "excerpt": "Pasal 14\nProdusen wajib melakukan pemanfaatan kembali sampah dengan:\na.   menyusun rencana dan/atau program pemanfaatan kembali sampah\n     sebagai bagian dari usaha dan/atau kegiatannya sesuai dengan\n     kebijakan dan strategi pengelolaan sampah;\nb.   menggunakan bahan baku produksi yang dapat diguna ulang;\n     dan/atau\nc.   menarik kembali sampah dari produk dan kemasan produk untuk\n     diguna ulang.",
+          "excerpt_sha256": "834299218065a0a591f7197fc9d7d7bb772a509adc61bf3beb660605f64afdc8"
+        },
+        {
+          "article": 15,
+          "physical_start": 6,
+          "excerpt": "Pasal 15\n(1) Penggunaan bahan baku produksi dan kemasan yang dapat diurai\n    oleh proses alam, yang menimbulkan sesedikit mungkin sampah, dan\n    yang dapat didaur ulang dan/atau diguna ulang sebagaimana\n    dimaksud dalam Pasal 12 sampai dengan Pasal 14 dilakukan secara\n    bertahap persepuluh tahun melalui peta jalan.\n(2) Pentahapan sebagaimana dimaksud pada ayat (1) diatur oleh menteri\n    yang menyelenggarakan urusan pemerintahan di bidang perlindungan\n    dan pengelolaan lingkungan hidup.\n(3) Dalam menetapkan peta jalan sebagaimana dimaksud pada ayat (1)\n    menteri yang menyelenggarakan urusan pemerintahan di bidang\n    perlindungan dan pengelolaan lingkungan hidup berkoordinasi\n    dengan menteri yang menyelenggarakan urusan pemerintahan di\n\n\n\n                                                     www.djpp.depkumham.go.id\n\f                                    7                       2012, No.188\n\n\n\n     bidang perindustrian dan melakukan konsultasi publik dengan\n     produsen.\n(4) Ketentuan lebih lanjut mengenai tata cara pengurangan sampah\n    diatur dengan peraturan menteri yang menyelenggarakan urusan\n    pemerintahan di bidang perlindungan dan pengelolaan lingkungan\n    hidup setelah berkoordinasi dengan menteri yang menyelenggarakan\n    urusan pemerintahan di bidang perindustrian dan melakukan\n    konsultasi publik dengan produsen.\n                              Bagian Kedua\n                            Penanganan Sampah",
+          "excerpt_sha256": "aeec804773688201e2658a809421093ef1b70e0f8f343c4ca631d28226cf0ea5"
+        }
+      ],
+      "subject": "Pemerintah, pemerintah daerah, pelaku usaha dan masyarakat",
+      "object": "Pembatasan timbulan, daur ulang dan pemanfaatan kembali",
+      "scope": "UU20(1–4); PP11–15",
+      "authority": "Presiden menerbitkan PP; pembagian kewenangan PP/Perda tidak disatukan",
+      "time": "Pinned historical text only; current validity and as-of applicability NOT_ASSESSED",
+      "exceptions": "Pentahapan dan aturan menteri PP15; tidak semua kewajiban fasilitasi UU20(2) dibuktikan oleh kandidat ini",
+      "candidate_relation": "SEMANTIC_ALIGNMENT_CANDIDATE",
+      "preamble_relation": "CITES_AS_BASIS",
+      "delegation_relation": "DELEGATES_TO",
+      "implementation_relation": "NOT_PROMOTED"
+    },
+    {
+      "article": 22,
+      "reference_class": "POSITIVE_PREAMBLE_MANDATE_WITH_SUBSTANTIVE_CANDIDATES",
+      "uu": {
+        "article": 22,
+        "physical_start": 12,
+        "excerpt": "Pasal 22\n\n(1) Kegiatan penanganan sampah sebagaimana dimaksud\n    dalam Pasal 19 huruf b meliputi:\n    a. pemilahan dalam bentuk pengelompokan dan\n       pemisahan sampah sesuai dengan jenis, jumlah,\n       dan/atau sifat sampah;\n    b. pengumpulan dalam bentuk pengambilan dan\n       pemindahan sampah dari sumber sampah ke\n       tempat penampungan sementara atau tempat\n       pengolahan sampah terpadu;\n    c. pengangkutan dalam bentuk membawa sampah dari\n       sumber dan/atau dari tempat penampungan\n       sampah sementara atau dari tempat pengolahan\n       sampah terpadu menuju ke tempat pemrosesan\n       akhir;\n    d. pengolahan dalam bentuk mengubah karakteristik,\n       komposisi, dan jumlah sampah; dan/atau\n    e. pemrosesan      akhir  sampah    dalam   bentuk\n       pengembalian sampah dan/atau residu hasil\n       pengolahan sebelumnya ke media lingkungan secara\n       aman.\n (2) Ketentuan lebih lanjut mengenai penanganan sampah\n     sebagaimana dimaksud pada ayat (1) diatur dengan\n     peraturan pemerintah dan/atau peraturan daerah\n     sesuai dengan kewenangannya.\n\n                                         Bagian Kedua . . .\n\f                  - 13 -\n\n             Bagian Kedua\n      Pengelolaan Sampah Spesifik",
+        "excerpt_sha256": "0ef7ad66838acdfb53b2a38bc88ad69c6effb902d429fb07fd2cd7be1ed108b6"
+      },
+      "pp_body_candidates": [
+        {
+          "article": 16,
+          "physical_start": 7,
+          "excerpt": "Pasal 16\nPenanganan sampah meliputi kegiatan:\na.   pemilahan;\nb.   pengumpulan;\nc.   pengangkutan;\nd.   pengolahan; dan\ne.   pemrosesan akhir sampah.",
+          "excerpt_sha256": "b1c97984cb40b83f27bc03758cf35774871e298e9ce276d429b9dd2d03d09d7e"
+        },
+        {
+          "article": 17,
+          "physical_start": 7,
+          "excerpt": "Pasal 17\n(1) Pemilahan sampah sebagaimana dimaksud dalam Pasal 16 huruf a\n    dilakukan oleh:\n     a.   setiap orang pada sumbernya;\n     b.   pengelola kawasan permukiman, kawasan komersial, kawasan\n          industri, kawasan khusus, fasilitas umum, fasilitas sosial, dan\n          fasilitas lainnya; dan\n     c.   pemerintah kabupaten/kota.\n(2) Pemilahan sebagaimana dimaksud pada ayat (1) dilakukan melalui\n    kegiatan pengelompokan sampah menjadi paling sedikit 5 (lima) jenis\n    sampah yang terdiri atas:\n     a.   sampah yang mengandung bahan berbahaya dan beracun serta\n          limbah bahan berbahaya dan beracun;\n     b.   sampah yang mudah terurai;\n     c.   sampah yang dapat digunakan kembali;\n     d.   sampah yang dapat didaur ulang; dan\n     e.   sampah lainnya.\n\n\n\n\n                                                      www.djpp.depkumham.go.id\n\f2012, No.188                           8\n\n\n\n(3) Pengelola kawasan permukiman, kawasan komersial, kawasan\n    industri, kawasan khusus, fasilitas umum, fasilitas sosial, dan\n    fasilitas lainnya dalam melakukan pemilahan sampah wajib\n    menyediakan sarana pemilahan sampah skala kawasan.\n(4) Pemerintah kabupaten/kota menyediakan sarana pemilahan sampah\n    skala kabupaten/kota.\n(5) Pemilahan sampah sebagaimana dimaksud pada ayat (3) dan ayat (4)\n    harus menggunakan sarana yang memenuhi persyaratan:\n   a.   jumlah sarana sesuai jenis pengelompokan sampah sebagaimana\n        dimaksud pada ayat (2);\n   b.   diberi label atau tanda; dan\n   c.   bahan, bentuk, dan warna wadah.",
+          "excerpt_sha256": "95d43d024cc9b1577eb1a1e53d7c6b69fe477207786158fd209efc247e077d3f"
+        },
+        {
+          "article": 18,
+          "physical_start": 8,
+          "excerpt": "Pasal 18\n(1) Pengumpulan sampah sebagaimana dimaksud dalam Pasal 16 huruf b\n    dilakukan oleh:\n   a.   pengelola kawasan permukiman, kawasan komersial, kawasan\n        industri, kawasan khusus, fasilitas umum, fasilitas sosial, dan\n        fasilitas lainnya; dan\n   b.   pemerintah kabupaten/kota.\n(2) Pengelola kawasan permukiman, kawasan komersial, kawasan\n    industri, kawasan khusus, fasilitas umum, fasilitas sosial, dan\n    fasilitas lainnya dalam melakukan pengumpulan sampah wajib\n    menyediakan:\n   a.   TPS;\n   b.   TPS 3R; dan/atau\n   c.   alat pengumpul untuk sampah terpilah.\n(3) Pemerintah kabupaten/kota menyediakan TPS dan/atau TPS 3R pada\n    wilayah permukiman.\n(4) TPS dan/atau TPS 3R sebagaimana dimaksud pada ayat (2) dan ayat\n    (3) harus memenuhi persyaratan:\n   a.   tersedia sarana untuk mengelompokkan sampah menjadi paling\n        sedikit 5 (lima) jenis sampah;\n   b.   luas lokasi dan kapasitas sesuai kebutuhan;\n   c.   lokasinya mudah diakses;\n   d.   tidak mencemari lingkungan; dan\n   e.   memiliki jadwal pengumpulan dan pengangkutan.\n\n\n\n\n                                                      www.djpp.depkumham.go.id\n\f                                   9                       2012, No.188\n\n\n\n(5) Ketentuan lebih lanjut mengenai persyaratan teknis pengumpulan dan\n    penyediaan TPS dan/atau TPS 3R diatur dengan peraturan menteri\n    yang menyelenggarakan urusan pemerintahan di bidang pekerjaan\n    umum.",
+          "excerpt_sha256": "029a2ccd0d78b6dcbd86cd31d9beb215cccdf8d5678a6a3c972306f333633d0d"
+        },
+        {
+          "article": 19,
+          "physical_start": 9,
+          "excerpt": "Pasal 19\n(1) Pengangkutan sampah sebagaimana dimaksud dalam Pasal 16 huruf\n    c dilakukan oleh pemerintah kabupaten/kota.\n(2) Pemerintah kabupaten/kota dalam melakukan pengangkutan sampah\n    sebagaimana dimaksud pada ayat (1):\n    a.   menyediakan alat angkut sampah termasuk untuk sampah\n         terpilah yang tidak mencemari lingkungan; dan\n    b.   melakukan pengangkutan sampah dari TPS dan/atau TPS 3R ke\n         TPA atau TPST.\n(3) Dalam pengangkutan sampah, pemerintah kabupaten/kota dapat\n    menyediakan stasiun peralihan antara.\n(4) Ketentuan mengenai persyaratan alat angkut sebagaimana dimaksud\n    pada ayat (2) huruf a diatur dengan peraturan menteri yang\n    menyelenggarakan urusan pemerintahan di bidang perhubungan.",
+          "excerpt_sha256": "c7a949f0e2470c89d776ae8d9f7847122a06398776befcbc22b742ff4141854a"
+        },
+        {
+          "article": 20,
+          "physical_start": 9,
+          "excerpt": "Pasal 20\nDalam hal dua atau lebih kabupaten/kota melakukan pengolahan sampah\nbersama dan memerlukan pengangkutan sampah lintas kabupaten/kota,\npemerintah kabupaten/kota dapat mengusulkan kepada pemerintah\nprovinsi untuk menyediakan stasiun peralihan antara dan alat angkut.",
+          "excerpt_sha256": "c5e6cd25ef83c6a1f51a27a5e40ec1a6ee56c2c831f2ddd72f8ad319b656b4ad"
+        },
+        {
+          "article": 21,
+          "physical_start": 9,
+          "excerpt": "Pasal 21\n(1) Pengolahan sampah sebagaimana dimaksud dalam Pasal 16 huruf d\n    meliputi kegiatan:\n    a.   pemadatan;\n    b.   pengomposan;\n    c.   daur ulang materi; dan/atau\n    d.   daur ulang energi.\n(2) Pengolahan sampah sebagaimana dimaksud pada ayat (1) dilakukan\n    oleh:\n    a.   setiap orang pada sumbernya;\n    b.   pengelola kawasan permukiman, kawasan komersial, kawasan\n         industri, kawasan khusus, fasilitas umum, fasilitas sosial, dan\n         fasilitas lainnya; dan\n    c.   pemerintah kabupaten/kota.\n\n\n\n                                                     www.djpp.depkumham.go.id\n\f2012, No.188                         10\n\n\n\n(3) Pengelola kawasan permukiman, kawasan komersial, kawasan\n    industri, kawasan khusus, fasilitas umum, fasilitas sosial, dan\n    fasilitas lainnya wajib menyediakan fasilitas pengolahan sampah skala\n    kawasan yang berupa TPS 3R.\n(4) Pemerintah kabupaten/kota menyediakan fasilitas          pengolahan\n    sampah pada wilayah permukiman yang berupa:\n    a.   TPS 3R;\n    b.   stasiun peralihan antara;\n    c.   TPA; dan/atau\n    d.   TPST.",
+          "excerpt_sha256": "c3906977626975e36d08f11b90d26733850c0e809573255a052811184e22c59b"
+        },
+        {
+          "article": 22,
+          "physical_start": 10,
+          "excerpt": "Pasal 22\n(1) Pemrosesan akhir sampah sebagaimana dimaksud dalam Pasal 16\n    huruf e dilakukan dengan menggunakan:\n    a.   metode lahan urug terkendali;\n    b.   metode lahan urug saniter; dan/atau\n    c.   teknologi ramah lingkungan.\n(2) Pemrosesan akhir sampah sebagaimana dimaksud pada ayat (1)\n    dilakukan oleh pemerintah kabupaten/kota.",
+          "excerpt_sha256": "746416a30db1365ed1dee3fb3c7440ba8b9c73f9fd579e3eb4a0ba9159e0d289"
+        },
+        {
+          "article": 23,
+          "physical_start": 10,
+          "excerpt": "Pasal 23\n(1) Dalam   melakukan     pemrosesan   akhir  sampah,    pemerintah\n    kabupaten/kota wajib menyediakan dan mengoperasikan TPA.\n(2) Dalam menyediakan TPA sebagaimana dimaksud pada ayat (1)\n    pemerintah kabupaten/kota:\n    a.   melakukan pemilihan lokasi sesuai dengan rencana tata ruang\n         wilayah provinsi dan/atau kabupaten/kota;\n    b.   menyusun analisis biaya dan teknologi; dan\n    c.   menyusun rancangan teknis.\n(3) Lokasi TPA sebagaimana dimaksud pada ayat (2) huruf a, paling\n    sedikit memenuhi aspek:\n    a.   geologi;\n    b.   hidrogeologi;\n    c.   kemiringan zona;\n    d.   jarak dari lapangan terbang;\n    e.   jarak dari permukiman;\n    f.   tidak berada di kawasan lindung/cagar alam; dan/atau\n\n\n\n                                                      www.djpp.depkumham.go.id\n\f                                    11                   2012, No.188\n\n\n\n    g.   bukan merupakan daerah banjir periode ulang 25 (dua puluh\n         lima) tahun.\n(4) TPA yang disediakan oleh pemerintah kabupaten/kota sebagaimana\n    dimaksud pada ayat (2) harus dilengkapi:\n    a.   fasilitas dasar;\n    b.   fasilitas perlindungan lingkungan;\n    c.   fasilitas operasi; dan\n    d.   fasilitas penunjang.",
+          "excerpt_sha256": "e6c4513a2fc9b4312f729101e67038f99db4ea9376897d33b76b8c8fe73505c0"
+        },
+        {
+          "article": 24,
+          "physical_start": 11,
+          "excerpt": "Pasal 24\n(1) Pengoperasian TPA sebagaimana dimaksud dalam Pasal 23 ayat (1)\n    harus memenuhi persyaratan teknis pengoperasian TPA yang\n    ditetapkan   oleh  menteri   yang   menyelenggarakan  urusan\n    pemerintahan di bidang pekerjaan umum.\n(2) Dalam hal TPA tidak dioperasikan sesuai dengan persyaratan teknis\n    sebagaimana dimaksud pada ayat (1), harus dilakukan penutupan\n    dan/atau rehabilitasi.\n(3) Ketentuan lebih lanjut mengenai penutupan dan/atau rehabilitasi\n    sebagaimana dimaksud pada ayat (2) diatur dengan peraturan menteri\n    yang menyelenggarakan urusan pemerintahan di bidang pekerjaan\n    umum setelah berkoordinasi dengan menteri yang menyelenggarakan\n    urusan pemerintahan di bidang perlindungan dan pengelolaan\n    lingkungan hidup.",
+          "excerpt_sha256": "acd00d322a161ef021f20ec7768d47224e8cae8963831a8a01900235a7105b5c"
+        },
+        {
+          "article": 25,
+          "physical_start": 11,
+          "excerpt": "Pasal 25\n(1) Kegiatan penyediaan fasilitas pengolahan dan pemrosesan akhir\n    sampah dilakukan melalui tahapan:\n    a.   perencanaan;\n    b.   pembangunan; dan\n    c.   pengoperasian dan pemeliharaan.\n(2) Pembangunan sebagaimana dimaksud pada ayat (1) huruf b meliputi\n    kegiatan:\n    a.   konstruksi;\n    b.   supervisi; dan\n    c.   uji coba.\n(3) Ketentuan lebih lanjut mengenai tata cara penyediaan fasilitas\n    pengolahan dan pemrosesan akhir sampah diatur dengan peraturan\n    menteri yang menyelenggarakan urusan pemerintahan di bidang\n    pekerjaan umum.\n\n\n\n                                                   www.djpp.depkumham.go.id\n\f2012, No.188                       12",
+          "excerpt_sha256": "53d978254cd74cae4921e2f41920e7d62fa8d235b1d405798dde60dbe466f4f4"
+        },
+        {
+          "article": 26,
+          "physical_start": 12,
+          "excerpt": "Pasal 26\n(1) Dalam melakukan kegiatan pengangkutan, pengolahan,               dan\n    pemrosesan akhir sampah, pemerintah kabupaten/kota dapat:\n    a.   membentuk kelembagaan pengelola sampah;\n    b.   bermitra dengan badan usaha atau masyarakat; dan/atau\n    c.   bekerjasama dengan pemerintah kabupaten/kota lain.\n(2) Kemitraan dan kerjasama sebagaimana dimaksud pada ayat (1) huruf\n    b dan huruf c dilaksanakan sesuai dengan peraturan perundangan-\n    undangan.",
+          "excerpt_sha256": "3651d0d154fa399e4d50fc6d52e79dc47c0495090db6380ab02bcb1bb1b86417"
+        },
+        {
+          "article": 27,
+          "physical_start": 12,
+          "excerpt": "Pasal 27\nDalam hal terdapat kondisi khusus, pemerintah provinsi dapat melakukan\npengangkutan, pengolahan, dan pemrosesan akhir sampah.",
+          "excerpt_sha256": "fb79eb89aaf378eb3299aa09d69aa107fc4a96f4ed79b014e49bab784deaaac1"
+        },
+        {
+          "article": 28,
+          "physical_start": 12,
+          "excerpt": "Pasal 28\nSampah yang tidak dapat diolah melalui kegiatan sebagaimana dimaksud\ndalam Pasal 21 ayat (1) ditimbun di TPA.",
+          "excerpt_sha256": "78358c48babc252b2bdfca665adf50991f82d840783e26957dc362bc4b8308c7"
+        },
+        {
+          "article": 29,
+          "physical_start": 12,
+          "excerpt": "Pasal 29\n(1) Dalam    penyelenggaraan  penanganan     sampah,    pemerintah\n    kabupaten/kota memungut retribusi kepada setiap orang atas jasa\n    pelayanan yang diberikan.\n(2) Retribusi sebagaimana dimaksud pada ayat (1) ditetapkan secara\n    progresif berdasarkan jenis, karakteristik, dan volume sampah.\n(3) Hasil retribusi sebagaimana dimaksud pada ayat (1) digunakan untuk:\n    a.   kegiatan layanan penanganan sampah;\n    b.   penyediaan fasilitas pengumpulan sampah;\n    c.   penanggulangan keadaan darurat;\n    d.   pemulihan lingkungan akibat kegiatan penanganan sampah;\n         dan/atau\n    e.   peningkatan kompetensi pengelola sampah.\n(4) Ketentuan lebih lanjut mengenai tata cara perhitungan tarif retribusi\n    berdasarkan jenis, karakteristik, dan volume sampah sebagaimana\n    dimaksud pada ayat (2) diatur dengan peraturan menteri yang\n    menyelenggarakan urusan pemerintahan di bidang dalam negeri.",
+          "excerpt_sha256": "db54931a06e5e3cd6f9af97a574bb39b9e27bae7c825a9f048a3014fc7d5cd1a"
+        },
+        {
+          "article": 30,
+          "physical_start": 12,
+          "excerpt": "Pasal 30\n(1) Setiap orang yang bertugas melakukan kegiatan pengangkutan,\n    pengolahan, dan pemrosesan akhir sampah wajib memiliki sertifikat\n    kompetensi.\n\n\n\n                                                      www.djpp.depkumham.go.id\n\f                                   13                       2012, No.188\n\n\n\n(2) Ketentuan lebih lanjut mengenai tata cara memperoleh sertifikat\n    kompetensi sebagaimana dimaksud pada ayat (1) diatur dalam\n    peraturan menteri sesuai dengan kewenangannya.\n                                 BAB IV\n                              KOMPENSASI",
+          "excerpt_sha256": "36aa1cd74d2f2e7136e32b5132e9449529e715f3d4c69caa923999c9d9976f34"
+        }
+      ],
+      "subject": "Setiap orang, pengelola kawasan dan pemerintah kabupaten/kota",
+      "object": "Pemilahan, pengumpulan, pengangkutan, pengolahan dan pemrosesan akhir",
+      "scope": "PP16–30; PP dan/atau Perda sesuai kewenangan",
+      "authority": "Presiden menerbitkan PP; pembagian kewenangan PP/Perda tidak disatukan",
+      "time": "Pinned historical text only; current validity and as-of applicability NOT_ASSESSED",
+      "exceptions": "PP27 kondisi khusus provinsi; kewenangan/kondisi masing-masing pasal harus dibaca, bukan diasumsikan linear",
+      "candidate_relation": "SEMANTIC_ALIGNMENT_CANDIDATE",
+      "preamble_relation": "CITES_AS_BASIS",
+      "delegation_relation": "DELEGATES_TO",
+      "implementation_relation": "NOT_PROMOTED"
+    },
+    {
+      "article": 24,
+      "reference_class": "POSITIVE_PREAMBLE_MANDATE_WITH_SUBSTANTIVE_CANDIDATES",
+      "uu": {
+        "article": 24,
+        "physical_start": 13,
+        "excerpt": "Pasal 24\n\n(1) Pemerintah dan pemerintah daerah wajib membiayai\n    penyelenggaraan pengelolaan sampah.\n(2) Pembiayaan sebagaimana dimaksud pada ayat (1)\n    bersumber dari anggaran pendapatan dan belanja\n    negara serta anggaran pendapatan dan belanja daerah.\n(3) Ketentuan    lebih lanjut mengenai  pembiayaan\n    sebagaimana dimaksud pada ayat (1) dan ayat (2)\n    diatur  dengan peraturan pemerintah   dan/atau\n    peraturan daerah.\n\n              Bagian Kedua\n               Kompensasi",
+        "excerpt_sha256": "9f6f8773e97611400072057319fd42df96719feb106315653addc9a586b5a887"
+      },
+      "pp_body_candidates": [
+        {
+          "article": 29,
+          "physical_start": 12,
+          "excerpt": "Pasal 29\n(1) Dalam    penyelenggaraan  penanganan     sampah,    pemerintah\n    kabupaten/kota memungut retribusi kepada setiap orang atas jasa\n    pelayanan yang diberikan.\n(2) Retribusi sebagaimana dimaksud pada ayat (1) ditetapkan secara\n    progresif berdasarkan jenis, karakteristik, dan volume sampah.\n(3) Hasil retribusi sebagaimana dimaksud pada ayat (1) digunakan untuk:\n    a.   kegiatan layanan penanganan sampah;\n    b.   penyediaan fasilitas pengumpulan sampah;\n    c.   penanggulangan keadaan darurat;\n    d.   pemulihan lingkungan akibat kegiatan penanganan sampah;\n         dan/atau\n    e.   peningkatan kompetensi pengelola sampah.\n(4) Ketentuan lebih lanjut mengenai tata cara perhitungan tarif retribusi\n    berdasarkan jenis, karakteristik, dan volume sampah sebagaimana\n    dimaksud pada ayat (2) diatur dengan peraturan menteri yang\n    menyelenggarakan urusan pemerintahan di bidang dalam negeri.",
+          "excerpt_sha256": "db54931a06e5e3cd6f9af97a574bb39b9e27bae7c825a9f048a3014fc7d5cd1a"
+        },
+        {
+          "article": 32,
+          "physical_start": 13,
+          "excerpt": "Pasal 32\n(1) Kompensasi sebagaimana dimaksud dalam Pasal 31 ayat (1) harus\n    dianggarkan dalam anggaran pendapatan dan belanja negara dan\n    anggaran pendapatan dan belanja daerah.\n(2) Dalam hal anggaran untuk kompensasi pada pemerintah\n    kabupaten/kota sudah tidak tersedia lagi, kompensasi diberikan oleh\n    pemerintah provinsi.\n(3) Dalam hal anggaran untuk kompensasi pada pemerintah provinsi\n    sudah tidak tersedia lagi, kompensasi diberikan oleh Pemerintah.\n(4) Ketentuan lebih lanjut mengenai tata cara pemberian kompensasi oleh\n    pemerintah kabupaten/kota dan pemerintah provinsi sebagaimana\n    dimaksud pada ayat (2) diatur dengan peraturan daerah.\n\n\n\n\n                                                      www.djpp.depkumham.go.id\n\f2012, No.188                       14\n\n\n\n                                 BAB V\n           PENGEMBANGAN DAN PENERAPAN TEKNOLOGI",
+          "excerpt_sha256": "73505ce57dac2f299719b5c371b3f07786a8618b67084765fec5fde070f19ea8"
+        }
+      ],
+      "subject": "Pemerintah dan pemerintah daerah",
+      "object": "Pembiayaan penyelenggaraan dari APBN dan APBD",
+      "scope": "PP29 retribusi; PP32 anggaran kompensasi hanya cakupan parsial",
+      "authority": "Presiden menerbitkan PP; pembagian kewenangan PP/Perda tidak disatukan",
+      "time": "Pinned historical text only; current validity and as-of applicability NOT_ASSESSED",
+      "exceptions": "Tidak boleh menyamakan kompensasi dengan seluruh pembiayaan; PP32(2–3) bersyarat anggaran tidak tersedia",
+      "candidate_relation": "SEMANTIC_ALIGNMENT_CANDIDATE",
+      "preamble_relation": "CITES_AS_BASIS",
+      "delegation_relation": "DELEGATES_TO",
+      "implementation_relation": "NOT_PROMOTED"
+    },
+    {
+      "article": 25,
+      "reference_class": "POSITIVE_PREAMBLE_MANDATE_WITH_SUBSTANTIVE_CANDIDATES",
+      "uu": {
+        "article": 25,
+        "physical_start": 13,
+        "excerpt": "Pasal 25\n\n(1) Pemerintah dan pemerintah daerah secara sendiri-\n    sendiri  atau   bersama-sama   dapat   memberikan\n    kompensasi kepada orang sebagai akibat dampak\n    negatif yang ditimbulkan oleh kegiatan penanganan\n    sampah di tempat pemrosesan akhir sampah.\n\n\n                                    (2)   Kompensasi . . .\n\f                  - 14 -\n\n\n(2) Kompensasi sebagaimana dimaksud pada ayat (1)\n    berupa:\n    a. relokasi;\n    b. pemulihan lingkungan;\n    c. biaya kesehatan dan pengobatan; dan/atau\n    d. kompensasi dalam bentuk lain.\n\n(3) Ketentuan lebih lanjut mengenai dampak negatif dan\n    kompensasi sebagaimana dimaksud pada ayat (1) dan\n    ayat (2) diatur dengan peraturan pemerintah.\n\n(4) Ketentuan    lebih   lanjut   mengenai  pemberian\n    kompensasi     oleh pemerintah daerah sebagaimana\n    dimaksud pada ayat (1) diatur dengan peraturan\n    pemerintah dan/atau peraturan daerah.\n\n\n\n              BAB VIII\n     KERJA SAMA DAN KEMITRAAN\n\n\n              Bagian Kesatu\n         Kerja Sama Antardaerah",
+        "excerpt_sha256": "2fb59a697d6117dfc138506efa868834deb8d84782afb475982bd104c26103b4"
+      },
+      "pp_body_candidates": [
+        {
+          "article": 31,
+          "physical_start": 13,
+          "excerpt": "Pasal 31\n(1) Pemerintah kabupaten/kota secara sendiri atau secara bersama dapat\n    memberikan kompensasi sebagai akibat dampak negatif yang\n    ditimbulkan oleh kegiatan pemrosesan akhir sampah.\n(2) Dampak negatif yang ditimbulkan oleh kegiatan pemrosesan akhir\n    sampah sebagaimana dimaksud pada ayat (1) diakibatkan oleh:\n    a.   pencemaran air;\n    b.   pencemaran udara;\n    c.   pencemaran tanah;\n    d.   longsor;\n    e.   kebakaran;\n    f.   ledakan gas metan; dan/atau\n    g.   hal lain yang menimbulkan dampak negatif.\n(3) Bentuk kompensasi sebagaimana dimaksud pada ayat (1) berupa:\n    a.   relokasi penduduk;\n    b.   pemulihan lingkungan;\n    c.   biaya kesehatan dan pengobatan;\n    d.   penyediaan fasilitas sanitasi dan kesehatan; dan/atau\n    e.   kompensasi dalam bentuk lain.",
+          "excerpt_sha256": "4a479288f1032457bd656b517f5983d8bca172792795c7f52af9df06c7d8025f"
+        },
+        {
+          "article": 32,
+          "physical_start": 13,
+          "excerpt": "Pasal 32\n(1) Kompensasi sebagaimana dimaksud dalam Pasal 31 ayat (1) harus\n    dianggarkan dalam anggaran pendapatan dan belanja negara dan\n    anggaran pendapatan dan belanja daerah.\n(2) Dalam hal anggaran untuk kompensasi pada pemerintah\n    kabupaten/kota sudah tidak tersedia lagi, kompensasi diberikan oleh\n    pemerintah provinsi.\n(3) Dalam hal anggaran untuk kompensasi pada pemerintah provinsi\n    sudah tidak tersedia lagi, kompensasi diberikan oleh Pemerintah.\n(4) Ketentuan lebih lanjut mengenai tata cara pemberian kompensasi oleh\n    pemerintah kabupaten/kota dan pemerintah provinsi sebagaimana\n    dimaksud pada ayat (2) diatur dengan peraturan daerah.\n\n\n\n\n                                                      www.djpp.depkumham.go.id\n\f2012, No.188                       14\n\n\n\n                                 BAB V\n           PENGEMBANGAN DAN PENERAPAN TEKNOLOGI",
+          "excerpt_sha256": "73505ce57dac2f299719b5c371b3f07786a8618b67084765fec5fde070f19ea8"
+        }
+      ],
+      "subject": "Pemerintah dan pemerintah daerah; PP31 kabupaten/kota",
+      "object": "Dampak negatif TPA dan kompensasi",
+      "scope": "UU25(1–4), physical13–14; PP31–32 physical13",
+      "authority": "Presiden menerbitkan PP; pembagian kewenangan PP/Perda tidak disatukan",
+      "time": "Pinned historical text only; current validity and as-of applicability NOT_ASSESSED",
+      "exceptions": "Dapat memberi; bentuk/penyebab PP31; fallback provinsi/Pemerintah PP32(2–3); Perda PP32(4)",
+      "candidate_relation": "SEMANTIC_ALIGNMENT_CANDIDATE",
+      "preamble_relation": "CITES_AS_BASIS",
+      "delegation_relation": "DELEGATES_TO",
+      "implementation_relation": "NOT_PROMOTED"
+    },
+    {
+      "article": 28,
+      "reference_class": "POSITIVE_PREAMBLE_MANDATE_WITH_SUBSTANTIVE_CANDIDATES",
+      "uu": {
+        "article": 28,
+        "physical_start": 15,
+        "excerpt": "Pasal 28\n\n(1) Masyarakat dapat berperan dalam pengelolaan sampah\n    yang diselenggarakan oleh Pemerintah dan/atau\n    pemerintah daerah.\n\n(2) Peran sebagaimana dimaksud pada ayat (1) dapat\n    dilakukan melalui:\n    a. pemberian usul, pertimbangan, dan saran kepada\n       Pemerintah dan/atau pemerintah daerah;\n    b. perumusan kebijakan pengelolaan sampah; dan/atau\n    c. pemberian saran dan pendapat dalam penyelesaian\n       sengketa persampahan.\n\n(3) Ketentuan lebih lanjut mengenai bentuk dan tata cara\n    peran masyarakat sebagaimana dimaksud pada ayat (1)\n    dan ayat (2) diatur dengan peraturan pemerintah\n    dan/atau peraturan daerah.\n\n\n                                                BAB X . . .\n\f                    - 16 -\n\n                   BAB X\n                 LARANGAN",
+        "excerpt_sha256": "419f3e8984e562c377660b068e95aa91ddffcfdb512009b6b62a151584031b7e"
+      },
+      "pp_body_candidates": [
+        {
+          "article": 35,
+          "physical_start": 15,
+          "excerpt": "Pasal 35\n(1) Masyarakat berperan serta dalam proses pengambilan keputusan,\n    penyelenggaraan, dan pengawasan dalam kegiatan pengelolaan\n    sampah rumah tangga dan sampah sejenis sampah rumah tangga\n    yang diselenggarakan oleh Pemerintah dan/atau pemerintah daerah.\n(2) Peran serta masyarakat sebagaimana dimaksud pada ayat (1) dapat\n    berupa:\n    a.   pemberian usul, pertimbangan, dan/atau saran kepada\n         Pemerintah dan/atau pemerintah daerah dalam kegiatan\n         pengelolaan sampah;\n    b.   pemberian saran dan pendapat dalam perumusan kebijakan dan\n         strategi pengelolaan sampah rumah tangga dan sampah sejenis\n         sampah rumah tangga;\n    c.   pelaksanaan kegiatan penanganan sampah rumah tangga dan\n         sampah sejenis sampah rumah tangga yang dilakukan secara\n         mandiri dan/atau bermitra dengan pemerintah kabupaten/kota;\n         dan/atau\n    d.   pemberian    pendidikan   dan pelatihan, kampanye, dan\n         pendampingan oleh kelompok masyarakat kepada anggota\n         masyarakat dalam pengelolaan sampah untuk mengubah\n         perilaku anggota masyarakat.\n(3) Peran serta masyarakat sebagaimana dimaksud pada ayat (2) huruf a\n    dan huruf b disampaikan melalui forum yang keanggotaannya terdiri\n    atas pihak-pihak terkait.\n\n\n                                                   www.djpp.depkumham.go.id\n\f2012, No.188                          16\n\n\n\n                                   BAB VIII\n                                 PEMBINAAN",
+          "excerpt_sha256": "8f341233a261c76e5e6ca2eb8e38d7bbb2049862ae3c1d335f7ce181256f9057"
+        }
+      ],
+      "subject": "Masyarakat; Pemerintah dan pemerintah daerah",
+      "object": "Bentuk/tata cara peran masyarakat",
+      "scope": "PP35 physical15; forum pihak terkait pada ayat3",
+      "authority": "Presiden menerbitkan PP; pembagian kewenangan PP/Perda tidak disatukan",
+      "time": "Pinned historical text only; current validity and as-of applicability NOT_ASSESSED",
+      "exceptions": "PP35(2)c–d menambahkan bentuk kegiatan; kesetaraan normatif tetap kandidat",
+      "candidate_relation": "SEMANTIC_ALIGNMENT_CANDIDATE",
+      "preamble_relation": "CITES_AS_BASIS",
+      "delegation_relation": "DELEGATES_TO",
+      "implementation_relation": "NOT_PROMOTED"
+    }
+  ],
+  "negative_controls": [
+    {
+      "article": 12,
+      "uu": {
+        "article": 12,
+        "physical_start": 9,
+        "excerpt": "Pasal 12\n\n(1) Setiap orang dalam pengelolaan sampah rumah tangga\n    dan sampah sejenis sampah rumah tangga wajib\n    mengurangi dan menangani sampah dengan cara yang\n    berwawasan lingkungan.\n(2) Ketentuan lebih lanjut mengenai tata cara pelaksanaan\n    kewajiban pengelolaan sampah rumah tangga dan\n    sampah sejenis sampah rumah tangga sebagaimana\n    dimaksud pada ayat (1) diatur dengan peraturan\n    daerah.",
+        "excerpt_sha256": "b28ad79fce25de9505357c94013d2eabce23adc275c749c88b7153f44617ad5a"
+      },
+      "expected": "NOT_CITED_IN_PP81_PREAMBLE",
+      "delegation": "PERDA_ONLY_IN_UU12_2",
+      "scope": "Do not infer no substantive overlap with PP81"
+    },
+    {
+      "article": 21,
+      "uu": {
+        "article": 21,
+        "physical_start": 12,
+        "excerpt": "Pasal 21\n\n(1) Pemerintah memberikan:\n    a. insentif kepada setiap orang yang melakukan\n       pengurangan sampah; dan\n    b. disinsentif kepada setiap orang yang tidak melakukan\n       pengurangan sampah.\n(2)   Ketentuan lebih lanjut mengenai jenis, bentuk, dan\n      tata  cara   pemberian   insentif dan    disinsentif\n      sebagaimana dimaksud pada ayat (1) diatur dengan\n      peraturan pemerintah.\n\n              Paragraf Kedua\n            Penanganan Sampah",
+        "excerpt_sha256": "2af82a8b81005a67173535190626673ecf1896d2f6d8b3458bdabf3281dcf0c1"
+      },
+      "expected": "NOT_CITED_IN_PP81_PREAMBLE",
+      "delegation": "EXPLICIT_PP_DELEGATION_IN_UU21_2",
+      "scope": "Negative for preamble citation only. NO_DELEGATION would be false."
+    }
+  ],
+  "visual_checks": [
+    "pp13.png",
+    "uu-13.png",
+    "uu-14.png"
+  ],
+  "legal_effect": "NOT_ASSESSED",
+  "legal_harmonization": "NOT_ASSESSED",
+  "review_decision": "NO_ACTIVE_DECISION",
+  "relation_promotion": "NOT_PERFORMED",
+  "production_admission": "DENIED"
+}

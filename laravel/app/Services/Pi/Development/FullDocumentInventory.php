@@ -79,6 +79,7 @@ final class FullDocumentInventory
             'PARAGRAPH_MARKER'=>'/^\h*\(\d+[a-z]?\)\h+\S/iu',
             'LETTER_MARKER'=>'/^\h*[a-z][.)]\h+\S/u',
             'NUMBER_MARKER'=>'/^\h*\d+[.)]\h+\S/u',
+            'EXPLANATION_DETAIL'=>'/^\h*(?:Ayat\h*\(\d+[a-z]?\)|Huruf\h+[a-z]|Angka\h+\d+)\h*$/iu',
             'PREAMBLE_MARKER'=>'/^\h*(?:Menimbang|Mengingat|Memutuskan|Menetapkan)\h*:/iu',
             'SUBACTIVITY_MARKER'=>'/^\h*Sub\h*Kegiatan\h*:\h*\d+(?:\.\d+){5}(?![\d.])/iu',
             'ACCOUNT_FULL_MARKER'=>'/^\h*\d(?:\.\d+){4}\.\d{5}(?!\d)/u',
@@ -105,9 +106,15 @@ final class FullDocumentInventory
                     break;
                 }
             }
+            // Native text can contain only a footer or fragmented glyphs on a visual form.
+            $content=preg_replace('/^.*(?:www\.peraturan\.go\.id|\d{4},\h*No\.\d+).*$/mu','',$page);
+            preg_match_all('/(?<![\p{L}\p{N}])\p{L}{3,}(?![\p{L}\p{N}])/u',$content,$words);
+            $wordCount=count($words[0]);
+            $sparse=$wordCount<6&&!isset($pageCounts['ARTICLE']);
             if ($hasText && !$markers) { $unclassified++; }
             $records[]=['pdf_page'=>$i+1,'text_bytes'=>strlen($page),
                 'text_sha256'=>strtoupper(hash('sha256',$page)),
+                'native_text_quality'=>['lexical_words'=>$wordCount,'state'=>$sparse?'SPARSE_OR_FRAGMENTED_REQUIRES_VISUAL':'UNVERIFIED_TEXT_AVAILABLE'],
                 'state'=>!$hasText?'NO_TEXT_OCR_OR_VISUAL_REQUIRED':(!$markers?'TEXT_UNCLASSIFIED':'TEXT_WITH_CANDIDATE_MARKERS'),
                 'marker_counts'=>$pageCounts,'markers'=>$markers];
         }

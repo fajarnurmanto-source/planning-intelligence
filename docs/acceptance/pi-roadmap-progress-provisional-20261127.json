@@ -161,7 +161,11 @@
   "evidence": [
     "docs/PI_APR_OPERATIONAL_ACCEPTANCE_20261127.md",
     "docs/PI_MASTER_ROADMAP_CANONICAL_20261108.md",
-    "CI runs 46035096370/46035096252/46035096254/46035096420"
+    "CI runs 46035096370/46035096252/46035096254/46035096420",
+    "docs/PI_INTELLIGENCE_QUALIFICATION_20261128.md"
   ],
-  "production_admission": "DENIED"
+  "production_admission": "DENIED",
+  "latest_reassessment": "2026-11-28",
+  "latest_measurement": "docs/PI_INTELLIGENCE_QUALIFICATION_20261128.md",
+  "latest_conclusion": "14/40 retained; measured routing/HRIA partial, not enough to close full milestone checkpoint or G1-G7"
 }

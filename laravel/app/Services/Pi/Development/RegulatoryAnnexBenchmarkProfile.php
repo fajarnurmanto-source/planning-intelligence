@@ -73,10 +73,12 @@ final class RegulatoryAnnexBenchmarkProfile
                 $n=$nodes[$number]??[];$rows=$fragments[$number]??[];
                 $route=match(true){
                     $p['processing_route']==='VISUAL_OR_OCR_REQUIRED'=>'VISUAL_REQUIRED_HOLD',
+                    ($inventory['pages'][$number-1]['native_text_quality']['state']??null)==='SPARSE_OR_FRAGMENTED_REQUIRES_VISUAL'&&$rows===[]&&array_intersect(array_keys($m),['ARTICLE','CHAPTER','PART','PARAGRAPH_HEADING','ANNEX_HEADING','EXPLANATION_HEADING','CONTENTS_HEADING','PREAMBLE_MARKER'])===[]=>'VISUAL_REQUIRED_HOLD',
                     !empty($unbound[$number])=>'LOCATOR_RECONCILIATION_HOLD',
                     $rows!==[]&&$n!==[]=>'MIXED_FRAGMENT_REVIEW',
                     $rows!==[]=>'FISCAL_ROW_FRAGMENTS_REVIEW',
                     $n!==[]=>'LEGAL_LAYOUT_NODES_REVIEW',
+                    count(array_filter($inventory['pages'][$number-1]['markers'],static fn($marker)=>($marker['zone_signal']??null)==='EXPLANATION_HEADING'&&in_array($marker['kind'],['ARTICLE','EXPLANATION_DETAIL'],true)))>0=>'EXPLANATION_PROVISION_REVIEW',
                     isset($m['EXPLANATION_HEADING'])||isset($m['CONTENTS_HEADING'])||isset($m['ANNEX_HEADING'])||isset($m['PREAMBLE_MARKER'])=>'SECTION_HEADING_REVIEW',
                     isset($m['CHAPTER'])||isset($m['PART'])||isset($m['PARAGRAPH_HEADING'])=>'HEADING_STRUCTURE_REVIEW',
                     $p['processing_route']==='TABLE_RECONSTRUCTION_CANDIDATE'=>'TABLE_LAYOUT_WITHOUT_ACCOUNT_FRAGMENTS_HOLD',
