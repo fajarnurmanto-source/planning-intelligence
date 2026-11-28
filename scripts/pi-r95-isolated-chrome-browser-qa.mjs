@@ -125,6 +125,21 @@ try{
     width:1440,height:900,deviceScaleFactor:1,mobile:false,
   })
   await navigate('/login.html')
+  // PXT actual browser, isolated account only. No visual mock or production auth.
+  await until("document.querySelector('#submit')?.disabled===false",'PXT_LOGIN_READY')
+  async function pxtCheck(path,mobile){
+    await send('Emulation.setDeviceMetricsOverride',{width:mobile?390:1440,height:mobile?844:900,deviceScaleFactor:1,mobile})
+    await navigate(path)
+    await until("document.body.classList.contains('pi-pxt') && getComputedStyle(document.body).colorScheme==='light'",'PXT_LIGHT_READY')
+    const metrics=await evalPage("({width:innerWidth,doc:document.documentElement.scrollWidth,mark:document.querySelector('.pi-mark')?.naturalWidth,focus:getComputedStyle(document.body).colorScheme})")
+    assert.ok(metrics.width>=(mobile?385:1300)&&metrics.width<=(mobile?400:1440),'PXT_VIEWPORT_'+JSON.stringify(metrics))
+    assert.ok(metrics.doc<=metrics.width+3,'PXT_OVERFLOW_'+JSON.stringify(metrics))
+    assert.ok(metrics.mark>0,'PXT_LOGOMARK_MISSING')
+  }
+  await pxtCheck('/login.html',false)
+  await pxtCheck('/login.html',true)
+  await pxtCheck('/login.html',false)
+  await until("document.querySelector('#submit')?.disabled===false",'PXT_LOGIN_DESKTOP_READY')
   const logged=await evalPage("(async function(){"+
     "const s=await fetch('/api/auth/setup-status',{credentials:'same-origin'});"+
     "const d=await s.json();"+
@@ -135,6 +150,18 @@ try{
   assert.equal(logged.setup,200)
   assert.equal(logged.needs_setup,false)
   assert.equal(logged.status,200)
+  for(const mobile of [false,true]){
+    await pxtCheck('/index.html',mobile)
+    await until("document.querySelectorAll('.pi-r108-task-card').length===5 && !!document.querySelector('.pi-user-bar')",'PXT_DASHBOARD_AUTHENTICATED')
+    assert.ok(await evalPage("document.documentElement.scrollWidth<=innerWidth+3"))
+    assert.ok(await evalPage("Array.from(document.querySelectorAll('.pi-r108-task-card')).every(a=>a.origin===location.origin)"))
+    await evalPage("document.querySelector('button[aria-label=\"Cari di PI (Ctrl+K)\"]').click()")
+    await until("document.querySelector('dialog[aria-label=\"Pencarian PI\"]')?.open",'PXT_DASHBOARD_SEARCH')
+    assert.equal(await evalPage("getComputedStyle(document.querySelector('dialog[aria-label=\"Pencarian PI\"]')).backgroundColor"),'rgb(255, 255, 255)')
+    await evalPage("document.querySelector('dialog[aria-label=\"Pencarian PI\"]').close()")
+  }
+  console.log('PI_PXT_LOGIN_DASHBOARD_LIGHT_DESKTOP_MOBILE=PASS')
+  await send('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false})
   await navigate('/development-case-r85.html')
   await until("document.querySelector('#r86-status')?.textContent?.includes('Registry R86 siap')","R86_CATALOGUE")
   await until("document.querySelector('#r85-questions')?.querySelectorAll('article').length > 0","R85_CASE")
