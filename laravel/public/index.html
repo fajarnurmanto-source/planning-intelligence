@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="./institution-home.css">
   <link rel="stylesheet" href="./pi-ia-r69e.css">
   <script defer src="./institution-home.js"></script>
+  <script defer src="./pi-glossary.js"></script>
+  <script defer src="./pi-pxt-shell.js"></script>
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
   <link rel="stylesheet" href="./planner-workflow-r108.css">
@@ -16,13 +18,14 @@
   <link rel="stylesheet" href="./pi-design-tokens.css">
   <link rel="stylesheet" href="./pi-pxt-dashboard.css">
 </head>
-<body class="pi-pxt pi-pxt-dashboard">
+<body class="pi-pxt pi-pxt-shell pi-pxt-dashboard">
   <a class="pi-skip" href="#home-title">Ke isi utama</a>
   <div class="app-shell">
     <aside class="sidebar" aria-label="Navigasi utama">
       <div class="identity"><img class="pi-mark" src="./pi-brand.svg" width="44" height="44" alt=""><div><strong>Planning<br>Intelligence</strong><small>RUANG KERJA INSTITUSI</small></div></div>
       <div class="institution-card"><span>Institusi aktif</span><strong>Pemerintah Kota Yogyakarta</strong><small>Akses lokal · SSO ASN belum tersedia.</small></div>
-      <nav data-pi-app-nav aria-label="Hierarki aplikasi Planning Intelligence"></nav>
+      <button type="button" class="pi-nav-toggle" aria-controls="pi-primary-nav" aria-expanded="true" hidden>Menu pekerjaan</button>
+      <nav id="pi-primary-nav" data-pi-app-nav aria-label="Navigasi pekerjaan Planning Intelligence"></nav>
       <div class="side-foot">Ruang kerja lokal<br><small>Belum untuk produksi / keputusan otomatis</small></div>
     </aside>
 

@@ -24,7 +24,7 @@
     const menu = document.createElement('div')
     menu.className = 'pi-user-bar'
     const identity = document.createElement('span')
-    identity.textContent = `${user.username} · ${user.role.replace('_',' ')}`
+    identity.textContent = `${user.username} · ${window.PIGlossary?.role(user.role)||user.role.replace('_',' ')}`
     const button = document.createElement('button')
     button.textContent = 'Keluar'
     button.onclick = async () => {

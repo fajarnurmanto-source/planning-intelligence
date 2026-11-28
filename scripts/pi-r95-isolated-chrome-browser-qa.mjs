@@ -162,7 +162,7 @@ try{
   }
   console.log('PI_PXT_LOGIN_DASHBOARD_LIGHT_DESKTOP_MOBILE=PASS')
   await send('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false})
-  await navigate('/development-case-r85.html')
+  await pxtCheck('/development-case-r85.html',false)
   await until("document.querySelector('#r86-status')?.textContent?.includes('Registry R86 siap')","R86_CATALOGUE")
   await until("document.querySelector('#r85-questions')?.querySelectorAll('article').length > 0","R85_CASE")
   const loaded=await evalPage("({"+
@@ -371,6 +371,13 @@ try{
   assert.ok(phone.r85Visible&&!phone.r86Visible&&!phone.r88Visible&&!phone.r89Visible&&!phone.r100Visible,
     'PI_R108_MOBILE_WORKFLOW_DETAILS_MUST_BE_COLLAPSED_'+JSON.stringify(phone))
   console.log('PI_R95_CHROME_MOBILE_390PX_NO_OVERFLOW=PASS')
+  await until("document.querySelector('.pi-nav-toggle')?.hidden===false && document.querySelector('#pi-primary-nav')?.hidden===true",'PXT_MOBILE_NAV_COLLAPSED')
+  await evalPage("document.querySelector('.pi-nav-toggle').click()")
+  assert.ok(await evalPage("document.querySelector('.pi-nav-toggle').getAttribute('aria-expanded')==='true' && !document.querySelector('#pi-primary-nav').hidden"))
+  await evalPage("document.querySelector('.pi-nav-toggle').click()")
+  assert.ok(await evalPage("document.querySelector('#pi-primary-nav').hidden && document.querySelector('.pi-nav-toggle').getAttribute('aria-expanded')==='false'"))
+  assert.ok(await evalPage("getComputedStyle(document.body).colorScheme==='light' && !!window.PIGlossary && document.querySelector('.pi-mark').naturalWidth>0"))
+  console.log('PI_PXT_WORKSPACE_LIGHT_MOBILE_NAV_GLOSSARY=PASS')
 
   // Re-select 2027 and observe ABSTAIN; do not consent or call paid provider.
   await evalPage("(()=>{const y=document.querySelector('#r88-controls select[name=year]');"+

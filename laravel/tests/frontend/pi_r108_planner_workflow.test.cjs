@@ -58,7 +58,7 @@ test('R108 Wave2 preserves backend states while displaying planner-readable mean
  assert.match(caseJs,/production_admission !== 'DENIED'/)
  assert.match(caseJs,/humanStatus|explainStatus/)
  assert.match(caseJs,/Lihat jejak bukti teknis/)
- assert.match(caseJs,/Tidak diizinkan/)
+ assert.match(read('pi-glossary.js'),/Tidak diizinkan/)
  assert.doesNotMatch(caseJs,/innerHTML|insertAdjacentHTML|document\.write/)
 })
 test('R108 Wave2 shows honest example scope and one genuine next step',()=>{
