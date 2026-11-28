@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Telaah dasar hukum · Planning Intelligence</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23176d58'/%3E%3Ctext x='5' y='23' font-size='20' fill='white'%3EPI%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="./pi-brand.svg">
   <link rel="stylesheet" href="./institution-home.css">
   <link rel="stylesheet" href="./pi-ia-r69e.css">
   <link rel="stylesheet" href="./regulatory-workbench-r87.bundle.css?v=r87a">
@@ -12,10 +12,11 @@
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./regulatory-workbench-r87.bundle.js?v=r87a"></script>
 </head>
-<body>
+<body class="pi-pxt pi-pxt-regulatory">
+<a class="pi-skip" href="#pi-regulatory-title">Ke isi utama</a>
 <div class="app-shell">
   <aside class="sidebar" aria-label="Navigasi utama">
-    <div class="identity"><span class="identity-mark">PI</span><div><strong>Planning<br>Intelligence</strong><small>RUANG KERJA INSTITUSI</small></div></div>
+    <div class="identity"><img class="pi-mark" src="./pi-brand.svg" width="44" height="44" alt=""><div><strong>Planning<br>Intelligence</strong><small>RUANG KERJA INSTITUSI</small></div></div>
     <div class="institution-card"><span>KONTEKS PEMERIKSAAN</span><strong>Pemerintah Kota Yogyakarta</strong><small>Telaah regulasi · lingkungan uji</small></div>
     <nav data-pi-app-nav aria-label="Hierarki aplikasi Planning Intelligence"></nav>
     <div class="side-foot"><span class="online-dot"></span> Layanan QA lokal<br><small>Keputusan hukum membutuhkan reviewer</small></div>
@@ -27,16 +28,17 @@
       <section class="hero">
         <div class="hero-main">
           <span class="eyebrow">DASAR HUKUM DAN KEWENANGAN</span>
-          <h1>Telaah dasar hukum<br><em>dan perubahan peraturan</em></h1>
+          <h1 id="pi-regulatory-title">Telaah dasar hukum<br><em>dan perubahan peraturan</em></h1>
           <p>Periksa dasar kewenangan, hubungan dokumen perencanaan, serta riwayat perubahan penjabaran APBD Kota Yogyakarta 2026. Hasil adalah bahan telaah, bukan pengesahan hukum.</p>
           <div class="hero-actions"><a class="primary-btn" href="#r70l-title">Periksa dasar kewenangan ↗</a><a class="secondary-btn" href="#r72-title">Periksa riwayat perubahan ↗</a></div>
         </div>
         <div class="hero-side"><span>BATAS INTERPRETASI</span><strong>Perlu telaah</strong><p>Keselarasan hukum belum dinilai; perbandingan angka belum diizinkan.</p><span class="status-pill">Belum untuk keputusan resmi</span></div>
       </section>
       <nav class="panel" aria-label="Pilih pekerjaan telaah regulasi"><h2>Pilih pekerjaan</h2><ul><li><a href="#r70l-title">Periksa dasar kewenangan</a></li><li><a href="#r72-title">Telusuri perubahan peraturan</a></li><li><a href="#r70j-title">Periksa hubungan dokumen perencanaan</a></li><li><a href="#r70o-title">Cari peraturan resmi</a></li><li><a href="#r75-title">Siapkan bahan telaah</a></li></ul></nav>
+      <section class="panel pi-normative-boundary" aria-labelledby="pi-normative-boundary-title"><h2 id="pi-normative-boundary-title">Batas telaah norma dan kewenangan</h2><p>Hubungan rujukan, delegasi, perubahan versi dan kesamaan tema memiliki makna berbeda. Menelusuri arah sebaliknya tidak membuktikan kewenangan atau hubungan hukum baru. Rantai norma induk, perubahan dan keberlakuan pada tanggal kasus belum lengkap; keselarasan hukum dan perbandingan angka tetap ditahan.</p><div class="hero-actions"><a class="secondary-btn" href="./regulatory-sources-r70b.html">Periksa naskah dan bukti</a><a class="secondary-btn" href="./development-case-r85.html#pi-view=kewenangan">Kembali ke telaah kasus</a></div></section>
       <section class="r70g-stats" aria-label="Ringkasan bukti tersedia">
         <article><small>Dokumen resmi</small><strong id="r70g-sources">—</strong><span>Sumber dan ruang lingkup</span></article>
-        <article><small>Peraturan pengubah</small><strong id="r70g-amendments">—</strong><span>Lima perubahan Perwali</span></article>
+        <article><small>Peraturan pengubah</small><strong id="r70g-amendments">—</strong><span>Perubahan dalam daftar yang diperiksa</span></article>
         <article><small>Rujukan Lampiran I/II</small><strong id="r70g-targets">—</strong><span>Klausul, bukan angka belanja</span></article>
         <article><small>Kutipan terverifikasi</small><strong id="r70g-hashes">—</strong><span>Kutipan terikat sumber</span></article>
       </section>
@@ -95,11 +97,11 @@
 <section class="panel r70l-panel" aria-labelledby="r70l-title">
         <div class="panel-heading"><div>
           
-          <h2 id="r70l-title">Aturan induk mendahului RPJMD dan RKPD</h2>
+          <h2 id="r70l-title">Norma induk dan kewenangan RKPD 2026</h2>
           <p>Telusuri Permendagri 86/2017 Pasal 76 sebagai dasar penerbitan pedoman tahunan, kemudian Permendagri 10/2025 yang secara khusus mengatur RKPD 2026. Periksa pasal, kewenangan, hubungan nasional–provinsi–kota, batas pengecualian DIY dan jalur ke anggaran sebelum memetakan substansi.</p>
         </div></div>
-        <p id="r70l-status" class="r70g-status" role="status" aria-live="polite">Memuat dasar hukum resmi…</p>
-        <div id="r70l-results" aria-label="Dua peraturan induk, enam ketentuan, jejak delegasi dan gerbang abstain"></div>
+        <div class="pi-root-toolbar"><p id="r70l-status" class="r70g-status" role="status" aria-live="polite">Memuat dasar hukum resmi…</p><button id="r70l-reload" type="button" class="r70h-evidence-button" disabled>Periksa ulang dasar hukum</button></div>
+        <div id="r70l-results" aria-busy="true" aria-label="Rujukan norma, ketentuan, jejak delegasi dan batas kesimpulan"></div>
         <p class="r70h-caveat">Ini adalah metadata dan ringkasan ketentuan dari PDF resmi, bukan teks PDF yang sudah di-hash. Hasil hanya untuk telaah; amendemen dan pemenuhan substansi belum disahkan. Tidak ada perhitungan anggaran.</p>
       </section>
       <section class="panel r70o-panel" aria-labelledby="r70o-title">
@@ -123,7 +125,7 @@
         <div class="panel-heading"><div>
           
           <h2 id="r70r-title">Sistem menelusuri dasar hukum dan calon aturan induk</h2>
-          <p>Tanpa perlu mengetik kata kunci, Laravel mengambil abstrak resmi Permendagri 10/2025 dan 86/2017 dari JDIH BPK, membaca bagian dasar hukum, lalu membangun jejak rujukan nasional ke UU, Perpres, Permendagri, serta UUD bila tercantum. Cache diperbarui otomatis ketika kedaluwarsa; pembaruan terjadwal berlaku jika scheduler Laravel aktif.</p>
+          <p>PI membaca jejak rujukan dari abstrak resmi dua peraturan awal apabila tersedia. Penelusuran dan pembaruan otomatis bergantung pada konfigurasi layanan serta ketersediaan sumber. Hasil bukan daftar seluruh norma yang berlaku.</p>
         </div></div>
         <p id="r70r-status" class="r70g-status" role="status" aria-live="polite">Memulai penelusuran otomatis sumber hukum resmi…</p>
         <div id="r70r-results" class="r70g-stack" aria-label="Kandidat aturan induk dari sumber resmi yang ditelusuri tanpa input pengguna"></div>
@@ -133,20 +135,21 @@
         <div class="panel-heading"><div>
           
           <h2 id="r74-title">Telusuri induk, turunan, dan keluarga tema</h2>
-          <p>Jelajahi hierarki Pasal 7/8 dan graf hubungan resmi yang tersedia. Hubungan yuridis, riwayat perubahan, serta kedekatan tema dipisahkan. Kutipan metadata R70R hanya kandidat; sumber PDF belum diikat hash dan keputusan hukum tidak dihasilkan otomatis.</p>
+          <p>Pilih jenis hubungan dan arah penelusuran. Daftar Pasal 7 dan Pasal 8 berbeda: subjenis Pasal 8 tidak otomatis mempunyai urutan peringkat universal. Jarak graf bukan tingkat hierarki hukum. Sumber dan status tiap hubungan tetap dapat diperiksa.</p>
         </div></div>
         <div id="r74-taxonomy" class="r74-taxonomy" aria-label="Ringkasan taksonomi peraturan">Memuat taksonomi hukum…</div>
         <form id="r74-form" class="r74-controls">
           <label for="r74-root">Regulasi atau tema</label>
           <select id="r74-root" required><option value="">Memuat daftar…</option></select>
           <label for="r74-direction">Arah penelusuran</label>
-          <select id="r74-direction"><option value="ancestors">Ke induk</option><option value="descendants">Ke turunan</option><option value="both">Kedua arah</option></select>
+          <select id="r74-direction"><option value="ancestors">Ke dasar atau target rujukan</option><option value="descendants">Ke peraturan yang merujuk</option><option value="both">Kedua arah</option></select>
           <label for="r74-lens">Jenis hubungan</label>
-          <select id="r74-lens"><option value="legal">Hukum / delegasi</option><option value="version">Perubahan versi</option><option value="thematic">Genealogi tematik</option><option value="all">Seluruh hubungan (berlabel)</option></select>
-          <button type="submit" class="r70h-evidence-button">Telusuri graf</button>
+          <select id="r74-lens"><option value="legal">Rujukan, kewenangan dan delegasi</option><option value="version">Perubahan versi</option><option value="thematic">Kedekatan tema (bukan hierarki hukum)</option><option value="all">Seluruh hubungan (berlabel)</option></select>
+          <button id="r74-run" type="submit" class="r70h-evidence-button">Telusuri hubungan</button>
         </form>
         <p id="r74-status" class="r70g-status" role="status" aria-live="polite">Memuat kelompok peraturan…</p>
-        <div id="r74-results" class="r74-results" aria-label="Simpul dan relasi genealogi"></div>
+        <p id="r74-lens-note" class="pi-lens-note">Arah panah mengikuti relasi sumber yang tercatat, bukan urutan kekuatan hukum.</p>
+        <div id="r74-results" class="r74-results" aria-busy="true" aria-label="Simpul, relasi dan lokasi bukti"></div>
         <p class="r70h-caveat">GRAPH PARTIAL · REVIEW_REQUIRED · LEGAL_HARMONIZATION NOT_ASSESSED · NUMERIC BLOCKED · PRODUCTION DENIED. Tidak ada perubahan database atau keputusan hukum otomatis.</p>
       </section>
 </details>

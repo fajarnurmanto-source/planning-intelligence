@@ -58,7 +58,7 @@ test('R108 Wave2 preserves backend states while displaying planner-readable mean
  assert.match(caseJs,/production_admission !== 'DENIED'/)
  assert.match(caseJs,/humanStatus|explainStatus/)
  assert.match(caseJs,/Lihat jejak bukti teknis/)
- assert.match(caseJs,/Tidak diizinkan/)
+ assert.match(read('pi-glossary.js'),/Tidak diizinkan/)
  assert.doesNotMatch(caseJs,/innerHTML|insertAdjacentHTML|document\.write/)
 })
 test('R108 Wave2 shows honest example scope and one genuine next step',()=>{
@@ -91,7 +91,8 @@ test('R108 Wave3 evidence remains graph-derived, source-backed and collapsed by 
  assert.match(script,/r85-evidence-group/)
  assert.match(script,/Buka dokumen sumber/)
  assert.match(script,/allowedSource\(source.source_url\)/)
- assert.match(script,/SOURCE_LOCATED_NOT_HASH_PINNED/)
+ assert.match(read('pi-glossary.js'),/SOURCE_LOCATED_NOT_HASH_PINNED:'Lokasi sumber ditemukan · berkas belum diverifikasi'/)
+ assert.match(script,/explainStatus\(source\.verification_status\)/)
  assert.match(html,/pi-r108-catalog-details/)
  assert.match(css,/r85-evidence-group-heading/)
  assert.doesNotMatch(script,/innerHTML|document\.write|insertAdjacentHTML/)

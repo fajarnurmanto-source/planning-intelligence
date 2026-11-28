@@ -83,7 +83,7 @@
       id('source-caveat').textContent = `${data.documents.filter(doc => doc.pdf_available).length} dari ${data.documents.length} dokumen katalog memiliki cuplikan PDF dalam instalasi QA ini. Dokumen lain tetap tercatat sebagai rujukan, bukan bukti PDF lokal yang sudah diperiksa.`
     } catch (exc) {
       for (const field of ['metric-docs','metric-pdfs','metric-findings','metric-decisions']) id(field).textContent = '—'
-      error('Tidak dapat menampilkan ringkasan: ' + String(exc.message || exc) + '. Pemeriksaan harus dihentikan.')
+      error('Ringkasan belum tersedia. Muat ulang halaman atau periksa ketersediaan dokumen. Belum dapat menyimpulkan kondisi kasus.')
     }
   }
   document.addEventListener('DOMContentLoaded', load)

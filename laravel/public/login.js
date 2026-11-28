@@ -4,6 +4,8 @@
   let needsSetup = false
   let csrf = ''
   let initialized = false
+  const safeMessages = new Set(['Status autentikasi tidak tersedia','Status sesi login tidak lengkap','Login ditolak. Ketik ulang kata sandi secara manual; periksa sandi yang tersimpan di browser.','Login diterima, tetapi sesi browser belum aktif. Periksa cookie situs lokal lalu coba lagi.','Nama pengguna atau kata sandi belum dapat diverifikasi.','Terlalu banyak percobaan. Tunggu sebelum mencoba kembali.','Sesi perlu diperbarui. Muat ulang halaman lalu coba lagi.','Akses ditolak. Hubungi pengelola akun.'])
+  const showError = error => { const message=error?.message; el('feedback').textContent=safeMessages.has(message)?message:'Akses belum dapat diproses. Periksa sambungan layanan atau muat ulang halaman.' }
   async function initialize() {
     try {
       const response = await fetch('/api/auth/setup-status', {cache:'no-store'})
@@ -12,9 +14,9 @@
       needsSetup = Boolean(status.needs_setup)
       csrf = String(status.csrf || '')
       if (!csrf || typeof status.needs_setup !== 'boolean') throw new Error('Status sesi login tidak lengkap')
-      el('heading').textContent = needsSetup ? 'Buat akun administrator QA' : 'Masuk ke ruang kerja'
+      el('heading').textContent = needsSetup ? 'Siapkan akun administrator' : 'Masuk ke ruang kerja'
       el('description').textContent = needsSetup
-        ? 'Buat satu akun khusus pratinjau Kota Yogyakarta. Data akun tidak dikirim ke penyedia AI.'
+        ? 'Siapkan satu akun untuk ruang kerja lokal Kota Yogyakarta. Data akun tidak dikirim ke penyedia AI.'
         : 'Masukkan nama pengguna dan kata sandi akun lokal Planning Intelligence.'
       el('password-hint').textContent = needsSetup ? '· minimal 12 karakter' : ''
       el('password').autocomplete = needsSetup ? 'new-password' : 'current-password'
@@ -24,7 +26,7 @@
       el('submit').textContent = needsSetup ? 'Buat akun dan masuk' : 'Masuk'
       initialized = true
       el('submit').disabled = false
-    } catch (error) { el('feedback').textContent = String(error.message || error) }
+    } catch (error) { showError(error) }
   }
   async function submit(event) {
     event.preventDefault()
@@ -49,7 +51,7 @@
           el('password').focus()
           throw new Error('Login ditolak. Ketik ulang kata sandi secara manual; periksa sandi yang tersimpan di browser.')
         }
-        throw new Error(result.code || 'Autentikasi ditolak')
+        throw new Error(response.status===429?'Terlalu banyak percobaan. Tunggu sebelum mencoba kembali.':response.status===419?'Sesi perlu diperbarui. Muat ulang halaman lalu coba lagi.':response.status===403?'Akses ditolak. Hubungi pengelola akun.':'Nama pengguna atau kata sandi belum dapat diverifikasi.')
       }
       // A successful POST alone is not enough. Verify that the browser sent
       // back its new authenticated cookie before navigating to the workspace.
@@ -63,7 +65,7 @@
         throw new Error('Login diterima, tetapi sesi browser belum aktif. Periksa cookie situs lokal lalu coba lagi.')
       }
       location.replace('./index.html')
-    } catch (error) { el('feedback').textContent = String(error.message || error) }
+    } catch (error) { showError(error) }
     finally { submitButton.disabled = false }
   }
   document.addEventListener('DOMContentLoaded', () => {

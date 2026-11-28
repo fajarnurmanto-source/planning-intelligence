@@ -5,9 +5,9 @@ test('PER01 five stages retain missing evidence',()=>{assert.match(read('index.h
 test('PER01 fiscal source names use shared identity',()=>{const s=read('native-annex-r106.js');assert.match(s,/PIRegulatoryIdentity\.resolve/);assert.match(s,/YOG-APBD-DETAIL-CHANGE3-2026/);assert.match(s,/judul belum terverifikasi/);assert.match(read('development-case-r85.html'),/per01-base-title/);});
 
 test('PER-B shows Indonesian graph labels while retaining raw technical audit',()=>{
- const s=read('development-case-r85.js');
- assert.match(s,/Versi regulasi/);assert.match(s,/Kandidat penganggaran/);
- assert.match(s,/nodeLabels\[from\.type\]/);assert.match(s,/relationLabels\[edge\.relation\]/);
+ const s=read('development-case-r85.js'),g=read('pi-glossary.js');
+ assert.match(g,/Versi regulasi/);assert.match(g,/Kandidat penganggaran/);
+ assert.match(s,/PIGlossary\?\.node\(from\.type\)/);assert.match(s,/PIGlossary\?\.relation\(edge\.relation\)/);
  assert.match(s,/technical\(row,edge\.status,/);
  assert.doesNotMatch(s,/add\(row, 'code', 'r85-relation'/);
 });
