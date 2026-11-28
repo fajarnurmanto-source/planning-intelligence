@@ -313,6 +313,11 @@ try{
   assert.equal(preview.runDisabled,true)
   assert.equal(preview.consentChecked,false)
   console.log('PI_R95_CHROME_R89_PREVIEW_WITHOUT_PAID_PROVIDER=PASS')
+  assert.ok(await evalPage("document.querySelector('#r88-context').textContent.includes('2026') && !!document.querySelector('.pi-crosswalk-gaps') && document.querySelector('.pi-crosswalk-summary').textContent.includes('Tidak ada kesetaraan')"))
+  await evalPage("(()=>{const y=document.querySelector('#r88-controls select[name=year]');y.value='2027';y.dispatchEvent(new Event('change',{bubbles:true}))})()")
+  assert.ok(await evalPage("!document.querySelector('#r88-results').children.length && document.querySelector('#r88-export').disabled && document.querySelector('#r89-consent').disabled && document.querySelector('#r89-data').hidden && document.querySelector('#r89-run').disabled"))
+  await evalPage("(()=>{const y=document.querySelector('#r88-controls select[name=year]');y.value='2026';y.dispatchEvent(new Event('change',{bubbles:true}))})()")
+  console.log('PI_PXT_F3_CONTEXT_INVALIDATION_AND_CONSENT_OFF=PASS')
 
   await until("document.querySelector('#r100-count-metadata')?.textContent === '18'",'R100_INDEX_READY')
   const sourceState=await evalPage("({"+

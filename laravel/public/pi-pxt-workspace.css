@@ -39,3 +39,15 @@
 .pi-pxt-workspace .r85-guard-panel h2{font-size:17px;margin:6px 0 8px}
 .pi-pxt-workspace .pi-normative-notice{font-size:13px;line-height:1.6;color:var(--pi-secondary);margin:8px 0 12px;max-width:95ch}
 .pi-pxt-workspace .r85-guards span{border-radius:8px;line-height:1.4}
+
+/* F3/SPC-01/SCP-01. Context and missing evidence precede relationship detail. */
+.pi-pxt-workspace .pi-crosswalk-context{background:var(--pi-tint);color:var(--pi-navy);border:1px solid var(--pi-border);padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.65;overflow-wrap:anywhere}
+.pi-pxt-workspace .pi-crosswalk-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.pi-pxt-workspace .pi-crosswalk-grid article{min-width:0;overflow-wrap:anywhere;background:#fff;color:var(--pi-text);border:1px solid var(--pi-border);border-radius:var(--pi-radius-md);padding:16px}
+.pi-pxt-workspace .pi-crosswalk-summary,.pi-pxt-workspace .pi-crosswalk-traces{grid-column:1/-1}
+.pi-pxt-workspace .pi-crosswalk-grid .pi-crosswalk-gaps{background:var(--pi-warning-bg);border-color:#DEC69B}
+.pi-pxt-workspace .pi-crosswalk-row{border-top:1px solid var(--pi-border);padding:12px 0}
+.pi-pxt-workspace .pi-crosswalk-row p,.pi-pxt-workspace .pi-crosswalk-grid p{color:var(--pi-secondary);font-size:13px;line-height:1.65;margin:7px 0}
+.pi-pxt-workspace .pi-crosswalk-row small{color:var(--pi-action);font-weight:650;font-size:12px}
+.pi-pxt-workspace .pi-crosswalk-grid a{color:var(--pi-action);text-decoration:underline;text-underline-offset:3px}
+@media(max-width:700px){.pi-pxt-workspace .pi-crosswalk-grid{grid-template-columns:minmax(0,1fr)}}
