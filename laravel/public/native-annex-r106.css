@@ -6,3 +6,14 @@
 .r106-panel th,.r106-panel td{text-align:left;border-bottom:1px solid #d7dce1;padding:10px 8px}
 .r106-panel td{font-variant-numeric:tabular-nums}
 .r106-panel td:first-child{font-family:ui-monospace,monospace;font-size:.8rem;white-space:nowrap}
+
+/* F4/SRA-01/SOT-01: evidence-first fiscal view; no implied approval. */
+.r106-panel .pi-fiscal-boundary{border:1px solid #DEC69B;border-radius:12px;background:#FFF4DF;color:#80570E;padding:14px;margin:14px 0;font-size:13px;line-height:1.65}
+.r106-panel .pi-fiscal-boundary h3{color:#142A40;margin-top:0}.r106-panel .pi-fiscal-boundary a{color:#106B66;text-decoration:underline}
+.r106-panel .pi-fiscal-chain{list-style:none;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.r106-panel .pi-fiscal-chain li{background:#fff;border:1px solid #DCE2E9;border-radius:8px;padding:10px;min-width:0;overflow-wrap:anywhere}
+.r106-panel .pi-fiscal-chain strong,.r106-panel .pi-fiscal-chain span{display:block}.r106-panel .pi-fiscal-chain strong{color:#142A40}.r106-panel .pi-fiscal-chain span{color:#526577;font-size:12px}
+.r106-panel .r106-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.r106-panel .pi-fiscal-source{border:1px solid #DCE2E9;border-radius:10px;padding:12px;min-width:0;background:#fff;overflow-wrap:anywhere;color:#526577}
+.r106-panel .pi-fiscal-source a,.r106-panel .pi-fiscal-row-proof a{color:#106B66;text-decoration:underline;text-underline-offset:3px}.r106-panel .pi-fiscal-row-proof a{display:block;padding:4px 0;white-space:normal}
+.r106-panel table{min-width:870px}.r106-panel caption{text-align:left;padding:10px;color:#526577;background:#fff;font-size:12px}.r106-panel .pi-fiscal-row-proof details{max-width:240px;font-size:12px;overflow-wrap:anywhere}.r106-panel details summary{cursor:pointer;color:#106B66}.r106-panel #r106-summary{font-weight:650;line-height:1.6;overflow-wrap:anywhere}
+@media(max-width:700px){.r106-panel .pi-fiscal-chain{grid-template-columns:repeat(2,minmax(0,1fr))}.r106-panel .r106-links{grid-template-columns:minmax(0,1fr)}}

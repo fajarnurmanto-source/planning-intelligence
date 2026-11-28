@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="./regulatory-lifecycle-r86.css">
   <link rel="stylesheet" href="./official-sources-r100.css">
   <link rel="stylesheet" href="./native-annex-r106.css">
+  <script defer src="./pi-glossary.js"></script>
+  <script defer src="./pi-pxt-shell.js"></script>
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./development-case-r85.js"></script>
@@ -20,22 +22,28 @@
   <script defer src="./native-annex-r106.js"></script>
   <link rel="stylesheet" href="./planner-workflow-r108.css">
   <script defer src="./planner-workflow-r108.js"></script>
+  <link rel="icon" type="image/svg+xml" href="./pi-brand.svg">
+  <link rel="stylesheet" href="./pi-design-tokens.css">
+  <link rel="stylesheet" href="./pi-pxt-dashboard.css">
+  <link rel="stylesheet" href="./pi-pxt-workspace.css">
 </head>
-<body>
+<body class="pi-pxt pi-pxt-shell pi-pxt-workspace">
+  <a class="pi-skip" href="#r85-title">Ke isi utama</a>
   <div class="app-shell">
     <aside class="sidebar" aria-label="Navigasi utama">
-      <div class="identity"><span class="identity-mark">PI</span><div><strong>Planning<br>Intelligence</strong><small>RUANG KERJA INSTITUSI</small></div></div>
-      <div class="institution-card"><span>INSTITUSI AKTIF · QA LOKAL</span><strong>Pemerintah Kota Yogyakarta</strong><small>PI Superior · lintas aplikasi</small></div>
-      <nav data-pi-app-nav aria-label="Hierarki aplikasi Planning Intelligence"></nav>
-      <div class="side-foot"><span class="online-dot"></span> Layanan QA lokal<br><small>Relasi kandidat memerlukan reviewer</small></div>
+      <div class="identity"><img class="pi-mark" src="./pi-brand.svg" width="44" height="44" alt=""><div><strong>Planning<br>Intelligence</strong><small>RUANG KERJA INSTITUSI</small></div></div>
+      <div class="institution-card"><span>Institusi aktif</span><strong>Pemerintah Kota Yogyakarta</strong><small>Telaah lintas dokumen</small></div>
+      <button type="button" class="pi-nav-toggle" aria-controls="pi-primary-nav" aria-expanded="true" hidden>Menu pekerjaan</button>
+      <nav id="pi-primary-nav" data-pi-app-nav aria-label="Navigasi pekerjaan Planning Intelligence"></nav>
+      <div class="side-foot">Ruang kerja lokal<br><small>Relasi kandidat memerlukan reviewer</small></div>
     </aside>
     <main class="main-content">
       <header class="topbar"><span><b>Telaah pembangunan</b><span class="top-separator">/</span> Kasus yang sedang diperiksa</span><span class="local-badge">● LOCAL QA</span></header>
       <div class="content-wrap">
-        <div class="notice" role="note"><span class="notice-icon">i</span><span>Sumber terverifikasi, hubungan kandidat, dan abstain ditampilkan terpisah. <strong>Halaman ini tidak membuat kesimpulan hukum atau keputusan review otomatis.</strong></span><span class="notice-label">PERLU TELAAH</span></div>
+        <div class="notice" role="note"><span class="notice-icon">i</span><span>Sumber yang telah diperiksa, hubungan kandidat, dan hasil yang belum dapat disimpulkan ditampilkan terpisah. <strong>Halaman ini tidak membuat kesimpulan hukum atau keputusan review otomatis.</strong></span><span class="notice-label">PERLU TELAAH</span></div>
         <section class="hero r85-hero" aria-labelledby="r85-title">
           <div class="hero-main"><span class="eyebrow">TELAAH PERENCANAAN DAN ANGGARAN</span><h1 id="r85-title">Telaah rencana, anggaran, dan bukti.</h1><p>Periksa apa yang diketahui, apa yang belum dapat dipastikan, dan bukti yang perlu ditelaah berikutnya.</p></div>
-          <div class="hero-side"><span>KASUS AKTIF</span><strong id="r85-case-label">Memuat kasus…</strong><p id="r85-case-summary">Memeriksa kontrak bukti dan pembatasan.</p><span id="r85-case-status" class="status-pill">● Memuat</span></div>
+          <div class="hero-side"><span>KASUS AKTIF</span><strong id="r85-case-label">Memuat kasus…</strong><p id="r85-case-summary">Memeriksa ketersediaan bukti dan batas telaah.</p><span id="r85-case-status" class="status-pill">● Memuat</span></div>
         </section>
 
         <form id="r85-filters" class="r85-filters" aria-label="Filter kasus pembangunan">
@@ -47,19 +55,20 @@
         </form>
 
         <section id="r88-crosswalk" class="panel" aria-labelledby="r88-title">
-          <div class="panel-heading"><div><span class="section-number">KESESUAIAN PERENCANAAN</span><h2 id="r88-title">Telusuri kewenangan, nomenklatur dan anggaran</h2><p>Periksa kesesuaian kewenangan, kode subkegiatan dan dokumen sesuai tahun acuan. Jika versi pembanding belum ada, hasil belum dapat disimpulkan.</p></div></div>
+          <div class="panel-heading"><div><span class="section-number">KESESUAIAN PERENCANAAN</span><h2 id="r88-title">Telaah nomenklatur, dokumen dan indikator</h2><p>Periksa keterkaitan kode subkegiatan dan dokumen perencanaan. Jejak lokal bukan verifikasi nomenklatur nasional atau dasar kewenangan OPD. Versi dan definisi pembanding harus tersedia sebelum menilai kesesuaian.</p></div></div>
           <section class="pi-r108-performance" aria-labelledby="pi-performance-title"><h3 id="pi-performance-title">Sasaran, indikator dan program kasus</h3><p>Ringkasan bukti kasus yang dimuat. Target dan realisasi tidak boleh disimpulkan dari nama indikator atau anggaran.</p><div id="pi-performance-evidence" role="status" aria-live="polite">Menunggu bukti kasus…</div></section>
           <form id="r88-controls" class="r85-filters">
             <label>Kode subkegiatan<input name="code" value="2.11.11.2.01.0004" required maxlength="40"></label>
             <label>Tahun<select name="year"><option>2026</option><option>2027</option></select></label>
-            <label>Tanggal acuan<input name="as_of" type="date" value="2026-11-21" required></label>
-            <button type="submit" class="primary-btn">Periksa kesesuaian</button>
+            <label>Batas tanggal pengamatan bukti<input name="as_of" type="date" value="2026-11-21" required></label>
+            <button id="r88-run" type="submit" class="primary-btn">Periksa kesesuaian</button>
             <button id="r88-export" type="button" class="secondary-btn" disabled>Ekspor data bukti (lanjutan)</button>
           </form>
           <p id="r88-status" role="status" aria-live="polite">Pilih Periksa kesesuaian untuk memuat bukti.</p>
+          <p id="r88-context" class="pi-crosswalk-context">Belum ada konteks crosswalk yang diterima. Filter ini terpisah dari kasus contoh di atas.</p>
 
           <a href="/regulatory-trace-r70a.html#r84-review-workspace">Buka meja pemeriksaan bukti</a>
-          <div id="r88-results" class="r85-question-grid"></div>
+          <div id="r88-results" class="r85-question-grid pi-crosswalk-grid" aria-busy="false"></div>
           <section id="r89-panel" class="r89-panel" aria-labelledby="r89-title">
             <h3 id="r89-title">Bantuan AI untuk memeriksa kesesuaian istilah</h3>
             <p>DeepSeek, OpenAI, Gemini, Groq, atau OpenRouter melalui API cloud. Tidak memerlukan model atau GPU lokal. AI hanya menyarankan hubungan makna; hukum dan indikator tetap memerlukan pembuktian dan reviewer.</p>
@@ -70,8 +79,8 @@
             <button id="r89-preview" class="secondary-btn" type="button" disabled>Pratinjau data yang dikirim</button>
             <pre id="r89-data" class="r89-preview-data" aria-label="Pratinjau data semantik" hidden></pre>
             <label><input id="r89-consent" type="checkbox" disabled> Saya telah memeriksa pratinjau di atas dan menyetujui pengiriman tepat data tersebut ke provider pilihan, termasuk ketentuan privasi dan potensi biaya API.</label>
-            <button id="r89-run" class="secondary-btn" type="button" disabled>Jalankan analisis semantik cloud</button>
-            <p id="r89-status" role="status" aria-live="polite">Muat crosswalk 2026 untuk menyiapkan pratinjau. Tidak ada panggilan AI otomatis.</p>
+            <button id="r89-run" class="secondary-btn" type="button" disabled>Jalankan analisis dengan AI</button>
+            <p id="r89-status" role="status" aria-live="polite">Periksa kesesuaian tahun 2026 untuk menyiapkan pratinjau. Tidak ada panggilan AI otomatis.</p>
             <div id="r89-results" class="r85-question-grid"></div>
           </section>
         </section>
@@ -89,18 +98,18 @@
           <div id="r86-metrics" class="r86-metrics"></div>
           <section class="r86-subsection" aria-labelledby="r86-temporal-title"><h3 id="r86-temporal-title">Aturan waktu dan transisi</h3><div id="r86-temporal" class="r86-temporal"></div></section>
           <section class="r86-subsection" aria-labelledby="r86-stages-title"><h3 id="r86-stages-title">Tahap, aktor, artefak dan gap</h3><div id="r86-stages" class="r86-stages"></div></section>
-          <section class="r86-subsection" aria-labelledby="r86-apps-title"><h3 id="r86-apps-title">Satu engine, lima aplikasi spesialis</h3><div id="r86-apps" class="r86-apps"></div></section>
+          <section class="r86-subsection" aria-labelledby="r86-apps-title"><h3 id="r86-apps-title">PI Superior dan lima aplikasi spesialis</h3><div id="r86-apps" class="r86-apps"></div></section>
           <section class="r86-subsection" aria-labelledby="r86-sources-title"><h3 id="r86-sources-title">Bukti primer dan lokator</h3><div id="r86-sources" class="r86-sources"></div></section>
           <section class="r86-subsection" aria-labelledby="r86-brief-title"><h3 id="r86-brief-title">Executive review brief</h3><div id="r86-brief" class="r86-brief"></div></section>
         </section>
 
         <section class="panel" aria-labelledby="r85-questions-title">
-          <div class="panel-heading"><div><span class="section-number">01 · LIMA PERTANYAAN INTI</span><h2 id="r85-questions-title">Jawaban ringkas untuk pengambil keputusan</h2><p>Setiap jawaban menunjuk ke relasi dan status buktinya.</p></div></div>
+          <div class="panel-heading"><div><span class="section-number">01 · LIMA PERTANYAAN INTI</span><h2 id="r85-questions-title">Temuan sementara untuk pengambil keputusan</h2><p>Setiap jawaban menunjuk ke relasi dan status buktinya.</p></div></div>
           <div id="r85-questions" class="r85-question-grid" aria-live="polite"><p class="loading">Memuat jawaban…</p></div>
         </section>
 
         <section class="panel" aria-labelledby="r85-graphs-title">
-          <div class="panel-heading"><div><span class="section-number">02 · EMPAT GRAF TERPADU</span><h2 id="r85-graphs-title">Dari norma hingga keluaran pembangunan</h2><p>Panah adalah relasi bertipe. Status kandidat tidak berarti hubungan itu sudah disahkan.</p></div></div>
+          <div class="panel-heading"><div><span class="section-number">02 · EMPAT GRAF TERPADU</span><h2 id="r85-graphs-title">Dari norma hingga keluaran pembangunan</h2><p>Graf regulasi dan kewenangan berbeda dari graf dokumen perencanaan dan penganggaran. Panah menunjukkan relasi bertipe, bukan tingkatan hukum atau persetujuan otomatis.</p></div></div>
           <div id="r85-graphs" class="r85-graph-grid" aria-live="polite"><p class="loading">Menyusun graf…</p></div>
         </section>
 
@@ -110,7 +119,8 @@
         </section>
 
         <section class="panel r85-guard-panel" aria-labelledby="r85-guard-title">
-          <span class="section-number">04 · GERBANG KEAMANAN</span><h2 id="r85-guard-title">Apa yang tetap tidak boleh disimpulkan?</h2>
+          <span class="section-number">Batas telaah kasus</span><h2 id="r85-guard-title">Apa yang belum boleh disimpulkan?</h2>
+          <p class="pi-normative-notice">Norma induk, kewenangan, versi efektif dan ketentuan peralihan harus dibuktikan sebelum menilai keselarasan rencana atau anggaran. Tampilan kasus ini belum membuktikan kelengkapan penelusuran norma induk. RPJPD dan RPJMD bukan norma hukum tertinggi.</p>
           <div id="r85-guards" class="r85-guards"><p class="loading">Memeriksa gerbang…</p></div>
         </section>
         <section id="r100-official-sources" class="panel r100-panel" aria-labelledby="r100-title">
@@ -121,7 +131,7 @@
           </div></div>
           <div class="r100-overview" aria-label="Cakupan sumber dan status verifikasi">
             <div class="r100-metric"><strong id="r100-count-metadata">—</strong><span>metadata dokumen resmi terindeks</span></div>
-            <div class="r100-metric"><strong id="r100-count-hash">—</strong><span>berkas baru R100 terverifikasi SHA-256</span></div>
+            <div class="r100-metric"><strong id="r100-count-hash">—</strong><span>berkas baru yang cocok dengan hash arsip</span></div>
             <div class="r100-metric"><strong id="r100-count-amount">—</strong><span>angka subkegiatan 2026 diterima</span></div>
           </div>
           <details class="pi-r108-catalog-details">
@@ -137,33 +147,47 @@
               </select>
             </label>
           </div>
-          <p id="r100-state" class="r100-state" role="status" aria-live="polite">Memeriksa registry sumber resmi...</p>
+          <p id="r100-state" class="r100-state" role="status" aria-live="polite">Memeriksa daftar sumber resmi…</p>
           <div id="r100-list" class="r100-list" aria-live="polite"></div>
           <button id="r100-more" class="r100-more" type="button" hidden>Lihat semua sumber</button>
           <div id="r100-gaps" class="r100-gaps"><strong>Celah bukti belum diperiksa</strong></div>
-          <p class="r100-guard">R100 hanya mengindeks metadata yang ditemukan pada JDIH. Keterkaitan dengan subkegiatan .0004, keabsahan ketentuan, versi perubahan APBD, angka keluaran dan kesetaraan 2026–2027 tetap memerlukan naskah, lampiran, hash, dan review manusia. Tidak ada pemanggilan API cloud atau pengambilan berkas otomatis.</p>
+          <p class="r100-guard">Daftar ini hanya memuat metadata yang ditemukan pada JDIH. Keterkaitan dengan subkegiatan .0004, keabsahan ketentuan, versi perubahan APBD, angka keluaran dan kesetaraan 2026–2027 tetap memerlukan naskah, lampiran, hash, dan review manusia. Tidak ada pemanggilan API cloud atau pengambilan berkas otomatis.</p>
           </details>
         </section>
         <section class="panel r106-panel" id="r106-annex-review" aria-labelledby="r106-title">
           <div class="panel-heading"><div><span class="section-number">06 · LAMPIRAN APBD</span>
-            <h2 id="r106-title">Pemeriksaan lampiran APBD secara lokal</h2>
-            <p class="r106-warning">PI memeriksa dua berkas PDF terverifikasi SHA-256 dan memulihkan kode rekening yang terpotong pada subkegiatan 2.11.11.2.01.0004. Bukti ini belum menjadi keputusan fiskal atau hukum.</p>
+            <h2 id="r106-title">Telaah bukti rekening dan versi APBD</h2>
+            <p class="r106-warning">Lingkup tetap: kasus persampahan Kota Yogyakarta, APBD 2026, subkegiatan 2.11.11.2.01.0004. Pemeriksaan dua naskah ini menghasilkan kandidat rekening, bukan penetapan anggaran berlaku, kewenangan OPD, atau realisasi.</p>
           </div></div>
+          <section class="pi-fiscal-boundary" aria-label="Lingkup dan kekurangan bukti fiskal">
+            <h3>Jejak dokumen yang masih perlu dihubungkan</h3>
+            <p>Urutan telaah, bukan status kelulusan. Tahapan lain tidak otomatis terpenuhi karena dua lampiran cocok.</p>
+            <ol class="pi-fiscal-chain">
+              <li><strong>RKPD</strong><span>Hubungan substantif perlu telaah</span></li>
+              <li><strong>KUA–PPAS</strong><span>Bukti pengikatan belum diterima</span></li>
+              <li><strong>RKA / RAPBD</strong><span>Rincian pembanding belum diterima</span></li>
+              <li><strong>APBD</strong><span>Naskah awal dan perubahan III: kandidat</span></li>
+              <li><strong>DPA</strong><span>Belum terverifikasi</span></li>
+              <li><strong>Realisasi</strong><span>Belum terverifikasi</span></li>
+            </ol>
+            <p>Versi lanjutan Perwal 13/15 tahun 2026, identitas organisasi, sumber dana, dan kewenangan masih memerlukan pembuktian. Selisih nol pada dua naskah tidak membuktikan tidak ada perubahan pada seluruh tahun anggaran.</p>
+            <a href="#pi-view=rencana">Periksa hubungan rencana dan nomenklatur</a> · <a href="#pi-view=dokumen">Periksa dokumen dan bukti</a>
+          </section>
           <div class="r106-actions">
             <button type="button" id="r106-run" class="primary-btn">Periksa lampiran dari arsip lokal</button>
-            <p id="r106-status" role="status" aria-live="polite">Memerlukan R105 dan aktivasi R106 read-only.</p>
+            <p id="r106-status" role="status" aria-live="polite">Pilih pemeriksaan lampiran. Bukti harus tersedia dalam arsip lokal; pemeriksaan tidak mengubah dokumen.</p>
           </div>
           <p id="r106-summary" aria-live="polite"></p>
           <div id="r106-source-links" class="r106-links" aria-label="Lihat halaman PDF sumber"></div>
-          <div class="r106-table-wrap">
-            <table aria-label="Perbandingan enam rekening">
-              <thead><tr><th>Kode rekening lengkap</th><th id="per01-base-title">Perwal 74/2025 · judul belum terverifikasi</th><th id="per01-change-title">Perwal 12/2026 · judul belum terverifikasi</th><th>Selisih</th><th>Halaman bukti</th><th>Status</th></tr></thead>
+          <div class="r106-table-wrap" tabindex="0" role="region" aria-label="Tabel kandidat rekening; geser mendatar bila diperlukan">
+            <table aria-label="Rekonsiliasi kandidat enam rekening, dalam rupiah"><caption>Nominal hasil ekstraksi (Rp) · belum disahkan</caption>
+              <thead><tr><th>Kode rekening lengkap</th><th id="per01-base-title">Perwal 74/2025 · judul belum terverifikasi</th><th>Perubahan III · sebelum</th><th id="per01-change-title">Perwal 12/2026 · judul belum terverifikasi</th><th>Selisih tercetak III</th><th>Halaman bukti</th><th>Status</th></tr></thead>
               <tbody id="r106-rows"></tbody>
             </table>
           </div>
-          <p class="r106-warning">Lampiran, keaslian naskah, Perwal 13/15 tahun 2026, RKA/DPA dan realisasi masih memerlukan review. Penerimaan angka dan produksi tetap ditolak.</p>
+          <p class="r106-warning">Angka hanya kandidat text layer. Periksa kutipan dan halaman PDF setiap rekening; kecocokan hash tidak mengesahkan keaslian atau kelengkapan hukum. Penerimaan angka dan produksi tetap ditolak.</p>
         </section>
-        <footer class="page-footer">Planning Intelligence · Telaah Pembangunan<span>Kota Yogyakarta 2026 · Bukti publik dan QA lokal; keputusan manusia tetap wajib.</span></footer>
+        <footer class="page-footer">Planning Intelligence · Telaah Pembangunan<span>Kota Yogyakarta 2026 · Bukti publik dan akses lokal terbatas; keputusan manusia tetap wajib.</span></footer>
       </div>
     </main>
   </div>

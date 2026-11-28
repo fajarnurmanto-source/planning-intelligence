@@ -3,39 +3,47 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Naskah lengkap &amp; perubahan · Regulatory Intelligence QA</title>
+  <title>Naskah dan bukti regulasi · Planning Intelligence</title>
+  <link rel="icon" type="image/svg+xml" href="./pi-brand.svg">
   <link rel="stylesheet" href="./institution-home.css">
   <link rel="stylesheet" href="./pi-ia-r69e.css">
   <link rel="stylesheet" href="./regulatory-r69e.css">
   <link rel="stylesheet" href="./regulatory-trace-r70a.css">
   <link rel="stylesheet" href="./regulatory-sources-r70b.css">
+  <link rel="stylesheet" href="./pi-design-tokens.css">
+  <link rel="stylesheet" href="./pi-pxt-dashboard.css">
+  <script defer src="./pi-glossary.js"></script>
+  <script defer src="./pi-pxt-shell.js"></script>
   <script defer src="./pi-auth-shell.js"></script>
   <script defer src="./pi-ia-r69e.js"></script>
   <script defer src="./regulatory-sources-r70b.js"></script>
 </head>
-<body>
+<body class="pi-pxt pi-pxt-shell pi-pxt-evidence">
+  <a class="pi-skip" href="#evidence-title">Ke isi utama</a>
   <div class="app-shell">
     <aside class="sidebar" aria-label="Navigasi utama">
-      <div class="identity"><span class="identity-mark">PI</span><div><strong>Planning<br>Intelligence</strong><small>RUANG KERJA INSTITUSI</small></div></div>
-      <div class="institution-card"><span>INSTITUSI AKTIF · QA LOKAL</span><strong>Pemerintah Kota Yogyakarta</strong><small>Regulatory Intelligence · Paket FREE</small></div>
-      <nav data-pi-app-nav aria-label="Hierarki aplikasi Planning Intelligence"></nav>
-      <div class="side-foot"><span class="online-dot"></span> Layanan QA lokal<br><small>Analisis hukum memerlukan reviewer</small></div>
+      <div class="identity"><img class="pi-mark" src="./pi-brand.svg" width="44" height="44" alt=""><div><strong>Planning<br>Intelligence</strong><small>RUANG KERJA INSTITUSI</small></div></div>
+      <div class="institution-card"><span>Institusi aktif</span><strong>Pemerintah Kota Yogyakarta</strong><small>Ruang kerja bukti regulasi</small></div>
+      <button type="button" class="pi-nav-toggle" aria-controls="pi-primary-nav" aria-expanded="true" hidden>Menu pekerjaan</button>
+      <nav id="pi-primary-nav" data-pi-app-nav aria-label="Navigasi pekerjaan Planning Intelligence"></nav>
+      <div class="side-foot">Ruang kerja lokal<br><small>Analisis hukum memerlukan reviewer</small></div>
     </aside>
     <main class="main-content">
-      <header class="topbar"><span><b>Naskah lengkap &amp; perubahan</b><span class="top-separator">/</span> Regulatory Intelligence</span><span class="local-badge">● LOCAL QA</span></header>
+      <header class="topbar"><span><b>Naskah lengkap &amp; perubahan</b><span class="top-separator">/</span> Regulatory Intelligence</span><span class="local-badge">Akses lokal</span></header>
       <div class="content-wrap">
-        <div class="notice" role="note"><span class="notice-icon">i</span><span>Dokumen yang tersimpan adalah <strong>potret sumber pada waktu akuisisi</strong>, bukan versi hukum terkonsolidasi. Identitas, status berlaku, dan hubungan antarperubahan harus diperiksa reviewer.</span><span class="notice-label">R70B · FULL SOURCE</span></div>
+        <div class="notice" role="note"><span class="notice-icon">i</span><span>Dokumen yang tersimpan adalah <strong>potret sumber pada waktu akuisisi</strong>, bukan versi hukum terkonsolidasi. Identitas, status berlaku, dan hubungan antarperubahan harus diperiksa reviewer.</span><span class="notice-label">Batas bukti</span></div>
         <section class="hero">
-          <div class="hero-main"><span class="eyebrow">REGULATORY INTELLIGENCE · SUMBER RESMI BERJEJAK</span><h1>Naskah utuh, setiap versi.<br><em>Jejak bukti per halaman.</em></h1><p>Unduh naskah Perda APBD 2026, Perwali Penjabaran, dan lima perubahannya dari JDIH Kota Yogyakarta. Simpan snapshot SHA-256 serta indeks halaman sebelum mulai menelaah hubungan dan perbedaan pasal.</p><div class="hero-actions"><a class="secondary-btn" href="./regulatory-laravel-r70g.html#r70l-title">Aturan induk di Laravel ↗</a><a class="primary-btn" href="./regulatory-laravel-r70g.html#r72-title">Garis waktu perubahan Laravel ↗</a></div></div>
-          <div class="hero-side"><span>PILOT AKTIF</span><strong>Pemerintah Kota Yogyakarta</strong><p>Rantai APBD 2026 · Koleksi lokal read-only</p><span class="status-pill">● Rekonsiliasi versi belum dilakukan</span></div>
+          <div class="hero-main"><span class="eyebrow">REGULATORY INTELLIGENCE · SUMBER RESMI BERJEJAK</span><h1 id="evidence-title">Naskah dan bukti regulasi</h1><p>Periksa Perda APBD 2026, Perwali Penjabaran dan lima perubahannya. Bedakan tautan resmi, salinan lokal yang cocok dengan hash arsip, dan ketentuan yang masih perlu ditelaah.</p><div class="hero-actions"><a class="secondary-btn" href="./regulatory-laravel-r70g.html#r70l-title">Periksa norma induk</a><a class="primary-btn" href="./regulatory-laravel-r70g.html#r72-title">Telusuri riwayat perubahan</a></div></div>
+          <div class="hero-side"><span>Konteks bukti</span><strong>Pemerintah Kota Yogyakarta</strong><p>Rantai APBD 2026 · Arsip lokal baca-saja</p><span class="status-pill">● Rekonsiliasi versi belum dilakukan</span></div>
         </section>
-        <section class="reg-trace-stats" aria-label="Ringkasan akuisisi"><article><small>Dokumen terdaftar</small><strong id="r70b-total">—</strong><span>Perda + Perwali &amp; perubahan</span></article><article><small>Terindeks lengkap</small><strong id="r70b-verified">—</strong><span>Identitas naskah terdeteksi</span></article><article><small>Metadata perlu cek</small><strong id="r70b-anomalies">—</strong><span>Potensi ketidaksesuaian JDIH</span></article><article><small>Harmonisasi</small><strong>ABSTAIN</strong><span>Keputusan hukum oleh reviewer</span></article></section>
-        <section class="panel r70b-panel"><div class="panel-heading"><div><span class="section-number">01 · SUMBER DAN SNAPSHOT</span><h2>Rantai dokumen APBD 2026</h2><p>Status diambil dari penyimpanan QA institusi ini. Snapshot tidak otomatis menyatakan sebuah peraturan masih berlaku.</p></div></div><div id="r70b-sources" class="r70b-grid"><p class="loading">Memeriksa snapshot resmi…</p></div></section>
+        <section class="reg-trace-stats" aria-label="Ringkasan akuisisi"><article><small>Dokumen terdaftar</small><strong id="r70b-total">—</strong><span>Perda + Perwali &amp; perubahan</span></article><article><small>Salinan lokal cocok hash</small><strong id="r70b-verified">—</strong><span>Integritas berkas, bukan isi hukum</span></article><article><small>Metadata perlu cek</small><strong id="r70b-anomalies">—</strong><span>Potensi ketidaksesuaian JDIH</span></article><article><small>Harmonisasi</small><strong class="pi-evidence-held">Belum dinilai</strong><span>Harmonisasi dan keputusan hukum</span></article></section>
+        <section class="panel r70b-panel"><div class="panel-heading"><div><span class="section-number">01 · SUMBER DAN SNAPSHOT</span><h2>Rantai dokumen APBD 2026</h2><p>Status diambil dari penyimpanan QA institusi ini. Snapshot tidak otomatis menyatakan sebuah peraturan masih berlaku.</p></div></div><div class="pi-evidence-toolbar"><p id="r70b-state" role="status" aria-live="polite">Memeriksa daftar sumber…</p><button id="r70b-reload" type="button" class="secondary-btn" disabled>Periksa ulang daftar sumber</button></div><div id="r70b-sources" class="r70b-grid" aria-busy="true"><p class="loading">Memeriksa arsip…</p></div></section>
+        <nav class="panel pi-evidence-next" aria-label="Kelanjutan telaah"><h2>Setelah memeriksa sumber</h2><p>Hash yang cocok belum membuktikan norma induk, perubahan efektif, hak penggunaan, atau hubungan hukum. Lanjutkan telaah ketentuan dan kembali ke kasus tanpa menganggap bukti telah disahkan.</p><div class="hero-actions"><a class="primary-btn" href="./regulatory-trace-r70a.html">Telaah ketentuan dan jejak bukti</a><a class="secondary-btn" href="./development-case-r85.html#pi-view=dokumen">Kembali ke bukti kasus</a></div></nav>
         <div class="reg-columns">
-          <section class="panel"><div class="panel-heading"><div><span class="section-number">02 · AKUISISI TERKONTROL</span><h2>Cara mengambil naskah lengkap</h2><p>Snapshot lokal hanya tersedia setelah operator QA menyiapkan root PDF dan manifest SHA-256 pada backend Laravel. Tidak ada pengunduhan PDF otomatis dari browser dan tidak ada perubahan basis data produksi.</p></div></div><ol class="r70b-steps"><li>Gunakan hanya berkas PDF resmi yang sudah disimpan dan tercatat sidik jari SHA-256 pada ledger R70C.</li><li>Daftarkan berkas di manifest lokal R78 dengan path relatif dalam folder root yang disetujui.</li><li>Backend Laravel hanya mengizinkan PDF yang hash-nya cocok dan tersedia di dalam root.</li><li>Jika status masih <strong>Perlu review</strong>, PDF lokal belum tersedia atau belum lolos verifikasi.</li></ol><p class="r70b-note">Tidak ada penulisan otomatis maupun penyimpulan versi terkonsolidasi. Halaman ini membaca hasil QA Laravel; bukti historis disimpan oleh operator.</p></section>
-          <section class="panel"><div class="panel-heading"><div><span class="section-number">03 · REVIEW GATE</span><h2>Batas simpulan mesin</h2></div></div><ul class="reg-guard"><li>Periksa identitas, struktur, pasal, lampiran, dan status berlaku dari setiap naskah resmi.</li><li>Bandingkan perubahan pertama sampai kelima dengan naskah dasar sebelum menyusun versi terkonsolidasi.</li><li>Ketidaksesuaian metadata JDIH ditandai untuk investigasi, bukan disimpulkan sebagai kesalahan hukum.</li><li>Audit disharmoni vertikal/horizontal dan angka APBD tetap ditahan sampai bukti serta gerbang review lengkap.</li></ul><div class="reg-warning">QA: sumber asli dan indeks teks membantu penelusuran. Perbandingan versi, kesimpulan hukum, dan keputusan anggaran belum tersedia.</div></section>
+          <section class="panel"><div class="panel-heading"><div><span class="section-number">02 · AKUISISI TERKONTROL</span><h2>Ketersediaan salinan lokal</h2><p>Salinan lokal tersedia bila pengelola arsip telah menyiapkan berkas dan daftar hash yang sesuai. Browser tidak mengunduh dokumen secara otomatis.</p></div></div><ol class="r70b-steps"><li>Buka naskah resmi dari sumber yang tercatat.</li><li>Jika salinan lokal belum tersedia, hubungi pengelola arsip dan periksa ulang daftar sumber setelah arsip disiapkan.</li><li>PI hanya menyediakan salinan lokal yang lolos pemeriksaan integritas berkas.</li></ol><p class="r70b-note">Tidak ada penulisan otomatis atau pengesahan versi terkonsolidasi.</p></section>
+          <section class="panel"><div class="panel-heading"><div><span class="section-number">03 · BATAS TELAAH</span><h2>Batas simpulan mesin</h2></div></div><ul class="reg-guard"><li>Periksa identitas, struktur, pasal, lampiran, dan status berlaku dari setiap naskah resmi.</li><li>Bandingkan perubahan pertama sampai kelima dengan naskah dasar sebelum menyusun versi terkonsolidasi.</li><li>Ketidaksesuaian metadata JDIH ditandai untuk investigasi, bukan disimpulkan sebagai kesalahan hukum.</li><li>Audit disharmoni vertikal/horizontal dan angka APBD tetap ditahan sampai bukti serta gerbang review lengkap.</li></ul><div class="reg-warning">Sumber asli membantu penelusuran. Perbandingan versi, kesimpulan hukum, dan keputusan anggaran belum tersedia.</div></section>
         </div>
-        <footer class="page-footer">Planning Intelligence · Regulatory Full Sources R70B<span>FREE QA · Sumber publik · Tidak ada keputusan hukum otomatis · Production denied</span></footer>
+        <footer class="page-footer">Planning Intelligence · Naskah dan bukti regulasi<span>Sumber publik · Keputusan hukum oleh pihak berwenang · Belum untuk produksi</span></footer>
       </div>
     </main>
   </div>

@@ -1,0 +1,25 @@
+/* F2/SCR-01 selected analytical surfaces. Other workbench panels retain legacy
+ * colors until separately audited; do not apply a global palette blindly. */
+.pi-pxt-regulatory .pi-normative-boundary,.pi-pxt-regulatory .r70l-panel,.pi-pxt-regulatory .r74-panel{background:#fff;color:var(--pi-text);border:1px solid var(--pi-border);border-radius:var(--pi-radius-md);color-scheme:light}
+.pi-pxt-regulatory .pi-normative-boundary{border-left:4px solid var(--pi-gold)}
+.pi-pxt-regulatory .pi-normative-boundary h2,.pi-pxt-regulatory .r70l-panel h2,.pi-pxt-regulatory .r74-panel h2,.pi-pxt-regulatory .r70l-panel h3,.pi-pxt-regulatory .r74-panel h3{color:var(--pi-navy)}
+.pi-pxt-regulatory .pi-normative-boundary p,.pi-pxt-regulatory .r70l-panel .panel-heading p,.pi-pxt-regulatory .r74-panel .panel-heading p,.pi-pxt-regulatory .pi-lens-note{color:var(--pi-secondary);font-size:13px;line-height:1.65}
+.pi-pxt-regulatory .pi-normative-boundary .secondary-btn{background:#fff;border:1px solid #91B5B0;color:var(--pi-action)}
+.pi-pxt-regulatory .r70l-trace,.pi-pxt-regulatory .r70l-source,.pi-pxt-regulatory .r70l-version,.pi-pxt-regulatory .r70l-norm,.pi-pxt-regulatory .r70l-applicability,.pi-pxt-regulatory .r74-taxonomy,.pi-pxt-regulatory .r74-node,.pi-pxt-regulatory .r74-relation{background:#F8FAFC;border-color:var(--pi-border);min-width:0;overflow-wrap:anywhere;color:var(--pi-text)}
+.pi-pxt-regulatory .r70l-trace strong,.pi-pxt-regulatory .r70l-version strong,.pi-pxt-regulatory .r70l-norm strong,.pi-pxt-regulatory .r70l-applicability strong,.pi-pxt-regulatory .r74-node strong,.pi-pxt-regulatory .r74-relation strong{color:var(--pi-navy);font-size:14px}
+.pi-pxt-regulatory .r70l-panel p:not(.r70h-caveat),.pi-pxt-regulatory .r70l-panel small,.pi-pxt-regulatory .r70l-panel .r70l-role,.pi-pxt-regulatory .r74-panel small,.pi-pxt-regulatory .r74-source-status,.pi-pxt-regulatory .r74-node-meta{color:var(--pi-secondary);font-size:12px;line-height:1.65}
+.pi-pxt-regulatory .r70l-panel .r70j-link,.pi-pxt-regulatory .r74-evidence-link,.pi-pxt-regulatory .r70l-panel .r70j-kind,.pi-pxt-regulatory .r74-kind,.pi-pxt-regulatory .r74-count{color:var(--pi-action);font-size:12px}
+.pi-pxt-regulatory .r70l-panel .r70j-unpinned,.pi-pxt-regulatory .r70l-panel .r70h-caveat,.pi-pxt-regulatory .r74-panel .r70h-caveat{color:var(--pi-warning)!important;font-size:12px;line-height:1.6}
+.pi-pxt-regulatory .r70l-stop{background:var(--pi-warning-bg);border-color:#DEC69B}
+.pi-pxt-regulatory .r70l-stop strong,.pi-pxt-regulatory .r70l-stop p,.pi-pxt-regulatory .r70l-stop small{color:var(--pi-warning)!important}
+.pi-pxt-regulatory .r70l-panel .r70g-status[data-error=true]{color:var(--pi-error)!important}
+.pi-pxt-regulatory .pi-reg-audit{margin-top:8px;border-top:1px solid var(--pi-border);padding-top:8px;overflow-wrap:anywhere}
+.pi-pxt-regulatory .pi-reg-audit summary{color:var(--pi-action);font-size:12px;cursor:pointer;font-weight:650}
+.pi-pxt-regulatory .pi-reg-audit code{display:block;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--pi-secondary);font-size:11px}
+.pi-pxt-regulatory .pi-root-toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.pi-pxt-regulatory .r70l-panel .r70h-evidence-button,.pi-pxt-regulatory .r74-panel .r70h-evidence-button{background:var(--pi-action);color:white;min-height:44px}
+.pi-pxt-regulatory .r74-controls select{min-height:44px;max-width:100%}
+.pi-pxt-regulatory .r74-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));align-items:center}
+.pi-pxt-regulatory .r74-controls select,.pi-pxt-regulatory .r74-controls button{width:100%;min-width:0}
+.pi-pxt-regulatory .r74-node-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr))}
+@media(max-width:680px){.pi-pxt-regulatory .r74-controls{grid-template-columns:minmax(0,1fr)}.pi-pxt-regulatory .pi-normative-boundary{padding:14px}}
