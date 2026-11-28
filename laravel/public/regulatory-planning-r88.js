@@ -10,7 +10,8 @@
   let data = null
   let semanticPreview = null
   let generation=0, previewGeneration=0, crosswalkBusy=false, previewBusy=false, runBusy=false
-  const currentFilters=()=>new URLSearchParams(new FormData(get('r88-controls')))
+  // Disabled controls are excluded from FormData; read named values even during a locked run.
+  const currentFilters=()=>new URLSearchParams(['code','year','as_of'].map(name=>[name,get('r88-controls').elements.namedItem(name).value]))
   const filterMatches=(filters,query)=>String(filters?.year)===query.get('year')&&filters?.as_of===query.get('as_of')&&filters?.code===query.get('code')
   const labelStatus=code=>window.PIGlossary?.status(code)||'Perlu pemeriksaan lanjutan'
   const labelRelation=code=>window.PIGlossary?.relation(code)||'Hubungan perlu diperiksa'
@@ -148,7 +149,7 @@
     const own=++generation
     fail('Sedang memeriksa bukti…')
     get('r88-status').textContent='Sedang memeriksa bukti…'
-    const query=new URLSearchParams(new FormData(event.currentTarget))
+    const query=currentFilters()
     crosswalkBusy=true
     get('r88-run').disabled=true
     get('r88-results').setAttribute('aria-busy','true')
@@ -156,7 +157,8 @@
       const response=await fetch('/api/qa-superior-r88/planning-crosswalk?'+query,{credentials:'same-origin',cache:'no-store'})
       if(!response.ok)throw Error('CROSSWALK_REQUEST_HOLD')
       const next=await response.json()
-      if(own!==generation||query.toString()!==currentFilters().toString())return
+      if(own!==generation)return
+      if(query.toString()!==currentFilters().toString()){fail('Pilihan berubah. Periksa kesesuaian untuk konteks baru.');return}
       checked(next,query)
       render(next)
       data=next
@@ -170,7 +172,7 @@
   const approved = get('r89-consent')
   const sameFilters = () => {
     if (!data) return false
-    const current = new URLSearchParams(new FormData(get('r88-controls')))
+    const current = currentFilters()
     return current.get('year') === String(data.filters.year)
       && current.get('as_of') === data.filters.as_of
       && current.get('code') === data.filters.code
@@ -197,7 +199,8 @@
         credentials:'same-origin', cache:'no-store', headers:{Accept:'application/json'}
       })
       const payload = await response.json()
-      if(own!==previewGeneration||data!==snapshot||provider!==get('r89-provider').value||!sameFilters())return
+      if(own!==previewGeneration)return
+      if(data!==snapshot||provider!==get('r89-provider').value||!sameFilters()){resetSemantic('Konteks berubah. Periksa kembali sebelum menyetujui.');return}
       if (!response.ok) throw new Error(payload.code || 'HTTP ' + response.status)
       if (payload.schema !== 'PI_R89_EVIDENCE_BOUND_SEMANTIC_ANALYSIS_V1'
         || payload.tenant_id !== data.tenant_id
@@ -238,7 +241,7 @@
       if (!sessionResponse.ok) throw new Error('Sesi login berakhir')
       const session = await sessionResponse.json()
       if (typeof session.csrf !== 'string' || !session.csrf) throw new Error('Token CSRF tidak tersedia')
-      if(!valid())return
+      if(!valid()){resetSemantic('Konteks berubah sebelum pengiriman. Tidak ada panggilan AI.');return}
       const response = await fetch('/api/qa-superior-r89/semantic-candidates', {
         method:'POST', credentials:'same-origin', cache:'no-store',
         headers:{'Content-Type':'application/json',Accept:'application/json','X-CSRF-TOKEN':session.csrf},
@@ -250,7 +253,7 @@
         })
       })
       const payload = await response.json()
-      if(!valid())return
+      if(!valid()){resetSemantic('Konteks berubah setelah permintaan dikirim. Hasil tidak ditampilkan; periksa status layanan sebelum mengajukan permintaan baru.');return}
       if (!response.ok) throw new Error(payload.semantic_reasoning?.status || payload.code || 'HTTP ' + response.status)
       const gate = payload.semantic_reasoning?.gates
       if (payload.schema !== 'PI_R89_EVIDENCE_BOUND_SEMANTIC_ANALYSIS_V1'

@@ -773,3 +773,6 @@ CD-20261128-PI-PXT-D2 — D1 CI 2/2 PASS (R88 46098854171 95/95 actual frontend,
 
 
 CD-20261128-PI-PXT-D3 — F3/SPC-01/SCP-01: D2 R88 46105809756 actual 100/100 frontend and Chrome 3 nodes/6 provisions PASS; R73/R74 PASS, Windows 46105809763 initially running. Existing R88 crosswalk UI bound to submitted year/code/evidence cutoff, with local nomenclature vs national master, indicator candidate vs equivalence, missing authority/indicator/DPA-realisation-audit evidence and provenance. Client guards read-model and disallows stale output/export/AI consent after context change; in-flight preview invalidation, bounded request and paid controls lock/context recheck, no new AI call. Fixture from prior actual engine receipt plus negative tests/isolated browser, new CI pending. No Work branch or original runtime write, no gate or progress promotion. Actual N-document/N-year F3 acceptance remains open.
+
+
+CD-20261128-PI-PXT-D3-LOCK — Correct disabled-form serialization in new D3 run guard before acceptance; named field values remain available during locking. Simulated explicit single POST and context change before POST tests added, plus actual browser 2027 completed-context hold assertion. No live call, no admission. CI pending.

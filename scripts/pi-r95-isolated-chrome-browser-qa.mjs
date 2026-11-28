@@ -393,7 +393,7 @@ try{
   await evalPage("(()=>{const y=document.querySelector('#r88-controls select[name=year]');"+
     "y.value='2027';y.dispatchEvent(new Event('change',{bubbles:true}));"+
     "document.querySelector('#r88-controls').requestSubmit()})()")
-  await until("document.querySelector('#r88-status')?.textContent?.includes('ABSTAIN')","R88_2027_ABSTAIN")
+  await until("document.querySelector('#r88-results')?.getAttribute('aria-busy')==='false' && document.querySelector('#r88-status')?.textContent?.includes('ABSTAIN') && document.querySelector('#r88-context')?.textContent?.includes('2027')","R88_2027_ABSTAIN")
   const abstain=await evalPage("({"+
     "runDisabled:document.querySelector('#r89-run')?.disabled,"+
     "previewDisabled:document.querySelector('#r89-preview')?.disabled,"+
